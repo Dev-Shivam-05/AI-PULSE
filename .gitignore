@@ -1,0 +1,45 @@
+# ---- Secrets & sessions (NEVER commit) ----
+# NOTE: config.json holds only non-secret settings now (secrets live in .env), so it IS committed.
+.env
+client_secret.json
+*.pickle
+youtube_token.pickle
+ig_session.json
+
+# ---- Browser automation profiles ----
+browser_profile/
+yt_browser_profile/
+
+# ---- Working data & generated media ----
+temp/
+output/videos/
+output/shorts/
+output/thumbnails/
+output/samples/
+logs/
+*.log
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# ---- OS / editor / local tooling ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local archive of unrelated files
+_archive/
+
+# Kokoro TTS model files (~310 MB — downloaded on demand, cached by CI)
+assets/models/
+
+# Personal voice samples (not needed in CI)
+assets/voice_sample.ogg
+assets/voice_sample.wav
+assets/voice_sample_02.m4a
+assets/voice_clone_test.wav

@@ -1,0 +1,54 @@
+========================================================================
+ AI PULSE — VOICE SAMPLE SCRIPT  (read this aloud to clone your voice)
+========================================================================
+
+HOW TO RECORD (free voice clone):
+  1. Quiet room. No fan / AC / traffic noise. Phone mic is fine, ~15 cm away.
+  2. Read NATURALLY — like explaining something to a friend. Not robotic.
+  3. Read it through once to warm up, then record in (ideally) one take.
+  4. Save as WAV or MP3 and put it here:  D:\Temp\FactVerse\assets\voice_sample.wav
+  5. More audio = better clone. If you can comfortably do ~3 minutes, great.
+  6. Tell me when it's saved and I'll wire up FREE local voice cloning
+     (runs on your laptop — slower than paid, but ₹0).
+
+------------------------------------------------------------------------
+SCRIPT (read everything below this line):
+
+Hey, and welcome to AI Pulse — your daily decode of the fast-moving world
+of artificial intelligence.
+
+Every single day, something changes. A new model launches. A benchmark gets
+shattered. A company you've never heard of suddenly raises five hundred
+million dollars. And honestly? It's almost impossible to keep up.
+
+That's exactly why this channel exists. My job is simple: take the biggest,
+strangest, and most important AI stories of the day, and explain them in
+plain language — no hype, no jargon, just the truth about what's actually
+happening and why it matters to you.
+
+Think about it. Five years ago, the idea that a computer could write an
+essay, pass a medical exam, or generate a photorealistic video from a single
+sentence sounded like science fiction. Today, it's Tuesday.
+
+So here's how this works. I read the research papers, the lab announcements,
+the leaked benchmarks — so you don't have to. Then I break it all down. What
+was announced? Is it actually a breakthrough, or just clever marketing? And
+what does it mean for the future of work, creativity, and everyday life?
+
+Some days the news is thrilling — a model learns to reason through problems
+no human has ever solved. Other days, it's unsettling: questions about jobs,
+privacy, and who really controls these systems. We cover all of it, honestly.
+
+Numbers matter here, so I'll always give you the real figures — parameter
+counts, accuracy scores, costs, release dates. If a claim sounds too good to
+be true, I'll tell you. And if something genuinely changes the game, you'll
+hear about it here first.
+
+Whether you're a developer, a student, an investor, or just someone curious
+about where all of this is heading — you are in exactly the right place.
+
+So take a breath, get comfortable, and let's decode today's AI together.
+Because the future isn't coming. It's already here — and it is moving faster
+than ever before.
+
+This is AI Pulse. Let's get into it.

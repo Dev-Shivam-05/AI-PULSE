@@ -1,0 +1,21 @@
+{
+    "youtube_channel_name": "AI Pulse",
+    "channel_name": "AI Pulse",
+    "channel_handle": "aipulse",
+    "channel_tagline": "AI news, decoded",
+
+    "tts_provider": "kokoro",
+    "kokoro_voice": "af_heart",
+    "voice_speed": 1.0,
+    "voice": "en-US-GuyNeural",
+    "voice_rate": "+5%",
+
+    "videos_per_run": 1,
+    "auto_upload_youtube": true,
+    "auto_upload_instagram": false,
+    "schedule_hours": [18],
+
+    "llm_provider": "gemini",
+    "stock_provider": "pexels",
+    "video_provider": "none"
+}

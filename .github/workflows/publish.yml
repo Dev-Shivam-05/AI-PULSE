@@ -1,0 +1,112 @@
+name: AI Pulse — Auto Publish
+
+# Free, always-on posting. Runs on GitHub's servers on a schedule (not your laptop).
+# Format is chosen by weekday inside the pipeline:
+#   Mon/Wed/Fri/Sat = evergreen explainer · Tue/Thu = news explainer · Sun = weekly roundup
+on:
+  schedule:
+    - cron: "0 13 * * *"      # 13:00 UTC = 6:30 PM IST (evening peak). ONE run/day — a second
+                              #  run would exceed the YouTube API's 10k daily quota (~6.5k/run).
+  workflow_dispatch: {}        # manual trigger from the Actions tab
+
+permissions:
+  contents: write              # save used-topics / production-log state back to the repo
+  issues: write                # failure alerts become GitHub issues (-> email notification)
+  actions: write               # keepalive: re-enable this cron (GitHub disables idle schedules)
+
+concurrency:
+  group: ai-pulse-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install ffmpeg + fonts
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+
+      - name: Cache whisper model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: whisper-base-v1
+
+      - name: Cache Kokoro voice model (~310 MB, downloads once)
+        uses: actions/cache@v4
+        with:
+          path: assets/models
+          key: kokoro-model-v1.0
+
+      - name: Install Python deps
+        run: pip install -r requirements-ci.txt
+
+      - name: Write credentials from secrets
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          YT_CLIENT_SECRET_B64: ${{ secrets.YT_CLIENT_SECRET_B64 }}
+          YT_TOKEN_B64: ${{ secrets.YT_TOKEN_B64 }}
+        run: |
+          printf 'GEMINI_API_KEY=%s\nPEXELS_API_KEY=%s\n' "$GEMINI_API_KEY" "$PEXELS_API_KEY" > .env
+          echo "$YT_CLIENT_SECRET_B64" | base64 -d > client_secret.json
+          echo "$YT_TOKEN_B64" | base64 -d > youtube_token.pickle
+
+      - name: Generate + publish a video (+ Shorts)
+        run: python -m factverse.ai_pipeline publish
+
+      # Learning-loop data: daily channel/video performance snapshot (never fatal)
+      - name: Collect channel analytics
+        if: always()
+        continue-on-error: true
+        run: python -m factverse.analytics
+
+      # Runs even when publishing failed — losing used-topic state causes duplicate videos.
+      - name: Save state back to repo
+        if: always()
+        run: |
+          git config user.name "ai-pulse-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
+          if git commit -m "state update [skip ci]"; then
+            ok=0
+            for i in 1 2 3; do
+              if git push; then ok=1; break; fi
+              git pull --rebase || true
+            done
+            if [ "$ok" != "1" ]; then
+              echo "::error::state push failed — duplicate topics possible tomorrow"
+              exit 1
+            fi
+          else
+            echo "no state change"
+          fi
+
+      - name: Alert on failure (GitHub issue → email notification)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "🔴 AI Pulse publish failed — $(date -u +%Y-%m-%d)" \
+            --body "The scheduled run failed. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Most common causes:
+          - YouTube token expired (re-auth locally, update YT_TOKEN_B64 secret)
+          - Gemini/Pexels key dead or over quota
+          - Policy/QA gate blocked a bad video (check the run log — that is the system working)" \
+            || echo "issue creation failed (is Issues enabled on the repo?)"
+
+      # GitHub silently disables cron workflows after ~60 days without repo activity.
+      - name: Keep the schedule alive
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/publish.yml/enable" || true
