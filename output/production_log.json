@@ -660,5 +660,68 @@
     ],
     "format": "roundup",
     "status": "RENDER_ONLY"
+  },
+  {
+    "timestamp": "2026-07-19T06:08:50.003770",
+    "title": "AI Development Gets Scalable: NVIDIA & Hugging Face Partnership",
+    "description": "This week's AI Roundup dives into the latest advancements and industry shifts. We explore how NVIDIA and Hugging Face are enabling scalable fine-tuning of video and image models, a crucial step for the next generation of generative AI. Then, we examine a significant financial shift as GPU financiers are backing inference chips, signaling a move towards more efficient AI deployment. OpenAI introduces a new 'scorecard' for businesses to measure AI value beyond simple token costs. Plus, an open-source GUI coding agent emerges, and we investigate Apple's potential legal maneuvers against OpenAI. Get the full picture on what's shaping the AI landscape. #AI #GenerativeAI #MachineLearning #TechNews #Innovation #AIStrategy #OpenSourceAI Subscribe to AI Pulse.\n\nSource: https://huggingface.co/blog/nvidia/scale-diffusers-finetuning-nemo-automodel\n\nChapters:\n0:00 AI Video Training\n1:51 AI Model Deployment\n3:38 AI Business Impact\n4:56 AI Economic Value\n6:36 Tech Industry Ripples",
+    "tags": [
+      "AI",
+      "NVIDIA",
+      "Hugging Face",
+      "Generative AI",
+      "Diffusion Models",
+      "Inference Chips",
+      "GPU",
+      "AI Infrastructure",
+      "OpenAI",
+      "AI Value",
+      "ROI",
+      "Open Source",
+      "Coding Agent",
+      "GUI",
+      "Apple",
+      "Artificial Intelligence",
+      "Tech Trends",
+      "Machine Learning",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/AI_Development_Gets_Scalable_NVIDIA__Hugging_Face_20260719_055426_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260719_055824.mp4",
+      "output/shorts/short_2_20260719_060002.mp4",
+      "output/shorts/short_3_20260719_060106.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260719_055724.jpg",
+    "youtube_url": "https://youtube.com/watch?v=2ZwvUCOiDNs",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=1e_pQtxsMlE",
+      "https://youtube.com/watch?v=4lpLfK5u7Fg",
+      "https://youtube.com/watch?v=o_gdINGBu9o"
+    ],
+    "shorts_meta": [
+      {
+        "title": "NVIDIA x Hugging Face: AI Unleashed! 🚀 #Shorts",
+        "description": "Massive AI models are now accessible! Discover how NVIDIA's power and Hugging Face's community are revolutionizing AI development. Get ready for a leap forward!",
+        "instagram_caption": "🚀 AI development just hit hyperspeed! NVIDIA and Hugging Face are teaming up to make massive AI models accessible to everyone. Get ready for innovation like never before! Follow @aipulse! #AI #Nvidia #HuggingFace #DeepLearning #MachineLearning #ArtificialIntelligence #Tech #Innovation #FutureOfAI #Partnership #AIScalability #ModelTraining #OpenSourceAI #AIRevolution #TechNews #GenerativeAI #NLP #ComputerVision #DataScience #AICommunity"
+      },
+      {
+        "title": "Scalable AI: NVIDIA + Hugging Face Secret! 🤫 #Shorts",
+        "description": "Unlock the future of AI. This powerful partnership is making complex model development easier and faster than ever. See how they're doing it!",
+        "instagram_caption": "🤫 The secret to scalable AI is out! NVIDIA and Hugging Face are collaborating to bring powerful AI development to the masses. Prepare for groundbreaking advancements! Follow @aipulse! #AIScale #NvidiaAI #HuggingFaceAI #TechPartnership #AIProgress #FutureTech #InnovationNation #MachineLearningModels #DeepLearningCommunity #AIDevelopment #AIAdvancements #TechTrends #NextGenAI #Coders #Developers #AIForGood #TechUpdate #AIExplosion #DigitalTransformation #AIRevolution"
+      },
+      {
+        "title": "AI Supercharge: NVIDIA & Hugging Face Explored! ⚡ #Shorts",
+        "description": "Experience the next wave of AI! Learn how this incredible collaboration is boosting AI development and making powerful tools available to creators worldwide.",
+        "instagram_caption": "⚡ AI is getting a serious supercharge! NVIDIA and Hugging Face are joining forces to accelerate AI development and empower creators globally. This is a game-changer! Follow @aipulse! #AISupercharge #NvidiaTech #HuggingFaceCommunity #AICollaboration #TechNewsDaily #ArtificialIntelligenceNews #MachineLearningTips #DeepLearningProjects #AIInspiration #TechWorld #FutureIsNow #AIInnovation #ScalableAI #TechInsights #CreatorEconomy #AIforEveryone #DigitalFuture #AICoalition #AIExploration #TechBreakthrough"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
