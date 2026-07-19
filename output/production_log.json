@@ -723,5 +723,66 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-19T14:37:45.858739",
+    "title": "AI for All? The New \"World Wide Web of AI\" Is Here",
+    "description": "Welcome to AI Pulse's AI Roundup! This week, we dive into the 5 AI stories that truly moved the needle, counting down to the most impactful revelation. From luxury AI gadgets that underwhelm to a groundbreaking vision for a 'World Wide Web of AI' that promises free, open access for all. We'll explore why teens need safe access to AI, the critical evaluation gaps facing enterprise AI deployments, and how specialized models are proving they can still outperform general giants. Get ready for a curated look at the week's most important AI developments, highlighting innovation, challenges, and the future landscape. Don't miss the story that aims to democratize AI globally, making it accessible even offline and in diverse languages. #AI #AIRoundup #AIforGood #TechNews #EnterpriseAI #OpenAI #AIAccess Subscribe to AI Pulse\n\nSource: https://techcrunch.com/2026/07/19/nonprofit-current-ai-is-racing-to-build-the-world-wide-web-of-ai-free-for-all/\n\nChapters:\n0:00 AI Language Access\n0:59 AI For All\n1:34 AI Policy Flaw\n2:16 AI Strategy Wins\n2:53 AI Serves All",
+    "tags": [
+      "AI",
+      "AI Pulse",
+      "AI Roundup",
+      "Tech News",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "AI Development",
+      "AI Ethics",
+      "AI Access",
+      "Enterprise AI",
+      "AI Agents",
+      "OpenAI",
+      "Hugging Face",
+      "Current AI",
+      "Vertu",
+      "Digital Divide",
+      "Language AI",
+      "Open Source AI",
+      "ai news",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/AI_for_All_The_New_World_Wide_Web_of_AI_Is_Here_20260719_143049_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260719_143247.mp4",
+      "output/shorts/short_2_20260719_143346.mp4",
+      "output/shorts/short_3_20260719_143443.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260719_143156.jpg",
+    "youtube_url": "https://youtube.com/watch?v=tgq0mv5rJTw",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=Ry_1j34vv7E",
+      "https://youtube.com/watch?v=MN6UDG4PzU8",
+      "https://youtube.com/watch?v=CE-emWAoIck"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI's BIGGEST Leap! 🤯 #Shorts",
+        "description": "The 'World Wide Web of AI' is here, making AI accessible to EVERYONE. Discover how this revolution is changing everything you know. #AIforAll #TechRevolution",
+        "instagram_caption": "🤯 AI is no longer exclusive! The new 'World Wide Web of AI' unlocks incredible possibilities for all. Get ready for a future powered by everyone's intelligence. Follow @aipulse!"
+      },
+      {
+        "title": "Unlock AI's Power NOW! 🚀 #Shorts",
+        "description": "Dive into the 'World Wide Web of AI' and harness its potential. This is your gateway to innovative AI tools and knowledge. Don't get left behind! #FutureTech #AIExplained",
+        "instagram_caption": "🚀 Ready to harness the power of AI? The 'World Wide Web of AI' is your ultimate gateway to groundbreaking tools and knowledge. This is your chance to innovate like never before. Follow @aipulse!"
+      },
+      {
+        "title": "Your AI Future STARTS Now! ✨ #Shorts",
+        "description": "Experience the 'World Wide Web of AI' – a new era of accessibility. Learn how you can leverage this incredible technology for your life and career. #Innovation #ArtificialIntelligence",
+        "instagram_caption": "✨ Your future powered by AI is here! Explore the revolutionary 'World Wide Web of AI' and discover how it's reshaping industries and daily life. Don't miss out on this incredible wave of innovation. Follow @aipulse!"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
