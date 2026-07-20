@@ -1,13 +1,16 @@
 name: AI Pulse — Auto Publish
 
 # Free, always-on posting. Runs on GitHub's servers on a schedule (not your laptop).
-# Format is chosen by weekday inside the pipeline:
-#   Mon/Wed/Fri/Sat = evergreen explainer · Tue/Thu = news explainer · Sun = weekly roundup
+#
+# TWO cron entries because GitHub's cron is best-effort (observed 1-2h late):
+# the second firing is a free retry. The pipeline's already-published-today
+# guard makes extra firings no-ops, so this can never double-publish or burn
+# API quota. Off-:00 minutes fire noticeably closer to on-time.
 on:
   schedule:
-    - cron: "0 13 * * *"      # 13:00 UTC = 6:30 PM IST (evening peak). ONE run/day — a second
-                              #  run would exceed the YouTube API's 10k daily quota (~6.5k/run).
-  workflow_dispatch: {}        # manual trigger from the Actions tab
+    - cron: "23 12 * * *"     # 12:23 UTC ≈ 5:53 PM IST — primary
+    - cron: "53 14 * * *"     # 14:53 UTC ≈ 8:23 PM IST — retry (skips if day is done)
+  workflow_dispatch: {}        # manual trigger from the Actions tab (also guard-protected)
 
 permissions:
   contents: write              # save used-topics / production-log state back to the repo
@@ -69,24 +72,33 @@ jobs:
         run: python -m factverse.analytics
 
       # Runs even when publishing failed — losing used-topic state causes duplicate videos.
+      # Union-merge against fresh origin/main instead of rebase: append-only JSON
+      # files conflict under rebase, which is exactly how state was lost before.
       - name: Save state back to repo
         if: always()
         run: |
           git config user.name "ai-pulse-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
-          if git commit -m "state update [skip ci]"; then
-            ok=0
-            for i in 1 2 3; do
-              if git push; then ok=1; break; fi
-              git pull --rebase || true
+          ok=0
+          for i in 1 2 3; do
+            mkdir -p /tmp/state_incoming
+            for f in used_topics.json used_urls.json output/production_log.json \
+                     state/failed_topics.json state/runs.jsonl state/analytics.jsonl; do
+              [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
-            if [ "$ok" != "1" ]; then
-              echo "::error::state push failed — duplicate topics possible tomorrow"
-              exit 1
+            git fetch origin main --quiet
+            git checkout -B main origin/main --quiet
+            python -m factverse.state_merge /tmp/state_incoming
+            git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
+            if git commit -m "state update [skip ci]" --quiet; then
+              if git push origin main; then ok=1; break; fi
+            else
+              echo "no state change"; ok=1; break
             fi
-          else
-            echo "no state change"
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::error::state push failed — duplicate topics possible tomorrow"
+            exit 1
           fi
 
       - name: Alert on failure (GitHub issue → email notification)

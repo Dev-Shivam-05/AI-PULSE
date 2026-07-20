@@ -13,6 +13,7 @@
     "videos_per_run": 1,
     "auto_upload_youtube": true,
     "auto_upload_instagram": false,
+    "declare_synthetic_media": false,
     "schedule_hours": [18],
 
     "llm_provider": "gemini",

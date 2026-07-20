@@ -105,3 +105,31 @@ def test_build_chapters_offline(monkeypatch):
 def test_build_chapters_needs_enough_scenes(monkeypatch):
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
     assert ap.build_chapters({"scenes": [{"narration": "x"}] * 4}, [0, 1, 2, 3], 2.6) == ""
+
+
+# --------------------------------------------------------------- near-duplicate guard
+def test_too_similar_catches_reworded_story():
+    used = {signal_engine._norm("AI Development Gets Scalable: NVIDIA & Hugging Face Partners")}
+    assert signal_engine._is_used("AI Scale-Up: NVIDIA & Hugging Face Forge New Path", used)
+    assert not signal_engine._is_used("Google Releases a Weather Prediction Model", used)
+
+
+# --------------------------------------------------------------- state merge
+def test_state_merge_unions_lists_and_logs():
+    from factverse import state_merge as sm
+    ours = '["topic a", "topic b"]'
+    theirs = '["topic b", "topic c"]'
+    merged = sm.merge_file("used_topics.json", ours, theirs)
+    assert set(__import__("json").loads(merged)) == {"topic a", "topic b", "topic c"}
+
+    log_a = '[{"timestamp": "1", "title": "x"}]'
+    log_b = '[{"timestamp": "2", "title": "y"}, {"timestamp": "1", "title": "x"}]'
+    merged = sm.merge_file("output/production_log.json", log_a, log_b)
+    assert len(__import__("json").loads(merged)) == 2
+
+    jl = sm.merge_file("state/runs.jsonl", '{"a":1}\n{"b":2}\n', '{"b":2}\n{"c":3}\n')
+    assert jl.count("\n") == 3
+
+    counts = sm.merge_file("state/failed_topics.json", '{"t": 2}', '{"t": 1, "u": 1}')
+    d = __import__("json").loads(counts)
+    assert d["t"] == 2 and d["u"] == 1

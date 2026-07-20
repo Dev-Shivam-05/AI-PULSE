@@ -90,6 +90,32 @@ def _used_urls() -> set[str]:
     return set()
 
 
+_STOP = {"the", "a", "an", "of", "to", "in", "for", "and", "on", "is", "are",
+         "with", "at", "its", "it", "s", "new", "how", "why", "what"}
+
+
+def _tokens(s: str) -> set[str]:
+    return {w for w in _norm(s).split() if len(w) > 2 and w not in _STOP}
+
+
+def _too_similar(title: str, used: set[str], threshold: float = 0.5) -> bool:
+    """Token-overlap near-duplicate check. Catches the same story re-worded
+    ('NVIDIA & Hugging Face Partners' vs 'NVIDIA & Hugging Face Forge New Path')
+    that exact/substring matching misses — the failure that once published two
+    near-identical videos."""
+    t = _tokens(title)
+    if len(t) < 3:
+        return False
+    for u in used:
+        ut = _tokens(u)
+        if len(ut) < 3:
+            continue
+        inter = len(t & ut)
+        if inter / min(len(t), len(ut)) >= threshold:
+            return True
+    return False
+
+
 def _is_used(title: str, used: set[str]) -> bool:
     nt = _norm(title)
     for u in used:
@@ -100,7 +126,7 @@ def _is_used(title: str, used: set[str]) -> bool:
             return True
         if u == nt:
             return True
-    return False
+    return _too_similar(title, used)
 
 
 # The same story published as a paper reads worse on video than as news; weight kinds.

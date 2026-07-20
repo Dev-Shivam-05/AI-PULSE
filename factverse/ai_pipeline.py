@@ -621,10 +621,51 @@ MIN_WORDS = {"news": 850, "evergreen": 1000, "roundup": 800}
 MAX_OVERLAP = 0.08
 
 
+def already_published_today() -> bool:
+    """Idempotence guard: exactly ONE published video per UTC day, no matter how
+    many times the workflow fires (late cron + retry cron, re-runs, manual runs).
+
+    Checks origin/main's run ledger first — a re-run executes on a STALE checkout,
+    so the local file alone cannot be trusted. Set FORCE_PUBLISH=1 to override."""
+    import os as _os
+    import subprocess as _sp
+    if _os.environ.get("FORCE_PUBLISH"):
+        return False
+    today = _dt.datetime.utcnow().strftime("%Y-%m-%d")
+    texts = []
+    try:
+        _sp.run(["git", "fetch", "origin", "main", "--quiet"], cwd=str(fv.BASE),
+                capture_output=True, timeout=60)
+        r = _sp.run(["git", "show", "origin/main:state/runs.jsonl"], cwd=str(fv.BASE),
+                    capture_output=True, text=True, timeout=30)
+        if r.returncode == 0:
+            texts.append(r.stdout)
+    except Exception:
+        pass
+    try:
+        if RUNS_LOG.exists():
+            texts.append(RUNS_LOG.read_text(encoding="utf-8"))
+    except OSError:
+        pass
+    for text in texts:
+        for line in text.splitlines():
+            try:
+                d = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if d.get("status") == "PUBLISHED" and str(d.get("timestamp", "")).startswith(today):
+                print(f"  ⏭️  Already published today ({d.get('title', '')[:60]}) — skipping.")
+                return True
+    return False
+
+
 def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     print("=" * 70)
     print(f"  {fv.CHANNEL_NAME} — content pipeline v2 (viral-first)")
     print("=" * 70)
+    if publish and already_published_today():
+        record_run(status="SKIPPED_DUPLICATE_DAY", format="-")
+        return {"status": "SKIPPED_DUPLICATE_DAY"}
     ranked = [i for i in signal_engine.rank(limit=20) if not too_many_failures(i["title"])]
     fmt, viral = decide_format(force_format, ranked)
     print(f"  🧭 Format today: {fmt.upper()}")
@@ -724,6 +765,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             eng.save_report(script, video, shorts, thumb, meta, None, [], status="UPLOAD_FAILED")
             record_run(status="UPLOAD_FAILED", format=fmt, title=script["title"])
             return None
+        eng.yt_comment(yt_url, "Sources are in the description. What's your take — "
+                               "hype or turning point? 👇")
         for i, sp in enumerate(shorts):
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
@@ -731,6 +774,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                               sd, script.get("tags", []) + ["Shorts"], is_short=True)
             if u:
                 yt_shorts.append(u)
+                # visible path from the Short to the full video (description links
+                # are hidden on the Shorts player; a channel comment is tappable)
+                eng.yt_comment(u, f"▶️ Full breakdown: {yt_url}")
         status = "PUBLISHED"
     else:
         print("\n  ⏸️  Render-only (publish skipped).")

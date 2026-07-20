@@ -803,10 +803,11 @@ Return ONLY JSON:
 def yt_auth():
     from google_auth_oauthlib.flow import InstalledAppFlow
     from google.auth.transport.requests import Request
-    # yt-analytics scope included up front so the nightly analytics collector
-    # (the learning loop's data source) works without ever re-consenting.
+    # analytics scope: nightly performance collector; force-ssl: posting the
+    # shorts->full-video comment. One consent covers everything.
     SCOPES = ["https://www.googleapis.com/auth/youtube.upload",
               "https://www.googleapis.com/auth/youtube",
+              "https://www.googleapis.com/auth/youtube.force-ssl",
               "https://www.googleapis.com/auth/yt-analytics.readonly"]
     creds = None
     tok = BASE/"youtube_token.pickle"
@@ -866,9 +867,13 @@ def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3):
         body = {"snippet":{"title":title[:100],"description":desc,
                            "tags":clean_tags,"categoryId":"28",
                            "defaultLanguage":"en","defaultAudioLanguage":"en"},
-                "status":{"privacyStatus":"public","selfDeclaredMadeForKids":False,
-                          # honest AI-content disclosure — cheap insurance for a synthetic channel
-                          "containsSyntheticMedia":True}}
+                "status":{"privacyStatus":"public","selfDeclaredMadeForKids":False}}
+        # YouTube's synthetic-media disclosure is REQUIRED only for realistic
+        # altered content (fabricated people/events). Narrated explainers over
+        # licensed stock footage don't meet that bar, and the "AI" badge costs
+        # viewer trust — so disclosure is opt-in via config.
+        if fv.flag("declare_synthetic_media", False):
+            body["status"]["containsSyntheticMedia"] = True
 
         for attempt in range(retries):
             try:
@@ -909,6 +914,27 @@ def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3):
         return None
     except Exception as e:
         print(f"❌ {e}"); return None
+
+
+def yt_comment(video_url, text):
+    """Post a channel comment on a video (e.g. the full-video link on a Short).
+    Best-effort: needs the youtube.force-ssl scope — if the current token predates
+    that scope, this logs and moves on. Never fails the pipeline."""
+    try:
+        vid = video_url.split("v=")[-1].split("&")[0]
+        from googleapiclient.discovery import build
+        creds = yt_auth()
+        if not creds: return None
+        yt = build("youtube","v3",credentials=creds)
+        yt.commentThreads().insert(part="snippet", body={
+            "snippet": {"videoId": vid,
+                        "topLevelComment": {"snippet": {"textOriginal": text[:9000]}}}
+        }).execute()
+        print(f"  💬 Comment posted on {vid}")
+        return True
+    except Exception as e:
+        print(f"  💬 Comment skipped ({str(e)[:120]})")
+        return None
 
 
 # ============================================================
