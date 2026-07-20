@@ -784,5 +784,68 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-20T15:47:48.908748",
+    "title": "China AI: Cheaper Power, Global Shift?",
+    "description": "China's AI just dropped a bomb. Their new models could mean cheaper goods, but also upend global power dynamics, impacting your job and your wallet. AI Pulse breaks down the latest from Moonshot AI and Alibaba, revealing how their frontier models aim to rival top US competitors. Discover what Kimi K3 and Qwen3.8 mean for the AI landscape, national security, and your finances. We explore the impact of China's open-source AI strategy. Is America's AI dominance truly under threat? Find out what this means for YOU. #AI #ArtificialIntelligence #ChinaAI #TechNews #FutureOfAI #AISecurity Subscribe to AI Pulse\n\nSource: https://www.theverge.com/ai-artificial-intelligence/967781/chinese-ai-models-open-source-moonshot-kimi-k3-alibaba-qwen\n\nChapters:\n0:00 China's AI Bombshell\n1:16 US vs China AI\n2:39 Chinese AI Capability\n4:38 AI Powered Future\n6:05 US AI Dominance Threatened",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "China AI",
+      "Moonshot AI",
+      "Alibaba",
+      "Kimi K3",
+      "Qwen3.8",
+      "Open Source AI",
+      "AI Dominance",
+      "Tech Race",
+      "Geopolitics",
+      "National Security",
+      "Global Economy",
+      "Future of Tech",
+      "AI Models",
+      "LLM",
+      "Tech Explained",
+      "AI Pulse",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/China_AI_Cheaper_Power_Global_Shift_20260720_153335_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260720_153805.mp4",
+      "output/shorts/short_2_20260720_153833.mp4",
+      "output/shorts/short_3_20260720_154004.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260720_153619.jpg",
+    "youtube_url": "https://youtube.com/watch?v=vPqNwXYBTUA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=GLdsPCkh4wE",
+      "https://youtube.com/watch?v=uDRxDzxWYGA",
+      "https://youtube.com/watch?v=Lujv22bBl78"
+    ],
+    "shorts_meta": [
+      {
+        "title": "China's AI Edge: Fueling Innovation with Affordable Energy! #Shorts",
+        "description": "Dive into how China's access to cheaper power is accelerating its AI development. This energy advantage is a critical factor in the global tech race.",
+        "instagram_caption": "⚡️ China's AI surge is supercharged by an unexpected advantage: incredibly cheap power! This energy edge isn't just a cost-saver; it's a game-changer for AI innovation globally. Follow @aipulse!\n#ChinaAI #AICapability #TechAdvantage #PoweringAI #GlobalTech #AIInnovation #EnergyCosts #FutureTech #DeepLearning #MachineLearning #TechNews #AIStrategy #EconomicShift #DigitalFuture #AIResearch #TechTrends #NextGenAI #SustainableAI #DataCenters #AIdevelopment"
+      },
+      {
+        "title": "Is China Redefining Global AI Leadership? The Power Play! #Shorts",
+        "description": "Explore the monumental shift happening in the AI landscape. China's rapid advancements are challenging traditional leaders and reshaping the future of technology.",
+        "instagram_caption": "🌍 Is the global AI power balance shifting right before your eyes? China's rapid advancements are making waves and challenging long-held tech leadership positions. Follow @aipulse!\n#GlobalAI #TechShift #ChinaTech #AIPower #LeadershipChange #FutureofAI #InnovationNation #TechRevolution #AIcompetition #Geopolitics #DigitalTransformation #WorldTech #EmergingTech #AIimpact #SiliconValley #TechGiants #AIcommunity #GlobalInnovation #StrategicAI #AIleaders"
+      },
+      {
+        "title": "Unleashing China's AI Boom: What it Means for the World! #Shorts",
+        "description": "Discover the incredible growth of AI in China and its potential ripple effects across industries and nations. Is a new tech era upon us?",
+        "instagram_caption": "🚀 Get ready to witness China's AI boom and its monumental implications for the entire world! This technological explosion is set to redefine industries and societies alike. Follow @aipulse!\n#AIboom #ChinaInnovation #FutureIsNow #TechImpact #WorldChanging #AIapplications #SmartTech #DigitalEconomy #Industry40 #AIethics #SocietalImpact #TechForecast #AIpredictions #InnovationLab #TechWorld #DisruptiveTech #AIforGood #FutureofWork #SmartCities #AIevolution"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
