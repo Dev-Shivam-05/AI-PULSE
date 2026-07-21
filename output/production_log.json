@@ -602,66 +602,6 @@
     "status": "SUCCESS"
   },
   {
-    "timestamp": "2026-07-19T08:17:33.418080",
-    "title": "AI's Creative Spark: Author Warns of Generational Silence",
-    "description": "The AI revolution is hitting a critical juncture. This week, we dive into the growing concerns about AI's impact on creativity and expression, as a renowned author issues a stark warning to OpenAI. Plus, a major financial shift sees investment pouring into inference chips, signaling a move towards more cost-effective AI solutions. We also explore new tools for scaling AI model fine-tuning and a novel approach to measuring AI's true business value. Finally, a groundbreaking open-source coding agent emerges, promising to democratize AI development. #AI #ArtificialIntelligence #TechNews #Innovation #GenerativeAI Subscribe to AI Pulse.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/967630/dave-eggers-openai-chatgpt-silencing-an-entire-generation\n\nChapters:\n0:00 AI Stifles Expression\n2:04 Industrial AI Might\n3:45 AI Hardware Shifts\n5:42 Quantifying AI Value\n7:25 New Open Source",
-    "tags": [
-      "AI",
-      "Artificial Intelligence",
-      "OpenAI",
-      "Dave Eggers",
-      "ChatGPT",
-      "Generative AI",
-      "NVIDIA",
-      "Hugging Face",
-      "Inference Chips",
-      "GPU",
-      "AI Finance",
-      "AI Value",
-      "AI Scorecard",
-      "Coding Agent",
-      "Open Source AI",
-      "Tech Trends",
-      "Future of AI",
-      "AI Ethics",
-      "ai news",
-      "machine learning",
-      "tech news",
-      "ai explained",
-      "technology",
-      "deep learning",
-      "ai pulse"
-    ],
-    "video": "output/videos/AIs_Creative_Spark_Author_Warns_of_Generational_Si_20260719_080814_final.mp4",
-    "shorts": [
-      "output/shorts/short_1_20260719_081326.mp4",
-      "output/shorts/short_2_20260719_081350.mp4",
-      "output/shorts/short_3_20260719_081418.mp4"
-    ],
-    "thumbnail": "output/thumbnails/thumb_20260719_081022.jpg",
-    "youtube_url": null,
-    "youtube_shorts": [],
-    "shorts_meta": [
-      {
-        "title": "AI's CREATIVE THREAT: Author's Stark WARNING! #Shorts",
-        "description": "A prominent author issues a chilling warning about AI's impact on human creativity, fearing a future of 'generational silence'. Discover the potential consequences and what it means for art and expression.",
-        "instagram_caption": "🤯 Is AI stealing our creative voice? An author's dire prediction of 'generational silence' will make you think twice about the future of art. Follow @aipulse!"
-      },
-      {
-        "title": "SILENCE THE SPARK? AI & The Future of Creation #Shorts",
-        "description": "Explore the alarming possibility that AI could stifle human originality, leading to a loss of unique artistic expression across generations. Learn why this is a critical conversation.",
-        "instagram_caption": "✍️ Will AI extinguish the human spark of creativity? This author's warning about 'generational silence' is a wake-up call we can't ignore. Follow @aipulse!"
-      },
-      {
-        "title": "GENERATIONAL SILENCE: AI's Creative DANGER! #Shorts",
-        "description": "An eye-opening look at an author's urgent message regarding AI's potential to create a 'generational silence' in the realm of human creativity. Understand the risks and the debate.",
-        "instagram_caption": "🚨 AI's creative surge might lead to a 'generational silence.' This author's potent warning is essential viewing for anyone concerned about the future of art. Follow @aipulse!"
-      }
-    ],
-    "format": "roundup",
-    "status": "RENDER_ONLY"
-  },
-  {
     "timestamp": "2026-07-19T06:08:50.003770",
     "title": "AI Development Gets Scalable: NVIDIA & Hugging Face Partnership",
     "description": "This week's AI Roundup dives into the latest advancements and industry shifts. We explore how NVIDIA and Hugging Face are enabling scalable fine-tuning of video and image models, a crucial step for the next generation of generative AI. Then, we examine a significant financial shift as GPU financiers are backing inference chips, signaling a move towards more efficient AI deployment. OpenAI introduces a new 'scorecard' for businesses to measure AI value beyond simple token costs. Plus, an open-source GUI coding agent emerges, and we investigate Apple's potential legal maneuvers against OpenAI. Get the full picture on what's shaping the AI landscape. #AI #GenerativeAI #MachineLearning #TechNews #Innovation #AIStrategy #OpenSourceAI Subscribe to AI Pulse.\n\nSource: https://huggingface.co/blog/nvidia/scale-diffusers-finetuning-nemo-automodel\n\nChapters:\n0:00 AI Video Training\n1:51 AI Model Deployment\n3:38 AI Business Impact\n4:56 AI Economic Value\n6:36 Tech Industry Ripples",
@@ -723,6 +663,66 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-19T08:17:33.418080",
+    "title": "AI's Creative Spark: Author Warns of Generational Silence",
+    "description": "The AI revolution is hitting a critical juncture. This week, we dive into the growing concerns about AI's impact on creativity and expression, as a renowned author issues a stark warning to OpenAI. Plus, a major financial shift sees investment pouring into inference chips, signaling a move towards more cost-effective AI solutions. We also explore new tools for scaling AI model fine-tuning and a novel approach to measuring AI's true business value. Finally, a groundbreaking open-source coding agent emerges, promising to democratize AI development. #AI #ArtificialIntelligence #TechNews #Innovation #GenerativeAI Subscribe to AI Pulse.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/967630/dave-eggers-openai-chatgpt-silencing-an-entire-generation\n\nChapters:\n0:00 AI Stifles Expression\n2:04 Industrial AI Might\n3:45 AI Hardware Shifts\n5:42 Quantifying AI Value\n7:25 New Open Source",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "OpenAI",
+      "Dave Eggers",
+      "ChatGPT",
+      "Generative AI",
+      "NVIDIA",
+      "Hugging Face",
+      "Inference Chips",
+      "GPU",
+      "AI Finance",
+      "AI Value",
+      "AI Scorecard",
+      "Coding Agent",
+      "Open Source AI",
+      "Tech Trends",
+      "Future of AI",
+      "AI Ethics",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/AIs_Creative_Spark_Author_Warns_of_Generational_Si_20260719_080814_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260719_081326.mp4",
+      "output/shorts/short_2_20260719_081350.mp4",
+      "output/shorts/short_3_20260719_081418.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260719_081022.jpg",
+    "youtube_url": null,
+    "youtube_shorts": [],
+    "shorts_meta": [
+      {
+        "title": "AI's CREATIVE THREAT: Author's Stark WARNING! #Shorts",
+        "description": "A prominent author issues a chilling warning about AI's impact on human creativity, fearing a future of 'generational silence'. Discover the potential consequences and what it means for art and expression.",
+        "instagram_caption": "🤯 Is AI stealing our creative voice? An author's dire prediction of 'generational silence' will make you think twice about the future of art. Follow @aipulse!"
+      },
+      {
+        "title": "SILENCE THE SPARK? AI & The Future of Creation #Shorts",
+        "description": "Explore the alarming possibility that AI could stifle human originality, leading to a loss of unique artistic expression across generations. Learn why this is a critical conversation.",
+        "instagram_caption": "✍️ Will AI extinguish the human spark of creativity? This author's warning about 'generational silence' is a wake-up call we can't ignore. Follow @aipulse!"
+      },
+      {
+        "title": "GENERATIONAL SILENCE: AI's Creative DANGER! #Shorts",
+        "description": "An eye-opening look at an author's urgent message regarding AI's potential to create a 'generational silence' in the realm of human creativity. Understand the risks and the debate.",
+        "instagram_caption": "🚨 AI's creative surge might lead to a 'generational silence.' This author's potent warning is essential viewing for anyone concerned about the future of art. Follow @aipulse!"
+      }
+    ],
+    "format": "roundup",
+    "status": "RENDER_ONLY"
   },
   {
     "timestamp": "2026-07-19T14:37:45.858739",
@@ -843,6 +843,68 @@
         "title": "Unleashing China's AI Boom: What it Means for the World! #Shorts",
         "description": "Discover the incredible growth of AI in China and its potential ripple effects across industries and nations. Is a new tech era upon us?",
         "instagram_caption": "🚀 Get ready to witness China's AI boom and its monumental implications for the entire world! This technological explosion is set to redefine industries and societies alike. Follow @aipulse!\n#AIboom #ChinaInnovation #FutureIsNow #TechImpact #WorldChanging #AIapplications #SmartTech #DigitalEconomy #Industry40 #AIethics #SocietalImpact #TechForecast #AIpredictions #InnovationLab #TechWorld #DisruptiveTech #AIforGood #FutureofWork #SmartCities #AIevolution"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-21T14:55:39.837241",
+    "title": "Deezer: AI Music Now Half of All Uploads",
+    "description": "Your favorite music streamer just revealed something terrifying: more than HALF of the new songs you hear every day are FAKE. This deep dive into Deezer's shocking announcement unpacks how AI-generated music is fundamentally reshaping the industry, impacting human artists, and challenging how platforms manage content. We'll explore the rapid rise of AI tracks, the battle against fraud, and what this means for the future of your listening experience. #AI #AIMusic #Deezer #Streaming #MusicIndustry #TechNews #ArtificialIntelligence \n\nSubscribe to AI Pulse for more essential tech insights.\n\nSource: https://techcrunch.com/2026/07/21/music-streamer-deezer-says-more-than-50-of-daily-uploads-are-ai-generated/\n\nChapters:\n0:00 Terrifying Deezer News\n1:17 Deep Music Problem\n2:18 Deezer's AI Policy\n3:48 Discovery Concerns Arise\n5:10 Music's Existential Threat\n\n▶ Watch next: https://youtube.com/watch?v=vPqNwXYBTUA",
+    "tags": [
+      "AI",
+      "AI Music",
+      "Deezer",
+      "Music Streaming",
+      "Artificial Intelligence",
+      "Tech News",
+      "Music Industry",
+      "Generative AI",
+      "Content Moderation",
+      "Copyright",
+      "Digital Music",
+      "Artist Rights",
+      "Fraud Detection",
+      "Suno",
+      "Udio",
+      "Streaming Platforms",
+      "TechCrunch",
+      "AI Pulse",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/Deezer_AI_Music_Now_Half_of_All_Uploads_20260721_144310_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260721_144708.mp4",
+      "output/shorts/short_2_20260721_144800.mp4",
+      "output/shorts/short_3_20260721_144854.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260721_144539.jpg",
+    "youtube_url": "https://youtube.com/watch?v=6W3YViigO9E",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=13Jn_vdy3S4",
+      "https://youtube.com/watch?v=7JLm4SFuKds",
+      "https://youtube.com/watch?v=paTPZDBJjjE"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Dominates Deezer! 🤖 #Shorts",
+        "description": "Deezer reveals AI music is HALF of all uploads! Mind-blowing tech takeover.",
+        "instagram_caption": "🤯 AI music is officially taking over the music industry! Deezer's latest stats show AI now makes up half of all uploads, a revolutionary shift. Follow @aipulse!"
+      },
+      {
+        "title": "Music's Future: AI Reigns Supreme! 🚀 #Shorts",
+        "description": "The music industry is changing FAST! AI-generated tracks are exploding on Deezer.",
+        "instagram_caption": "🎶 Is this the future of music? AI-generated tracks are skyrocketing on Deezer, making up 50% of all uploads. Prepare for a sonic revolution! Follow @aipulse!"
+      },
+      {
+        "title": "Deezer: AI Takes Over 50%! ⚡ #Shorts",
+        "description": "Unbelievable! AI music is now half of Deezer's uploads. Get ready for the AI music era.",
+        "instagram_caption": "🔥 Fifty percent! Deezer's uploads are now dominated by AI-generated music, signaling a massive industry pivot. The age of AI in music is here! Follow @aipulse!"
       }
     ],
     "format": "news",
