@@ -22,5 +22,7 @@
     "shorts_per_day": 2,
     "longform_slot_utc": "16:45",
     "require_insight_block": false,
-    "kokoro_voice_b": "am_michael"
+    "kokoro_voice_b": "am_michael",
+    "l2_voice_backend": "kokoro",
+    "l2_kokoro_voice": "bm_george"
 }

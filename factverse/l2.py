@@ -43,14 +43,19 @@ def _mark_used(kind: str, name: str) -> None:
     USAGE.write_text(json.dumps(u, ensure_ascii=False), encoding="utf-8")
 
 
+def _natural_key(p: Path):
+    import re as _re
+    return [int(t) if t.isdigit() else t.lower() for t in _re.split(r"(\d+)", p.name)]
+
+
 def next_clip(kind: str):
-    """Oldest unused clip of the kind, or None."""
+    """Oldest unused clip of the kind (natural sort: _2 before _10), or None."""
     d = STORE / KINDS[kind]
     if not d.exists():
         return None
     used = set(_usage().get(kind, []))
     clips = sorted([p for p in list(d.glob("*.wav")) + list(d.glob("*.mp3"))
-                    if p.name not in used])
+                    if p.name not in used], key=_natural_key)
     return clips[0] if clips else None
 
 
@@ -97,9 +102,14 @@ def build_human_segment(wav, out: str, label: str = "THE TAKE") -> str | None:
     dd.rectangle([(0, H - 8), (W, H)], fill=(224, 32, 42, 255))
     frame = canvas.convert("RGB")
     frame.save(fdir / "0000.png")
+    # Normalize the human audio to match the pipeline's track exactly:
+    # 44.1kHz stereo (phone recordings arrive 48kHz mono — a mismatch makes the
+    # splice concat fail) + EBU loudness so levels match the synthetic narration.
     r = subprocess.run([fv.FFMPEG or "ffmpeg", "-y", "-loop", "1", "-framerate", str(FPS),
                         "-i", str(fdir / "0000.png"), "-i", str(wav),
                         "-t", f"{d:.2f}", "-vf", f"scale={W}:{H},setsar=1,fps={FPS}",
+                        "-af", "highpass=f=80,loudnorm=I=-16:TP=-1.5:LRA=11",
+                        "-ar", "44100", "-ac", "2",
                         "-c:v", "libx264", "-preset", "fast", "-crf", "21",
                         "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
                         "-shortest", str(out)], capture_output=True, text=True, timeout=600)
@@ -118,14 +128,17 @@ def splice(video: str, segment: str, at: float) -> str:
     """Insert `segment` into `video` at time `at` (re-encode concat, atomic)."""
     out = str(video).replace(".mp4", "_l2.mp4")
     nv = "scale=1280:720,setsar=1,fps=30"
+    # every audio branch is format-normalized — concat requires identical
+    # sample rate + channel layout, and human recordings vary
+    na = "aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo"
     fc = (
         f"[0:v]split=2[c0][c1];[0:a]asplit=2[ca0][ca1];"
         f"[c0]trim=0:{at:.3f},setpts=PTS-STARTPTS,{nv}[pre];"
-        f"[ca0]atrim=0:{at:.3f},asetpts=PTS-STARTPTS[prea];"
+        f"[ca0]atrim=0:{at:.3f},asetpts=PTS-STARTPTS,{na}[prea];"
         f"[c1]trim={at:.3f},setpts=PTS-STARTPTS,{nv}[post];"
-        f"[ca1]atrim={at:.3f},asetpts=PTS-STARTPTS[posta];"
-        f"[1:v]{nv}[seg];"
-        f"[pre][prea][seg][1:a][post][posta]concat=n=3:v=1:a=1[v][a]"
+        f"[ca1]atrim={at:.3f},asetpts=PTS-STARTPTS,{na}[posta];"
+        f"[1:v]{nv}[seg];[1:a]{na}[sega];"
+        f"[pre][prea][seg][sega][post][posta]concat=n=3:v=1:a=1[v][a]"
     )
     import os
     r = subprocess.run([fv.FFMPEG or "ffmpeg", "-y", "-i", str(video), "-i", str(segment),
