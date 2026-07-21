@@ -17,5 +17,7 @@
     "llm_provider": "gemini",
     "stock_provider": "pexels",
     "video_provider": "none",
-    "declare_synthetic_media": false
+    "declare_synthetic_media": false,
+    "dialogue_news": true,
+    "kokoro_voice_analyst": "am_michael"
 }

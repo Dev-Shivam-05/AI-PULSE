@@ -133,3 +133,47 @@ def test_state_merge_unions_lists_and_logs():
     counts = sm.merge_file("state/failed_topics.json", '{"t": 2}', '{"t": 1, "u": 1}')
     d = __import__("json").loads(counts)
     assert d["t"] == 2 and d["u"] == 1
+
+
+# --------------------------------------------------------------- distribution rules
+def test_slots_are_spaced_and_future():
+    import datetime as dt
+    from factverse import scheduling as sch
+    base = dt.datetime(2026, 7, 21, 13, 5, tzinfo=dt.timezone.utc)  # 18:35 IST
+    slots = sch.next_slots(3, after=base)
+    assert len(slots) == 3
+    times = [dt.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
+             for s in slots]
+    assert times[0] > base
+    for a, b in zip(times, times[1:]):
+        assert (b - a).total_seconds() >= 4 * 3600
+
+
+def test_distribution_violations_raise():
+    import datetime as dt
+    import pytest
+    from factverse import scheduling as sch
+    t0 = dt.datetime(2026, 7, 21, 7, 0, tzinfo=sch.IST)
+    with pytest.raises(sch.PipelineViolation):
+        sch.validate_distribution([t0, t0 + dt.timedelta(hours=1)])   # 1h gap
+    with pytest.raises(sch.PipelineViolation):
+        sch.validate_distribution([t0 + dt.timedelta(hours=5 * i) for i in range(5)])  # 5 shorts
+    with pytest.raises(sch.PipelineViolation):
+        sch.validate_shorts_batch(["a.mp4", "b.mp4"], ["hook one", ""])  # raw slice
+
+
+def test_dialogue_segments_grouping():
+    script = {"scenes": [
+        {"narration": "hook line", "speaker": "host"},
+        {"narration": "more host", "speaker": "host"},
+        {"narration": "the facts", "speaker": "analyst"},
+        {"narration": "back to host", "speaker": "host"},
+    ]}
+    segs = ap._dialogue_segments(script, "")
+    assert segs is not None and len(segs) == 3
+    assert "hook line" in segs[0][1] and "more host" in segs[0][1]
+    assert segs[1][1] == "the facts"
+
+
+def test_dialogue_segments_none_for_monologue():
+    assert ap._dialogue_segments({"scenes": [{"narration": "x"}] * 6}, "") is None

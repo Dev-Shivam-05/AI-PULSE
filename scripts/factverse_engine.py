@@ -834,9 +834,12 @@ def yt_auth():
         with open(tok,"wb") as f: pickle.dump(creds,f)
     return creds
 
-def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3):
+def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3, publish_at=None):
+    """Upload a video. With publish_at (RFC3339 UTC), uploads PRIVATE and lets
+    YouTube auto-publish at that time — the platform holds the release queue."""
     label = "Short" if is_short else "Video"
-    print(f"\n  📤 {label} → YouTube...", end=" ")
+    when = f" (scheduled {publish_at})" if publish_at else ""
+    print(f"\n  📤 {label} → YouTube{when}...", end=" ")
     try:
         from googleapiclient.discovery import build
         from googleapiclient.http import MediaFileUpload
@@ -868,12 +871,14 @@ def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3):
                            "tags":clean_tags,"categoryId":"28",
                            "defaultLanguage":"en","defaultAudioLanguage":"en"},
                 "status":{"privacyStatus":"public","selfDeclaredMadeForKids":False}}
-        # YouTube's synthetic-media disclosure is REQUIRED only for realistic
-        # altered content (fabricated people/events). Narrated explainers over
-        # licensed stock footage don't meet that bar, and the "AI" badge costs
-        # viewer trust — so disclosure is opt-in via config.
-        if fv.flag("declare_synthetic_media", False):
-            body["status"]["containsSyntheticMedia"] = True
+        # HARD RULE: containsSyntheticMedia stays OFF. YouTube requires that
+        # disclosure only for realistic altered content (fabricated people or
+        # events); narrated explainers over licensed stock footage do not meet
+        # that bar, and the "AI" badge suppresses click-through. If the channel
+        # ever ships realistic synthetic VISUALS, revisit this line.
+        if publish_at:
+            body["status"]["privacyStatus"] = "private"
+            body["status"]["publishAt"] = str(publish_at)
 
         for attempt in range(retries):
             try:
@@ -914,6 +919,38 @@ def yt_upload(path, title, desc, tags, thumb=None, is_short=False, retries=3):
         return None
     except Exception as e:
         print(f"❌ {e}"); return None
+
+
+def yt_playlist_add(video_url, playlist_title):
+    """Binge architecture: put the video into its topic playlist (created on
+    first use). Playlists feed 'watch next' and lift session duration.
+    Best-effort — never fails the pipeline."""
+    try:
+        vid = video_url.split("v=")[-1].split("&")[0]
+        from googleapiclient.discovery import build
+        creds = yt_auth()
+        if not creds: return None
+        yt = build("youtube","v3",credentials=creds)
+        pid = None
+        resp = yt.playlists().list(part="snippet", mine=True, maxResults=50).execute()
+        for p in resp.get("items", []):
+            if p["snippet"]["title"].strip().lower() == playlist_title.strip().lower():
+                pid = p["id"]; break
+        if not pid:
+            created = yt.playlists().insert(part="snippet,status", body={
+                "snippet": {"title": playlist_title,
+                            "description": f"{playlist_title} — {BRAND}"},
+                "status": {"privacyStatus": "public"}}).execute()
+            pid = created["id"]
+            print(f"  📚 Created playlist: {playlist_title}")
+        yt.playlistItems().insert(part="snippet", body={
+            "snippet": {"playlistId": pid,
+                        "resourceId": {"kind": "youtube#video", "videoId": vid}}}).execute()
+        print(f"  📚 Added to playlist: {playlist_title}")
+        return True
+    except Exception as e:
+        print(f"  📚 Playlist skipped ({str(e)[:120]})")
+        return None
 
 
 def yt_comment(video_url, text):

@@ -155,14 +155,44 @@ def build_ass(words, out_ass: str, play_w: int = 1280, play_h: int = 720,
     return out_ass
 
 
-def burn_ass(video: str, ass: str) -> str:
-    """Burn an ASS subtitle file into the video (cwd-relative to dodge Windows path bugs)."""
+def _citation_filters(citations, ass_dir: Path) -> str:
+    """drawtext chain for on-screen source chips: [(start, end, text), ...].
+    Rendered top-right during fact delivery — credibility on screen, not just in
+    the description. Uses the same cwd-relative fontfile trick as the Shorts."""
+    if not citations:
+        return ""
+    font = fv.ASSETS / "fonts" / "short.ttf"
+    if not font.exists():
+        return ""
+    try:
+        # ffmpeg needs the font reachable from the ass cwd; copy it next to the .ass
+        target = ass_dir / "cite.ttf"
+        if not target.exists():
+            import shutil as _sh
+            _sh.copy(str(font), str(target))
+    except Exception:
+        return ""
+    parts = []
+    for (st, en, text) in citations:
+        t = (str(text).replace("\\", "").replace("'", "").replace('"', "")
+                      .replace(":", "\\:").replace("%", "%%"))[:48]
+        parts.append(
+            f"drawtext=fontfile=cite.ttf:text='{t}':fontsize=26:fontcolor=white@0.85:"
+            f"box=1:boxcolor=black@0.45:boxborderw=10:x=w-text_w-28:y=34:"
+            f"enable='between(t,{st:.2f},{en:.2f})'")
+    return "," + ",".join(parts)
+
+
+def burn_ass(video: str, ass: str, citations=None) -> str:
+    """Burn karaoke captions (plus optional on-screen source citations) into the
+    video (cwd-relative to dodge Windows path bugs)."""
     out = str(video).replace(".mp4", "_cap.mp4")
     ap = Path(ass)
     ff = fv.FFMPEG or "ffmpeg"
     try:
+        vf = f"ass={ap.name}" + _citation_filters(citations, ap.parent)
         r = subprocess.run(
-            [ff, "-y", "-i", str(video), "-vf", f"ass={ap.name}",
+            [ff, "-y", "-i", str(video), "-vf", vf,
              "-c:v", "libx264", "-preset", "fast", "-crf", "21",
              "-c:a", "copy", "-movflags", "+faststart", out],
             cwd=str(ap.parent), capture_output=True, text=True, timeout=1800)

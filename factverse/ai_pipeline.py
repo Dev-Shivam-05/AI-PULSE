@@ -44,6 +44,8 @@ from factverse import branding
 from factverse import voice
 from factverse import tts_kokoro
 from factverse import thumbnail
+from factverse import infographics
+from factverse import scheduling
 from factverse import shorts as shorts_mod
 from factverse.intelligence import signal_engine
 
@@ -184,7 +186,11 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
         narration = str(sc.get("narration", "")).strip()
         vq = str(sc.get("visual_query", "")).strip() or "computer technology"
         if narration:
-            scenes.append({"scene_num": len(scenes) + 1, "narration": narration, "visual_query": vq})
+            entry = {"scene_num": len(scenes) + 1, "narration": narration, "visual_query": vq}
+            spk = str(sc.get("speaker", "")).strip().lower()
+            if spk in ("host", "analyst"):
+                entry["speaker"] = spk
+            scenes.append(entry)
     if len(scenes) < 5:
         return None
     s["scenes"] = scenes
@@ -303,12 +309,23 @@ def script_news(item: dict, viral_hint: tuple | None = None) -> dict | None:
             angle_block = (f"\nEDITORIAL ANGLE (lean into this — it is why the story can go viral):"
                            f"\n- Angle: {angle}\n- Opening-line idea: {hook_idea}\n"
                            f"(Stay accurate; the angle sharpens the framing, it never invents facts.)\n")
+    dialogue_block = ""
+    if fv.flag("dialogue_news", True):
+        dialogue_block = """
+FORMAT — TWO-VOICE SHOW (Host + Analyst):
+- Write it as a natural conversation. Add a "speaker" field to every scene:
+  "host" (curious, sharp, asks what the audience is thinking, reacts honestly) or
+  "analyst" (calm expert, delivers the facts and the so-what).
+- Alternate naturally every 1-3 scenes — real back-and-forth, not a rigid ping-pong.
+- Scene 1 is the HOST cold-opening with the hook. The analyst NEVER greets; they answer.
+- No names, no "welcome" — they talk to each other like smart friends mid-conversation.
+"""
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, an authoritative faceless AI/tech
 YouTube channel. Write an ENGAGING but strictly ACCURATE explainer on this real development.
 
 HEADLINE: {title}
 SOURCE: {source}  ({url})
-{ground_block}{angle_block}
+{ground_block}{angle_block}{dialogue_block}
 ACCURACY RULES:
 - Attribute uncertain claims ("according to {source}"). Never invent numbers or quotes.
 - Spend at least a third of the video on WHY THIS MATTERS to a curious general-tech viewer:
@@ -488,7 +505,27 @@ Return ONLY the full expanded JSON (same schema)."""
 
 
 # --------------------------------------------------------------- voice
-def synthesize_voice(narration: str):
+def _dialogue_segments(script: dict, narration: str):
+    """(voice, text) segments for the two-voice show; None when not a dialogue."""
+    scenes = script.get("scenes", [])
+    if not any(sc.get("speaker") for sc in scenes):
+        return None
+    host = fv.KOKORO_VOICE
+    analyst = str(fv.setting("kokoro_voice_analyst", "am_michael"))
+    segs, cur_v, cur_t = [], None, []
+    for sc in scenes:
+        v = analyst if sc.get("speaker") == "analyst" else host
+        if v != cur_v and cur_t:
+            segs.append((cur_v, " . . . ".join(cur_t)))
+            cur_t = []
+        cur_v = v
+        cur_t.append(sc.get("narration", ""))
+    if cur_t:
+        segs.append((cur_v, " . . . ".join(cur_t)))
+    return segs if len(segs) > 1 else None
+
+
+def synthesize_voice(narration: str, script: dict | None = None):
     """Provider chain: clone (local, non-commercial!) / kokoro -> edge. Returns (audio, words|None)."""
     provider = (str(fv.TTS_PROVIDER) or "kokoro").lower()
 
@@ -501,6 +538,13 @@ def synthesize_voice(narration: str):
 
     if provider in ("kokoro", "clone"):
         if tts_kokoro.available():
+            segs = _dialogue_segments(script or {}, narration)
+            if segs:
+                print(f"  🎙️  Two-voice show: host '{fv.KOKORO_VOICE}' + analyst "
+                      f"'{fv.setting('kokoro_voice_analyst', 'am_michael')}' ({len(segs)} turns)...")
+                out = tts_kokoro.synth_multi(segs, str(fv.TEMP / "voice.wav"))
+                if out:
+                    return out, None
             print(f"  🎙️  Kokoro voice '{fv.KOKORO_VOICE}' (free, neural, local)...")
             out = tts_kokoro.synth(narration, str(fv.TEMP / "voice.wav"))
             if out:
@@ -620,6 +664,20 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
 MIN_WORDS = {"news": 850, "evergreen": 1000, "roundup": 800}
 MAX_OVERLAP = 0.08
 
+# binge sequencing: every long-form belongs to exactly one topic playlist
+PLAYLIST_BY_FORMAT = {"news": "AI News, Decoded",
+                      "evergreen": "How AI Actually Works",
+                      "roundup": "Weekly AI Roundup"}
+
+
+def _last_published_url() -> str:
+    """Most recent published long-form URL — the previous link in the chain."""
+    log = _read_json(fv.BASE / "output" / "production_log.json", [])
+    for e in reversed(log):
+        if e.get("youtube_url"):
+            return str(e["youtube_url"])
+    return ""
+
 
 def already_published_today() -> bool:
     """Idempotence guard: exactly ONE published video per UTC day, no matter how
@@ -698,8 +756,18 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
     scene_clips = eng.step3_download(script)
 
+    # info-dense motion graphics: stat scenes lead with a generated card, not stock
+    src_domain = ""
+    if script.get("source_url"):
+        try:
+            from urllib.parse import urlparse
+            src_domain = urlparse(script["source_url"]).netloc.replace("www.", "")
+        except Exception:
+            src_domain = ""
+    infographics.inject_cards(script, scene_clips, source_domain=src_domain)
+
     print("\n[4/10] 🎙️ Voiceover...")
-    audio, edge_words = synthesize_voice(narration)
+    audio, edge_words = synthesize_voice(narration, script)
     if not audio:
         print("  ❌ Voice step failed.")
         record_run(status="VOICE_FAILED", format=fmt, title=script["title"])
@@ -735,7 +803,16 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
 
     print("  📝 Burning live word-by-word captions...")
     ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"), play_w=eng.WIDTH, play_h=eng.HEIGHT)
-    video = captions.burn_ass(video, ass)
+    # on-screen source chips during fact delivery (content timeline; frames carry
+    # the overlay through the cold-open re-order untouched)
+    cites = []
+    if starts and len(starts) >= 6:
+        chip = f"Source: {src_domain}" if src_domain else (
+            "Sources in description" if script.get("format") == "roundup" else "")
+        if chip:
+            for i in (1, len(starts) // 2, len(starts) - 2):
+                cites.append((starts[i] + 0.4, starts[i] + 6.4, chip))
+    video = captions.burn_ass(video, ass, citations=cites)
 
     print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
     video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
@@ -758,6 +835,13 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     status, yt_url, yt_shorts = "RENDER_ONLY", None, []
     if publish and fv.flag("auto_upload_youtube"):
         print("\n  📤 Publishing...")
+        # chain design: the description carries a watch-next link to the previous
+        # episode; comments stitch the chain in both directions after upload
+        prev_url = _last_published_url()
+        if prev_url:
+            script["description"] = (script["description"].rstrip()
+                                     + f"\n\n▶ Watch next: {prev_url}")
+
         yt_url = eng.yt_upload(video, script["title"], script["description"],
                                script.get("tags", []), thumb)
         if not yt_url:
@@ -765,13 +849,26 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             eng.save_report(script, video, shorts, thumb, meta, None, [], status="UPLOAD_FAILED")
             record_run(status="UPLOAD_FAILED", format=fmt, title=script["title"])
             return None
+
+        # binge architecture: every long-form lands in exactly one topic playlist
+        eng.yt_playlist_add(yt_url, PLAYLIST_BY_FORMAT.get(script.get("format", fmt),
+                                                           "AI News, Decoded"))
         eng.yt_comment(yt_url, "Sources are in the description. What's your take — "
-                               "hype or turning point? 👇")
+                               "hype or turning point? 👇"
+                               + (f"\n\nMissed the last one: {prev_url}" if prev_url else ""))
+        if prev_url:
+            eng.yt_comment(prev_url, f"📢 The next episode is live: {yt_url}")
+
+        # spaced Shorts drops: upload now, YouTube publishes on the 4h+ grid
+        slots = scheduling.next_slots(len(shorts)) if shorts else []
+        scheduling.validate_shorts_batch(
+            shorts, [m.get("title", "") for m in meta[:len(shorts)]] or ["x"] * len(shorts))
         for i, sp in enumerate(shorts):
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
             u = eng.yt_upload(sp, mi.get("title", script["title"] + " #Shorts"),
-                              sd, script.get("tags", []) + ["Shorts"], is_short=True)
+                              sd, script.get("tags", []) + ["Shorts"], is_short=True,
+                              publish_at=(slots[i] if i < len(slots) else None))
             if u:
                 yt_shorts.append(u)
                 # visible path from the Short to the full video (description links

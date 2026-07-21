@@ -99,22 +99,34 @@ def _chunks(text: str) -> list[str]:
 
 def synth(text: str, out_wav: str, voice: str | None = None, speed: float | None = None):
     """Synthesize `text` to out_wav in the Kokoro voice. Returns out_wav or None."""
+    return synth_multi([(voice or fv.KOKORO_VOICE, text)], out_wav, speed=speed)
+
+
+def synth_multi(segments: list, out_wav: str, speed: float | None = None):
+    """Multi-voice synthesis: segments = [(voice, text), ...] concatenated with
+    natural gaps. Powers the Host + Analyst dialogue format. Returns path or None."""
     try:
         import numpy as np
         import soundfile as sf
 
         kokoro = _get()
-        voice = voice or fv.KOKORO_VOICE
         speed = float(speed or fv.VOICE_SPEED)
         pieces, rate = [], 24000
-        chunks = _chunks(text)
-        if not chunks:
+        wrote = False
+        for si, (voice, text) in enumerate(segments):
+            chunks = _chunks(text or "")
+            for i, chunk in enumerate(chunks):
+                samples, rate = kokoro.create(chunk, voice=voice or fv.KOKORO_VOICE,
+                                              speed=speed, lang="en-us")
+                pieces.append(samples)
+                wrote = True
+                if i < len(chunks) - 1:
+                    pieces.append(np.zeros(int(_GAP_SECONDS * rate), dtype=samples.dtype))
+            if wrote and si < len(segments) - 1:
+                # slightly longer beat on a speaker change reads as conversation
+                pieces.append(np.zeros(int(0.30 * rate), dtype=pieces[-1].dtype))
+        if not wrote:
             return None
-        for i, chunk in enumerate(chunks):
-            samples, rate = kokoro.create(chunk, voice=voice, speed=speed, lang="en-us")
-            pieces.append(samples)
-            if i < len(chunks) - 1:
-                pieces.append(np.zeros(int(_GAP_SECONDS * rate), dtype=samples.dtype))
         sf.write(out_wav, np.concatenate(pieces), rate)
         return out_wav
     except Exception as e:
