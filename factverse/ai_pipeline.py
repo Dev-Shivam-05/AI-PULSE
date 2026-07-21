@@ -16,7 +16,7 @@ Safety rails (YouTube's 2025 "inauthentic content" policy is the #1 threat):
   * every script passes a critique/retention rewrite pass (originality + hooks)
   * a verbatim-overlap gate blocks scripts that copy their source article
   * a render QA gate blocks broken/silent/truncated videos from publishing
-  * uploads carry the synthetic-media disclosure flag
+  * synthetic-media disclosure per POLICY.md (off for narrated-stock content)
   * topics are only marked "used" after the video actually succeeds
 
 Run:
@@ -46,6 +46,8 @@ from factverse import tts_kokoro
 from factverse import thumbnail
 from factverse import infographics
 from factverse import scheduling
+from factverse import gates
+from factverse import l2
 from factverse import shorts as shorts_mod
 from factverse.intelligence import signal_engine
 
@@ -188,8 +190,11 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
         if narration:
             entry = {"scene_num": len(scenes) + 1, "narration": narration, "visual_query": vq}
             spk = str(sc.get("speaker", "")).strip().lower()
-            if spk in ("host", "analyst"):
-                entry["speaker"] = spk
+            # neutral narration roles only (Bucket 3); legacy values map across
+            if spk in ("a", "host"):
+                entry["speaker"] = "a"
+            elif spk in ("b", "analyst"):
+                entry["speaker"] = "b"
             scenes.append(entry)
     if len(scenes) < 5:
         return None
@@ -212,6 +217,8 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
         if b not in existing and len(s["tags"]) < 28:
             s["tags"].append(b)
     s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
+    s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
+    s["filter_segment"] = any(sc.get("filter") for sc in (s.get("scenes") or []))
     s["source_url"] = source_url
     return s
 
@@ -240,20 +247,25 @@ _RETENTION_RULES = """RETENTION ENGINEERING (non-negotiable):
 
 def _output_contract(scene_range: str, words_per_scene: str) -> str:
     return f"""OUTPUT FIELDS:
-- titles: 3 DIFFERENT title options, each <=70 chars, curiosity + the key concrete noun,
-  keyword near the front, no clickbait lies.
+- titles: 3 DIFFERENT title options, each <=60 chars, the key ENTITY (model/company/tool name)
+  in the first 30 chars, ONE concrete number where honest, consequence framing over event
+  framing, never all-caps, no clickbait lies.
 - title: the strongest of the 3.
 - thumb_text: 2-4 PUNCHY words for the thumbnail (NOT the title — e.g. "CHEAPER THAN GPT?",
   "NO MORE CODERS?", "10X FASTER").
 - description: 150+ words; first 2 lines = hook + main keyword; 5-7 hashtags incl. #AI; end with
   "Subscribe to {fv.CHANNEL_NAME}".
-- tags: ~18 relevant tags.
+- tags: 8-12 relevant tags.
+- synthesis_claim: ONE sentence stating an insight, connection, or implication that is YOURS —
+  NOT stated in any source. This is mandatory; a video without genuine synthesis is not ready.
 - scenes: {scene_range} scenes, {words_per_scene} words each. Each scene: scene_num, narration,
-  visual_query.
+  visual_query. Include one mid-video FILTER segment (what does NOT matter and why) — mark that
+  scene with "filter": true.
 
 Return ONLY JSON:
 {{"titles":["..."],"title":"...","thumb_text":"...","description":"...","tags":["..."],
-"scenes":[{{"scene_num":1,"narration":"...","visual_query":"..."}}]}}"""
+"synthesis_claim":"...",
+"scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
 
 
 # --------------------------------------------------------------- virality judge
@@ -294,9 +306,14 @@ Return ONLY JSON, every story included, best first:
 
 
 # --------------------------------------------------------------- format: news
-def script_news(item: dict, viral_hint: tuple | None = None) -> dict | None:
+def script_news(item: dict, viral_hint: tuple | None = None,
+                hook_pattern: str | None = None) -> dict | None:
     title, source, url = item["title"], item["source"], item.get("url", "")
     grounding = fetch_text(url)
+    hook_block = ""
+    if hook_pattern in gates.HOOK_PATTERN_PROMPTS:
+        hook_block = (f"\nHOOK STRUCTURE (rotates daily so openings never repeat): "
+                      f"{gates.HOOK_PATTERN_PROMPTS[hook_pattern]}\n")
     ground_block = (
         f"\nSOURCE EXCERPT (ground every claim in this; NEVER copy sentences verbatim — always "
         f"rephrase in your own spoken words):\n{grounding}\n"
@@ -311,21 +328,26 @@ def script_news(item: dict, viral_hint: tuple | None = None) -> dict | None:
                            f"(Stay accurate; the angle sharpens the framing, it never invents facts.)\n")
     dialogue_block = ""
     if fv.flag("dialogue_news", True):
+        # POLICY NOTE (Bucket 3): the voices are NARRATORS, never personas implying
+        # human expertise or credentials. Reporting and explanation only — no roles
+        # like "analyst"/"expert", no advice framing anywhere.
         dialogue_block = """
-FORMAT — TWO-VOICE SHOW (Host + Analyst):
-- Write it as a natural conversation. Add a "speaker" field to every scene:
-  "host" (curious, sharp, asks what the audience is thinking, reacts honestly) or
-  "analyst" (calm expert, delivers the facts and the so-what).
+FORMAT — TWO-VOICE NARRATION:
+- Write it as a natural conversation between two NARRATORS (no names, no titles, no
+  credentials — they are voices of the channel, not experts). Add a "speaker" field to
+  every scene: "a" (drives the story, asks what the audience is thinking) or
+  "b" (delivers the facts, sources, and context).
 - Alternate naturally every 1-3 scenes — real back-and-forth, not a rigid ping-pong.
-- Scene 1 is the HOST cold-opening with the hook. The analyst NEVER greets; they answer.
-- No names, no "welcome" — they talk to each other like smart friends mid-conversation.
+- Scene 1 is voice "a" cold-opening with the hook. Voice "b" NEVER greets; they answer.
+- The narrators REPORT and EXPLAIN. They never advise viewers what to do with money,
+  health, legal, or political decisions, and never present themselves as experts.
 """
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, an authoritative faceless AI/tech
 YouTube channel. Write an ENGAGING but strictly ACCURATE explainer on this real development.
 
 HEADLINE: {title}
 SOURCE: {source}  ({url})
-{ground_block}{angle_block}{dialogue_block}
+{ground_block}{angle_block}{dialogue_block}{hook_block}
 ACCURACY RULES:
 - Attribute uncertain claims ("according to {source}"). Never invent numbers or quotes.
 - Spend at least a third of the video on WHY THIS MATTERS to a curious general-tech viewer:
@@ -465,7 +487,7 @@ Return ONLY the full corrected JSON (same schema)."""
         # an "improvement" that compresses the video is a regression — watch time is the product
         if (improved and len(improved["scenes"]) >= max(5, len(script["scenes"]) - 4)
                 and new_words >= old_words * 0.75):
-            for carry in ("format", "grounding", "roundup_items", "signal_title"):
+            for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern"):
                 if carry in script:
                     improved[carry] = script[carry]
             print("  ✍️  Critique pass applied.")
@@ -494,7 +516,7 @@ Return ONLY the full expanded JSON (same schema)."""
         if bigger:
             new_words = sum(len(sc["narration"].split()) for sc in bigger["scenes"])
             if new_words > words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title"):
+                for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern"):
                     if carry in script:
                         bigger[carry] = script[carry]
                 print(f"  ✍️  Expanded {words} -> {new_words} words.")
@@ -510,11 +532,11 @@ def _dialogue_segments(script: dict, narration: str):
     scenes = script.get("scenes", [])
     if not any(sc.get("speaker") for sc in scenes):
         return None
-    host = fv.KOKORO_VOICE
-    analyst = str(fv.setting("kokoro_voice_analyst", "am_michael"))
+    voice_a = fv.KOKORO_VOICE
+    voice_b = str(fv.setting("kokoro_voice_b", fv.setting("kokoro_voice_analyst", "am_michael")))
     segs, cur_v, cur_t = [], None, []
     for sc in scenes:
-        v = analyst if sc.get("speaker") == "analyst" else host
+        v = voice_b if sc.get("speaker") in ("b", "analyst") else voice_a
         if v != cur_v and cur_t:
             segs.append((cur_v, " . . . ".join(cur_t)))
             cur_t = []
@@ -540,8 +562,7 @@ def synthesize_voice(narration: str, script: dict | None = None):
         if tts_kokoro.available():
             segs = _dialogue_segments(script or {}, narration)
             if segs:
-                print(f"  🎙️  Two-voice show: host '{fv.KOKORO_VOICE}' + analyst "
-                      f"'{fv.setting('kokoro_voice_analyst', 'am_michael')}' ({len(segs)} turns)...")
+                print(f"  🎙️  Two-voice narration ({len(segs)} turns)...")
                 out = tts_kokoro.synth_multi(segs, str(fv.TEMP / "voice.wav"))
                 if out:
                     return out, None
@@ -632,6 +653,7 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         print("  🗞️  Weekly roundup from", len(ranked), "candidates")
         return script_roundup(ranked)
     if fmt == "news":
+        pattern = gates.pick_hook_pattern(_recent_hook_patterns())
         # hottest story first, then ranking order
         order = list(ranked)
         if viral_hint and viral_hint[0] in order:
@@ -639,10 +661,11 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             order.insert(0, viral_hint[0])
         for i, cand in enumerate(order[:3]):
             hint = viral_hint if (viral_hint and cand is viral_hint[0]) else None
-            print(f"  📰 Trying: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
-            s = script_news(cand, viral_hint=hint)
+            print(f"  📰 Trying: {cand['title'][:70]}  (fit={cand.get('fit_score')}, hook={pattern})")
+            s = script_news(cand, viral_hint=hint, hook_pattern=pattern)
             if s:
                 s["signal_title"] = cand["title"]
+                s["hook_pattern"] = pattern
                 return s
             mark_failed(cand["title"])
             print("     ↻ script failed, trying next story...")
@@ -677,6 +700,70 @@ def _last_published_url() -> str:
         if e.get("youtube_url"):
             return str(e["youtube_url"])
     return ""
+
+
+def _recent_hook_patterns(n: int = 6) -> list[str]:
+    out = []
+    try:
+        for line in RUNS_LOG.read_text(encoding="utf-8").splitlines()[-40:]:
+            try:
+                d = json.loads(line)
+                if d.get("hook_pattern"):
+                    out.append(str(d["hook_pattern"]))
+            except json.JSONDecodeError:
+                continue
+    except OSError:
+        pass
+    return out[-n:]
+
+
+def _notify_review(script: dict, thumb, yt_url: str, publish_at: str, conf: dict) -> None:
+    """The veto window: a NOTIFY-routed asset is scheduled (private + publishAt)
+    and the operator gets a review issue. No action → publishes on schedule;
+    veto → set the video private/edit in Studio before the slot fires."""
+    import os
+    body = (f"Scheduled: {publish_at}\nVideo: {yt_url}\nConfidence: {conf['score']} "
+            f"{conf['components']}\n\nTitle: {script.get('title')}\n"
+            f"Thumb text: {script.get('thumb_text')}\n"
+            f"Synthesis claim: {script.get('synthesis_claim')}\n\n"
+            f"To veto: open YouTube Studio before the publish time and set the video "
+            f"to Private, or edit title/thumbnail directly.")
+    token, repo = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
+    if token and repo:
+        try:
+            requests.post(f"https://api.github.com/repos/{repo}/issues",
+                          headers={"Authorization": f"Bearer {token}",
+                                   "Accept": "application/vnd.github+json"},
+                          json={"title": f"👀 Review before publish — {script.get('title', '')[:60]}",
+                                "body": body}, timeout=30)
+            print("  👀 Review issue opened (veto window active).")
+            return
+        except Exception as e:
+            print(f"   ⚠️ review notify failed: {e}")
+    print("  👀 REVIEW WINDOW:\n" + body)
+
+
+def _save_asset_record(script, fc, syn, rep, conf, l2_rec) -> None:
+    """Persist the small per-asset artifacts (script, claims, gate results) into
+    the committed asset store — the originality dossier and the input for future
+    dubbing/re-cuts. Audio/masters stay local (too large for the repo)."""
+    try:
+        aid = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+        d = fv.STATE / "assets" / aid
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "script.json").write_text(
+            json.dumps({k: v for k, v in script.items() if k != "grounding"},
+                       ensure_ascii=False, indent=2), encoding="utf-8")
+        (d / "gates.json").write_text(
+            json.dumps({"factcheck": fc, "synthesis": syn, "replication": rep,
+                        "confidence": conf, "l2": l2_rec}, ensure_ascii=False, indent=2),
+            encoding="utf-8")
+        # word alignment (if present this run) enables re-dubbing later
+        src = fv.TEMP / "captions.ass"
+        if src.exists():
+            (d / "captions.ass").write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+    except Exception as e:
+        print(f"   ⚠️ asset store save failed: {e}")
 
 
 def already_published_today() -> bool:
@@ -753,6 +840,53 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         mark_failed(script.get("signal_title", script["title"]))
         return None
 
+    # Bucket-3 gate: reporting is allowed; ADVISING viewers on finance/health/legal/
+    # politics is a hard fail. One rewrite attempt, then abort loudly.
+    adv = gates.advice_framing(narration)
+    if adv.get("advice"):
+        print(f"  🛑 ADVICE-FRAMING GATE: {adv.get('evidence', '')!r} — rewriting...")
+        fixed = llm.generate_json(
+            "Rewrite this video script JSON to REMOVE all prescriptive advice to viewers about "
+            "finance, health, legal, or political action. Report and explain; never tell viewers "
+            "what they should do. Keep the same JSON schema and all other content.\n\n"
+            + json.dumps({k: script[k] for k in ("title", "thumb_text", "description", "tags",
+                                                 "synthesis_claim", "scenes") if k in script},
+                         ensure_ascii=False), max_tokens=8192, temperature=0.3)
+        fixed = _validate_script(fixed, script["title"], script.get("source_url", ""))
+        if fixed:
+            for carry in ("format", "grounding", "roundup_items", "signal_title"):
+                if carry in script:
+                    fixed[carry] = script[carry]
+            script = fixed
+            narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+        if gates.advice_framing(narration).get("advice"):
+            print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
+            record_run(status="ADVICE_BLOCKED", format=fmt, title=script["title"])
+            mark_failed(script.get("signal_title", script["title"]))
+            return None
+
+    # Accuracy gate: claim-level fact check against the bound sources. A hook/
+    # thumbnail claim that cannot be traced to a source is a hard fail.
+    fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
+                          script.get("grounding", ""))
+    if not fc.get("passed", True):
+        print(f"  🛑 FACT-CHECK GATE: critical claim unsupported: "
+              f"{[c['text'][:80] for c in fc['critical_failures']]}")
+        record_run(status="FACTCHECK_BLOCKED", format=fmt, title=script["title"],
+                   factcheck=fc)
+        mark_failed(script.get("signal_title", script["title"]))
+        return None
+    if fc.get("soft_failures"):
+        print(f"  ⚠️ {len(fc['soft_failures'])} soft claim(s) unsupported — confidence reduced.")
+
+    # Originality gates (the monetization-policy clause, machine-checkable)
+    syn = gates.verify_synthesis(script, script.get("grounding", ""))
+    rep = gates.replication_test(script, script.get("grounding", ""))
+    if not syn.get("present"):
+        print("  ⚠️ No synthesis claim in script — confidence reduced (O2).")
+    if not rep.get("passed", True):
+        print("  ⚠️ Replication test failed — script derivable from sources alone (O3).")
+
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
     scene_clips = eng.step3_download(script)
 
@@ -799,7 +933,12 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
     thumb = (thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
              or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
-    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts)
+    # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
+    # units freed, one fewer templated upload in the channel-level pattern.
+    # Revisit only if Shorts→long CTR sustains >6% for 30 days.
+    shorts_n = int(fv.setting("shorts_per_day", 2))
+    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
+                                    max_count=min(shorts_n, 4))
 
     print("  📝 Burning live word-by-word captions...")
     ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"), play_w=eng.WIDTH, play_h=eng.HEIGHT)
@@ -817,24 +956,62 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
     video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
 
+    # L2 human editorial injection: real cold open at 0:00, insight block before
+    # the final scene — the policy's "creator's original insight", batched weekly.
+    intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
+    insight_at = (starts[-1] + intro_shift) if starts else None
+    video, l2_rec = l2.inject(video, insight_at)
+    if fv.flag("require_insight_block", False) and not l2_rec.get("insight"):
+        print("  🛑 O1 GATE: insight block required and missing. Publishing nothing is better.")
+        record_run(status="INSIGHT_MISSING", format=fmt, title=script["title"])
+        return None
+
     if not qa_video(video, audio_dur):
         mark_failed(script.get("signal_title", script["title"]))
         record_run(status="QA_FAILED", format=fmt, title=script["title"])
         return None
 
-    # chapters on the FINAL timeline (cold-open inserts the intro after scene 1)
+    # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
     if starts:
-        intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
-        chapters = build_chapters(script, starts, intro_shift)
+        cold_shift = l2._dur(fv.TEMP / "l2_cold.mp4") if l2_rec.get("cold_open") else 0.0
+        chapters = build_chapters(script, starts, intro_shift + cold_shift)
         if chapters:
             script["description"] = script["description"].rstrip() + "\n\n" + chapters
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
     meta = eng.step8_meta(script, len(shorts))
 
+    # ---- confidence router: auto / notify(veto window) / hold ----------------
+    stat_share = 0.0
+    if durs:
+        card_scenes = {i for i in range(len(scene_clips))
+                       if any("statcard" in str(c) for c in scene_clips[i])}
+        stat_share = sum(durs[i] for i in card_scenes) / max(1.0, sum(durs))
+    conf = gates.confidence({
+        "format": 1.0 if (10 <= len(script["scenes"]) <= 24 and words_total >= 700) else 0.6,
+        "novelty": 0.9 if not too_many_failures(script.get("signal_title", "")) else 0.4,
+        "facts": 0.0 if not fc.get("passed", True) else max(0.2, 1.0 - 0.2 * len(fc.get("soft_failures", []))),
+        "packaging": (0.9 if len(script["title"]) <= 60 else 0.6)
+                     * (1.0 if script.get("thumb_text") else 0.7),
+        "policy": 0.0 if adv.get("advice") else
+                  (0.55 if gates.sensitive_topic_risk(script["title"], narration[:1500]) else 1.0)
+                  * (1.0 if (syn.get("present") and rep.get("passed", True)) else 0.75)
+                  * (1.0 if l2_rec.get("insight") else 0.8),
+    })
+    print(f"  🧭 Confidence {conf['score']:.2f} → {conf['routing'].upper()}")
+
     status, yt_url, yt_shorts = "RENDER_ONLY", None, []
+    long_publish_at = None
     if publish and fv.flag("auto_upload_youtube"):
+        if conf["routing"] == "hold" and not __import__("os").environ.get("FORCE_PUBLISH"):
+            print("  🛑 ROUTER HOLD: confidence below floor — publishing nothing is better.")
+            eng.save_report(script, video, shorts, thumb, meta, None, [], status="HELD")
+            record_run(status="HELD", format=fmt, title=script["title"], confidence=conf)
+            return None
+
         print("\n  📤 Publishing...")
+        # decouple render from publish: upload private, publish at the fixed slot
+        long_publish_at = scheduling.long_slot()
         # chain design: the description carries a watch-next link to the previous
         # episode; comments stitch the chain in both directions after upload
         prev_url = _last_published_url()
@@ -843,12 +1020,15 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                                      + f"\n\n▶ Watch next: {prev_url}")
 
         yt_url = eng.yt_upload(video, script["title"], script["description"],
-                               script.get("tags", []), thumb)
+                               script.get("tags", []), thumb, publish_at=long_publish_at)
         if not yt_url:
             print("  ❌ Long-form upload failed — keeping topic unburned, failing the run.")
             eng.save_report(script, video, shorts, thumb, meta, None, [], status="UPLOAD_FAILED")
             record_run(status="UPLOAD_FAILED", format=fmt, title=script["title"])
             return None
+
+        if conf["routing"] == "notify":
+            _notify_review(script, thumb, yt_url, long_publish_at, conf)
 
         # binge architecture: every long-form lands in exactly one topic playlist
         eng.yt_playlist_add(yt_url, PLAYLIST_BY_FORMAT.get(script.get("format", fmt),
@@ -859,8 +1039,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         if prev_url:
             eng.yt_comment(prev_url, f"📢 The next episode is live: {yt_url}")
 
-        # spaced Shorts drops: upload now, YouTube publishes on the 4h+ grid
-        slots = scheduling.next_slots(len(shorts)) if shorts else []
+        # funnel Shorts: first lands ~2h after the long-form publish, the rest on
+        # the 4h grid; validated against the immutable distribution rules
+        slots = scheduling.shorts_slots_after_long(len(shorts), long_publish_at) if shorts else []
         scheduling.validate_shorts_batch(
             shorts, [m.get("title", "") for m in meta[:len(shorts)]] or ["x"] * len(shorts))
         for i, sp in enumerate(shorts):
@@ -883,11 +1064,21 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     for it in script.get("roundup_items", []):
         mark_used(it["title"], it.get("url", ""))
 
+    # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
+    _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+
     report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts_rendered=len(shorts),
-               viral_score=(viral[1] if viral else None))
+               viral_score=(viral[1] if viral else None),
+               hook_pattern=script.get("hook_pattern"),
+               synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
+               replication_passed=rep.get("passed", True),
+               confidence=conf, stat_card_share=round(stat_share, 3),
+               insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
+               publish_at=long_publish_at,
+               quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
     eng.cleanup()
     print(f"\n  ✅ DONE [{status}] → {video}")
     return report

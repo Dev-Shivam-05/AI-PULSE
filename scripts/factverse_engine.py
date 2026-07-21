@@ -130,95 +130,45 @@ def save_used(t):
 
 
 # ============================================================
-# STEP 1: TOPIC
-# ============================================================
-def step1_topic():
-    print("\n[1/10] 🔍 Finding viral topic...")
-    used = ", ".join(get_used()[-30:]) or "None"
-    
-    prompt = f"""YouTube strategist for "Fact Verse Official" (English facts/mystery channel).
-
-Generate ONE unique viral topic. Categories: mysterious disappearances, dark history, unexplained science, forbidden places, unsolved mysteries, mind-blowing psychology, lost civilizations, creepy real events.
-
-ALREADY USED (don't repeat): {used}
-
-Must be: fascinating, click-worthy, 8-10 min content, English audience, NOT mainstream.
-Return ONLY JSON: {{"topic":"title","angle":"unique angle","search_terms":["t1","t2","t3","t4","t5"]}}"""
-    
-    resp = gemini(prompt)
-    if resp:
-        try:
-            data = parse_json(resp)
-            if data and "topic" in data:
-                print(f"  ✅ {data['topic']}")
-                save_used(data['topic']); return data
-        except: pass
-    
-    fb = {"topic":"The Village That Vanished Overnight — 600 People Gone",
-          "angle":"Documented mass disappearances with no explanation",
-          "search_terms":["abandoned village","ghost town","mystery","empty houses","foggy landscape"]}
-    save_used(fb['topic']); print(f"  ✅ {fb['topic']}"); return fb
-
-
-# ============================================================
-# STEP 2: SCRIPT
-# ============================================================
-def step2_script(topic):
-    print("\n[2/10] ✍️ Writing viral script...")
-    
-    prompt = f"""ELITE YouTube scriptwriter for "Fact Verse Official".
-
-Topic: {topic['topic']}
-Angle: {topic['angle']}
-
-TITLE: Under 60 chars. Power words (Secret, Hidden, Terrifying, Impossible). Extreme curiosity gap.
-
-DESCRIPTION: 200+ words. First 2 lines = hook + keyword. Timestamps every 2 min. "Subscribe to Fact Verse Official!" End with #FactVerse #Facts #Mystery
-
-TAGS: Exactly 20 tags. Tag 1 = title. Tags 2-8 = topic keywords. Tags 9-14 = broader (mystery, science). Tags 15-20 = branding (fact verse, facts, mind blown).
-
-VISUAL QUERIES: CRITICAL — each must be 2-3 SIMPLE words searchable on Pexels. ALL DIFFERENT. 
-Good: "ocean waves", "dark forest", "ancient temple". Bad: "VFX glitching" (no results).
-
-SCENES: 15-18 scenes. Each 50-80 words. Start with SHOCKING hook. Pattern interrupts every 60s. Build tension. Final scene = mind-blown + subscribe CTA.
-
-Return ONLY JSON:
-{{"title":"...","description":"...","tags":["tag1"..."tag20"],"scenes":[{{"scene_num":1,"narration":"50-80 words","visual_query":"2-3 words"}}]}}"""
-    
-    resp = gemini(prompt)
-    if not resp:
-        time.sleep(5); resp = gemini(prompt)
-    if not resp: return None
-    
-    try:
-        s = parse_json(resp)
-        if not s or "scenes" not in s or len(s["scenes"]) < 5: return None
-        
-        if "title" not in s: s["title"] = topic["topic"][:60]
-        if "description" not in s: s["description"] = f"Discover {topic['topic']}. Subscribe to Fact Verse Official!\n\n#FactVerse #Facts #Mystery"
-        if "tags" not in s: s["tags"] = topic.get("search_terms",["facts"])
-        
-        brand = ["fact verse","fact verse official","facts","mystery","dark history",
-                 "mind blown","education","did you know","unexplained","terrifying facts",
-                 "scary facts","unknown facts","science facts","amazing facts","shocking facts"]
-        existing = [t.lower() for t in s["tags"]]
-        for b in brand:
-            if b not in existing and len(s["tags"]) < 35: s["tags"].append(b)
-        
-        words = sum(len(sc.get("narration","").split()) for sc in s["scenes"])
-        print(f"  ✅ Title: {s['title']}")
-        print(f"  ✅ {len(s['scenes'])} scenes | {words} words | ~{words/150:.1f} min | {len(s['tags'])} tags")
-        return s
-    except: return None
-
-
-# ============================================================
 # STEP 3: DOWNLOAD STOCK VIDEOS (2 clips per scene — optimized)
 # ============================================================
 def _slug_score(v, qwords):
     """Relevance of a Pexels result: its page URL slug describes the clip's content."""
     slug = (v.get("url") or "").lower()
     return sum(1 for w in qwords if w in slug)
+
+
+# Stock no-reuse ledger: repeated identical visuals across videos are an explicitly
+# named repetition signal in the inauthentic-content policy. 30-day window, hard gate.
+_STOCK_LEDGER = fv.STATE / "stock_ledger.json"
+
+def _stock_ledger():
+    try:
+        return json.loads(_STOCK_LEDGER.read_text(encoding="utf-8")) if _STOCK_LEDGER.exists() else {}
+    except Exception:
+        return {}
+
+def _stock_recent_ids(days=30):
+    cutoff = (datetime.now().timestamp()) - days * 86400
+    out = set()
+    for k, v in _stock_ledger().items():
+        try:
+            if datetime.fromisoformat(v).timestamp() >= cutoff:
+                out.add(str(k))
+        except Exception:
+            continue
+    return out
+
+def _stock_record(ids):
+    led = _stock_ledger()
+    now = datetime.now().isoformat(timespec="seconds")
+    for i in ids:
+        led[str(i)] = now
+    # keep the ledger bounded to ~1 year of entries
+    if len(led) > 5000:
+        led = dict(sorted(led.items(), key=lambda kv: kv[1])[-4000:])
+    _STOCK_LEDGER.write_text(json.dumps(led, ensure_ascii=False), encoding="utf-8")
+
 
 def dl_clips(query, out_dir, count=2):
     downloaded = []
@@ -228,6 +178,9 @@ def dl_clips(query, out_dir, count=2):
             headers={"Authorization":PEXELS_KEY}, timeout=30)
         r.raise_for_status()
         vids = r.json().get("videos",[])
+        # hard gate: never reuse a stock asset within 30 days
+        blocked = _stock_recent_ids()
+        vids = [v for v in vids if str(v.get("id")) not in blocked]
         # relevance first (slug ↔ query overlap), variety within the top matches
         qwords = [w for w in query.lower().split() if len(w) > 2]
         vids.sort(key=lambda v: _slug_score(v, qwords), reverse=True)
@@ -236,6 +189,7 @@ def dl_clips(query, out_dir, count=2):
         vids = top + vids[len(top):]
         
         idx = 0
+        used_ids = []
         for v in vids:
             if idx >= count: break
             # smallest rendition that still covers 720p — not the UHD original
@@ -247,8 +201,11 @@ def dl_clips(query, out_dir, count=2):
                         if dr.status_code == 200 and len(dr.content) > 50000:
                             p = out_dir / f"clip_{idx}.mp4"
                             with open(p,"wb") as o: o.write(dr.content)
-                            downloaded.append(str(p)); idx += 1; break
+                            downloaded.append(str(p)); used_ids.append(v.get("id")); idx += 1; break
                     except: continue
+        if used_ids:
+            try: _stock_record(used_ids)
+            except Exception: pass
     except: pass
     return downloaded
 
@@ -536,22 +493,29 @@ def find_best_moments(script):
     print("  🧠 AI finding best moments for Shorts...")
     all_n = "\n".join(f"[Scene {i+1}]: {sc.get('narration','')}" for i,sc in enumerate(script["scenes"]))
     
-    prompt = f"""Viral Shorts expert. Find 3 MOST EXCITING moments from this script.
+    prompt = f"""Shorts funnel designer. Every Short exists to route viewers to the full video —
+pick moments and write hooks with an explicit conversion mechanism.
 
 {all_n}
 
+Pick 3 moments using these formats (in this order):
+1. THE CLIFFHANGER — a moment that poses a question the clip will NOT fully answer;
+   the full video does. Cut at maximum curiosity.
+2. THE SINGLE FACT — one surprising, verifiable, sourced fact that stands alone;
+   credibility is the conversion mechanism.
+3. THE CLIFFHANGER (different part of the video).
+
 Rules:
-- DO NOT pick Scene 1 (intro is boring for Shorts)
-- Pick SHOCKING reveals, SURPRISING facts, DRAMATIC cliffhangers
-- Each must create CURIOSITY to watch full video
+- DO NOT pick Scene 1
 - Pick from different parts: early (3-5), middle (7-10), near end (12-15)
-- Write HOOK TEXT (5-8 words) for text overlay in first 2 seconds
+- HOOK TEXT: 4-7 words, specific and concrete (a builder audience discounts hype
+  words like "insane"/"game-changing" instantly). Never overclaim.
 
 Return ONLY JSON:
 {{"moments":[
-  {{"scene_num":4,"hook_text":"Scientists couldn't explain THIS"}},
-  {{"scene_num":8,"hook_text":"Nobody survived to tell"}},
-  {{"scene_num":13,"hook_text":"The truth is TERRIFYING"}}
+  {{"scene_num":4,"format":"cliffhanger","hook_text":"The benchmark hides one number"}},
+  {{"scene_num":8,"format":"single_fact","hook_text":"54% already had an incident"}},
+  {{"scene_num":13,"format":"cliffhanger","hook_text":"Why the price drop backfires"}}
 ]}}"""
     
     resp = gemini(prompt, model="gemini-2.5-flash-lite")
@@ -1045,176 +1009,15 @@ def cleanup():
 
 
 # ============================================================
-# ████ MAIN PIPELINE ████
-# ============================================================
-def run():
-    start = time.time()
-    print("\n"+"🚀"*30)
-    print("  FACTVERSE v6.0 — GENERATING VIDEO")
-    print("🚀"*30)
-    
-    topic = step1_topic()
-    
-    script = step2_script(topic)
-    if not script:
-        time.sleep(5); script = step2_script(topic)
-    if not script: print("  ❌ Script failed"); return None
-    
-    with open(TEMP/"script.json","w",encoding="utf-8") as f:
-        json.dump(script,f,indent=2,ensure_ascii=False)
-    
-    scene_clips = step3_download(script)
-    
-    audio, srt = step4_voice(script)
-    if not audio: return None
-    
-    video = step5_build(script, scene_clips, audio, srt)
-    if not video: return None
-    
-    if srt and os.path.exists(srt):
-        video = step5b_subs(video, srt)
-    
-    shorts = step6_shorts(video, script)
-    thumb = step7_thumb(video, script.get("title","Facts"))
-    shorts_meta = step8_meta(script, len(shorts))
-    
-    print("\n[10/10] 📤 Publishing...")
-    yt_url = None
-    yt_short_urls = []
-    
-    if CONFIG.get("auto_upload_youtube", False):
-        # LONG VIDEO FIRST → get URL for Shorts
-        print("\n  📹 Long video first (for Shorts link)...")
-        yt_url = yt_upload(video, script["title"], script["description"],
-                          script.get("tags",[]), thumb)
-        time.sleep(5)
-        
-        # ALL SHORTS with link to long video
-        if shorts:
-            for i, sp in enumerate(shorts):
-                mi = shorts_meta[i] if i < len(shorts_meta) else shorts_meta[0]
-                sd = mi.get("description","")
-                if yt_url: sd = f"🎬 FULL VIDEO: {yt_url}\n\n{sd}"
-                
-                url = yt_upload(sp, mi.get("title",script["title"]+" #Shorts"),
-                               sd, script.get("tags",[])+["Shorts"], is_short=True)
-                if url: yt_short_urls.append(url)
-                time.sleep(5)
-    else:
-        print("  📤 YouTube: OFF (set auto_upload_youtube=true)")
-    
-    # Instagram
-    if shorts and CONFIG.get("auto_upload_instagram", False):
-        for i, sp in enumerate(shorts):
-            mi = shorts_meta[i] if i < len(shorts_meta) else shorts_meta[0]
-            cap = mi.get("instagram_caption","")
-            if yt_url: cap += f"\n\n🎬 Full video on YouTube: {yt_url}"
-            ig_upload(sp, cap)
-            time.sleep(10)
-    
-    report = save_report(script,video,shorts,thumb,shorts_meta,yt_url,yt_short_urls)
-    cleanup()
-    
-    elapsed = time.time()-start
-    m,s = int(elapsed//60), int(elapsed%60)
-    
-    print("\n"+"="*60)
-    print("  ✅ COMPLETE!")
-    print("="*60)
-    print(f"  ⏱️ {m}m {s}s")
-    print(f"  📹 {video}")
-    print(f"  📱 {len(shorts)} shorts")
-    print(f"  🖼️ {thumb}")
-    print(f"  📋 {script['title']}")
-    print(f"  🏷️ {len(script.get('tags',[]))} tags")
-    if yt_url: print(f"  ▶️ {yt_url}")
-    for i,u in enumerate(yt_short_urls): print(f"  ▶️ Short {i+1}: {u}")
-    print("="*60)
-    return report
-
-
-# ============================================================
-# BATCH
-# ============================================================
-def batch(n=3):
-    print(f"\n  BATCH: {n} videos ({n*3} shorts)")
-    ok = 0
-    for i in range(n):
-        print(f"\n{'🎬'*25}\n  VIDEO {i+1}/{n}\n{'🎬'*25}")
-        if run(): ok += 1
-        if i < n-1:
-            w = random.randint(30,60)
-            print(f"\n  ⏳ Next in {w}s...")
-            time.sleep(w)
-    print(f"\n  🏁 DONE: {ok}/{n} videos + {ok*3} shorts")
-
-
-# ============================================================
-# SCHEDULER (Research-based optimal times)
-# ============================================================
-# Best YouTube posting times (research):
-# - Global English audience peaks: 12-3 PM EST
-# - Indian audience: 6-9 PM IST = 12:30-3:30 PM EST
-# - Weekend mornings also strong
-# - Post 15-30 min BEFORE peak for processing time
-#
-# Our schedule (IST):
-# 7:30 AM  → catches morning scrollers
-# 11:30 AM → catches lunch break viewers
-# 5:30 PM  → catches evening peak (biggest audience)
-# 9:30 PM  → catches night owls
-
-def schedule():
-    vpr = CONFIG.get("videos_per_run", 2)
-    
-    # Research-optimized hours (IST)
-    hours = CONFIG.get("schedule_hours", [7, 11, 17, 21])
-    
-    print(f"\n{'='*60}")
-    print(f"  🤖 AUTO-SCHEDULER (Research-Optimized Times)")
-    print(f"  Videos per run: {vpr}")
-    print(f"  Schedule: {[f'{h}:30' for h in hours]}")
-    print(f"  Daily output: {vpr*len(hours)} long + {vpr*len(hours)*3} shorts")
-    print(f"  Ctrl+C to stop")
-    print(f"{'='*60}")
-    
-    last = -1
-    while True:
-        now = datetime.now()
-        h = now.hour
-        if h in hours and h != last and now.minute >= 30:
-            print(f"\n⏰ Scheduled run: {now.strftime('%Y-%m-%d %H:%M')}")
-            batch(vpr)
-            last = h
-        time.sleep(60)
-
-
-# ============================================================
 # ENTRY
 # ============================================================
-_DEPRECATION = """
-⛔ The legacy engine no longer runs content generation directly.
-
-Its topic/script steps still produce the OLD mystery/facts content, which would
-publish off-brand videos to the {brand} channel (and matches the exact profile
-YouTube's inauthentic-content policy demonetizes).
-
-Use the current pipeline instead:
-    python -m factverse.ai_pipeline            # render only
-    python -m factverse.ai_pipeline publish    # render + upload
-
-(Engine render/upload functions remain in use as a library. If you truly need
-the old behavior: `python scripts/factverse_engine.py legacy-run`.)
-"""
-
 if __name__ == "__main__":
     m = sys.argv[1].lower() if len(sys.argv) > 1 else ""
     if m == "auth":
-        print("🔐 YouTube Auth...")
+        print("YouTube Auth...")
         c = yt_auth()
-        if c: print("✅ Success!")
-    elif m == "legacy-run": run()
-    elif m == "legacy-batch": batch(int(sys.argv[2]) if len(sys.argv)>2 else 3)
+        if c: print("Success!")
     else:
-        print(_DEPRECATION.format(brand=BRAND))
+        print("This module is a render/upload library. Entry point:")
+        print("    python -m factverse.ai_pipeline [publish]")
         sys.exit(2)

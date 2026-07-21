@@ -164,10 +164,10 @@ def test_distribution_violations_raise():
 
 def test_dialogue_segments_grouping():
     script = {"scenes": [
-        {"narration": "hook line", "speaker": "host"},
-        {"narration": "more host", "speaker": "host"},
-        {"narration": "the facts", "speaker": "analyst"},
-        {"narration": "back to host", "speaker": "host"},
+        {"narration": "hook line", "speaker": "a"},
+        {"narration": "more host", "speaker": "a"},
+        {"narration": "the facts", "speaker": "b"},
+        {"narration": "back to host", "speaker": "a"},
     ]}
     segs = ap._dialogue_segments(script, "")
     assert segs is not None and len(segs) == 3

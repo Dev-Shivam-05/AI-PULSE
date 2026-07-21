@@ -19,5 +19,8 @@
     "stock_provider": "pexels",
     "video_provider": "none",
     "dialogue_news": true,
-    "kokoro_voice_analyst": "am_michael"
+    "shorts_per_day": 2,
+    "longform_slot_utc": "16:45",
+    "require_insight_block": false,
+    "kokoro_voice_b": "am_michael"
 }
