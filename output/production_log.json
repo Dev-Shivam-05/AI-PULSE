@@ -1008,5 +1008,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-25T14:31:51.654563",
+    "title": "Kimi K3: AI Communism Fears Spook Wall Street",
+    "description": "They're calling it 'AI communism,' and it has Wall Street absolutely terrified. This week, a Chinese AI lab’s open model, Kimi K3, went viral, not just for its capabilities, but for the intense reaction it triggered in the U.S. AI industry. We break down why this model sent shockwaves through the market and what it reveals about the current AI landscape. Plus, an OpenAI model’s security lapse at Hugging Face highlights broader AI risks. Understand the panic, the politics, and the potential future of AI. #AI #TechCrunch #KimiK3 #OpenAI #AIRevolution #ArtificialIntelligence #TechNews #WallStreet\n\nSource: https://techcrunch.com/podcast/ai-communism-rogue-models-and-the-why-kimi-k3-spooked-wall-street/\n\nChapters:\n0:00 AI Communism Fear\n1:27 AI Accessibility Impact\n2:18 Kimi OpenAI Breach\n3:41 Job Market Disruption\n4:40 Open Source Threat\n\n▶ Watch next: https://youtube.com/watch?v=HaGMaoUwIoY",
+    "tags": [
+      "AI Communism",
+      "Kimi K3",
+      "OpenAI",
+      "Hugging Face",
+      "AI Security",
+      "Wall Street",
+      "AI Models",
+      "Tech News",
+      "Artificial Intelligence",
+      "China Tech",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Kimi_K3_AI_Communism_Fears_Spook_Wall_Street_20260725_141420_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260725_141806.mp4",
+      "output/shorts/short_2_20260725_141850.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260725_141707.jpg",
+    "youtube_url": "https://youtube.com/watch?v=vtw_9Q4KuG4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=vOrWqFJQ2eg",
+      "https://youtube.com/watch?v=ELUJRrzCbN8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Communism Spooks Wall Street! 🚨#Shorts",
+        "description": "Is AI paving the way for communism? Wall Street is terrified. Discover the shocking implications for capitalism.",
+        "instagram_caption": "🚨 AI communism? Wall Street is freaking out! Could this be the end of capitalism as we know it? Follow @aipulse! #AI #Communism #WallStreet #BigTech #Economy #Future #Capitalism #TechNews #ArtificialIntelligence #Analysis #Market #Investment #Fear #Revolution #AIRevolution #GlobalEconomy #Business #Finance #Technology #Automation"
+      },
+      {
+        "title": "AI Communism: The Unthinkable Threat? 😱#Shorts",
+        "description": "The AI revolution sparks fears of communist takeover. See why the financial elite are losing sleep.",
+        "instagram_caption": "😱 The unthinkable: AI leading to communism? The financial elite are NOT okay with this. What does it mean for our future? Follow @aipulse! #AICapitalism #AIControl #EconomicFuture #TechFears #MarketPanic #AIEthics #FutureOfWork #Innovation #DigitalRevolution #SocietalImpact #GlobalMarkets #InvestmentStrategy #EconomicTrends #AIPolicy #TechTrends #BusinessNews #AICommunity #DigitalTransformation #EmergingTech #AIInsights"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
