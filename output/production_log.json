@@ -1057,5 +1057,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-26T14:25:56.491454",
+    "title": "ChatGPT Desktop Gains Voice Control",
+    "description": "ChatGPT's desktop app just got a major upgrade, allowing users to converse with the AI. This week, we're counting down the AI stories that truly moved the needle, from enhanced voice interactions to the unsettling trend of AI-driven layoffs. We'll explore how AI is becoming more integrated into our daily workflows and the unexpected pushback it's starting to receive. Get ready for the top 5 AI developments shaping our future.\n\n#AI #TechNews #ChatGPT #ArtificialIntelligence #FutureOfWork\nSubscribe to AI Pulse.\n\nSource: https://techcrunch.com/2026/07/24/openais-new-voice-mode-makes-it-to-the-chatgpt-desktop-app/\n\nChapters:\n0:00 AI World Buzzes\n1:39 AI Expands Audio\n3:36 AI Dual Nature\n4:55 Hardware AI Experiment\n6:37 AI Bridging Gaps\n\n▶ Watch next: https://youtube.com/watch?v=vtw_9Q4KuG4",
+    "tags": [
+      "AI",
+      "ChatGPT",
+      "OpenAI",
+      "Anthropic",
+      "Claude",
+      "Voice AI",
+      "Layoffs",
+      "Tech Industry",
+      "Artificial Intelligence",
+      "AI Hardware",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/ChatGPT_Desktop_Gains_Voice_Control_20260726_141125_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260726_141507.mp4",
+      "output/shorts/short_2_20260726_141603.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260726_141408.jpg",
+    "youtube_url": "https://youtube.com/watch?v=Tl1wqmD3ZLU",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=LwrafK4HQmQ",
+      "https://youtube.com/watch?v=KTJc4cim8nI"
+    ],
+    "shorts_meta": [
+      {
+        "title": "🔥 ChatGPT TALKS! Desktop Voice Control Unleashed! #Shorts",
+        "description": "Experience the future of AI with ChatGPT's new voice control on desktop. Interact naturally and get answers instantly. #AI #ChatGPT #VoiceAI #TechNews #Innovation",
+        "instagram_caption": "🗣️ Your favorite AI just got a voice upgrade! ChatGPT on desktop now understands and responds to your voice commands. Get ready for seamless, hands-free interaction. Follow @aipulse!\n#ChatGPT #VoiceControl #AIDesktop #FutureOfTech #ArtificialIntelligence #TechGadgets #SmartAI #Innovation #AIChatbot #TechUpdate #DigitalAssistant #NewTech #Productivity #AIRevolution #TechTrends #LearnAI #AICommunity #VoiceCommand #DesktopAI #AITools"
+      },
+      {
+        "title": "🚀 Speak to ChatGPT! Revolutionary Desktop Voice Control! #Shorts",
+        "description": "Unlock powerful voice control for ChatGPT on your desktop. It's never been easier to get information and assistance. #ChatGPTDesktop #VoiceAI #FutureIsNow #AIRevolution",
+        "instagram_caption": "🤯 Say goodbye to typing, hello to talking! ChatGPT's desktop version now features incredible voice control, making interaction smoother than ever. Explore the future of AI today. Follow @aipulse!\n#VoiceAI #ChatGPT #DesktopControl #AI #ArtificialIntelligence #TechInnovation #SmartTechnology #DigitalTransformation #AIForEveryone #Gadget #FutureTech #TechLover #ProductivityHacks #AIUpdate #VoiceAssistant #NewFeatures #AIAdvancements #TechExploration #AIChat #FutureReady"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
