@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Linux",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Apache",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "By strategically releasing open-weight models, Chinese AI labs are not just competing on performance, but fundamentally altering the economic and development landscape of AI, forcing a re-evaluation of proprietary models."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses rhetorical questions and direct address ('Imagine your biggest tech rival...', 'Think about it:') to engage the viewer. It also frames the release of Kimi K3 as a 'secret weapon' bein"
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": "Cold_Open_5.mp3",
+    "insight": null
+  }
+}

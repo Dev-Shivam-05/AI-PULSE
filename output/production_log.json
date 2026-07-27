@@ -1106,5 +1106,54 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-27T17:19:49.938413",
+    "title": "Kimi K3: China's AI Model Given Away Free",
+    "description": "China is giving away its best AI models, and the West is scrambling. Learn why Moonshot AI's Kimi K3 is shaking up the industry and what it means for American tech giants.  This is a seismic shift in the AI landscape.\n\n#AI #ArtificialIntelligence #ChinaTech #OpenAI #GoogleAI #TechNews\n\nSubscribe to AI Pulse.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/971444/how-chinese-open-weight-ai-models-impact-us-companies\n\nChapters:\n0:00 Free Secret Weapon\n2:15 Why Give It Away\n3:27 Hardware Demand Boost\n5:27 China's AI Push\n6:53 Western AI Response\n\n▶ Watch next: https://youtube.com/watch?v=Tl1wqmD3ZLU",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "China AI",
+      "OpenAI",
+      "Google AI",
+      "Moonshot AI",
+      "Kimi K3",
+      "LLM",
+      "Tech",
+      "Innovation",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Kimi_K3_Chinas_AI_Model_Given_Away_Free_20260727_170249_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260727_170707.mp4",
+      "output/shorts/short_2_20260727_170801.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260727_170604.jpg",
+    "youtube_url": "https://youtube.com/watch?v=7g72JJA9fpQ",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=JxX4PnLi-gc",
+      "https://youtube.com/watch?v=OrlIxYaviJI"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Kimi K3: China's FREE AI Powerhouse! 🚀 #Shorts",
+        "description": "Unlock the future with Kimi K3, China's revolutionary AI model now available for everyone! Discover its groundbreaking capabilities and how it's changing the game.",
+        "instagram_caption": "🤯 Kimi K3 is HERE and it's FREE! China's latest AI model is ready to blow your mind with its incredible power. Prepare for a new era of AI innovation. Follow @aipulse!\n#AI #KimiK3 #ChinaAI #TechNews #ArtificialIntelligence #FreeAI #Innovation #FutureTech #MachineLearning #DeepLearning #AIPowered #TechTrends #DigitalTransformation #OpenSourceAI #GlobalTech #AIRevolution #SmartTech #CuttingEdge #AICommunity #TechDiscovery"
+      },
+      {
+        "title": "FREE AI REVOLUTION: Kimi K3 Unleashed! 🇨🇳 #Shorts",
+        "description": "China's Kimi K3 AI model is now open-source and free for all! Dive into the details of this powerful new technology and what it means for the AI landscape.",
+        "instagram_caption": "🔥 The AI landscape just shifted! China's Kimi K3 AI model is now free to use, offering immense power to creators and developers worldwide. Get ready to experience the next level of AI. Follow @aipulse!\n#KimiK3AI #FreeTech #ChinaTech #AIModel #OpenSource #TechBreakthrough #ArtificialIntelligenceNews #FutureOfAI #AIforGood #GlobalInnovation #MachineLearningModel #DeepLearningTech #TechUpdates #DigitalFuture #AIAdvancement #SmartTechnology #InnovationHub #TechInsights #AICreativity #AIExplorer"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
