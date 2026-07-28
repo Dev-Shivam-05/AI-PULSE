@@ -1155,5 +1155,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-07-28T16:43:46.932513",
+    "title": "Perplexity PC: Your Windows Computer is Now an AI Agent",
+    "description": "Perplexity's Personal Computer is now available on Windows PCs, transforming them into intelligent AI agents. This tool can access your local files, Microsoft Office 365 apps, and the web to perform tasks, acting as a digital assistant for complex workflows. Launched for Max and Enterprise Max subscribers starting at $200 per month, this development bridges the gap between powerful AI and the often isolated data on local machines. Discover how this could change your workday and the implications for data privacy. #AI #Tech #Windows #Perplexity #ArtificialIntelligence #FutureOfWork\n\nSource: https://www.theverge.com/ai-artificial-intelligence/971750/perplexity-personal-computer-windows-ai-agents\n\nChapters:\n0:00 AI Super Assistant\n0:38 Perplexity Microsoft Integrations\n1:19 Sensitive Data Access\n2:15 From Clicks To Delegation\n2:50 Perplexity's Data Promise\n\n▶ Watch next: https://youtube.com/watch?v=7g72JJA9fpQ",
+    "tags": [
+      "Perplexity",
+      "AI Agents",
+      "Windows PC",
+      "Artificial Intelligence",
+      "Tech News",
+      "Microsoft 365",
+      "Future of Work",
+      "Personal Computer",
+      "AI Tools",
+      "Productivity",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Perplexity_PC_Your_Windows_Computer_is_Now_an_AI_A_20260728_163500_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260728_163759.mp4",
+      "output/shorts/short_2_20260728_163900.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260728_163602.jpg",
+    "youtube_url": "https://youtube.com/watch?v=3cqKQsXKYoY",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=JZrCJ6wIGJo",
+      "https://youtube.com/watch?v=TJXymT1pNFM"
+    ],
+    "shorts_meta": [
+      {
+        "title": "🤯 Transform Your Windows PC into an AI Powerhouse! #Shorts",
+        "description": "Discover how Perplexity PC turns your everyday Windows computer into a powerful AI agent, ready to assist you with advanced intelligence. Get a glimpse into the future of computing!",
+        "instagram_caption": "🚀 Get ready to witness your Windows PC evolve into an incredibly smart AI agent with Perplexity PC! This revolutionary tech changes how you interact with your computer forever, bringing advanced intelligence right to your desktop. Follow @aipulse!\n#AITransformation #PerplexityPC #WindowsAI #FutureTech #SmartPC #AIagent #TechRevolution #Innovation #ArtificialIntelligence #PCUpgrade #TechGadgets #FutureOfComputing #DigitalTransformation #MachineLearning #AITools #SmartTechnology #WindowsUsers #NextGenAI #TechNews #AIpowered"
+      },
+      {
+        "title": "🚀 AI Revolution: Windows PC Becomes Your Smartest Assistant! #Shorts",
+        "description": "Explore the groundbreaking features of Perplexity PC, making your Windows computer an intuitive AI agent. Boost your productivity and creativity with intelligent assistance directly from your desktop.",
+        "instagram_caption": "✨ Imagine your Windows PC not just running programs, but actively thinking and assisting you like a true AI agent! Perplexity PC is making this a reality, bringing unparalleled intelligence and efficiency to your daily computing tasks. Follow @aipulse!\n#AIAgent #Perplexity #WindowsTech #SmartComputing #ProductivityBoost #TechInnovation #AIRevolution #FutureIsNow #DigitalAssistant #MachineIntelligence #TechDaily #PCMasterRace #AIforEveryone #IntelligentSystems #NewTech #TechTrends #SoftwareDevelopment #Windows11 #CreativeAI #WorkSmart"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

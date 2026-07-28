@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 7,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Perplexity's latest AI",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "By integrating directly into the Windows operating system, Perplexity's Personal Computer is democratizing agentic AI for enterprise users, potentially shifting the paradigm of local data control and user autonomy in the face of increasingly powerful, cloud-based AI services."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a rhetorical question at the beginning ('What if your computer could act like a super-intelligent assistant... but also h') and a concluding statement about the critical part of t"
+  },
+  "confidence": {
+    "score": 0.79,
+    "components": {
+      "format": 0.6,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

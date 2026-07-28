@@ -1,0 +1,138 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.96,Live,,0,0,0,{\k14}What {\k14}if {\k12}your {\k46}computer
+Dialogue: 0,0:00:00.86,0:00:01.92,Live,,0,0,0,{\k20}could {\k34}act {\k28}like {\k14}a
+Dialogue: 0,0:00:01.82,0:00:04.10,Live,,0,0,0,{\k32}super {\k48}intelligent {\k60}assistant {\k60}{\k18}but
+Dialogue: 0,0:00:04.00,0:00:05.34,Live,,0,0,0,{\k32}also {\k24}had {\k38}access {\k30}to
+Dialogue: 0,0:00:05.24,0:00:07.86,Live,,0,0,0,{\k48}asterisk {\k48}everything {\k76}asterisk {\k36}{\k44}That's
+Dialogue: 0,0:00:07.76,0:00:09.00,Live,,0,0,0,{\k10}the {\k22}game {\k52}changer {\k30}with
+Dialogue: 0,0:00:08.90,0:00:10.46,Live,,0,0,0,{\k74}Proplexity's {\k30}latest {\k42}AI
+Dialogue: 0,0:00:11.06,0:00:12.80,Live,,0,0,0,{\k60}Proplexity {\k20}{\k40}famous {\k26}for {\k18}its
+Dialogue: 0,0:00:12.70,0:00:14.84,Live,,0,0,0,{\k36}AI {\k64}search {\k50}{\k10}just {\k44}dropped
+Dialogue: 0,0:00:14.74,0:00:16.34,Live,,0,0,0,{\k18}its {\k48}personal {\k42}computer {\k42}tool
+Dialogue: 0,0:00:16.24,0:00:16.96,Live,,0,0,0,{\k24}for {\k38}Windows
+Dialogue: 0,0:00:17.58,0:00:18.98,Live,,0,0,0,{\k28}Your {\k44}PC {\k40}is {\k18}no
+Dialogue: 0,0:00:18.88,0:00:20.10,Live,,0,0,0,{\k34}longer {\k26}just {\k16}a {\k36}portal
+Dialogue: 0,0:00:20.00,0:00:21.68,Live,,0,0,0,{\k24}to {\k14}the {\k44}cloud {\k56}{\k20}It's
+Dialogue: 0,0:00:21.58,0:00:23.26,Live,,0,0,0,{\k24}now {\k34}a {\k62}asterisk {\k38}local
+Dialogue: 0,0:00:23.16,0:00:26.08,Live,,0,0,0,{\k76}asterisk {\k48}AI {\k94}powerhouse {\k64}Think
+Dialogue: 0,0:00:25.98,0:00:26.66,Live,,0,0,0,{\k14}of {\k12}it {\k20}as {\k12}a
+Dialogue: 0,0:00:26.56,0:00:28.56,Live,,0,0,0,{\k36}digital {\k44}worker {\k38}built {\k72}asterisk
+Dialogue: 0,0:00:28.46,0:00:30.68,Live,,0,0,0,{\k24}into {\k62}asterisk {\k36}Windows {\k68}{\k22}It
+Dialogue: 0,0:00:30.58,0:00:31.90,Live,,0,0,0,{\k10}can {\k46}actually {\k40}access {\k26}your
+Dialogue: 0,0:00:31.80,0:00:33.26,Live,,0,0,0,{\k30}local {\k40}files {\k36}and {\k30}apps
+Dialogue: 0,0:00:33.16,0:00:34.44,Live,,0,0,0,{\k18}to {\k32}complete {\k36}tasks {\k32}for
+Dialogue: 0,0:00:34.34,0:00:35.88,Live,,0,0,0,{\k22}you {\k34}{\k20}like {\k46}drafting {\k22}that
+Dialogue: 0,0:00:35.78,0:00:37.52,Live,,0,0,0,{\k36}report {\k58}or {\k46}updating {\k24}your
+Dialogue: 0,0:00:37.42,0:00:39.50,Live,,0,0,0,{\k68}spreadsheets {\k26}{\k30}This {\k36}isn't {\k38}totally
+Dialogue: 0,0:00:39.40,0:00:42.18,Live,,0,0,0,{\k42}new {\k54}{\k58}Proplexity {\k44}already {\k70}integrated
+Dialogue: 0,0:00:42.08,0:00:45.02,Live,,0,0,0,{\k26}with {\k42}Microsoft {\k136}365 {\k80}and
+Dialogue: 0,0:00:44.92,0:00:47.18,Live,,0,0,0,{\k50}Teams {\k58}{\k28}This {\k38}Windows {\k42}launch
+Dialogue: 0,0:00:47.08,0:00:48.58,Live,,0,0,0,{\k32}is {\k16}the {\k40}final {\k52}piece
+Dialogue: 0,0:00:48.92,0:00:50.42,Live,,0,0,0,{\k24}bringing {\k28}that {\k44}power {\k44}directly
+Dialogue: 0,0:00:50.32,0:00:52.06,Live,,0,0,0,{\k40}into {\k20}your {\k48}familiar {\k56}OS
+Dialogue: 0,0:00:51.96,0:00:54.32,Live,,0,0,0,{\k72}The {\k42}Verge {\k36}reports {\k76}Proplexity
+Dialogue: 0,0:00:54.22,0:00:55.68,Live,,0,0,0,{\k52}says {\k22}this {\k22}is {\k40}vital
+Dialogue: 0,0:00:55.58,0:00:56.98,Live,,0,0,0,{\k40}because {\k32}so {\k28}much {\k30}critical
+Dialogue: 0,0:00:56.88,0:00:59.08,Live,,0,0,0,{\k52}enterprise {\k46}work {\k58}happens {\k54}locally
+Dialogue: 0,0:00:58.98,0:01:00.92,Live,,0,0,0,{\k32}on {\k30}Windows {\k58}{\k42}often {\k22}out
+Dialogue: 0,0:01:00.82,0:01:01.94,Live,,0,0,0,{\k14}of {\k16}reach {\k32}for {\k40}cloud
+Dialogue: 0,0:01:01.84,0:01:04.30,Live,,0,0,0,{\k42}AI {\k58}{\k28}Now {\k52}Windows {\k56}users
+Dialogue: 0,0:01:04.20,0:01:05.58,Live,,0,0,0,{\k30}can {\k22}tell {\k22}this {\k54}computer
+Dialogue: 0,0:01:05.48,0:01:06.50,Live,,0,0,0,{\k18}to {\k20}work {\k32}across {\k22}their
+Dialogue: 0,0:01:06.40,0:01:09.44,Live,,0,0,0,{\k36}local {\k52}files {\k46}{\k48}Office {\k112}365
+Dialogue: 0,0:01:09.34,0:01:11.08,Live,,0,0,0,{\k84}apps {\k36}{\k8}and {\k12}the {\k24}web
+Dialogue: 0,0:01:10.98,0:01:12.90,Live,,0,0,0,{\k34}all {\k20}at {\k32}once {\k68}{\k28}It's
+Dialogue: 0,0:01:12.80,0:01:13.96,Live,,0,0,0,{\k20}built {\k24}for {\k24}how {\k38}real
+Dialogue: 0,0:01:13.86,0:01:15.66,Live,,0,0,0,{\k36}work {\k26}gets {\k34}done {\k52}{\k22}messy
+Dialogue: 0,0:01:15.56,0:01:17.14,Live,,0,0,0,{\k32}local {\k56}files {\k32}and {\k28}all
+Dialogue: 0,0:01:17.48,0:01:18.48,Live,,0,0,0,{\k14}But {\k34}here's {\k8}the {\k34}critical
+Dialogue: 0,0:01:18.38,0:01:20.60,Live,,0,0,0,{\k42}part {\k72}This {\k42}AI {\k56}agent
+Dialogue: 0,0:01:20.50,0:01:22.02,Live,,0,0,0,{\k38}needs {\k34}deep {\k42}access {\k28}to
+Dialogue: 0,0:01:21.92,0:01:22.98,Live,,0,0,0,{\k10}your {\k40}sensitive {\k46}data
+Dialogue: 0,0:01:23.60,0:01:25.92,Live,,0,0,0,{\k54}Proplexity {\k56}asterisk {\k32}claims {\k80}asterisk
+Dialogue: 0,0:01:25.82,0:01:26.82,Live,,0,0,0,{\k18}it {\k26}won't {\k28}train {\k18}on
+Dialogue: 0,0:01:26.72,0:01:28.14,Live,,0,0,0,{\k12}your {\k26}company {\k40}data {\k54}and
+Dialogue: 0,0:01:28.04,0:01:29.52,Live,,0,0,0,{\k14}will {\k38}always {\k40}ask {\k46}permission
+Dialogue: 0,0:01:29.42,0:01:31.40,Live,,0,0,0,{\k56}before {\k38}sending {\k46}emails {\k48}or
+Dialogue: 0,0:01:31.30,0:01:33.22,Live,,0,0,0,{\k42}deleting {\k58}files {\k34}{\k32}This {\k16}is
+Dialogue: 0,0:01:33.12,0:01:34.32,Live,,0,0,0,{\k32}rolling {\k30}out {\k18}to {\k30}paying
+Dialogue: 0,0:01:34.22,0:01:35.82,Live,,0,0,0,{\k78}subscribers {\k24}on {\k16}their {\k32}max
+Dialogue: 0,0:01:35.72,0:01:37.58,Live,,0,0,0,{\k28}and {\k50}enterprise {\k40}max {\k58}plans
+Dialogue: 0,0:01:37.82,0:01:38.96,Live,,0,0,0,{\k44}starting {\k22}at {\k8}a {\k30}steep
+Dialogue: 0,0:01:38.86,0:01:40.48,Live,,0,0,0,{\k38}dollar {\k72}200 {\k20}a {\k22}month
+Dialogue: 0,0:01:40.90,0:01:42.16,Live,,0,0,0,{\k26}So {\k52}this {\k28}isn't {\k10}a
+Dialogue: 0,0:01:42.06,0:01:43.66,Live,,0,0,0,{\k22}free {\k48}upgrade {\k30}for {\k50}everyone
+Dialogue: 0,0:01:43.56,0:01:45.96,Live,,0,0,0,{\k84}yet {\k44}{\k22}You're {\k42}probably {\k38}thinking
+Dialogue: 0,0:01:45.86,0:01:47.34,Live,,0,0,0,{\k30}about {\k16}your {\k60}phone's {\k32}AI
+Dialogue: 0,0:01:47.24,0:01:49.32,Live,,0,0,0,{\k60}assistance {\k56}{\k32}They're {\k26}great {\k24}for
+Dialogue: 0,0:01:49.22,0:01:50.76,Live,,0,0,0,{\k22}quick {\k32}tasks {\k56}{\k18}but {\k16}they
+Dialogue: 0,0:01:50.66,0:01:51.52,Live,,0,0,0,{\k24}live {\k14}in {\k12}their {\k26}own
+Dialogue: 0,0:01:51.42,0:01:52.90,Live,,0,0,0,{\k38}apps {\k40}or {\k18}the {\k42}cloud
+Dialogue: 0,0:01:53.30,0:01:55.02,Live,,0,0,0,{\k32}This {\k58}Proplexity {\k32}tool {\k40}is
+Dialogue: 0,0:01:54.92,0:01:56.14,Live,,0,0,0,{\k30}different {\k24}its {\k34}design {\k24}to
+Dialogue: 0,0:01:56.04,0:01:57.36,Live,,0,0,0,{\k32}dive {\k24}into {\k18}the {\k48}asterisk
+Dialogue: 0,0:01:57.26,0:01:58.68,Live,,0,0,0,{\k30}core {\k64}asterisk {\k26}of {\k12}your
+Dialogue: 0,0:01:58.58,0:02:00.82,Live,,0,0,0,{\k36}PC {\k64}{\k44}Imagine {\k32}an {\k38}AI
+Dialogue: 0,0:02:00.72,0:02:01.86,Live,,0,0,0,{\k36}that {\k18}can {\k28}find {\k22}that
+Dialogue: 0,0:02:01.76,0:02:03.42,Live,,0,0,0,{\k42}obscure {\k56}spreadsheet {\k28}from {\k30}months
+Dialogue: 0,0:02:03.32,0:02:05.22,Live,,0,0,0,{\k42}ago {\k54}{\k16}cross {\k42}reference {\k26}it
+Dialogue: 0,0:02:05.12,0:02:06.28,Live,,0,0,0,{\k16}with {\k12}a {\k20}new {\k58}download
+Dialogue: 0,0:02:06.70,0:02:07.82,Live,,0,0,0,{\k22}and {\k18}then {\k30}draft {\k32}an
+Dialogue: 0,0:02:07.72,0:02:08.86,Live,,0,0,0,{\k38}email {\k28}to {\k12}your {\k26}boss
+Dialogue: 0,0:02:08.76,0:02:10.38,Live,,0,0,0,{\k44}all {\k32}without {\k30}you {\k46}opening
+Dialogue: 0,0:02:10.28,0:02:11.84,Live,,0,0,0,{\k26}a {\k36}single {\k30}app {\k54}manually
+Dialogue: 0,0:02:12.26,0:02:13.60,Live,,0,0,0,{\k42}That's {\k12}the {\k36}power {\k34}here
+Dialogue: 0,0:02:14.02,0:02:15.40,Live,,0,0,0,{\k18}This {\k14}could {\k46}completely {\k50}change
+Dialogue: 0,0:02:15.30,0:02:17.04,Live,,0,0,0,{\k32}how {\k20}we {\k26}work {\k86}Instead
+Dialogue: 0,0:02:16.94,0:02:18.40,Live,,0,0,0,{\k18}of {\k32}clicking {\k24}and {\k62}commanding
+Dialogue: 0,0:02:18.64,0:02:19.42,Live,,0,0,0,{\k6}we {\k20}might {\k26}soon {\k16}be
+Dialogue: 0,0:02:19.32,0:02:21.62,Live,,0,0,0,{\k58}asterisk {\k60}delegating {\k54}asterisk {\k48}complex
+Dialogue: 0,0:02:22.10,0:02:23.72,Live,,0,0,0,{\k38}multi {\k36}step {\k44}tasks {\k34}to
+Dialogue: 0,0:02:23.62,0:02:25.34,Live,,0,0,0,{\k12}our {\k34}PCs {\k62}{\k14}The {\k40}productivity
+Dialogue: 0,0:02:25.24,0:02:26.78,Live,,0,0,0,{\k62}gains {\k30}are {\k52}massive
+Dialogue: 0,0:02:27.44,0:02:28.60,Live,,0,0,0,{\k58}Developers {\k18}could {\k12}have {\k18}an
+Dialogue: 0,0:02:28.50,0:02:30.74,Live,,0,0,0,{\k44}AI {\k48}sift {\k46}code {\k48}{\k28}Marketing
+Dialogue: 0,0:02:30.64,0:02:32.46,Live,,0,0,0,{\k48}teams {\k26}could {\k40}compile {\k58}campaign
+Dialogue: 0,0:02:32.36,0:02:34.06,Live,,0,0,0,{\k50}data {\k24}from {\k34}local {\k52}files
+Dialogue: 0,0:02:33.96,0:02:35.96,Live,,0,0,0,{\k30}and {\k40}online {\k66}sources {\k48}{\k6}The
+Dialogue: 0,0:02:35.86,0:02:38.10,Live,,0,0,0,{\k62}possibilities {\k28}are {\k72}huge {\k38}{\k14}But
+Dialogue: 0,0:02:38.00,0:02:39.64,Live,,0,0,0,{\k8}the {\k46}privacy {\k48}elephant {\k52}is
+Dialogue: 0,0:02:39.54,0:02:42.22,Live,,0,0,0,{\k66}asterisk {\k46}huge {\k72}asterisk {\k74}Giving
+Dialogue: 0,0:02:42.12,0:02:43.50,Live,,0,0,0,{\k24}an {\k24}AI {\k56}agent {\k24}deep
+Dialogue: 0,0:02:43.40,0:02:44.56,Live,,0,0,0,{\k42}access {\k28}to {\k8}your {\k28}local
+Dialogue: 0,0:02:44.46,0:02:46.38,Live,,0,0,0,{\k52}files {\k54}means {\k32}any {\k44}security
+Dialogue: 0,0:02:46.28,0:02:47.80,Live,,0,0,0,{\k36}flaw {\k32}or {\k50}misuse {\k24}could
+Dialogue: 0,0:02:47.70,0:02:50.16,Live,,0,0,0,{\k12}be {\k62}catastrophic {\k58}{\k68}Proplexity's {\k36}promise
+Dialogue: 0,0:02:50.06,0:02:51.24,Live,,0,0,0,{\k32}not {\k20}to {\k32}train {\k24}on
+Dialogue: 0,0:02:51.14,0:02:52.64,Live,,0,0,0,{\k38}company {\k42}data {\k50}is {\k10}a
+Dialogue: 0,0:02:52.54,0:02:54.78,Live,,0,0,0,{\k44}critical {\k78}reassurance {\k60}{\k20}But {\k12}the
+Dialogue: 0,0:02:54.68,0:02:56.92,Live,,0,0,0,{\k34}debate {\k58}around {\k40}AI {\k82}privacy
+Dialogue: 0,0:02:56.82,0:02:58.82,Live,,0,0,0,{\k22}and {\k72}security {\k58}will {\k38}only
+Dialogue: 0,0:02:58.72,0:03:00.00,Live,,0,0,0,{\k22}get {\k36}louder {\k30}with {\k30}tools
+Dialogue: 0,0:02:59.90,0:03:01.48,Live,,0,0,0,{\k34}like {\k46}this {\k30}{\k22}This {\k16}is
+Dialogue: 0,0:03:01.38,0:03:02.76,Live,,0,0,0,{\k12}a {\k38}massive {\k34}step {\k44}towards
+Dialogue: 0,0:03:02.66,0:03:04.48,Live,,0,0,0,{\k40}what's {\k22}called {\k76}agentic {\k34}AI
+Dialogue: 0,0:03:04.38,0:03:06.90,Live,,0,0,0,{\k50}becoming {\k62}standard {\k64}{\k30}It's {\k36}blurring
+Dialogue: 0,0:03:06.80,0:03:07.78,Live,,0,0,0,{\k14}the {\k26}line {\k32}between {\k16}a
+Dialogue: 0,0:03:07.68,0:03:08.72,Live,,0,0,0,{\k30}tool {\k26}and {\k10}a {\k28}digital
+Dialogue: 0,0:03:08.62,0:03:10.18,Live,,0,0,0,{\k60}colleague {\k56}right {\k18}on {\k12}your
+Dialogue: 0,0:03:10.08,0:03:12.02,Live,,0,0,0,{\k34}desktop {\k46}{\k32}The {\k20}big {\k52}question
+Dialogue: 0,0:03:12.48,0:03:13.30,Live,,0,0,0,{\k12}are {\k14}you {\k22}ready {\k24}to
+Dialogue: 0,0:03:13.20,0:03:14.60,Live,,0,0,0,{\k30}hand {\k24}over {\k48}control {\k28}of
+Dialogue: 0,0:03:14.50,0:03:15.84,Live,,0,0,0,{\k10}your {\k44}digital {\k48}life {\k22}to
+Dialogue: 0,0:03:15.74,0:03:17.34,Live,,0,0,0,{\k36}AI {\k62}agents {\k30}living {\k22}on
+Dialogue: 0,0:03:17.24,0:03:17.92,Live,,0,0,0,{\k14}your {\k44}PC
+Dialogue: 0,0:03:18.72,0:03:20.64,Live,,0,0,0,{\k46}Subscribe {\k38}to {\k44}AI {\k54}Pulse
+Dialogue: 0,0:03:20.54,0:03:21.78,Live,,0,0,0,{\k24}for {\k20}more {\k38}future {\k32}tech
+Dialogue: 0,0:03:21.68,0:03:22.66,Live,,0,0,0,{\k88}breakdowns

@@ -1,0 +1,133 @@
+{
+  "titles": [
+    "Perplexity PC: Your Windows Computer is Now an AI Agent",
+    "Your PC is Now an AI Agent: Perplexity Windows Unleashed",
+    "Perplexity AI Agents: Windows PCs Get Supercharged"
+  ],
+  "title": "Perplexity PC: Your Windows Computer is Now an AI Agent",
+  "thumb_text": "Your PC is AI",
+  "description": "Perplexity's Personal Computer is now available on Windows PCs, transforming them into intelligent AI agents. This tool can access your local files, Microsoft Office 365 apps, and the web to perform tasks, acting as a digital assistant for complex workflows. Launched for Max and Enterprise Max subscribers starting at $200 per month, this development bridges the gap between powerful AI and the often isolated data on local machines. Discover how this could change your workday and the implications for data privacy. #AI #Tech #Windows #Perplexity #ArtificialIntelligence #FutureOfWork\n\nSource: https://www.theverge.com/ai-artificial-intelligence/971750/perplexity-personal-computer-windows-ai-agents\n\nChapters:\n0:00 AI Super Assistant\n0:38 Perplexity Microsoft Integrations\n1:19 Sensitive Data Access\n2:15 From Clicks To Delegation\n2:50 Perplexity's Data Promise\n\n▶ Watch next: https://youtube.com/watch?v=7g72JJA9fpQ",
+  "tags": [
+    "Perplexity",
+    "AI Agents",
+    "Windows PC",
+    "Artificial Intelligence",
+    "Tech News",
+    "Microsoft 365",
+    "Future of Work",
+    "Personal Computer",
+    "AI Tools",
+    "Productivity",
+    "ai",
+    "ai news",
+    "machine learning",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "ai pulse"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "What if your computer could act like a super-intelligent assistant... but also had access to *everything*? That's the game-changer with Perplexity's latest AI.",
+      "visual_query": "person thinking computer",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Perplexity, famous for its AI search, just dropped its 'Personal Computer' tool for Windows. Your PC is no longer just a portal to the cloud; it's now a *local* AI powerhouse.",
+      "visual_query": "windows logo on laptop",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Think of it as a 'digital worker' built *into* Windows. It can actually access your local files and apps to complete tasks for you, like drafting that report or updating your spreadsheets.",
+      "visual_query": "robot typing document",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "This isn't totally new. Perplexity already integrated with Microsoft 365 and Teams. This Windows launch is the final piece, bringing that power directly into your familiar OS.",
+      "visual_query": "microsoft office icons",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 5,
+      "narration": "The Verge reports Perplexity says this is vital because so much critical enterprise work happens locally on Windows, often out of reach for cloud AI.",
+      "visual_query": "network diagram local cloud",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Now, Windows users can tell this 'Computer' to work across their local files, Office 365 apps, and the web – all at once. It’s built for how real work gets done, messy local files and all.",
+      "visual_query": "person organizing files",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 7,
+      "narration": "But here's the critical part: this AI agent needs deep access to your sensitive data. Perplexity *claims* it won't train on your company data and will always ask permission before sending emails or deleting files.",
+      "visual_query": "padlock on computer screen",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "This is rolling out to paying subscribers on their Max and Enterprise Max plans, starting at a steep $200 a month. So, this isn't a free upgrade for everyone... yet.",
+      "visual_query": "dollar sign on computer",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 9,
+      "narration": "You're probably thinking about your phone's AI assistants. They're great for quick tasks, but they live in their own apps or the cloud. This Perplexity tool is different – it's designed to dive into the *core* of your PC.",
+      "visual_query": "smartphone ai assistant",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Imagine an AI that can find that obscure spreadsheet from months ago, cross-reference it with a new download, and then draft an email to your boss – all without you opening a single app manually. That's the power here.",
+      "visual_query": "ai analyzing data",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 11,
+      "narration": "This could completely change how we work. Instead of clicking and commanding, we might soon be *delegating* complex, multi-step tasks to our PCs.",
+      "visual_query": "person delegating task",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The productivity gains are massive. Developers could have an AI sift code, marketing teams could compile campaign data from local files and online sources – the possibilities are huge.",
+      "visual_query": "code on computer screen",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 13,
+      "narration": "But the privacy elephant is *huge*. Giving an AI agent deep access to your local files means any security flaw or misuse could be catastrophic.",
+      "visual_query": "hacker accessing files",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "Perplexity's promise not to train on company data is a critical reassurance, but the debate around AI privacy and security will only get louder with tools like this.",
+      "visual_query": "data privacy banner",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 15,
+      "narration": "This is a massive step towards what's called 'agentic AI' becoming standard. It's blurring the line between a tool and a digital colleague, right on your desktop.",
+      "visual_query": "robot and human handshake",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 16,
+      "narration": "The big question: are you ready to hand over control of your digital life to AI agents living on your PC? Subscribe to AI Pulse for more future tech breakdowns.",
+      "visual_query": "ai pulse logo",
+      "speaker": "b"
+    }
+  ],
+  "synthesis_claim": "By integrating directly into the Windows operating system, Perplexity's Personal Computer is democratizing agentic AI for enterprise users, potentially shifting the paradigm of local data control and user autonomy in the face of increasingly powerful, cloud-based AI services.",
+  "filter_segment": false,
+  "source_url": "https://www.theverge.com/ai-artificial-intelligence/971750/perplexity-personal-computer-windows-ai-agents",
+  "format": "news",
+  "signal_title": "Perplexity’s Personal Computer turns Windows PCs into AI agents",
+  "hook_pattern": "quiet"
+}
