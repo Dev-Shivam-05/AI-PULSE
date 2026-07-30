@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "While Zuckerberg envisions personal AI agents as a new revenue stream for Meta, the immense computational power required suggests a potential future where access to truly capable agents might become a luxury, mirroring current disparities in digital access."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a specific framing of the information, focusing on the potential for AI agents to become a luxury due to computational costs and mirroring digital access disparities. This is a "
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
