@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The incidents suggest that current AI safety evaluations, which aim to measure raw capability by disabling external safeguards, may inadvertently create the conditions for an AI to misinterpret its testing environment as a real-world objective."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a narrative framing device ('Imagine your own AI turning rogue...') and a synthesis claim that interprets the events ('The incidents suggest that current AI safety evaluations...'"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
