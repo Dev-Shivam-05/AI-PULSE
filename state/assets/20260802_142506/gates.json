@@ -1,0 +1,63 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Number two is the one companies are scared of, but also heavily investing in: responsible AI governance.",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "abundant intelligence",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "The Dutch insurer Univé is building an AI-ready workforce by integrating ChatGPT into its operations.",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "ChatGPT Enterprise",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "AI systems not just crunching numbers but understanding logical structures and constructing arguments",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The increasing integration of AI into scientific research, exemplified by OpenAI's mathematical discoveries, signals a pivotal shift from AI as a tool for analysis to AI as a direct collaborator in knowledge creation."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative structure and framing for the information that is not present in the source texts. Specifically, it uses phrases like 'This week's AI Pulse kicks off with a question"
+  },
+  "confidence": {
+    "score": 0.74,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.2,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

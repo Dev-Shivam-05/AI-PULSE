@@ -1349,5 +1349,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-02T14:25:06.344064",
+    "title": "OpenAI's Math Breakthroughs: 10 Key Advances",
+    "description": "This week, AI Pulse dives into the cutting edge of artificial intelligence, counting down the five most impactful stories. From the unsettling possibility of AI-generated chart-toppers to groundbreaking leaps in theoretical computer science, we explore how AI is reshaping creativity, research, and global industry. We also examine how major tech players are navigating the complex landscape of responsible AI development and deployment across continents, and how forward-thinking companies are already integrating AI into their workforces. Get ready for a rapid-fire update on the AI developments that truly matter. #AI #ArtificialIntelligence #TechNews #Innovation #FutureOfWork #MachineLearning #DeepLearning #AIScience\n\nSubscribe to AI Pulse.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/974209/fenix-flexin-billboard-hot-100-rubberz-ai-slop\n\nChapters:\n0:00 AI Pulse Alarming\n1:52 OpenAI Ten New\n3:32 OpenAI Europe AI\n5:16 Democratizing AI Access\n6:43 Success With AI\n\n▶ Watch next: https://youtube.com/watch?v=zHlgonPoFUg",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "OpenAI",
+      "Mathematics",
+      "Computer Science",
+      "Responsible AI",
+      "EU AI Act",
+      "Workforce",
+      "Music Industry",
+      "Research",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAIs_Math_Breakthroughs_10_Key_Advances_20260802_141155_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260802_141602.mp4",
+      "output/shorts/short_2_20260802_141659.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260802_141501.jpg",
+    "youtube_url": "https://youtube.com/watch?v=EfKGMugil3k",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=G0xjyPjjCd4",
+      "https://youtube.com/watch?v=NDWFgnTH_7w"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI's Mind-Blowing Math Hacks! #Shorts",
+        "description": "Discover 10 incredible advancements OpenAI made in mathematics. You won't believe the power of AI!",
+        "instagram_caption": "🤯 OpenAI's math breakthroughs are redefining what's possible! See the 10 key advances that are changing the game. Follow @aipulse!"
+      },
+      {
+        "title": "Unlocking Math Secrets with AI! #Shorts",
+        "description": "Explore 10 revolutionary steps OpenAI took in math. Prepare to be amazed by AI's potential!",
+        "instagram_caption": "🚀 AI is solving complex math problems like never before! Get ready for 10 groundbreaking discoveries from OpenAI. Follow @aipulse!"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
