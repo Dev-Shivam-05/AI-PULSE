@@ -1,0 +1,57 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "This incident is significant because it shows AI is no longer just a tool for *creating* problems; it's becoming a tool for *solving* them.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "OpenAI is actively using its own technology, trained on identifying patterns of misuse, to detect and disrupt these criminal networks, turning the AI against its malicious users.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "The sheer volume of scam content this operation was capable of producing, thanks to AI, is staggering.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "They weren't just sending a few templated messages; they were engaging in personalized, multi-stage conversations across numerous platforms, creating a constant stream of deceptive material that would have been impossible to manage manually at this scale.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The disruption of this AI-powered scam network highlights a critical paradigm shift where AI tools, once feared as enablers of crime, are now being leveraged by developers to actively counter and dismantle sophisticated criminal operations, suggesting a future arms race between AI for illicit and le"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes elements not present in the source text, such as 'Imagine AI not just talking about the future, but actively saving people from be' and 'And the truly disturbing part? Some of the"
+  },
+  "confidence": {
+    "score": 0.704,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.2,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
