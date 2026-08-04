@@ -1447,5 +1447,56 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-04T15:06:50.861291",
+    "title": "OpenAI Luxury Trip Sparks Backlash",
+    "description": "OpenAI's first-ever influencer brand trip is drawing fire as tensions over AI's impact grow. What happened at their upstate New York 'Summer Club' retreat and why is it causing such a stir? We break down the luxury experiences, the backlash, and what this means for the future of AI marketing. Influencers were treated to farm-to-table dinners and wellness activities, while also learning about OpenAI's tools like ChatGPT Work. But the public reaction has been far from positive, with accusations of selling out and concerns about AI's environmental footprint. This event signals a new, potentially controversial, era in how AI companies engage with the public and shape perception. Is this the future of AI's public image? #AI #OpenAI #TechNews #InfluencerMarketing #ArtificialIntelligence\n\nSource: https://techcrunch.com/2026/08/03/influencers-draw-backlash-for-attending-openais-first-luxury-trip/\n\nChapters:\n0:00 AI Influencer Parties\n1:41 Viewer Backlash\n3:11 Creator Collaborations\n5:16 Anthropic's Dinners\n6:41 Shaping Public Opinion\n\n▶ Watch next: https://youtube.com/watch?v=KP3YESa172Y",
+    "tags": [
+      "OpenAI",
+      "AI marketing",
+      "influencer marketing",
+      "luxury retreat",
+      "ChatGPT",
+      "tech backlash",
+      "Summer Club",
+      "AI ethics",
+      "generative AI",
+      "AI controversy",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAI_Luxury_Trip_Sparks_Backlash_20260804_145401_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260804_145802.mp4",
+      "output/shorts/short_2_20260804_145858.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260804_145701.jpg",
+    "youtube_url": "https://youtube.com/watch?v=dNiAFoj8oJA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=gzq9J7GAD48",
+      "https://youtube.com/watch?v=4f_iI4TaaoU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI's Extravagant Getaway Ignites Fury! 🤯 #Shorts",
+        "description": "OpenAI staff enjoyed a lavish trip, sparking outrage among users and critics. Was it justified or a lavish waste of resources? The controversy is heating up!",
+        "instagram_caption": "✈️ OpenAI's luxury retreat is causing a major stir! Users are questioning the extravagance after a recent company getaway. What are your thoughts on this lavish trip? Follow @aipulse!"
+      },
+      {
+        "title": "Shocking OpenAI Luxury Trip Exposed! 🚨 #Shorts",
+        "description": "Details emerge about OpenAI's opulent trip, leading to a massive backlash. Is this the image the AI giant wants to project? We dive into the controversy.",
+        "instagram_caption": "💰 The opulent OpenAI getaway is making headlines and drawing serious criticism. Many are asking if this lavish spending is appropriate for the AI company. Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

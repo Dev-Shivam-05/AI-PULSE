@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Pusateri articulated that the intention was to demystify AI, showing how it can be a practical tool for everyday tasks and professional endeavors, rather than a nebulous, abstract concept.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "OpenAI's foray into influencer marketing with lavish retreats, while intended to demystify AI tools, inadvertently highlights the growing disconnect between the creators of advanced technology and public concerns about its societal and environmental costs."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific details about the content of the influencer posts (aesthetically pleasing, lighthearted) and the nature of the comments (many viewers weren't impressed, questions about e"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
