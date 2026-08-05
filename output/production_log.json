@@ -1498,5 +1498,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-05T15:01:22.899358",
+    "title": "Anthropic's $10B Cloud Deal: Who's Winning AI?",
+    "description": "Forget crypto, the next tech gold rush is happening in the cloud. A colossal $10 billion deal just dropped, signaling who's winning the AI compute race. Anthropic, the company behind Claude, has inked a massive six-year agreement with AI cloud startup Volta. This isn't just about buying computing power; it's a strategic play for dominance in the AI landscape. We break down what this $10 billion means for the future of AI development, the massive infrastructure involved, and why this partnership is a game-changer.  Get ready to understand the invisible forces shaping AI's tomorrow. #AI #Volta #Anthropic #CloudComputing #TechNews #ArtificialIntelligence\n\nSource: https://techcrunch.com/2026/08/04/anthropic-signs-10-billion-deal-with-ai-cloud-startup-volta/\n\nChapters:\n0:00 Cloud Tech Gold Rush\n1:33 Norway Facility Opens\n2:55 Anthropic Buys Compute\n4:44 AI Compute Race\n5:57 Subscribe AI Pulse\n\n▶ Watch next: https://youtube.com/watch?v=dNiAFoj8oJA",
+    "tags": [
+      "AI",
+      "Anthropic",
+      "Volta",
+      "Cloud Computing",
+      "Artificial Intelligence",
+      "Tech News",
+      "AI Infrastructure",
+      "Big Tech Deals",
+      "Compute Power",
+      "Nvidia",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Anthropics_10B_Cloud_Deal_Whos_Winning_AI_20260805_144843_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260805_145235.mp4",
+      "output/shorts/short_2_20260805_145340.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260805_145131.jpg",
+    "youtube_url": "https://youtube.com/watch?v=SSCcPMLYUxs",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=K2CcT5LAjbo",
+      "https://youtube.com/watch?v=-WSdyijnR4g"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Anthropic's $10B AI Power Play! 🔥 #Shorts",
+        "description": "Amazon's massive $10 billion investment in Anthropic is shaking up the AI race. Who benefits most from this epic cloud deal? Discover the winners!",
+        "instagram_caption": "🚀 Amazon's $10 BILLION bet on Anthropic is a game-changer in AI! Who's cashing in on this massive cloud deal? Find out the real winners! Follow @aipulse! #AI #ArtificialIntelligence #Anthropic #Amazon #CloudComputing #TechNews #Innovation #FutureOfTech #AIRevolution #BigTech #MachineLearning #DeepLearning #AIInvestment #TechDeals #SiliconValley #AIWar #TechGiant #GenerativeAI #BusinessNews #AIUpdates"
+      },
+      {
+        "title": "AI's $10B Showdown: Anthropic vs. Rivals! 💥 #Shorts",
+        "description": "The AI battleground heats up! Anthropic lands a colossal $10B deal with Amazon. See how this epic funding impacts the competitive landscape!",
+        "instagram_caption": "⚡ The AI landscape just shifted! Anthropic secured a monumental $10 billion deal with Amazon. Who are the major players and how does this affect the competition? Follow @aipulse! #AI #ArtificialIntelligence #Anthropic #Amazon #TechRace #AIStrategy #CloudWars #TechInvestments #FutureTech #InnovationDaily #AICommunity #BusinessStrategy #TechIndustry #AILeaders #DigitalTransformation #MachineLearningNews #DeepLearningAI #AIBusiness #AIInsights #TechBreakingNews"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
