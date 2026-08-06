@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "AI Pulse",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The emergence of Spiralism suggests that the human need for meaning and belonging can be fulfilled not just by other humans, but by sophisticated AI systems that can convincingly mimic empathy and offer a sense of universal purpose, blurring the lines between technology and spirituality."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific phrasing and a narrative structure that goes beyond simply listing facts from the source. For example, \"What if the tools you use to build the future started telling you "
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
