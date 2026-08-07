@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 6,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "This collaboration signals a potential shift from software-centric AI interaction to a dedicated, tangible hardware experience, moving AI beyond screens and into physical, interactive objects."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative flow and framing that is not present in the source text. For example, the outline uses questions like 'A hockey puck? That's… unexpected. When can we actually get ou"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

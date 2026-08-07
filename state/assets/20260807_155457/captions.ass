@@ -1,0 +1,222 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.48,Live,,0,0,0,{\k44}Joni {\k42}Ive {\k14}{\k6}the {\k32}design
+Dialogue: 0,0:00:01.38,0:00:02.48,Live,,0,0,0,{\k38}gear {\k18}ru {\k24}behind {\k20}the
+Dialogue: 0,0:00:02.38,0:00:03.98,Live,,0,0,0,{\k40}iPhone {\k54}{\k4}is {\k40}teaming {\k12}up
+Dialogue: 0,0:00:03.88,0:00:06.22,Live,,0,0,0,{\k20}with {\k70}OpenAI {\k62}{\k40}Their {\k32}first
+Dialogue: 0,0:00:06.12,0:00:07.74,Live,,0,0,0,{\k52}creation {\k52}{\k22}it's {\k14}not {\k12}a
+Dialogue: 0,0:00:07.64,0:00:08.94,Live,,0,0,0,{\k34}phone {\k24}but {\k32}something {\k30}far
+Dialogue: 0,0:00:08.84,0:00:10.94,Live,,0,0,0,{\k56}stranger {\k48}{\k44}Imagine {\k20}a {\k32}smart
+Dialogue: 0,0:00:10.84,0:00:13.24,Live,,0,0,0,{\k52}speaker {\k52}but {\k58}completely {\k68}screenless
+Dialogue: 0,0:00:13.74,0:00:15.12,Live,,0,0,0,{\k20}Think {\k10}a {\k42}battery {\k56}powered
+Dialogue: 0,0:00:15.30,0:00:17.14,Live,,0,0,0,{\k18}donut {\k34}shaped {\k58}device {\k64}about
+Dialogue: 0,0:00:17.04,0:00:18.10,Live,,0,0,0,{\k20}the {\k40}size {\k24}of {\k12}a
+Dialogue: 0,0:00:18.00,0:00:18.74,Live,,0,0,0,{\k34}hockey {\k30}puck
+Dialogue: 0,0:00:19.38,0:00:20.36,Live,,0,0,0,{\k22}This {\k26}isn't {\k18}just {\k22}a
+Dialogue: 0,0:00:20.26,0:00:22.72,Live,,0,0,0,{\k46}passive {\k56}listening {\k50}device {\k64}{\k20}It's
+Dialogue: 0,0:00:22.62,0:00:23.66,Live,,0,0,0,{\k38}designed {\k28}to {\k14}be {\k14}a
+Dialogue: 0,0:00:23.56,0:00:26.38,Live,,0,0,0,{\k54}proactive {\k52}AI {\k80}companion {\k56}{\k30}always
+Dialogue: 0,0:00:26.28,0:00:27.80,Live,,0,0,0,{\k34}ready {\k22}to {\k42}engage {\k44}without
+Dialogue: 0,0:00:27.70,0:00:28.58,Live,,0,0,0,{\k22}the {\k16}need {\k18}to {\k22}wake
+Dialogue: 0,0:00:28.48,0:00:29.54,Live,,0,0,0,{\k22}it {\k18}with {\k10}a {\k46}specific
+Dialogue: 0,0:00:29.44,0:00:31.60,Live,,0,0,0,{\k50}command {\k48}phrase {\k64}every {\k44}single
+Dialogue: 0,0:00:31.50,0:00:33.22,Live,,0,0,0,{\k60}time {\k34}{\k10}A {\k32}hockey {\k26}puck
+Dialogue: 0,0:00:33.62,0:00:35.04,Live,,0,0,0,{\k50}That's {\k82}unexpected
+Dialogue: 0,0:00:35.66,0:00:36.54,Live,,0,0,0,{\k14}When {\k16}can {\k12}we {\k36}actually
+Dialogue: 0,0:00:36.44,0:00:37.46,Live,,0,0,0,{\k26}get {\k16}our {\k32}hands {\k18}on
+Dialogue: 0,0:00:37.36,0:00:39.18,Live,,0,0,0,{\k18}this {\k50}peculiar {\k50}AI {\k54}assistant
+Dialogue: 0,0:00:39.88,0:00:41.12,Live,,0,0,0,{\k8}The {\k24}form {\k40}factor {\k42}itself
+Dialogue: 0,0:00:41.02,0:00:42.74,Live,,0,0,0,{\k52}raises {\k54}questions {\k36}about {\k20}its
+Dialogue: 0,0:00:42.64,0:00:44.30,Live,,0,0,0,{\k62}functionality {\k58}and {\k18}how {\k18}it
+Dialogue: 0,0:00:44.20,0:00:45.50,Live,,0,0,0,{\k22}fits {\k34}into {\k16}our {\k48}existing
+Dialogue: 0,0:00:45.40,0:00:47.90,Live,,0,0,0,{\k30}tech {\k66}ecosystems {\k60}{\k52}Reports {\k32}point
+Dialogue: 0,0:00:47.80,0:00:50.04,Live,,0,0,0,{\k22}to {\k10}a {\k120}2027 {\k62}launch
+Dialogue: 0,0:00:50.24,0:00:51.44,Live,,0,0,0,{\k26}with {\k10}a {\k34}price {\k40}tag
+Dialogue: 0,0:00:51.34,0:00:52.76,Live,,0,0,0,{\k60}expected {\k24}to {\k14}be {\k34}over
+Dialogue: 0,0:00:52.66,0:00:53.84,Live,,0,0,0,{\k108}300
+Dialogue: 0,0:00:54.45,0:00:55.98,Live,,0,0,0,{\k31}This {\k42}suggests {\k34}a {\k36}premium
+Dialogue: 0,0:00:55.88,0:00:57.76,Live,,0,0,0,{\k78}product {\k30}{\k30}not {\k14}a {\k26}mass
+Dialogue: 0,0:00:57.66,0:01:00.04,Live,,0,0,0,{\k40}market {\k42}impulse {\k44}buy {\k54}{\k48}hinting
+Dialogue: 0,0:00:59.94,0:01:02.02,Live,,0,0,0,{\k16}at {\k54}advanced {\k70}capabilities {\k58}and
+Dialogue: 0,0:01:01.92,0:01:03.06,Live,,0,0,0,{\k8}a {\k38}focus {\k30}on {\k28}user
+Dialogue: 0,0:01:02.96,0:01:04.88,Live,,0,0,0,{\k84}experience {\k46}rather {\k24}than {\k28}sheer
+Dialogue: 0,0:01:04.78,0:01:07.40,Live,,0,0,0,{\k62}volume {\k38}{\k34}Over {\k66}300 {\k52}for
+Dialogue: 0,0:01:07.30,0:01:08.76,Live,,0,0,0,{\k16}a {\k24}hockey {\k26}puck {\k52}{\k18}what
+Dialogue: 0,0:01:08.66,0:01:09.72,Live,,0,0,0,{\k16}makes {\k30}this {\k20}thing {\k30}worth
+Dialogue: 0,0:01:09.62,0:01:11.06,Live,,0,0,0,{\k14}the {\k38}premium {\k56}{\k12}We're {\k14}not
+Dialogue: 0,0:01:10.96,0:01:12.00,Live,,0,0,0,{\k18}just {\k34}talking {\k28}about {\k14}a
+Dialogue: 0,0:01:11.90,0:01:13.32,Live,,0,0,0,{\k32}speaker {\k26}that {\k30}plays {\k44}music
+Dialogue: 0,0:01:13.86,0:01:15.12,Live,,0,0,0,{\k14}The {\k22}true {\k38}value {\k42}likely
+Dialogue: 0,0:01:15.02,0:01:16.70,Live,,0,0,0,{\k40}lies {\k30}in {\k12}the {\k76}sophistication
+Dialogue: 0,0:01:16.60,0:01:18.00,Live,,0,0,0,{\k20}of {\k14}the {\k34}AI {\k62}and
+Dialogue: 0,0:01:17.90,0:01:18.94,Live,,0,0,0,{\k12}the {\k32}novel {\k30}ways {\k20}it
+Dialogue: 0,0:01:18.84,0:01:20.36,Live,,0,0,0,{\k40}interacts {\k26}with {\k28}us {\k48}The
+Dialogue: 0,0:01:20.26,0:01:22.16,Live,,0,0,0,{\k40}design {\k30}is {\k46}reportedly {\k64}unique
+Dialogue: 0,0:01:22.52,0:01:23.82,Live,,0,0,0,{\k46}featuring {\k36}moving {\k38}parts
+Dialogue: 0,0:01:24.46,0:01:26.06,Live,,0,0,0,{\k26}These {\k54}components {\k26}will {\k44}physically
+Dialogue: 0,0:01:25.96,0:01:27.22,Live,,0,0,0,{\k38}shift {\k22}to {\k26}show {\k30}when
+Dialogue: 0,0:01:27.12,0:01:28.64,Live,,0,0,0,{\k10}the {\k38}device {\k28}is {\k66}interacting
+Dialogue: 0,0:01:28.54,0:01:30.82,Live,,0,0,0,{\k90}alongside {\k70}subtle {\k32}lights {\k26}and
+Dialogue: 0,0:01:30.72,0:01:32.28,Live,,0,0,0,{\k10}a {\k40}camera {\k58}{\k24}Think {\k14}of
+Dialogue: 0,0:01:32.18,0:01:33.16,Live,,0,0,0,{\k10}it {\k20}like {\k16}a {\k42}physical
+Dialogue: 0,0:01:33.06,0:01:35.10,Live,,0,0,0,{\k66}manifestation {\k48}of {\k14}the {\k66}AI's
+Dialogue: 0,0:01:35.00,0:01:37.32,Live,,0,0,0,{\k46}attention {\k48}{\k12}a {\k38}subtle {\k20}{\k58}almost
+Dialogue: 0,0:01:37.22,0:01:38.82,Live,,0,0,0,{\k60}organic {\k36}way {\k20}to {\k34}convey
+Dialogue: 0,0:01:38.72,0:01:40.74,Live,,0,0,0,{\k32}its {\k36}state {\k54}{\k24}moving {\k46}beyond
+Dialogue: 0,0:01:40.64,0:01:42.34,Live,,0,0,0,{\k54}simple {\k46}blinking {\k60}LEDs
+Dialogue: 0,0:01:43.00,0:01:44.66,Live,,0,0,0,{\k34}Moving {\k48}parts {\k28}{\k28}So {\k18}it's
+Dialogue: 0,0:01:44.56,0:01:45.44,Live,,0,0,0,{\k14}not {\k22}just {\k10}a {\k32}static
+Dialogue: 0,0:01:45.34,0:01:46.78,Live,,0,0,0,{\k48}object {\k46}{\k18}It {\k10}has {\k12}a
+Dialogue: 0,0:01:46.68,0:01:48.60,Live,,0,0,0,{\k32}physical {\k42}presence {\k28}that {\k80}communicates
+Dialogue: 0,0:01:48.91,0:01:50.92,Live,,0,0,0,{\k35}That {\k44}sounds {\k66}almost {\k46}alive
+Dialogue: 0,0:01:51.26,0:01:52.94,Live,,0,0,0,{\k38}This {\k38}tactile {\k52}feedback {\k30}could
+Dialogue: 0,0:01:52.84,0:01:54.44,Live,,0,0,0,{\k46}fundamentally {\k58}change {\k30}how {\k16}we
+Dialogue: 0,0:01:54.34,0:01:55.90,Live,,0,0,0,{\k38}perceive {\k32}and {\k36}trust {\k40}AI
+Dialogue: 0,0:01:56.44,0:01:57.30,Live,,0,0,0,{\k16}making {\k18}it {\k18}feel {\k24}more
+Dialogue: 0,0:01:57.20,0:01:58.62,Live,,0,0,0,{\k44}present {\k36}and {\k24}less {\k28}like
+Dialogue: 0,0:01:58.52,0:02:00.38,Live,,0,0,0,{\k12}a {\k64}disembodied {\k36}voice {\k44}{\k20}The
+Dialogue: 0,0:02:00.28,0:02:02.40,Live,,0,0,0,{\k28}goal {\k22}is {\k70}portability {\k54}{\k28}easy
+Dialogue: 0,0:02:02.30,0:02:03.32,Live,,0,0,0,{\k14}to {\k32}carry {\k28}around {\k18}the
+Dialogue: 0,0:02:03.22,0:02:04.58,Live,,0,0,0,{\k26}home {\k24}with {\k22}one {\k54}hand
+Dialogue: 0,0:02:04.88,0:02:06.58,Live,,0,0,0,{\k34}similar {\k24}to {\k84}Amazon's {\k18}old
+Dialogue: 0,0:02:06.48,0:02:07.36,Live,,0,0,0,{\k26}tap {\k52}speaker
+Dialogue: 0,0:02:08.06,0:02:09.98,Live,,0,0,0,{\k26}This {\k86}emphasizes {\k24}a {\k46}fluid
+Dialogue: 0,0:02:10.12,0:02:12.42,Live,,0,0,0,{\k24}mobile {\k64}interaction {\k54}model {\k44}{\k34}allowing
+Dialogue: 0,0:02:12.32,0:02:13.88,Live,,0,0,0,{\k30}the {\k42}AI {\k36}to {\k38}follow
+Dialogue: 0,0:02:13.78,0:02:14.88,Live,,0,0,0,{\k26}you {\k22}from {\k26}room {\k26}to
+Dialogue: 0,0:02:14.78,0:02:16.84,Live,,0,0,0,{\k36}room {\k34}{\k34}becoming {\k32}a {\k60}constant
+Dialogue: 0,0:02:17.12,0:02:19.88,Live,,0,0,0,{\k72}unobtrusive {\k68}companion {\k42}{\k34}Now {\k50}let's
+Dialogue: 0,0:02:19.78,0:02:20.66,Live,,0,0,0,{\k16}cut {\k24}through {\k12}the {\k26}noise
+Dialogue: 0,0:02:21.22,0:02:22.32,Live,,0,0,0,{\k22}The {\k28}hockey {\k24}puck {\k26}shape
+Dialogue: 0,0:02:22.22,0:02:23.38,Live,,0,0,0,{\k24}is {\k10}a {\k28}design {\k44}choice
+Dialogue: 0,0:02:23.72,0:02:24.70,Live,,0,0,0,{\k12}but {\k10}the {\k22}real {\k44}story
+Dialogue: 0,0:02:24.60,0:02:26.34,Live,,0,0,0,{\k28}is {\k36}open {\k34}AI {\k66}delivering
+Dialogue: 0,0:02:26.24,0:02:27.84,Live,,0,0,0,{\k66}advanced {\k42}AI {\k30}in {\k12}a
+Dialogue: 0,0:02:27.74,0:02:29.72,Live,,0,0,0,{\k48}tangible {\k70}screen {\k26}free {\k44}format
+Dialogue: 0,0:02:30.24,0:02:31.64,Live,,0,0,0,{\k22}This {\k16}is {\k22}about {\k70}abstracting
+Dialogue: 0,0:02:31.54,0:02:32.72,Live,,0,0,0,{\k22}away {\k18}the {\k48}complexity {\k20}of
+Dialogue: 0,0:02:32.62,0:02:34.62,Live,,0,0,0,{\k54}interfaces {\k62}and {\k30}making {\k44}AI
+Dialogue: 0,0:02:34.52,0:02:36.88,Live,,0,0,0,{\k76}accessible {\k44}through {\k38}natural {\k68}conversation
+Dialogue: 0,0:02:36.78,0:02:38.62,Live,,0,0,0,{\k60}and {\k34}subtle {\k40}physical {\k40}cues
+Dialogue: 0,0:02:38.82,0:02:40.26,Live,,0,0,0,{\k36}It's {\k40}expected {\k22}to {\k36}function
+Dialogue: 0,0:02:40.16,0:02:42.10,Live,,0,0,0,{\k32}like {\k36}chat {\k88}GPT's {\k28}voice
+Dialogue: 0,0:02:42.00,0:02:43.50,Live,,0,0,0,{\k46}mode {\k34}{\k22}but {\k18}with {\k20}more
+Dialogue: 0,0:02:43.40,0:02:45.20,Live,,0,0,0,{\k44}advanced {\k52}models {\k28}for {\k46}truly
+Dialogue: 0,0:02:45.10,0:02:47.60,Live,,0,0,0,{\k64}natural {\k70}human {\k28}like {\k78}conversations
+Dialogue: 0,0:02:48.22,0:02:49.64,Live,,0,0,0,{\k34}This {\k24}means {\k28}going {\k46}beyond
+Dialogue: 0,0:02:49.54,0:02:51.04,Live,,0,0,0,{\k50}simple {\k40}command {\k50}response
+Dialogue: 0,0:02:51.78,0:02:53.30,Live,,0,0,0,{\k12}We're {\k36}talking {\k30}about {\k64}contextual
+Dialogue: 0,0:02:53.20,0:02:55.70,Live,,0,0,0,{\k90}understanding {\k64}{\k34}memory {\k20}of {\k32}past
+Dialogue: 0,0:02:55.60,0:02:57.56,Live,,0,0,0,{\k68}interactions {\k52}{\k22}and {\k10}the {\k34}ability
+Dialogue: 0,0:02:57.46,0:02:58.82,Live,,0,0,0,{\k30}to {\k48}engage {\k26}in {\k22}more
+Dialogue: 0,0:02:58.72,0:03:01.08,Live,,0,0,0,{\k78}complex {\k16}{\k38}multi {\k36}turn {\k58}dialogues
+Dialogue: 0,0:03:00.98,0:03:02.68,Live,,0,0,0,{\k44}that {\k22}mimic {\k50}human {\k44}discourse
+Dialogue: 0,0:03:03.08,0:03:04.54,Live,,0,0,0,{\k36}So {\k22}the {\k54}interaction {\k24}is
+Dialogue: 0,0:03:04.44,0:03:05.98,Live,,0,0,0,{\k24}key {\k51}{\k33}It's {\k16}not {\k20}just
+Dialogue: 0,0:03:05.88,0:03:07.70,Live,,0,0,0,{\k38}asking {\k48}questions {\k50}{\k12}but {\k24}having
+Dialogue: 0,0:03:07.60,0:03:09.82,Live,,0,0,0,{\k44}nuanced {\k78}conversations {\k62}powered {\k28}by
+Dialogue: 0,0:03:09.72,0:03:11.64,Live,,0,0,0,{\k40}open {\k72}AI's {\k26}latest {\k44}AI
+Dialogue: 0,0:03:12.24,0:03:13.32,Live,,0,0,0,{\k20}But {\k32}here's {\k10}the {\k36}kicker
+Dialogue: 0,0:03:13.62,0:03:14.42,Live,,0,0,0,{\k14}This {\k16}is {\k22}just {\k18}the
+Dialogue: 0,0:03:14.32,0:03:15.10,Live,,0,0,0,{\k26}first {\k42}device
+Dialogue: 0,0:03:15.72,0:03:16.46,Live,,0,0,0,{\k12}Is {\k16}this {\k16}a {\k20}one
+Dialogue: 0,0:03:16.36,0:03:17.62,Live,,0,0,0,{\k24}off {\k46}or {\k18}the {\k28}start
+Dialogue: 0,0:03:17.52,0:03:19.14,Live,,0,0,0,{\k16}of {\k28}something {\k34}bigger {\k62}{\k12}The
+Dialogue: 0,0:03:19.04,0:03:20.32,Live,,0,0,0,{\k44}potential {\k26}for {\k12}a {\k36}connected
+Dialogue: 0,0:03:20.22,0:03:22.26,Live,,0,0,0,{\k60}ecosystem {\k48}of {\k26}AI {\k60}devices
+Dialogue: 0,0:03:22.16,0:03:24.26,Live,,0,0,0,{\k42}is {\k24}immense {\k56}{\k46}Rumors {\k32}suggest
+Dialogue: 0,0:03:24.16,0:03:25.06,Live,,0,0,0,{\k36}this {\k20}could {\k10}be {\k14}the
+Dialogue: 0,0:03:24.96,0:03:25.96,Live,,0,0,0,{\k38}first {\k20}in {\k14}a {\k18}whole
+Dialogue: 0,0:03:25.86,0:03:27.56,Live,,0,0,0,{\k54}family {\k18}of {\k46}devices {\k42}that
+Dialogue: 0,0:03:27.46,0:03:29.36,Live,,0,0,0,{\k46}open {\k48}AI {\k46}has {\k40}planned
+Dialogue: 0,0:03:29.76,0:03:31.62,Live,,0,0,0,{\k44}This {\k48}implies {\k28}a {\k56}strategic
+Dialogue: 0,0:03:31.52,0:03:32.64,Live,,0,0,0,{\k34}move {\k30}to {\k22}build {\k16}a
+Dialogue: 0,0:03:32.54,0:03:35.24,Live,,0,0,0,{\k72}comprehensive {\k48}AI {\k62}hardware {\k78}platform
+Dialogue: 0,0:03:35.52,0:03:36.56,Live,,0,0,0,{\k28}not {\k24}just {\k18}a {\k24}single
+Dialogue: 0,0:03:36.46,0:03:39.60,Live,,0,0,0,{\k64}product {\k62}{\k48}Imagine {\k64}specialized {\k66}devices
+Dialogue: 0,0:03:39.50,0:03:40.98,Live,,0,0,0,{\k32}for {\k28}different {\k34}tasks {\k44}or
+Dialogue: 0,0:03:40.88,0:03:44.02,Live,,0,0,0,{\k72}environments {\k80}all {\k62}seamlessly {\k90}integrated
+Dialogue: 0,0:03:44.28,0:03:45.64,Live,,0,0,0,{\k22}A {\k40}family {\k20}of {\k44}devices
+Dialogue: 0,0:03:46.18,0:03:47.56,Live,,0,0,0,{\k26}This {\k20}means {\k46}open {\k36}AI
+Dialogue: 0,0:03:47.46,0:03:49.20,Live,,0,0,0,{\k48}is {\k26}moving {\k34}beyond {\k56}software
+Dialogue: 0,0:03:49.10,0:03:50.78,Live,,0,0,0,{\k52}and {\k18}into {\k44}dedicated {\k44}AI
+Dialogue: 0,0:03:50.68,0:03:51.42,Live,,0,0,0,{\k64}hardware
+Dialogue: 0,0:03:52.02,0:03:54.04,Live,,0,0,0,{\k46}Imagine {\k46}multiple {\k52}devices {\k48}throughout
+Dialogue: 0,0:03:53.94,0:03:55.54,Live,,0,0,0,{\k20}your {\k28}home {\k42}{\k14}all {\k46}powered
+Dialogue: 0,0:03:55.44,0:03:57.66,Live,,0,0,0,{\k26}by {\k48}advanced {\k48}AI {\k56}{\k34}interacting
+Dialogue: 0,0:03:57.56,0:03:58.84,Live,,0,0,0,{\k30}with {\k28}you {\k38}and {\k22}each
+Dialogue: 0,0:03:58.74,0:04:00.38,Live,,0,0,0,{\k22}other {\k70}{\k20}This {\k20}could {\k22}lead
+Dialogue: 0,0:04:00.28,0:04:01.74,Live,,0,0,0,{\k20}to {\k12}a {\k40}truly {\k64}intelligent
+Dialogue: 0,0:04:01.64,0:04:04.06,Live,,0,0,0,{\k70}environment {\k48}where {\k44}devices {\k70}anticipate
+Dialogue: 0,0:04:03.96,0:04:05.70,Live,,0,0,0,{\k36}needs {\k50}and {\k50}collaborate {\k28}to
+Dialogue: 0,0:04:05.60,0:04:07.00,Live,,0,0,0,{\k20}serve {\k30}you {\k30}{\k20}This {\k30}push
+Dialogue: 0,0:04:06.90,0:04:08.48,Live,,0,0,0,{\k20}for {\k32}hardware {\k50}means {\k46}AI
+Dialogue: 0,0:04:08.38,0:04:10.02,Live,,0,0,0,{\k38}could {\k28}become {\k28}more {\k60}integrated
+Dialogue: 0,0:04:09.92,0:04:11.38,Live,,0,0,0,{\k32}into {\k14}our {\k24}daily {\k66}lives
+Dialogue: 0,0:04:11.76,0:04:13.18,Live,,0,0,0,{\k20}less {\k60}reliant {\k24}on {\k28}pulling
+Dialogue: 0,0:04:13.08,0:04:13.92,Live,,0,0,0,{\k28}out {\k10}a {\k36}phone
+Dialogue: 0,0:04:14.54,0:04:15.82,Live,,0,0,0,{\k24}It's {\k6}a {\k50}significant {\k38}step
+Dialogue: 0,0:04:15.72,0:04:18.06,Live,,0,0,0,{\k40}towards {\k58}truly {\k54}ambient {\k72}AI
+Dialogue: 0,0:04:18.48,0:04:20.18,Live,,0,0,0,{\k24}where {\k64}intelligence {\k32}is {\k40}woven
+Dialogue: 0,0:04:20.08,0:04:21.20,Live,,0,0,0,{\k26}into {\k14}the {\k40}fabric {\k22}of
+Dialogue: 0,0:04:21.10,0:04:23.54,Live,,0,0,0,{\k12}our {\k60}surroundings {\k66}{\k54}accessible {\k42}whenever
+Dialogue: 0,0:04:23.44,0:04:24.76,Live,,0,0,0,{\k38}and {\k28}wherever {\k30}you {\k26}need
+Dialogue: 0,0:04:24.66,0:04:27.06,Live,,0,0,0,{\k22}it {\k36}{\k28}without {\k62}explicit {\k82}invocation
+Dialogue: 0,0:04:27.36,0:04:29.12,Live,,0,0,0,{\k26}The {\k60}implications {\k34}are {\k46}massive
+Dialogue: 0,0:04:29.58,0:04:31.00,Live,,0,0,0,{\k50}transforming {\k32}how {\k20}we {\k30}manage
+Dialogue: 0,0:04:30.90,0:04:32.88,Live,,0,0,0,{\k22}our {\k46}homes {\k44}{\k28}access {\k48}information
+Dialogue: 0,0:04:33.10,0:04:34.84,Live,,0,0,0,{\k34}and {\k22}work {\k62}{\k22}Will {\k24}this
+Dialogue: 0,0:04:34.74,0:04:36.16,Live,,0,0,0,{\k32}hockey {\k26}puck {\k38}speaker {\k36}be
+Dialogue: 0,0:04:36.06,0:04:37.06,Live,,0,0,0,{\k12}the {\k36}gateway {\k30}to {\k12}a
+Dialogue: 0,0:04:36.96,0:04:38.22,Live,,0,0,0,{\k20}new {\k40}era {\k16}of {\k40}personal
+Dialogue: 0,0:04:38.12,0:04:40.08,Live,,0,0,0,{\k32}AI {\k60}hardware {\k60}{\k24}Let {\k10}us
+Dialogue: 0,0:04:39.98,0:04:40.76,Live,,0,0,0,{\k20}know {\k16}what {\k12}you {\k20}think
+Dialogue: 0,0:04:40.66,0:04:42.42,Live,,0,0,0,{\k26}below {\k58}and {\k50}subscribe {\k32}for
+Dialogue: 0,0:04:42.32,0:04:44.54,Live,,0,0,0,{\k24}more {\k30}AI {\k82}breakthroughs {\k38}{\k38}Consider
+Dialogue: 0,0:04:44.44,0:04:46.38,Live,,0,0,0,{\k20}the {\k58}implications {\k34}for {\k72}accessibility
+Dialogue: 0,0:04:46.76,0:04:47.94,Live,,0,0,0,{\k8}A {\k36}screen {\k22}less {\k42}device
+Dialogue: 0,0:04:47.84,0:04:49.32,Live,,0,0,0,{\k30}that {\k32}relies {\k34}on {\k42}natural
+Dialogue: 0,0:04:49.22,0:04:50.94,Live,,0,0,0,{\k46}language {\k38}and {\k34}subtle {\k44}physical
+Dialogue: 0,0:04:50.84,0:04:52.66,Live,,0,0,0,{\k46}cues {\k48}could {\k14}be {\k64}revolutionary
+Dialogue: 0,0:04:52.56,0:04:54.20,Live,,0,0,0,{\k36}for {\k50}individuals {\k34}with {\k34}visual
+Dialogue: 0,0:04:54.10,0:04:55.98,Live,,0,0,0,{\k68}impairments {\k54}or {\k36}those {\k20}who
+Dialogue: 0,0:04:55.88,0:04:58.20,Live,,0,0,0,{\k28}find {\k60}traditional {\k64}interfaces {\k70}challenging
+Dialogue: 0,0:04:58.86,0:05:00.68,Live,,0,0,0,{\k24}The {\k32}tactile {\k52}feedback {\k56}{\k8}the
+Dialogue: 0,0:05:00.58,0:05:02.14,Live,,0,0,0,{\k32}movement {\k52}{\k8}the {\k24}lights {\k30}these
+Dialogue: 0,0:05:02.04,0:05:03.18,Live,,0,0,0,{\k24}all {\k46}contribute {\k24}to {\k10}a
+Dialogue: 0,0:05:03.08,0:05:05.22,Live,,0,0,0,{\k32}richer {\k44}{\k16}more {\k56}inclusive {\k56}interaction
+Dialogue: 0,0:05:05.12,0:05:07.40,Live,,0,0,0,{\k36}model {\k34}{\k68}Furthermore {\k36}{\k8}the {\k36}battery
+Dialogue: 0,0:05:07.30,0:05:09.14,Live,,0,0,0,{\k40}powered {\k46}nature {\k20}and {\k68}portability
+Dialogue: 0,0:05:09.04,0:05:10.96,Live,,0,0,0,{\k62}suggested {\k70}departure {\k34}from {\k16}the
+Dialogue: 0,0:05:10.86,0:05:12.64,Live,,0,0,0,{\k50}always {\k50}plugged {\k14}in {\k54}paradigm
+Dialogue: 0,0:05:12.54,0:05:14.36,Live,,0,0,0,{\k62}of {\k30}many {\k46}smart {\k34}home
+Dialogue: 0,0:05:14.26,0:05:16.46,Live,,0,0,0,{\k66}devices {\k62}{\k40}This {\k18}could {\k24}mean
+Dialogue: 0,0:05:16.36,0:05:18.40,Live,,0,0,0,{\k42}greater {\k52}flexibility {\k52}in {\k48}placement
+Dialogue: 0,0:05:18.30,0:05:20.40,Live,,0,0,0,{\k30}and {\k34}usage {\k70}{\k36}allowing {\k30}the
+Dialogue: 0,0:05:20.30,0:05:21.96,Live,,0,0,0,{\k42}AI {\k68}companion {\k32}to {\k14}be
+Dialogue: 0,0:05:21.86,0:05:22.56,Live,,0,0,0,{\k14}a {\k20}part {\k16}of {\k10}your
+Dialogue: 0,0:05:22.46,0:05:24.32,Live,,0,0,0,{\k32}life {\k32}both {\k66}inside {\k46}and
+Dialogue: 0,0:05:24.22,0:05:26.00,Live,,0,0,0,{\k50}outside {\k30}the {\k54}traditional {\k34}home
+Dialogue: 0,0:05:25.90,0:05:28.00,Live,,0,0,0,{\k70}environment {\k36}{\k24}The {\k48}integration {\k22}of
+Dialogue: 0,0:05:27.90,0:05:29.28,Live,,0,0,0,{\k8}a {\k36}camera {\k44}{\k22}even {\k18}if
+Dialogue: 0,0:05:29.18,0:05:31.10,Live,,0,0,0,{\k54}primarily {\k30}for {\k26}AI {\k72}processing
+Dialogue: 0,0:05:31.00,0:05:32.34,Live,,0,0,0,{\k60}and {\k20}not {\k22}for {\k22}user
+Dialogue: 0,0:05:32.24,0:05:34.08,Live,,0,0,0,{\k36}facing {\k48}video {\k48}{\k28}hints {\k14}at
+Dialogue: 0,0:05:33.98,0:05:35.94,Live,,0,0,0,{\k50}advanced {\k46}spatial {\k48}awareness {\k42}and
+Dialogue: 0,0:05:35.84,0:05:37.36,Live,,0,0,0,{\k52}environmental {\k90}understanding
+Dialogue: 0,0:05:38.00,0:05:39.24,Live,,0,0,0,{\k36}This {\k16}could {\k36}enable {\k26}the
+Dialogue: 0,0:05:39.14,0:05:41.04,Live,,0,0,0,{\k34}AI {\k36}to {\k26}better {\k84}contextualize
+Dialogue: 0,0:05:40.94,0:05:42.98,Live,,0,0,0,{\k18}your {\k44}requests {\k66}{\k46}understand {\k20}your
+Dialogue: 0,0:05:42.88,0:05:44.74,Live,,0,0,0,{\k50}surroundings {\k62}and {\k28}even {\k36}offer
+Dialogue: 0,0:05:44.64,0:05:46.62,Live,,0,0,0,{\k50}proactive {\k70}assistance {\k42}based {\k26}on
+Dialogue: 0,0:05:46.52,0:05:47.18,Live,,0,0,0,{\k16}what {\k14}it {\k26}sees
