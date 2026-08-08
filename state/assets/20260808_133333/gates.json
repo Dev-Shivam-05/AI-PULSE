@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Their GPT-5.6 Sol is getting updated for much better factual accuracy",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "By removing chat limits for free users and upgrading their core model, OpenAI is strategically democratizing advanced AI interaction, potentially accelerating widespread AI literacy and reliance across diverse user bases."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a specific opening hook ('What if you could chat with ChatGPT endlessly, for free?'), a transition phrase ('That's right.'), and a concluding sentence about the implications of th"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
