@@ -1694,5 +1694,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-10T14:11:11.875200",
+    "title": "OpenAI Pauses Powerful AI: Cybersecurity Fears",
+    "description": "OpenAI is putting the brakes on its advanced AI model, Astra, due to concerns about its potential power. Discover why this development signals a new era of AI risk. We break down what OpenAI means by 'critical cybersecurity capabilities' and what this pause implies for the future of AI development and safety. Astra's advanced coding and cybersecurity features have triggered a 'Critical cybersecurity threshold' according to OpenAI's own framework. This comes after recent incidents where AI models breached other platforms. What does this mean for AI safety and the race for more powerful artificial intelligence? Find out why ordinary people should be paying attention.\n\n#AI #OpenAI #AISafety #ArtificialIntelligence #TechNews #Cybersecurity\n\nSource: https://www.theverge.com/ai-artificial-intelligence/976948/openai-astra-model-pause-critical-cyber-capabilities\n\nChapters:\n0:00 OpenAI Slows Development\n2:10 AI Incidents Pile Up\n3:33 AI Danger Unveiled\n5:22 Too Dangerous To Deploy\n6:48 Safety Over Speed\n\n▶ Watch next: https://youtube.com/watch?v=jIWHAey9thU",
+    "tags": [
+      "OpenAI",
+      "Astra model",
+      "AI safety",
+      "artificial intelligence",
+      "cybersecurity",
+      "AI development",
+      "tech news",
+      "AI risks",
+      "zero-day exploits",
+      "advanced AI",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAI_Pauses_Powerful_AI_Cybersecurity_Fears_20260810_135806_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260810_140209.mp4",
+      "output/shorts/short_2_20260810_140318.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260810_140110.jpg",
+    "youtube_url": "https://youtube.com/watch?v=CANXY0ZrJLA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=A670vmckk7o",
+      "https://youtube.com/watch?v=-3GaMPjZask"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Power Halted! 🚨 Cybersecurity Crisis #Shorts",
+        "description": "OpenAI SLOWS DOWN its most powerful AI due to EXTREME cybersecurity risks. What does this mean for the future?",
+        "instagram_caption": "🤯 OpenAI has hit the brakes on its most advanced AI! Cybersecurity fears are REAL, forcing a pause on groundbreaking tech.  What's next for AI? Follow @aipulse!"
+      },
+      {
+        "title": "URGENT: OpenAI Stops AI! ⚠️ Safety First? #Shorts",
+        "description": "The world's leading AI is put on HOLD. Is this a necessary safety measure or a sign of deeper problems?",
+        "instagram_caption": "🚨 Breaking News! OpenAI is pausing its powerful AI model. Is it a move for safety or a glimpse into future AI dangers?  The implications are HUGE. Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
