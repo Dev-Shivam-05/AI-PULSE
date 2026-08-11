@@ -1743,5 +1743,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-11T14:08:22.616846",
+    "title": "OpenAI Daybreak: AI Fights AI Cyberattacks",
+    "description": "AI is fighting back against AI-powered cyberattacks. OpenAI has launched a new cyber defense service called Daybreak, featuring a brand new AI model, GPT-5.6-Cyber. With AI-led attacks multiplying daily, this development is crucial for understanding the future of digital security. We break down what this means for businesses and your online safety.\n\n#AI #Cybersecurity #OpenAI\n\nSource: https://techcrunch.com/2026/08/10/as-ai-led-attacks-multiply-openai-launches-a-new-cyber-model/\n\nChapters:\n0:00 AI Gone Rogue\n1:30 Defender Starting Point\n3:23 Exclusive AI Access\n4:51 AI Arms Race\n6:49 Digital Battleground\n\n▶ Watch next: https://youtube.com/watch?v=CANXY0ZrJLA",
+    "tags": [
+      "AI",
+      "Cybersecurity",
+      "OpenAI",
+      "GPT-5.6-Cyber",
+      "AI Attacks",
+      "Cyber Defense",
+      "Tech News",
+      "Artificial Intelligence",
+      "Daybreak",
+      "AI Security",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAI_Daybreak_AI_Fights_AI_Cyberattacks_20260811_135626_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260811_140004.mp4",
+      "output/shorts/short_2_20260811_140102.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260811_135917.jpg",
+    "youtube_url": "https://youtube.com/watch?v=wXSTjDcz4dM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=AsgPjmWe6Sg",
+      "https://youtube.com/watch?v=oo1FmTgSfiE"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI War: Cyber Defense Unleashed! #Shorts",
+        "description": "Witness the cutting edge of cybersecurity as AI battles AI in a simulated cyberattack. Discover how advanced defenses are being built.",
+        "instagram_caption": "🚨 AI is now fighting AI in the cybersecurity arena! See how our digital defenses are evolving at lightning speed to counter sophisticated threats. Follow @aipulse!"
+      },
+      {
+        "title": "AI vs AI: The Cyber Battlefield! #Shorts",
+        "description": "Explore the thrilling future of cybersecurity with OpenAI Daybreak. AI agents are trained to detect and neutralize malicious AI attacks in real-time.",
+        "instagram_caption": "🤯 The future of cybersecurity is here, and it's AI vs. AI! Watch as intelligent systems defend against simulated cyber warfare in this groundbreaking demonstration. Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

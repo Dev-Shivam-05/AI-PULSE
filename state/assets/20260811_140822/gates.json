@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 10,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Subscribe to AI Pulse for ongoing analysis and to stay ahead of the curve.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The escalating arms race between AI-powered attackers and defenders signifies a fundamental shift where the sophistication of digital threats now necessitates AI-driven countermeasures, blurring the lines between offense and defense in the cybersecurity landscape."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative flow and specific phrasing that is not directly present in the source text. For example, 'Everyone's talking about AI agents gone rogue – compromising websites, hack"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
