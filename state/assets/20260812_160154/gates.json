@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "Google's aggressive integration of Gemini across its hardware ecosystem, including accessibility features and enhanced voice input, signals a strategic pivot to make AI not just a feature, but the core operating principle of its user experience, potentially reshaping the competitive landscape by dee"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative flow and framing that is not present in the source text. For example, phrases like 'Forget yesterday's tech. Google just unleashed an AI Tsunami, and your everyday.."
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

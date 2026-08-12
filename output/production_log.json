@@ -1791,5 +1791,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-12T16:01:54.071231",
+    "title": "Pixel 11: HUGE AI Upgrades Revealed",
+    "description": "Forget yesterday's tech. Google just unleashed an AI Tsunami, and your everyday devices are about to get a mind-blowing, or maybe terrifying, upgrade. From the brand new Pixel 11 series to an AirTag competitor and revolutionary Gemini features, Made by Google '26 has dropped. We break down everything announced: the Pixel 11, Pixel Watch 5, the Pixel Tag, and how Gemini is weaving itself into the fabric of your devices.  Get ready for your phone to understand sign language, your voice commands to get smarter, and your tracking needs to be met.  This isn't just an upgrade; it's a paradigm shift in how we interact with technology. Will it make your life amazing or obsolete? We dive into the details. #AI #Google #Pixel11\n\nSource: https://techcrunch.com/2026/08/12/google-unveils-pixel-11-lineup-new-airtag-rival-and-gemini-features-at-made-by-google-2026/\n\nChapters:\n0:00 AI Tsunami Unleashed\n1:00 Pro Models Durability\n2:36 Rambler Voice Input\n4:16 Find Hub Tracker\n6:49 Embedded AI Push\n\n▶ Watch next: https://youtube.com/watch?v=wXSTjDcz4dM",
+    "tags": [
+      "Google",
+      "Pixel 11",
+      "Made by Google",
+      "Gemini",
+      "AI",
+      "Pixel Watch 5",
+      "Pixel Tag",
+      "Tech News",
+      "Android",
+      "Smartphone",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Pixel_11_HUGE_AI_Upgrades_Revealed_20260812_155110_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260812_155436.mp4",
+      "output/shorts/short_2_20260812_155528.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260812_155336.jpg",
+    "youtube_url": "https://youtube.com/watch?v=2LHhJwrwEH8",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=r07LaoM15MM",
+      "https://youtube.com/watch?v=oVt0HmYdOHw"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Pixel 11 AI Unleashed! 🤯 #Shorts",
+        "description": "Get ready for mind-blowing AI advancements in the new Pixel 11! Prepare to be amazed by the future of mobile tech. #Pixel11 #AI #GooglePixel #TechNews #Innovation",
+        "instagram_caption": "🤯 Pixel 11's AI is NEXT LEVEL! Witness the future of smartphones with jaw-dropping upgrades. Follow @aipulse!"
+      },
+      {
+        "title": "Pixel 11's AI Powerhouse! 🔥 #Shorts",
+        "description": "The Pixel 11 is here and its AI capabilities are revolutionary! See how Google is redefining artificial intelligence. #Pixel #AICapabilities #Smartphone #FutureTech #Gadgets",
+        "instagram_caption": "🔥 The Pixel 11 is an AI powerhouse! Prepare for an experience unlike any other with these incredible new features. Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
