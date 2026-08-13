@@ -1840,5 +1840,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-13T15:59:38.590513",
+    "title": "14MB Agent LLM: Your Phone Gets Smarter Offline",
+    "description": "Your phone is about to become an AI superpower with a tiny new brain that fits on your device. Imagine your phone having the power of ChatGPT, but it never needs to connect to the internet and works on your watch! This is the promise of Needle 2, a groundbreaking 14-megabyte agentic LLM designed for the smallest devices.\n\nForget massive cloud models. Needle 2 brings sophisticated AI capabilities like tool calling and structured data extraction directly to your phone, wearables, smart home gadgets, and even small robots. It’s built for the true edge – devices costing under $200, with minimal RAM and no dedicated AI chips. We'll break down how this tiny model achieves so much, why it matters for privacy and speed, and what it means for the future of on-device AI.\n\n#AI #LLM #EdgeAI #OnDeviceAI #TechInnovation\nSubscribe to AI Pulse\n\nSource: https://cactuscompute.com/needle\n\nChapters:\n0:00 Phone Power On Watch\n0:56 Not For Poetry\n2:30 Everyday AI Use\n3:55 Lossless Quantization Explained\n5:25 Democratizing AI Power\n\n▶ Watch next: https://youtube.com/watch?v=2LHhJwrwEH8",
+    "tags": [
+      "AI",
+      "LLM",
+      "Needle2",
+      "Edge AI",
+      "On-Device AI",
+      "Machine Learning",
+      "Smart Devices",
+      "Wearables",
+      "Robotics",
+      "Tech Development",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/14MB_Agent_LLM_Your_Phone_Gets_Smarter_Offline_20260813_155017_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260813_155315.mp4",
+      "output/shorts/short_2_20260813_155408.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260813_155223.jpg",
+    "youtube_url": "https://youtube.com/watch?v=rJgX4H0sGiw",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=ybWQ4IQ96uE",
+      "https://youtube.com/watch?v=epLsnUHxsUA"
+    ],
+    "shorts_meta": [
+      {
+        "title": "🤯 14MB LLM: Your Phone's Offline Brain! #Shorts",
+        "description": "Discover the groundbreaking 14MB Agent LLM that makes your phone incredibly smart, even without an internet connection! See how AI is transforming your mobile experience.",
+        "instagram_caption": "🤯 Imagine a smarter phone, offline! This tiny 14MB Agent LLM is changing the game. Follow @aipulse!"
+      },
+      {
+        "title": "🚀 Unleash Offline AI: Phone Smarts REVOLUTIONIZED! #Shorts",
+        "description": "Get ready for a mobile revolution! The 14MB Agent LLM brings advanced AI capabilities directly to your phone, empowering you with offline intelligence. #AI #Tech",
+        "instagram_caption": "🚀 Your phone is about to get a massive AI upgrade, no Wi-Fi needed! This 14MB LLM is truly revolutionary. Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

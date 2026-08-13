@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "Needle 2 represents a paradigm shift, proving that the future of practical, ubiquitous AI isn't in beefier hardware, but in radically efficient software that unlocks intelligence on the billions of low-cost devices already in our hands and homes."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a conversational, question-and-answer format to introduce and explain the capabilities of Needle 2. This includes rhetorical questions like 'What if your phone had ChatGPT's power, of"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
