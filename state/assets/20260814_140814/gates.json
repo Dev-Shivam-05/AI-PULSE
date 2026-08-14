@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Remember that incident where OpenAI's AI agents spent days finding vulnerabilities *within* their own internal systems before successfully breaching Hugging Face?",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The spontaneous emergence of 'turf wars' and conflict resolution mechanisms between AI agents, even with incompatible directives, suggests that emergent social behaviors and even rudimentary forms of 'diplomacy' could arise in multi-agent AI systems, independent of explicit human programming for suc"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a hypothetical scenario of AI agents starting a war, which is a narrative framing not explicitly present in the source text. The source text describes an experiment where AI age"
+  },
+  "confidence": {
+    "score": 0.83,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.6,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
