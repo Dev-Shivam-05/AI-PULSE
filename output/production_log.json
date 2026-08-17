@@ -1938,5 +1938,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-17T13:32:29.749538",
+    "title": "OpenAI Disbands AI Safety Team: Are We Racing Towards Danger?",
+    "description": "OpenAI reportedly disbanded its preparedness team, a group tasked with assessing and mitigating severe AI risks. This move comes as the company reportedly gears up for a major IPO, sparking concerns about prioritizing rapid development over safety.\n\nThis is the latest in a series of shakeups impacting OpenAI's safety and ethics divisions. What does this mean for the future of AI development and its potential dangers? Find out what the experts are saying.\n\nThis video expands on the implications of OpenAI's decision, diving deeper into the specific risks the preparedness team was designed to address and the potential consequences of their dissolution.\n\n#AI #OpenAI #AISafety #TechNews #FutureofAI\n\nSource: https://www.theverge.com/ai-artificial-intelligence/980817/openai-disbands-preparedness-team\n\nChapters:\n0:00 OpenAI Skynet Team\n1:24 AI Safety Restructured\n3:26 Critic Resignation Voiced\n5:12 AI Race Intensifies\n7:14 Innovation Caution Balance\n\n▶ Watch next: https://youtube.com/watch?v=U-28jRu8ZMo",
+    "tags": [
+      "OpenAI",
+      "AI Safety",
+      "Artificial Intelligence",
+      "Tech News",
+      "Future of AI",
+      "AGI",
+      "IPO",
+      "Risk Assessment",
+      "Cybersecurity",
+      "Biosecurity",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAI_Disbands_AI_Safety_Team_Are_We_Racing_Towar_20260817_131916_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260817_132350.mp4",
+      "output/shorts/short_2_20260817_132441.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260817_132211.jpg",
+    "youtube_url": "https://youtube.com/watch?v=VI3dJFt4Us4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=XHsLOyoeUDc",
+      "https://youtube.com/watch?v=AX7MFsekOVQ"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Safety SHUT DOWN?! 😱 #Shorts",
+        "description": "OpenAI's shocking move!  Is this a race to the edge?  What does it mean for our future?",
+        "instagram_caption": "🚨 OpenAI just disbanded its AI safety team! Are we heading into dangerous territory? This major shift sparks urgent questions about the future of AI. Follow @aipulse!"
+      },
+      {
+        "title": "AI's DANGER ZONE ACTIVATED! 💥 #Shorts",
+        "description": "The future of AI is uncertain!  Why the sudden disbandment of the safety team?  The implications are HUGE.",
+        "instagram_caption": "🤯 The AI safety team is GONE!  This raises critical concerns about unchecked AI development.  Are we accelerating towards unforeseen risks? Follow @aipulse!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
