@@ -1987,5 +1987,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-19T13:35:34.676404",
+    "title": "Teens Used ChatGPT for Years; Safety Features Now Launch",
+    "description": "OpenAI *finally* launched a ChatGPT version for teenagers, but it's years after kids were already hooked. This new 'ChatGPT for Teens' packs enhanced safety and learning tools to stop misuse and tackle mental health and academic worries. We're breaking down what this means for teens, parents, and schools.  Discover why these protections are so late and what hurdles are still ahead. #AI #ChatGPT #OpenAI #TeenTech #EdTech\n\nSource: https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/\n\nChapters:\n0:00 Teen ChatGPT Years\n2:03 Cheating Homework Nudges\n4:23 New Safety Blocked\n6:39 Not All AI Safe\n9:02 Teen Safety Added\n\n▶ Watch next: https://youtube.com/watch?v=VI3dJFt4Us4",
+    "tags": [
+      "ChatGPT for Teens",
+      "OpenAI safety features",
+      "AI ethics",
+      "teen mental health",
+      "AI in education",
+      "Study Mode ChatGPT",
+      "parental controls AI",
+      "AI chatbot development",
+      "TechCrunch news",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Teens_Used_ChatGPT_for_Years_Safety_Features_Now_L_20260819_132225_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260819_132657.mp4",
+      "output/shorts/short_2_20260819_132737.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260819_132528.jpg",
+    "youtube_url": "https://youtube.com/watch?v=5YxLPWQXcN4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=HH7FVZ4vcZU",
+      "https://youtube.com/watch?v=t-amqEzYAMY"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Teens Hacked ChatGPT For YEARS! 🤯 #Shorts",
+        "description": "Unbelievable! Teens have been mastering ChatGPT for years, and now major safety updates are finally rolling out.  What took so long? #AI #ChatGPT #TechNews",
+        "instagram_caption": "🤯 Teens secretly mastered ChatGPT for years! Now, crucial safety features are launching after all this time.  What are your thoughts on this AI evolution? Follow @aipulse!\n#AI #ChatGPT #TechNews #TeenTech #ArtificialIntelligence #FutureOfTech #Innovation #DigitalLiteracy #Privacy #Cybersecurity #EdTech #GenZ #TechTrends #AISafety #StudentLife #Learning #Technology #DigitalAge #AIRevolution #MustKnow"
+      },
+      {
+        "title": "ChatGPT Secrets REVEALED! 🤫 #Shorts",
+        "description": "The truth is out! Teens have been using ChatGPT without everyone knowing, and now the platform is getting a safety upgrade. Discover what's changing. #AIInsights #FutureTech",
+        "instagram_caption": "🤫 Teens have been playing the long game with ChatGPT for years!  Exciting new safety features are finally dropping.  Did you see this coming? Follow @aipulse!\n#ChatGPT #AI #TechSecrets #FutureOfAI #ArtificialIntelligence #AISafety #GenZTech #Innovation #DigitalWorld #TechUpdates #OnlineSafety #AIforGood #StudentHacks #LearningTools #TechTok #CyberAware #AIExplained #DigitalNative #Teenagers #NextGen"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

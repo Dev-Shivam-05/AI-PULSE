@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Imagine a teenager in 2023",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The belated launch of safety features for teen ChatGPT users suggests a reactive rather than proactive approach by AI developers, prioritizing rapid scaling over immediate user well-being and potentially setting a precedent for future AI product rollouts."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a synthesis claim that is not present in the source text. The claim discusses the \"belated launch of safety features for teen ChatGPT users\" and suggests a \"reactive rather than p"
+  },
+  "confidence": {
+    "score": 0.854,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
