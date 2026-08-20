@@ -2037,5 +2037,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-20T13:39:39.432929",
+    "title": "OpenAI Locks Out AI Cyber Researchers",
+    "description": "OpenAI has suddenly locked out researchers from a specialized AI program used for cybersecurity. This move has sparked confusion and concern, impacting those who rely on AI for defense. What were these researchers investigating, and why the sudden blackout? We dive into the details of OpenAI's 'Trusted Access for Cyber' program, the alleged 'technical issue,' and the implications for AI security research. Discover why this lockout could affect vulnerability patching and the broader cybersecurity landscape. #AI #Cybersecurity #OpenAI\n\nSource: https://techcrunch.com/2026/08/19/researchers-complain-that-openai-revoked-their-access-to-limited-cyber-program/\n\nChapters:\n0:00 Digital Defense Work\n1:56 Errors Escalate Fast\n3:31 Daybreak Blue Tier\n5:49 Advanced Red Tier\n7:19 Fragile Trust Broken\n\n▶ Watch next: https://youtube.com/watch?v=5YxLPWQXcN4",
+    "tags": [
+      "OpenAI",
+      "AI",
+      "Cybersecurity",
+      "AI Research",
+      "Tech News",
+      "Artificial Intelligence",
+      "Security Researchers",
+      "AI Ethics",
+      "AI Tools",
+      "Data Security",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse",
+      "OpenAI TAC",
+      "GPT-5.6 Sol"
+    ],
+    "video": "output/videos/OpenAI_Locks_Out_AI_Cyber_Researchers_20260820_132507_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260820_133010.mp4",
+      "output/shorts/short_2_20260820_133057.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260820_132828.jpg",
+    "youtube_url": "https://youtube.com/watch?v=daKuua2XAs8",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=Kcg3EHLSMio",
+      "https://youtube.com/watch?v=IDDjs6hYESk"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Researchers LOCKED OUT! 🚨 OpenAI's Shocking Move #Shorts",
+        "description": "Did OpenAI just silence crucial AI safety checks? Discover the controversial lockout of cyber researchers and what it means for AI's future.  #AI #OpenAI #Cybersecurity #AIResearch #TechNews #ArtificialIntelligence #AIethics",
+        "instagram_caption": "🚨 OpenAI just locked out AI cyber researchers! What are they hiding? This move raises serious questions about AI safety and transparency. Follow @aipulse! #AI #OpenAI #Cybersecurity #AIResearch #TechNews #ArtificialIntelligence #AIethics #AIInsider #TechScandal #FutureOfAI #AIWatch #GlobalTech #Innovation #TechUpdates #AICommunity #Security #DataScience #MachineLearning #DeepLearning #AIAdvancements"
+      },
+      {
+        "title": "OpenAI's SECRETIVE AI Lockout EXPLAINED! 🤯 #Shorts",
+        "description": "Uncover the dramatic story of OpenAI restricting access for AI security experts.  Why the sudden shutdown and what's at stake for AI development? #OpenAILeak #AIControversy #TechSecrets #AIgovernance #AIsecurity",
+        "instagram_caption": "🤯 OpenAI's recent lockout of AI cyber researchers is causing major buzz! We break down the controversy and the potential implications for the entire AI landscape. Follow @aipulse! #OpenAI #AI #AIResearch #Cybersecurity #TechNews #ArtificialIntelligence #AIethics #AIInsider #TechScandal #FutureOfAI #AIWatch #GlobalTech #Innovation #TechUpdates #AICommunity #Security #DataScience #MachineLearning #DeepLearning #AIAdvancements"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

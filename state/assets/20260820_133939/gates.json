@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Error messages became commonplace.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The sudden revocation of access to OpenAI's specialized cyber program, despite its stated aim of accelerating vulnerability patching, suggests a potential conflict between OpenAI's desire for control over advanced AI capabilities and the collaborative needs of the cybersecurity research community."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a narrative structure with phrases like 'Imagine dedicating your career...', 'These aren't casual users...', 'The fundamental purpose...', 'Then, the reports started to trickle in...'"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
