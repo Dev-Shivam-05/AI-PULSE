@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Haapoja's demonstration involved creating a short film using AI to generate multiple versions of himself, essentially acting alongside digital doppelgangers.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The backlash against YouTubers promoting AI platforms like Higgsfield highlights a growing tension between technological innovation and the perceived authenticity demanded by audiences, suggesting a crucial need for transparent creator monetization strategies in the AI era."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative structure and specific examples of how the YouTubers' videos are described (e.g., 'infomercial,' 'fictional story about exploring Mauritania'). The source text, while "
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

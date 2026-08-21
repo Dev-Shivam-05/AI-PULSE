@@ -2087,5 +2087,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-21T15:38:02.293823",
+    "title": "Higgsfield AI: YouTubers' Secret AI Cash Cow?",
+    "description": "Major YouTube creators are facing a storm of criticism for promoting AI platforms like Higgsfield. Discover why these partnerships are alienating fans and what it means for the future of content creation. We break down the controversy, the technology involved, and the underlying issues of AI ethics and creator compensation. Is this the new gold rush, or a dangerous path? Find out how AI money is changing the game on YouTube and potentially influencing your favorite creators. #AI #YouTube #CreatorEconomy #Higgsfield #TechControversy\n\nSubscribe to AI Pulse\n\nSource: https://www.theverge.com/ai-artificial-intelligence/983181/matti-haapoja-sam-kold-kolder-higgsfield-seedance-backlash\n\nChapters:\n0:00 Youtuber Ai Earnings\n1:33 Higgsfield Public Gain\n3:30 Fan Alienation\n5:19 Kolder Visuals Mixed\n7:29 Ai Gold Rush\n\n▶ Watch next: https://youtube.com/watch?v=daKuua2XAs8",
+    "tags": [
+      "AI",
+      "YouTube",
+      "Higgsfield",
+      "Creator Economy",
+      "Tech Controversy",
+      "Artificial Intelligence",
+      "Content Creation",
+      "Influencer Marketing",
+      "Seedance",
+      "AI Ethics",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Higgsfield_AI_YouTubers_Secret_AI_Cash_Cow_20260821_152518_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260821_152944.mp4",
+      "output/shorts/short_2_20260821_153036.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260821_152808.jpg",
+    "youtube_url": "https://youtube.com/watch?v=nXQT0BOL1Wo",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=4A7GrUMBr_c",
+      "https://youtube.com/watch?v=fThGb0aVwKc"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Pays YouTubers MILLIONS?! 🤯 #Shorts",
+        "description": "Discover Higgsfield AI: the secret tool YouTubers are using to skyrocket their earnings. Is this the future of content creation monetization?",
+        "instagram_caption": "🤯 Is AI secretly making YouTubers rich? Discover the mind-blowing truth behind Higgsfield AI and how it's becoming a massive cash cow. Follow @aipulse! #AI #YouTubers #HiggsfieldAI #ArtificialIntelligence #ContentCreation #Monetization #PassiveIncome #TechNews #DigitalMarketing #YouTubeTips #CreatorEconomy #OnlineBusiness #AIRevolution #FutureOfWork #EarnMoneyOnline #Viral #Trending #TechTok #Innovation #SocialMediaMarketing"
+      },
+      {
+        "title": "Unlocking HUGE YouTube Profits with AI! 🚀 #Shorts",
+        "description": "This AI is revolutionizing how YouTubers make money. Learn the secrets of Higgsfield AI and how you can leverage it for massive income.",
+        "instagram_caption": "🚀 Unlock the secrets to massive YouTube profits with AI! Higgsfield AI is the game-changer YouTubers are using to boost their earnings like never before. Follow @aipulse! #AIProfits #YouTubeMoney #HiggsfieldAISecrets #ContentCreator #DigitalCreator #TechTrends #AIForBusiness #YouTubeStrategy #MonetizeYourContent #CreatorTools #OnlineEarnings #ArtificialIntelligenceNews #BusinessGrowth #MarketingTech #YouTubeHacks #DigitalNomad #FutureTech #InnovationInTech #ContentStrategy #InfluencerMarketing"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
