@@ -273,3 +273,149 @@ def test_enforce_max_length_noop_under_cap(monkeypatch):
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: called.append(1))
     s = {"scenes": [{"narration": "one two three four five", "visual_query": "v"}] * 5, "title": "t"}
     assert ap.enforce_max_length(s, 900) is s and not called
+
+
+# === v3-B: original-visuals engine (screencap) ===============================
+from factverse import screencap
+from factverse import thumbnail as thumb_mod
+
+
+# --------------------------------------------------------------- segment planning
+def test_segment_plan_covers_recording_sequentially():
+    plan = screencap.segment_plan(120.0, 12)
+    assert len(plan) == 12 and plan[0] == (0.0, 10.0)
+    starts = [s for s, _ in plan]
+    assert starts == sorted(starts)                      # video progresses down the page
+    assert abs(sum(l for _, l in plan) - 120.0) < 0.1    # nothing recorded is wasted
+
+
+def test_segment_plan_short_recording_yields_fewer_chunks():
+    plan = screencap.segment_plan(10.0, 12)
+    assert len(plan) == 2                                # 4s minimum respected
+    assert all(l >= screencap.MIN_SEG for _, l in plan)
+
+
+def test_segment_plan_degenerate_inputs():
+    assert screencap.segment_plan(0, 5) == []
+    assert screencap.segment_plan(60, 0) == []
+
+
+def test_estimate_video_seconds_tracks_words_and_clamps():
+    assert screencap.estimate_video_seconds({"scenes": []}) == screencap.REC_MIN
+    est = screencap.estimate_video_seconds({"scenes": [{"narration": " ".join(["w"] * 450)}]})
+    assert est == 450 / screencap.WPS
+    long = {"scenes": [{"narration": " ".join(["w"] * 2000)}]}
+    assert screencap.estimate_video_seconds(long) == screencap.REC_MAX
+
+
+# --------------------------------------------------------------- ffmpeg args (built, never run)
+def test_trim_args_seek_past_blank_head():
+    args = screencap._trim_args("in.webm", "out.mp4")
+    assert args.index("-ss") < args.index("-i")          # page-load blank is removed
+    assert args[args.index("-ss") + 1] == str(screencap.HEAD_TRIM)
+
+
+def test_cut_args_carry_start_and_length():
+    args = screencap._cut_args("rec.mp4", "chunk.mp4", 12.5, 8.0)
+    assert args[args.index("-ss") + 1] == "12.5"
+    assert args[args.index("-t") + 1] == "8.0"
+
+
+# --------------------------------------------------------------- capture contract
+def test_capture_rejects_missing_url_or_scenes():
+    assert screencap.capture({"scenes": [], "source_url": "https://x.test"}) is None
+    assert screencap.capture({"scenes": [{"narration": "n"}], "source_url": ""}) is None
+
+
+def test_capture_fails_soft_when_recorder_dies(monkeypatch, tmp_path):
+    def boom(*a, **k):
+        raise RuntimeError("browser gone")
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page", boom)
+    s = {"scenes": [{"narration": "n"}] * 6, "source_url": "https://github.com/x/y"}
+    assert screencap.capture(s) is None                  # caller falls back to stock
+
+
+def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page",
+                        lambda url, out, t: (str(Path(out) / "rec.webm"),
+                                             str(Path(out) / "page.png")))
+    def fake_ffmpeg(args, timeout=600):
+        Path(args[-1]).write_bytes(b"0" * 2000)
+        return True
+    monkeypatch.setattr(screencap, "_ffmpeg", fake_ffmpeg)
+    monkeypatch.setattr(screencap, "_probe_duration", lambda p: 120.0)
+    s = {"scenes": [{"narration": "n"}] * 12, "source_url": "https://github.com/x/y"}
+    out = screencap.capture(s)
+    assert out and len(out["scene_clips"]) == 12
+    assert all(len(c) == 1 for c in out["scene_clips"])  # same shape as step3_download
+    assert out["scene_clips"][0][0].endswith("chunk_000.mp4")
+    assert out["scene_clips"][-1][0].endswith("chunk_011.mp4")
+
+
+# --------------------------------------------------------------- code cards
+def test_render_code_card_png_real_render(tmp_path):
+    out = tmp_path / "card.png"
+    res = screencap.render_code_card_png(
+        {"kind": "command", "text": "pip install factverse && factverse run demo",
+         "url": "https://github.com/x/y"}, str(out))
+    assert res and out.exists() and out.stat().st_size > 5000
+
+
+def test_render_code_card_requires_text(tmp_path):
+    assert screencap.render_code_card_png({"kind": "command", "text": "  "},
+                                          str(tmp_path / "c.png")) is None
+
+
+def test_inject_code_card_hits_payoff_scenes(monkeypatch):
+    monkeypatch.setattr(screencap, "make_code_card", lambda dl, out, seconds=6.0: "CARD.mp4")
+    script = {"deliverable": {"kind": "command", "text": "pip install x", "url": "u"},
+              "scenes": [{"narration": "hook"},
+                         {"narration": "you install it with one command"},
+                         {"narration": "uses"},
+                         {"narration": "the exact command is in the description"}]}
+    clips = [["a.mp4"], ["b.mp4"], ["c.mp4"], ["d.mp4"]]
+    assert screencap.inject_code_card(script, clips) == 2
+    assert clips[-1][0] == "CARD.mp4" and clips[1][0] == "CARD.mp4"
+
+
+def test_inject_code_card_noop_without_deliverable(monkeypatch):
+    called = []
+    monkeypatch.setattr(screencap, "make_code_card",
+                        lambda *a, **k: called.append(1) or "C")
+    clips = [["a"]]
+    assert screencap.inject_code_card({"deliverable": None, "scenes": []}, clips) == 0
+    assert not called and clips == [["a"]]
+
+
+# --------------------------------------------------------------- tool thumbnail
+def test_make_tool_thumb_from_screenshot(tmp_path):
+    from PIL import Image
+    shot = tmp_path / "page.png"
+    Image.new("RGB", (1920, 1080), (30, 34, 44)).save(shot)
+    out = tmp_path / "thumb.jpg"
+    res = thumb_mod.make_tool_thumb(str(shot), "free ai tool", str(out))
+    assert res and out.exists() and out.stat().st_size > 5000
+
+
+def test_make_tool_thumb_missing_screenshot(tmp_path):
+    assert thumb_mod.make_tool_thumb(str(tmp_path / "nope.png"), "x",
+                                     str(tmp_path / "o.jpg")) is None
+
+
+# --------------------------------------------------------------- grounding + filter fix
+def test_hf_readme_url_models_only():
+    assert (ap._hf_readme_url("https://huggingface.co/org/model")
+            == "https://huggingface.co/org/model/raw/main/README.md")
+    assert (ap._hf_readme_url("https://huggingface.co/gpt2")
+            == "https://huggingface.co/gpt2/raw/main/README.md")
+    assert ap._hf_readme_url("https://github.com/org/repo") == ""
+
+
+def test_validate_script_keeps_filter_marker():
+    base = {"scenes": [{"narration": f"s {i}", "visual_query": "v"} for i in range(6)]}
+    base["scenes"][3]["filter"] = True                   # the honest-limitation scene
+    assert ap._validate_script(base, "t")["filter_segment"] is True
+    plain = {"scenes": [{"narration": f"s {i}"} for i in range(6)]}
+    assert ap._validate_script(plain, "t")["filter_segment"] is False

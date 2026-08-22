@@ -46,6 +46,7 @@ from factverse import voice
 from factverse import tts_kokoro
 from factverse import thumbnail
 from factverse import infographics
+from factverse import screencap
 from factverse import scheduling
 from factverse import gates
 from factverse import l2
@@ -133,6 +134,13 @@ def fetch_text(url: str, limit: int = 4000) -> str:
         return ""
 
 
+def _hf_readme_url(url: str) -> str:
+    """huggingface.co model pages are JS-rendered (thin HTML). The hub serves the
+    model card as plain text at /<id>/raw/main/README.md — use that instead."""
+    m = re.match(r"https?://huggingface\.co/([\w.-]+(?:/[\w.-]+)?)/?$", str(url).strip())
+    return f"https://huggingface.co/{m.group(1)}/raw/main/README.md" if m else ""
+
+
 # --------------------------------------------------------------- policy gates
 def _shingles(text: str, n: int = 8) -> set:
     words = re.sub(r"[^a-z0-9 ]", " ", text.lower()).split()
@@ -184,6 +192,8 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
         return None
+    # read the per-scene "filter" marker BEFORE the rebuild below strips it
+    had_filter = any(sc.get("filter") for sc in s["scenes"])
     scenes = []
     for sc in s["scenes"]:
         narration = str(sc.get("narration", "")).strip()
@@ -227,7 +237,7 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
                             "url": str(dl.get("url", "")).strip()[:300]}
     else:
         s["deliverable"] = None
-    s["filter_segment"] = any(sc.get("filter") for sc in (s.get("scenes") or []))
+    s["filter_segment"] = had_filter
     s["source_url"] = source_url
     return s
 
@@ -382,6 +392,8 @@ def script_tool(item: dict) -> dict | None:
     run in the next ten minutes — not a broadcast about the news."""
     title, source, url = item["title"], item["source"], item.get("url", "")
     grounding = fetch_text(url, limit=5000)
+    if not grounding and _hf_readme_url(url):
+        grounding = fetch_text(_hf_readme_url(url), limit=5000)
     if not grounding:
         return None   # a tool video without its README/model card is guesswork
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
@@ -1024,7 +1036,19 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ⚠️ Replication test failed — script derivable from sources alone (O3).")
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
-    scene_clips = eng.step3_download(script)
+    # v3-B: a tool video is illustrated by the tool itself — a screen recording
+    # of its real page — never stock. capture() fails soft; stock is the fallback.
+    scene_clips, tool_shot = None, ""
+    if script.get("format") == "tool":
+        cap = screencap.capture(script)
+        if cap:
+            scene_clips = cap["scene_clips"]
+            tool_shot = cap.get("screenshot") or ""
+            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        else:
+            print("  ⚠️ Screen capture failed — stock visuals for this run.")
+    if scene_clips is None:
+        scene_clips = eng.step3_download(script)
 
     # info-dense motion graphics: stat scenes lead with a generated card, not stock
     src_domain = ""
@@ -1035,6 +1059,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         except Exception:
             src_domain = ""
     infographics.inject_cards(script, scene_clips, source_domain=src_domain)
+    if script.get("format") == "tool":
+        # the deliverable, on screen as a terminal card, in the scenes that speak it
+        screencap.inject_code_card(script, scene_clips)
 
     print("\n[4/10] 🎙️ Voiceover...")
     audio, edge_words = synthesize_voice(narration, script)
@@ -1070,7 +1097,13 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
     # Person-first thumbnail mined from this run's own footage; engine design is the fallback.
     thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
-    thumb = (thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
+    thumb = None
+    if tool_shot:
+        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
+        thumb = thumbnail.make_tool_thumb(
+            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
+    thumb = (thumb
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
              or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
     # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
     # units freed, one fewer templated upload in the channel-level pattern.

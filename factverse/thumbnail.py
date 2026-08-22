@@ -445,3 +445,61 @@ def make(video: str, temp_root: Path, thumb_text: str, out: str) -> str | None:
     except Exception as e:
         print(f"   ⚠️ thumbnail engine failed: {e}")
         return None
+
+
+# ------------------------------------------------------------------ v3 tool style
+TOOL_RED = (220, 38, 38)   # spec decision 6: #DC2626, not the brand RED above
+
+
+def _tool_font(size: int):
+    try:
+        return ImageFont.truetype(str(fv.FONTS / "Inter-Black.ttf"), size)
+    except Exception:
+        return _font(size)
+
+
+def make_tool_thumb(screenshot: str, thumb_text: str, out: str) -> str | None:
+    """v3 tool-format thumbnail (spec decision 6): the tool's REAL page frame +
+    2-4 word overlay — Inter Black ~130px, white on #DC2626 — + red baseline.
+    Person-cutout is retired for tool videos; caller falls back on None."""
+    try:
+        p = Path(screenshot or "")
+        if not p.exists():
+            return None
+        img = Image.open(p).convert("RGB").resize((W, H), Image.LANCZOS)
+        img = ImageEnhance.Contrast(img).enhance(1.15)
+        img = ImageEnhance.Color(img).enhance(1.25)
+        d = ImageDraw.Draw(img, "RGBA")
+        y_scrim = int(H * 0.45)
+        for y in range(y_scrim, H):              # legibility scrim over bottom half
+            a = int(165 * ((y - y_scrim) / (H - y_scrim)))
+            d.rectangle([(0, y), (W, y + 1)], fill=(0, 0, 0, a))
+
+        words = " ".join((thumb_text or "FREE AI TOOL").split()[:4])
+        lines = _wrap_two(words)
+        size, pad_x, pad_y, gap, x_edge = 130, 28, 10, 14, 48
+        f = _tool_font(size)
+        while size > 72 and any(
+                d.textlength(ln, font=f) > W - 2 * x_edge - 2 * pad_x for ln in lines):
+            size -= 6
+            f = _tool_font(size)
+        metrics = []
+        for ln in lines:
+            bb = d.textbbox((0, 0), ln, font=f)
+            metrics.append((ln, bb, bb[3] - bb[1]))
+        total = sum(h + 2 * pad_y for _, _, h in metrics) + gap * (len(metrics) - 1)
+        y = H - 12 - 26 - total                  # block sits above the baseline bar
+        for ln, bb, h in metrics:
+            tw = d.textlength(ln, font=f)
+            d.rectangle([(x_edge, y), (x_edge + tw + 2 * pad_x, y + h + 2 * pad_y)],
+                        fill=TOOL_RED + (255,))
+            d.text((x_edge + pad_x, y + pad_y - bb[1]), ln, font=f,
+                   fill=(255, 255, 255, 255))
+            y += h + 2 * pad_y + gap
+        d.rectangle([(0, H - 12), (W, H)], fill=TOOL_RED + (255,))
+        img.save(out, "JPEG", quality=92)
+        print("  🖼️ Tool thumbnail: real page screenshot + overlay.")
+        return out if Path(out).exists() else None
+    except Exception as e:
+        print(f"   ⚠️ tool thumbnail failed: {e}")
+        return None
