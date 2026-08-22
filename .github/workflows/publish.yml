@@ -10,7 +10,12 @@ on:
   schedule:
     - cron: "23 12 * * *"     # 12:23 UTC ≈ 5:53 PM IST — primary
     - cron: "53 14 * * *"     # 14:53 UTC ≈ 8:23 PM IST — retry (skips if day is done)
-  workflow_dispatch: {}        # manual trigger from the Actions tab (also guard-protected)
+  workflow_dispatch:           # manual trigger from the Actions tab (also guard-protected)
+    inputs:
+      format:
+        description: "Force a lane for a supervised run: news | evergreen | roundup | tool (blank = automatic)"
+        required: false
+        default: ""
 
 permissions:
   contents: write              # save used-topics / production-log state back to the repo
@@ -59,7 +64,10 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ hashFiles('requirements-ci.txt') }}
 
+      # Never a hard gate: screencap.capture() falls back to stock visuals when
+      # the browser is missing, so a download hiccup must not cost the day's video.
       - name: Install Playwright Chromium
+        continue-on-error: true
         run: python -m playwright install --with-deps chromium
 
       - name: Write credentials from secrets
@@ -74,7 +82,8 @@ jobs:
           echo "$YT_TOKEN_B64" | base64 -d > youtube_token.pickle
 
       - name: Generate + publish a video (+ Shorts)
-        run: python -m factverse.ai_pipeline publish
+        # the forced lane is empty on scheduled runs (the shell drops the empty arg)
+        run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
 
       # Learning-loop data: daily channel/video performance snapshot (never fatal)
       - name: Collect channel analytics

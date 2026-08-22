@@ -340,8 +340,10 @@ def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
     monkeypatch.setattr(screencap, "_record_page",
                         lambda url, out, t: (str(Path(out) / "rec.webm"),
-                                             str(Path(out) / "page.png")))
+                                             str(Path(out) / "page.png"), 3.1))
+    seen = []
     def fake_ffmpeg(args, timeout=600):
+        seen.append(args)
         Path(args[-1]).write_bytes(b"0" * 2000)
         return True
     monkeypatch.setattr(screencap, "_ffmpeg", fake_ffmpeg)
@@ -352,6 +354,25 @@ def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
     assert all(len(c) == 1 for c in out["scene_clips"])  # same shape as step3_download
     assert out["scene_clips"][0][0].endswith("chunk_000.mp4")
     assert out["scene_clips"][-1][0].endswith("chunk_011.mp4")
+    assert seen[0][seen[0].index("-ss") + 1] == "3.1"   # measured head, not the constant
+
+
+def test_capture_shares_chunks_when_recording_is_short(monkeypatch, tmp_path):
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page",
+                        lambda url, out, t: (str(Path(out) / "rec.webm"), "", 2.5))
+    def fake_ffmpeg(args, timeout=600):
+        Path(args[-1]).write_bytes(b"0" * 2000)
+        return True
+    monkeypatch.setattr(screencap, "_ffmpeg", fake_ffmpeg)
+    monkeypatch.setattr(screencap, "_probe_duration", lambda p: 10.0)   # only 2 chunks
+    s = {"scenes": [{"narration": "n"}] * 12, "source_url": "",
+         "deliverable": {"kind": "repo", "text": "x", "url": "https://github.com/x/y"}}
+    out = screencap.capture(s)                           # deliverable URL is the fallback
+    assert out and len(out["scene_clips"]) == 12
+    assert out["scene_clips"][5][0].endswith("chunk_000.mp4")
+    assert out["scene_clips"][6][0].endswith("chunk_001.mp4")
+    assert out["screenshot"] == ""                       # no screenshot -> thumb falls back
 
 
 # --------------------------------------------------------------- code cards
@@ -380,6 +401,18 @@ def test_inject_code_card_hits_payoff_scenes(monkeypatch):
     assert clips[-1][0] == "CARD.mp4" and clips[1][0] == "CARD.mp4"
 
 
+def test_inject_code_card_skips_hook_and_replaces_stat_card(monkeypatch):
+    monkeypatch.setattr(screencap, "make_code_card", lambda dl, out, seconds=6.0: "CARD.mp4")
+    script = {"deliverable": {"kind": "command", "text": "pip install x", "url": "u"},
+              "scenes": [{"narration": "install it now"},           # hook mentions install
+                         {"narration": "what it is"},
+                         {"narration": "the command is in the description"}]}
+    clips = [["a.mp4"], ["b.mp4"], ["temp/statcard_02.mp4", "c.mp4"]]
+    assert screencap.inject_code_card(script, clips) == 1   # hook never gets the card
+    assert clips[0] == ["a.mp4"] and clips[1] == ["b.mp4"]
+    assert clips[2] == ["CARD.mp4", "c.mp4"]             # stat card replaced, not stacked
+
+
 def test_inject_code_card_noop_without_deliverable(monkeypatch):
     called = []
     monkeypatch.setattr(screencap, "make_code_card",
@@ -402,6 +435,40 @@ def test_make_tool_thumb_from_screenshot(tmp_path):
 def test_make_tool_thumb_missing_screenshot(tmp_path):
     assert thumb_mod.make_tool_thumb(str(tmp_path / "nope.png"), "x",
                                      str(tmp_path / "o.jpg")) is None
+
+
+# --------------------------------------------------------------- rewrite passes keep v3 keys
+def _tool_script(words_per_scene: int, n: int = 6) -> dict:
+    return {"title": "T", "thumb_text": "X", "description": "d", "tags": [], "format": "tool",
+            "source_url": "https://github.com/x/y", "filter_segment": True,
+            "deliverable": {"kind": "command", "text": "pip install x", "url": "https://github.com/x/y"},
+            "scenes": [{"narration": " ".join(["word"] * words_per_scene), "visual_query": "v"}
+                       for _ in range(n)]}
+
+
+def test_rewrite_passes_carry_deliverable_and_filter(monkeypatch):
+    # the LLM never sees deliverable/filter_segment, so it cannot echo them back
+    rewrite = {"title": "T", "thumb_text": "X", "description": "new", "tags": [],
+               "scenes": [{"narration": " ".join(["word"] * 100), "visual_query": "v"}
+                          for _ in range(6)]}                               # 600 words
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: dict(rewrite))
+    for run_pass, wps in ((ap.critique_pass, 110),                 # 660 -> 600: accepted cut
+                          (lambda s: ap.enforce_length(s, 5000), 50),   # 300 -> 600: expanded
+                          (lambda s: ap.enforce_max_length(s, 100), 110)):  # 660 -> 600: tightened
+        out = run_pass(_tool_script(wps))
+        assert out["description"].startswith("new"), "pass should have applied"
+        assert out["deliverable"]["text"] == "pip install x"
+        assert out["filter_segment"] is True and out["format"] == "tool"
+        assert out["source_url"] == "https://github.com/x/y"
+    assert "deliverable" in ap._CARRY and "filter_segment" in ap._CARRY
+
+
+def test_append_deliverable_is_idempotent():
+    s = _tool_script(10)
+    ap._append_deliverable(s)
+    ap._append_deliverable(s)                            # advice-gate path calls it again
+    assert s["description"].count("🔧 Try it yourself") == 1
+    assert "pip install x" in s["description"] and "https://github.com/x/y" in s["description"]
 
 
 # --------------------------------------------------------------- grounding + filter fix

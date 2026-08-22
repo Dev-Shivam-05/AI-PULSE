@@ -89,8 +89,9 @@ def _probe_duration(path: str) -> float:
 
 
 # ------------------------------------------------------------- recording
-def _record_page(url: str, out_dir: str, target_seconds: float) -> tuple[str, str]:
-    """Record a slow human-style browse of `url`; returns (webm, screenshot).
+def _record_page(url: str, out_dir: str, target_seconds: float) -> tuple[str, str, float]:
+    """Record a slow human-style browse of `url`; returns (webm, screenshot, head)
+    where head = seconds of blank page-load at the start of the recording.
     Playwright is imported here, not at module level — CI tests have no browser."""
     from playwright.sync_api import sync_playwright
 
@@ -104,9 +105,11 @@ def _record_page(url: str, out_dir: str, target_seconds: float) -> tuple[str, st
             record_video_size={"width": REC_W, "height": REC_H},
             color_scheme="dark",
         )
-        page = ctx.new_page()
+        page = ctx.new_page()                # recording starts here: blank until paint
+        t0 = time.monotonic()
         page.goto(url, wait_until="domcontentloaded", timeout=45000)
-        page.wait_for_timeout(3000)          # settle; this blank head is trimmed
+        head = max(HEAD_TRIM, time.monotonic() - t0 + 0.3)   # slow pages: longer blank
+        page.wait_for_timeout(3000)          # settle (real content, kept)
         try:
             page.screenshot(path=shot)       # thumbnail base; recording matters more
         except Exception:
@@ -133,7 +136,7 @@ def _record_page(url: str, out_dir: str, target_seconds: float) -> tuple[str, st
     webms = sorted(out.glob("*.webm"), key=lambda f: f.stat().st_mtime)
     if not webms:
         raise RuntimeError("no recording produced")
-    return str(webms[-1]), shot
+    return str(webms[-1]), shot, head
 
 
 def capture(script: dict) -> dict | None:
@@ -150,9 +153,9 @@ def capture(script: dict) -> dict | None:
         rec_dir = fv.TEMP / "screencap"
         shutil.rmtree(rec_dir, ignore_errors=True)
         rec_dir.mkdir(parents=True, exist_ok=True)
-        webm, shot = _record_page(url, str(rec_dir), estimate_video_seconds(script))
+        webm, shot, head = _record_page(url, str(rec_dir), estimate_video_seconds(script))
         trimmed = str(rec_dir / "recording.mp4")
-        if not _ffmpeg(_trim_args(webm, trimmed)):
+        if not _ffmpeg(_trim_args(webm, trimmed, head)):
             return None
         total = _probe_duration(trimmed)
         if total < MIN_SEG:
@@ -261,24 +264,33 @@ def make_code_card(deliverable: dict, out_mp4: str, seconds: float = 6.0) -> str
     return None
 
 
+def _lead_with(clips: list, card: str) -> None:
+    """Put the card first. A stat card already leading the scene is replaced —
+    step5_build time-shares a scene equally between its clips, and a third clip
+    would squeeze the command below readable length."""
+    if clips and "statcard" in str(clips[0]):
+        clips[0] = card
+    else:
+        clips.insert(0, card)
+
+
 def inject_code_card(script: dict, scene_clips: list) -> int:
     """Lead the payoff scenes with the deliverable card: always the final scene
-    ("the exact command is in the description"), plus the first scene that
-    narrates installing/running it. Mirrors infographics.inject_cards."""
+    ("the exact command is in the description"), plus the first scene after the
+    hook that narrates installing/running it. Mirrors infographics.inject_cards."""
     dl = script.get("deliverable")
     if not dl or not scene_clips:
         return 0
     card = make_code_card(dl, str(fv.TEMP / "codecard.mp4"))
     if not card:
         return 0
-    placed = 0
-    scene_clips[-1].insert(0, card)
-    placed += 1
+    _lead_with(scene_clips[-1], card)
+    placed = 1
     kw = ("install", "command", "clone", "pip ", "terminal", "run it", "set it up")
-    for i, sc in enumerate(script.get("scenes") or []):
-        if i < len(scene_clips) - 1 and any(
-                w in str(sc.get("narration", "")).lower() for w in kw):
-            scene_clips[i].insert(0, card)
+    scenes = script.get("scenes") or []
+    for i in range(1, min(len(scenes), len(scene_clips)) - 1):   # never the hook
+        if any(w in str(scenes[i].get("narration", "")).lower() for w in kw):
+            _lead_with(scene_clips[i], card)
             placed += 1
             break
     return placed
