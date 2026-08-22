@@ -6,10 +6,11 @@ and monetization safety, then renders/publishes through the proven engine steps.
 
 Format choice is VIRALITY-FIRST (the channel's primary goal): every day the
 viral judge scores the top-ranked stories on shock, stakes, and broad appeal.
-  * news       — runs whenever a story scores >= VIRAL_THRESHOLD (hot stories
-                 are the viral ceiling; the judge's angle steers the script)
-  * evergreen  — the default when nothing is hot: search-driven explainers that
-                 compound watch hours for months (the monetization floor)
+  * news       — runs only for a genuinely hot story (>= VIRAL_THRESHOLD, v3: 8/10)
+  * tool       — v3 utility lane (config flag "tool_format"): a hands-on video about
+                 a free AI tool/repo/model the viewer can use TODAY, with a concrete
+                 deliverable in the description. The default lane once visuals land.
+  * evergreen  — fallback when nothing is hot and no tool signal exists
   * roundup    (Sun) — curated weekly top-5 (curation = added value = policy-safe)
 
 Safety rails (YouTube's 2025 "inauthentic content" policy is the #1 threat):
@@ -22,7 +23,7 @@ Safety rails (YouTube's 2025 "inauthentic content" policy is the #1 threat):
 Run:
     python -m factverse.ai_pipeline           # render only (safe)
     python -m factverse.ai_pipeline publish   # render + upload
-    python -m factverse.ai_pipeline publish news|evergreen|roundup   # force format
+    python -m factverse.ai_pipeline publish news|evergreen|roundup|tool  # force format
 
 Exit code is 0 only when the run truly succeeded — CI goes red otherwise.
 """
@@ -218,6 +219,14 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
             s["tags"].append(b)
     s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
+    # v3 tool-format contract: the concrete thing the viewer leaves with
+    dl = s.get("deliverable")
+    if isinstance(dl, dict) and str(dl.get("text", "")).strip():
+        s["deliverable"] = {"kind": str(dl.get("kind", "steps")).strip()[:20],
+                            "text": str(dl["text"]).strip()[:300],
+                            "url": str(dl.get("url", "")).strip()[:300]}
+    else:
+        s["deliverable"] = None
     s["filter_segment"] = any(sc.get("filter") for sc in (s.get("scenes") or []))
     s["source_url"] = source_url
     return s
@@ -242,6 +251,8 @@ _RETENTION_RULES = """RETENTION ENGINEERING (non-negotiable):
 - Every 3-4 scenes, use a pattern interrupt: a sharp question, a "but here's the problem", a
   concrete number, or a comparison a normal person can feel.
 - Use concrete numbers and real comparisons, never vague hype. Short sentences. Spoken language.
+- NEVER restate a point an earlier scene already made — every scene must add NEW information.
+  If two scenes would say the same thing in different words, keep one and cut the other.
 - Final scene = crisp takeaway + ONE question to the audience + "subscribe" CTA in one sentence."""
 
 
@@ -269,7 +280,7 @@ Return ONLY JSON:
 
 
 # --------------------------------------------------------------- virality judge
-VIRAL_THRESHOLD = 7.0
+VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is the default
 
 
 def viral_pick(ranked: list[dict], top_n: int = 8):
@@ -361,6 +372,54 @@ ACCURACY RULES:
     if s:
         s["grounding"] = grounding
         s["format"] = "news"
+    return s
+
+
+# --------------------------------------------------------------- format: tool
+def script_tool(item: dict) -> dict | None:
+    """v3 utility lane: a hands-on video about a free AI tool/repo/model.
+    The video is a TRANSACTION — the viewer leaves with a deliverable they can
+    run in the next ten minutes — not a broadcast about the news."""
+    title, source, url = item["title"], item["source"], item.get("url", "")
+    grounding = fetch_text(url, limit=5000)
+    if not grounding:
+        return None   # a tool video without its README/model card is guesswork
+    prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
+Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
+DO something concrete in the next ten minutes — that is the entire point of the video.
+
+TOOL: {title}
+SOURCE: {source}  ({url})
+
+SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
+{grounding}
+
+STRUCTURE (a transaction, not a broadcast):
+- Scene 1 HOOK: the specific thing the viewer will be able to do by the end, plus the most
+  surprising concrete detail (stars, size, speed, price=free). No greetings.
+- What it actually is and who built it (1-2 scenes, attributed).
+- GETTING IT RUNNING: the exact real steps/commands from the source. If the source shows an
+  install command, quote it EXACTLY — commands are the one place verbatim is required, not banned.
+- What to actually make with it: 3-5 concrete uses, most impressive first.
+- ONE honest limitation scene (who should NOT bother; what it can not do yet) — mark it "filter": true.
+- Final scene: the single next action + "the exact command is in the description" + ONE question
+  to the audience + subscribe, all in two sentences.
+{_RETENTION_RULES}
+{_VISUAL_RULES}
+
+{_output_contract("10-14", "50-70")}
+
+ADDITIONAL REQUIRED FIELD in the same JSON:
+"deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
+"url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
+    s = llm.generate_json(prompt, max_tokens=8192)
+    s = _validate_script(s, title, url)
+    if s and not s.get("deliverable"):
+        print("     ↻ tool script had no deliverable — rejected.")
+        return None
+    if s:
+        s["grounding"] = grounding
+        s["format"] = "tool"
     return s
 
 
@@ -471,10 +530,12 @@ AI/tech channel. Judge: (1) does scene 1 hook in the first 8 words with a real c
 promise? (2) is there a mid-video open loop and payoff? (3) any vague hype, filler, repeated ideas,
 or sentences that sound like a written article instead of speech? (4) is the best of the 3 titles
 actually the strongest (curiosity + concrete noun + keyword early)? (5) does thumb_text create an
-irresistible curiosity gap in <=4 words?
+irresistible curiosity gap in <=4 words? (6) does ANY scene restate a point an earlier scene
+already made? DELETE it — repetition is the #1 retention killer on this channel.
 
-Rewrite EVERY weak part. Keep the same JSON schema and roughly the same length; keep every
-visual_query unless the narration changed meaning. Never add facts that were not present.
+Rewrite EVERY weak part. Keep the same JSON schema. CUTTING is welcome (delete repetition and
+filler); never pad. Keep every visual_query unless the narration changed meaning. Never add facts
+that were not present.
 
 SCRIPT:
 {json.dumps(compact, ensure_ascii=False)}
@@ -484,10 +545,11 @@ Return ONLY the full corrected JSON (same schema)."""
         improved = _validate_script(improved, script["title"], script.get("source_url", ""))
         old_words = sum(len(sc["narration"].split()) for sc in script["scenes"])
         new_words = sum(len(sc["narration"].split()) for sc in improved["scenes"]) if improved else 0
-        # an "improvement" that compresses the video is a regression — watch time is the product
-        if (improved and len(improved["scenes"]) >= max(5, len(script["scenes"]) - 4)
-                and new_words >= old_words * 0.75):
-            for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern"):
+        # v3: cutting repetition is a WIN (retention is the product); only guard
+        # against the editor gutting the script entirely
+        if (improved and len(improved["scenes"]) >= max(5, len(script["scenes"]) - 6)
+                and new_words >= max(500, old_words * 0.5)):
+            for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
                 if carry in script:
                     improved[carry] = script[carry]
             print("  ✍️  Critique pass applied.")
@@ -516,13 +578,48 @@ Return ONLY the full expanded JSON (same schema)."""
         if bigger:
             new_words = sum(len(sc["narration"].split()) for sc in bigger["scenes"])
             if new_words > words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern"):
+                for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
                     if carry in script:
                         bigger[carry] = script[carry]
                 print(f"  ✍️  Expanded {words} -> {new_words} words.")
                 return bigger
     except Exception as e:
         print(f"   ⚠️ length pass skipped: {e}")
+    return script
+
+
+
+
+def enforce_max_length(script: dict, max_words: int) -> dict:
+    """v3 anti-padding pass: dense 4-6 minute videos out-retain padded 8-minute
+    ones (the 0:38 average view duration was the proof). Cut, never pad."""
+    words = sum(len(sc["narration"].split()) for sc in script["scenes"])
+    if words <= max_words:
+        return script
+    try:
+        prompt = f"""This YouTube script is too long ({words} words; the cap is {max_words}). CUT it
+down by deleting scenes that restate an earlier point, merging thin scenes, and tightening every
+sentence. NEVER cut: the scene-1 hook, the deliverable/CTA in the final scene, or any concrete
+number or command. Keep the same JSON schema and the visual_query values of the scenes you keep.
+Do not add anything new.
+
+SCRIPT:
+{json.dumps({k: script[k] for k in ('title', 'thumb_text', 'description', 'tags', 'scenes')}, ensure_ascii=False)}
+
+Return ONLY the full tightened JSON (same schema)."""
+        smaller = llm.generate_json(prompt, max_tokens=8192, temperature=0.3)
+        smaller = _validate_script(smaller, script["title"], script.get("source_url", ""))
+        if smaller:
+            new_words = sum(len(sc["narration"].split()) for sc in smaller["scenes"])
+            if 500 <= new_words < words:
+                for carry in ("format", "grounding", "roundup_items", "signal_title",
+                              "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
+                    if carry in script:
+                        smaller[carry] = script[carry]
+                print(f"  ✂️  Tightened {words} -> {new_words} words.")
+                return smaller
+    except Exception as e:
+        print(f"   ⚠️ tighten pass skipped: {e}")
     return script
 
 
@@ -630,19 +727,22 @@ def scene_durations(script: dict, words: list, audio_dur: float) -> list | None:
 
 
 # --------------------------------------------------------------- orchestrate
-def decide_format(force: str | None, ranked: list[dict]):
-    """Virality-first format choice. Sunday keeps the roundup; every other day the
-    viral judge decides: a genuinely hot story (>= VIRAL_THRESHOLD) overrides the
-    calendar and runs as news; otherwise we bank an evergreen explainer.
-    Returns (fmt, viral_hint)."""
-    if force in ("news", "evergreen", "roundup"):
+def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None = None):
+    """v3 format choice. Sunday keeps the roundup; a genuinely hot story
+    (viral judge >= VIRAL_THRESHOLD) runs as news; otherwise the utility lane —
+    a hands-on tool video when a tool signal exists (config flag "tool_format"),
+    else an evergreen explainer. Returns (fmt, viral_hint)."""
+    if force in ("news", "evergreen", "roundup", "tool"):
         return force, (viral_pick(ranked) if force == "news" else None)
-    if _dt.date.today().weekday() == 6:
+    if (today or _dt.date.today()).weekday() == 6:
         return "roundup", None
     viral = viral_pick(ranked)
     if viral and viral[1] >= VIRAL_THRESHOLD:
         print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
         return "news", viral
+    if fv.flag("tool_format", False) and any(i.get("kind") == "tool" for i in ranked):
+        print("  🧰 No breakout story — running the utility lane (tool video).")
+        return "tool", None
     print(f"  🌤️  No breakout story today"
           f"{f' (best scored {viral[1]:.0f}/10)' if viral else ''} — banking an evergreen.")
     return "evergreen", None
@@ -670,6 +770,18 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             mark_failed(cand["title"])
             print("     ↻ script failed, trying next story...")
         return None
+    if fmt == "tool":
+        tools = [c for c in ranked if c.get("kind") == "tool"]
+        for cand in tools[:3]:
+            print(f"  🧰 Trying tool: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
+            s = script_tool(cand)
+            if s:
+                s["signal_title"] = cand["title"]
+                return s
+            mark_failed(cand["title"])
+            print("     ↻ tool script failed, trying next...")
+        print("   ⚠️ No tool script — falling back to evergreen.")
+        return build_script("evergreen", ranked, viral_hint)
     # evergreen
     topic = pick_evergreen_topic(ranked)
     if not topic:
@@ -684,13 +796,18 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
     return s
 
 
-MIN_WORDS = {"news": 850, "evergreen": 1000, "roundup": 800}
+# v3: 4:00-6:00 runtime at ~150 wpm. The old 850-1000 floors forced the LLM to
+# pad — the root cause of the 0:38 average view duration. The floor now only
+# catches truly thin scripts; the CAP is what fights padding.
+MIN_WORDS = {"news": 620, "evergreen": 620, "roundup": 620, "tool": 600}
+MAX_WORDS = 900
 MAX_OVERLAP = 0.08
 
 # binge sequencing: every long-form belongs to exactly one topic playlist
 PLAYLIST_BY_FORMAT = {"news": "AI News, Decoded",
                       "evergreen": "How AI Actually Works",
-                      "roundup": "Weekly AI Roundup"}
+                      "roundup": "Weekly AI Roundup",
+                      "tool": "Free AI Tools, Tested"}
 
 
 def _last_published_url() -> str:
@@ -821,9 +938,19 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         record_run(status="NO_SCRIPT", format=fmt)
         return None
 
-    # critique first, THEN enforce length — the editor pass tends to compress
+    # critique first (it now cuts repetition), then the floor (sanity only),
+    # then the CAP — padding is the enemy, not brevity
     script = critique_pass(script)
-    script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 850))
+    script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+    script = enforce_max_length(script, MAX_WORDS)
+
+    # v3: the deliverable is the whole point of a tool video — print it where
+    # the viewer will actually look (top block of the description)
+    if script.get("deliverable"):
+        dl = script["deliverable"]
+        script["description"] = (script["description"].rstrip()
+                                 + "\n\n🔧 Try it yourself:\n" + dl["text"]
+                                 + (f"\n{dl['url']}" if dl.get("url") else ""))
 
     words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
     print(f"  ✅ Script: '{script['title']}' | {len(script['scenes'])} scenes | "
@@ -838,6 +965,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print(f"  🛑 POLICY GATE: {overlap:.0%} of the narration is verbatim from the source. Blocking.")
         record_run(status="POLICY_BLOCKED", format=fmt, title=script["title"], overlap=round(overlap, 3))
         mark_failed(script.get("signal_title", script["title"]))
+        if force_format is None and fmt != "evergreen":
+            print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
+            return run(publish=publish, force_format="evergreen")
         return None
 
     # Bucket-3 gate: reporting is allowed; ADVISING viewers on finance/health/legal/
@@ -863,6 +993,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
             record_run(status="ADVICE_BLOCKED", format=fmt, title=script["title"])
             mark_failed(script.get("signal_title", script["title"]))
+            if force_format is None and fmt != "evergreen":
+                print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
+                return run(publish=publish, force_format="evergreen")
             return None
 
     # Accuracy gate: claim-level fact check against the bound sources. A hook/
@@ -875,6 +1008,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         record_run(status="FACTCHECK_BLOCKED", format=fmt, title=script["title"],
                    factcheck=fc)
         mark_failed(script.get("signal_title", script["title"]))
+        if force_format is None and fmt != "evergreen":
+            print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
+            return run(publish=publish, force_format="evergreen")
         return None
     if fc.get("soft_failures"):
         print(f"  ⚠️ {len(fc['soft_failures'])} soft claim(s) unsupported — confidence reduced.")
@@ -911,6 +1047,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ❌ Caption timing failed.")
         record_run(status="TIMING_FAILED", format=fmt, title=script["title"])
         return None
+    # v3: captions must show the SCRIPT's spelling — whisper mishears proper
+    # nouns ("Haapoja" -> "Hoppogja") and those typos were burned on screen
+    words = captions.correct_words(words, narration)
     audio_dur = eng.dur(audio)
     durs = scene_durations(script, words, audio_dur)
     starts = None
@@ -988,7 +1127,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                        if any("statcard" in str(c) for c in scene_clips[i])}
         stat_share = sum(durs[i] for i in card_scenes) / max(1.0, sum(durs))
     conf = gates.confidence({
-        "format": 1.0 if (10 <= len(script["scenes"]) <= 24 and words_total >= 700) else 0.6,
+        "format": 1.0 if (8 <= len(script["scenes"]) <= 24 and words_total >= 550) else 0.6,
         "novelty": 0.9 if not too_many_failures(script.get("signal_title", "")) else 0.4,
         "facts": 0.0 if not fc.get("passed", True) else max(0.2, 1.0 - 0.2 * len(fc.get("soft_failures", []))),
         "packaging": (0.9 if len(script["title"]) <= 60 else 0.6)
@@ -1076,6 +1215,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
+               deliverable=bool(script.get("deliverable")),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
@@ -1087,6 +1227,6 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
 if __name__ == "__main__":
     args = [a.lower() for a in sys.argv[1:]]
     do_publish = "publish" in args
-    forced = next((a for a in args if a in ("news", "evergreen", "roundup")), None)
+    forced = next((a for a in args if a in ("news", "evergreen", "roundup", "tool")), None)
     ok = run(publish=do_publish, force_format=forced)
     sys.exit(0 if ok else 1)

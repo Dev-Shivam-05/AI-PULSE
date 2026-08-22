@@ -24,5 +24,6 @@
     "require_insight_block": false,
     "kokoro_voice_b": "am_michael",
     "l2_voice_backend": "kokoro",
-    "l2_kokoro_voice": "bm_george"
+    "l2_kokoro_voice": "bm_george",
+    "tool_format": false
 }

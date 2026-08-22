@@ -99,6 +99,38 @@ def transcribe_words(mp3: str):
         return []
 
 
+def correct_words(words, script_text: str):
+    """Overwrite whisper's TEXT with the script's own tokens where they align 1:1.
+
+    We know exactly what was spoken — we synthesized it — so the script is ground
+    truth for SPELLING ("Haapoja", "GPT-5.6"); whisper stays ground truth for
+    TIMING. Conservative by design: only equal-length aligned blocks are replaced;
+    anything unequal (numbers spoken as words, split tokens) keeps whisper's text.
+    Timings are never touched, so scene sync and Shorts cut points are unaffected.
+    """
+    if not words or not script_text:
+        return words
+    import difflib
+    script_toks = []
+    for w in script_text.split():
+        c = _clean_word(w)
+        if any(ch.isalnum() for ch in c):
+            script_toks.append(c)
+    if not script_toks:
+        return words
+    a = [w.lower() for (_, _, w) in words]
+    b = [t.lower() for t in script_toks]
+    out = list(words)
+    sm = difflib.SequenceMatcher(a=a, b=b, autojunk=False)
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag == "equal" or (tag == "replace" and (i2 - i1) == (j2 - j1)):
+            # equal blocks still adopt the script token ("OpenAI", not "openai")
+            for k in range(i2 - i1):
+                st, en, _w = out[i1 + k]
+                out[i1 + k] = (st, en, script_toks[j1 + k])
+    return out
+
+
 def _ts(t: float) -> str:
     # integer centiseconds first, so 59.999s can't format as the invalid "0:00:60.00"
     cs = max(0, int(round(t * 100)))
