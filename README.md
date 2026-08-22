@@ -11,7 +11,7 @@ signals (GitHub trending · Hugging Face trending · Product Hunt · HN · arXiv
                                     require a deliverable for tool videos
   → screencap.py                    TOOL videos: screen-record the tool's real page (headless
                                     Chromium 1920×1080, dark) + Pygments code card of the command
-    Pexels clips                    news / evergreen only
+    Pexels clips                    news / evergreen / roundup
   → Kokoro voice · whisper word-timing · ffmpeg build · karaoke captions
   → thumbnail (tool: real page screenshot + 2–4 words) · Shorts · branded cold-open
   → originality / advice / fact gates → YouTube upload (scheduled slot)
@@ -44,8 +44,8 @@ math: [docs/STRATEGY.md](docs/STRATEGY.md). Current truth: [docs/STATUS.md](docs
 
 ```powershell
 # one-time setup (Windows)
-powershell -ExecutionPolicy Bypass -File setup.ps1        # ffmpeg, venv, deps, .env template
-py -3 -m playwright install chromium                       # tool-video screen recording
+powershell -ExecutionPolicy Bypass -File setup.ps1         # ffmpeg, venv, deps, .env template
+.\.venv\Scripts\python -m playwright install chromium      # tool-video screen recording
 .\.venv\Scripts\python scripts\factverse_engine.py auth    # one-time YouTube OAuth
 
 # make a video

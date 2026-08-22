@@ -21,6 +21,7 @@ TOOLS_DIR = fv.BASE / "docs" / "tools"
 DEFAULT_BASE_URL = "https://dev-shivam-05.github.io/AI-PULSE"
 RED = "#DC2626"
 INK = "#0D1117"
+_MONO_COLS = 68        # JetBrains Mono 11pt inside the code box, A4 minus margins
 
 
 # ------------------------------------------------------------- naming (pure)
@@ -47,6 +48,16 @@ def fallback_sheet(script: dict) -> dict:
             "uses": [], "skip_if": ""}
 
 
+def _as_list(v) -> list[str]:
+    """The LLM returns a JSON list most of the time and a plain string the rest of
+    the time. Iterating a string yields CHARACTERS, so coerce before filtering."""
+    if isinstance(v, str):
+        v = [ln for ln in v.splitlines()] or [v]
+    elif not isinstance(v, (list, tuple)):
+        return []
+    return [str(x).strip() for x in v if str(x).strip()]
+
+
 def extract_sheet(script: dict) -> dict | None:
     """One LLM call -> {what, steps[2-5], uses[3], skip_if}. None on any failure."""
     dl = script.get("deliverable") or {}
@@ -68,8 +79,8 @@ Return ONLY JSON:
         d = llm.generate_json(prompt, max_tokens=1024, temperature=0.2)
         if not isinstance(d, dict):
             return None
-        steps = [str(s).strip() for s in (d.get("steps") or []) if str(s).strip()][:5]
-        uses = [str(u).strip() for u in (d.get("uses") or []) if str(u).strip()][:3]
+        steps = _as_list(d.get("steps"))[:5]
+        uses = _as_list(d.get("uses"))[:3]
         if len(steps) < 1:
             steps = fallback_sheet(script)["steps"]
         return {"what": " ".join(str(d.get("what", "")).split())[:400],
@@ -167,7 +178,13 @@ def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str |
         label("GET IT RUNNING")
         rows = []
         for s in steps[:5]:
-            rows += simpleSplit(_clean(s, uni), f["mono"], 11, W - 2 * M - 40)[:2]
+            # simpleSplit never breaks a long unbroken token (a git+https:// install
+            # URL is one), so hard-wrap on character count as well.
+            for row in simpleSplit(_clean(s, uni), f["mono"], 11, W - 2 * M - 40)[:2]:
+                while len(row) > _MONO_COLS:
+                    rows.append(row[:_MONO_COLS])
+                    row = row[_MONO_COLS:]
+                rows.append(row)
         rows = rows[:8]
         box_h = 18 * len(rows) + 22
         c.setFillColor(INK)

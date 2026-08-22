@@ -8,8 +8,10 @@ tune them once ~2 weeks of v3 data exist. The one metric that decides whether v3
 ## What posts today (implemented)
 
 The GitHub Actions cron fires at **5:53 PM IST** (retry 8:23 PM; the second firing is a no-op
-once the day is done). One run = one long video scheduled for the 16:45 UTC slot + 2 Shorts
-on the 4-hour `publishAt` grid after it. The lane is chosen per day by
+once the day is done). One run = one long video scheduled for the 16:45 UTC slot, then Short #1
+about **2 h after the long-form goes live** (≈00:15 IST) and Short #2 on the next
+07 / 12 / 17 / 21 IST grid slot, with the ≥4 h minimum preserved
+(`scheduling.shorts_slots_after_long`). The lane is chosen per day by
 `ai_pipeline.decide_format`:
 
 1. **Sunday** → weekly top-5 roundup.
@@ -78,15 +80,16 @@ use relevance-ranked Pexels clips.
 
 ## Shorts (2/day, cut from the long video)
 
-Each Short is a different hook angle into the same video and ends with "full video → link"
-(the link is also posted as a comment, since Shorts hide description links):
+`find_best_moments` picks the high-impact moments and labels each one with a hook angle
+(`scripts/factverse_engine.py`); every Short ends with "full video → link", which is also
+posted as a comment because Shorts hide description links:
 
-- **The Shock** — the single most surprising fact/number. Pure curiosity.
-- **What it means for you** — the practical "why you should care" angle.
+- **cliffhanger** — a question or tension the clip does not answer ("Why the price drop backfires").
+- **single_fact** — one sourced, surprising number ("54% already had an incident").
 
-Format: vertical 9:16, hook text in the first 1.5 s, big live captions, CTA in the last 3 s,
-≤35 s and loopable. Published on the 07 / 12 / 17 / 21 IST grid with ≥4 h spacing
-(hard-validated by `scheduling.validate_distribution`).
+Format: vertical 9:16, hook text over the **first 3.5 s**, big live captions, CTA in the
+**last 6 s**, no outro so the loop lands back on the hook. Spacing is hard-validated by
+`scheduling.validate_distribution` (≥4 h between drops, ≤4 per day).
 
 ## SEO — titles, tags, description
 
@@ -99,7 +102,8 @@ News: "The AI Chip That Breaks Nvidia's Grip".
 **Tag set (15–25, auto-generated):** exact-match tool/model names + broad (`ai tools`, `ai news`)
 + branded (`ai pulse`) + trending (`ai 2026`). The brand tags are appended automatically.
 
-**Engagement boosters (automated):** a pinned question comment, the watch-next chain link in
+**Engagement boosters (automated):** an automatic question comment (posted, not pinned — the
+Data API cannot pin), the watch-next chain link in
 the description and comments, one topic playlist per lane ("Free AI Tools, Tested" for tool
 videos).
 

@@ -553,12 +553,27 @@ _PDF_MARK = "📄 Free 1-page cheat sheet: "
 
 
 def _insert_after_hook(desc: str, block: str) -> str:
-    """Paragraph 1 = text before the first blank line (else first line; else end)."""
-    for sep in ("\n\n", "\n"):
-        if sep in desc:
-            head, tail = desc.split(sep, 1)
-            return f"{head}\n\n{block}\n\n{tail.lstrip()}"
-    return desc.rstrip() + "\n\n" + block
+    """Put the block directly under the hook paragraph (spec v3-C #7).
+
+    _validate_script appends "\\n\\nSource: …" / "\\n\\n#AI …" to the LLM text, so the
+    first blank line is often the one IT manufactured — splitting there would drop the
+    block below the whole body. Split inside the LLM text: first blank line if the head
+    has no internal newline, else the first newline."""
+    desc = desc.lstrip("\n")
+    if not desc:
+        return block
+    head, sep, tail = desc.partition("\n\n")
+    if not sep or "\n" in head:
+        head, sep, tail = desc.partition("\n")
+        if not sep:
+            return desc.rstrip() + "\n\n" + block
+    return f"{head.rstrip()}\n\n{block}\n\n{tail.lstrip()}"
+
+
+def _has_cheat_sheet(script: dict) -> bool:
+    """The description may only advertise a PDF that run() will actually write —
+    make_cheat_sheet has exactly this condition."""
+    return bool(script.get("format") == "tool" and script.get("deliverable"))
 
 
 def place_description_blocks(script: dict) -> None:
@@ -567,17 +582,25 @@ def place_description_blocks(script: dict) -> None:
     Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
     desc = str(script.get("description", ""))
     promo = str(fv.setting("promo_block", "") or "").strip()
-    first_time = _DL_MARK not in desc and (not promo or promo not in desc)
-    if first_time:
-        desc = desc[:_MAX_DESC]
     dl = script.get("deliverable")
+    if (dl or promo) and _DL_MARK not in desc and (not promo or promo not in desc):
+        desc = desc[:_MAX_DESC]   # only when we are about to add to it
     if dl:
-        if not script.get("cheat_sheet"):
+        if _has_cheat_sheet(script) and not script.get("cheat_sheet"):
             script["cheat_sheet"] = deliverable.pdf_name(script.get("title", ""))
-        if _DL_MARK not in desc:
-            block = (f"{_DL_MARK}:\n{dl['text']}"
-                     + (f"\n{dl['url']}" if dl.get("url") else "")
-                     + f"\n{_PDF_MARK}{deliverable.public_url(script['cheat_sheet'])}")
+        pdf_line = (f"\n{_PDF_MARK}{deliverable.public_url(script['cheat_sheet'])}"
+                    if script.get("cheat_sheet") else "")
+        block = (f"{_DL_MARK}:\n{dl['text']}"
+                 + (f"\n{dl['url']}" if dl.get("url") else "") + pdf_line)
+        if block not in desc:
+            # An LLM rewrite pass can echo the description back with the block
+            # partially mangled (dropped PDF line, altered URL). Trusting the 🔧
+            # marker alone would ship a link to a file we never wrote — so cut any
+            # stale fragment out and re-insert the block we can stand behind.
+            i = desc.find(_DL_MARK)
+            if i >= 0:
+                end = desc.find("\n\n", i)
+                desc = (desc[:i] + (desc[end + 2:] if end >= 0 else "")).strip()
             desc = _insert_after_hook(desc, block)
     if promo and promo not in desc:
         i = desc.find(_PDF_MARK)

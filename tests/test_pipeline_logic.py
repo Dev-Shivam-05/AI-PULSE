@@ -575,6 +575,58 @@ def test_make_cheat_sheet_without_llm_uses_fallback(monkeypatch, tmp_path):
     assert captured["sheet"]["steps"] == ["pip install x"] and captured["video_url"] == "https://youtu.be/v"
 
 
+def test_extract_sheet_coerces_string_lists(monkeypatch):
+    # the LLM returns a bare string often enough; iterating one yields CHARACTERS
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {
+        "what": "x", "steps": "pip install x\nmarkitdown a.pdf", "uses": "only one", "skip_if": ""})
+    sh = dlv.extract_sheet(_tool_script(5))
+    assert sh["steps"] == ["pip install x", "markitdown a.pdf"]
+    assert sh["uses"] == ["only one"]
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {"steps": 42, "uses": None})
+    assert dlv.extract_sheet(_tool_script(5))["steps"] == ["pip install x"]   # falls back
+
+
+def test_build_pdf_hard_wraps_unbreakable_commands(tmp_path):
+    long_cmd = "pip install git+https://github.com/some-org/a-really-long-repository-name@v1.2.3#egg=pkg"
+    out = tmp_path / "long.pdf"
+    assert dlv.build_pdf(_tool_script(5), {"what": "", "steps": [long_cmd], "uses": [], "skip_if": ""},
+                         str(out))
+    from reportlab.lib.utils import simpleSplit
+    rows = simpleSplit(long_cmd, "Courier", 11, 499)
+    assert any(len(r) > dlv._MONO_COLS for r in rows)      # simpleSplit alone overflows
+    assert len(long_cmd[:dlv._MONO_COLS]) == dlv._MONO_COLS
+
+
+def test_insert_after_hook_handles_manufactured_blank_line():
+    # _validate_script appends "\n\nSource: ..." — the block must not land below the body
+    d = ap._insert_after_hook("Hook.\nBody two.\nBody three.\n\nSource: u", "BLOCK")
+    assert d.startswith("Hook.\n\nBLOCK\n\nBody two.")
+    assert ap._insert_after_hook("\n\nHook.\n\nBody.", "BLOCK").startswith("Hook.\n\nBLOCK")
+    assert ap._insert_after_hook("Only one line.", "BLOCK") == "Only one line.\n\nBLOCK"
+
+
+def test_cheat_sheet_link_only_when_a_pdf_will_be_written(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    ever = {"format": "evergreen", "description": "Hook.\n\nBody.",
+            "deliverable": {"kind": "command", "text": "pip install x", "url": "u"}}
+    ap.place_description_blocks(ever)                    # make_cheat_sheet skips non-tool
+    assert "cheat_sheet" not in ever and "📄" not in ever["description"]
+    assert "🔧 Try it yourself" in ever["description"]
+
+
+def test_mangled_block_is_repaired_not_trusted(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    s = _tool_script(10)
+    ap.place_description_blocks(s)
+    good = s["description"]
+    # an LLM rewrite echoes the block back without the cheat-sheet line
+    s["description"] = good.replace("\n📄 Free 1-page cheat sheet: "
+                                    + dlv.public_url(s["cheat_sheet"]), "")
+    ap.place_description_blocks(s)
+    assert s["description"].count("🔧 Try it yourself") == 1
+    assert dlv.public_url(s["cheat_sheet"]) in s["description"]   # link == file we write
+
+
 def test_make_cheat_sheet_fails_soft(monkeypatch, tmp_path):
     monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
     monkeypatch.setattr(dlv, "extract_sheet", lambda s: (_ for _ in ()).throw(RuntimeError("x")))

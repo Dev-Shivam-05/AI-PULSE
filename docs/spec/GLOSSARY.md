@@ -18,7 +18,7 @@
   `📄 Free 1-page cheat sheet: <url>`, placed after paragraph 1 (spec v3-C decision 7).
 - **_CARRY** — the top-level script keys every LLM rewrite pass must copy across
   (`format, grounding, roundup_items, signal_title, synthesis_claim, filter_segment,
-  hook_pattern, deliverable`). A pass that forgets one silently changes the video.
+  hook_pattern, deliverable, cheat_sheet`). A pass that forgets one silently changes the video.
 - **deliverable** — required field of a tool script: `{"kind": "command|repo|steps", "text", "url"}`.
   Spoken in the final scene, printed in the description as "🔧 Try it yourself". No deliverable = no video.
 - **MAX_WORDS** — 900. The anti-padding cap enforced by `enforce_max_length` (cut, never pad).

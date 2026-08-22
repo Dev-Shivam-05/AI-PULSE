@@ -32,3 +32,9 @@ opencv-python-headless>=4.9,<5
 
 # Creator-style thumbnail cutouts (background removal)
 rembg>=2.0
+
+# v3 tool videos: screen recording (run `python -m playwright install chromium` once),
+# code cards, and the 1-page cheat-sheet PDF
+playwright==1.60.0
+pygments>=2.17
+reportlab>=4.0

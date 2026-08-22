@@ -31,17 +31,22 @@
   person-cutout thumbnails for news; auto-chapters; description with the deliverable block
   above the fold; **1-page cheat-sheet PDF** per tool video (`docs/tools/`, GitHub Pages);
   `promo_block` affiliate slot.
-- **Distribution**: long-form at the 16:45 UTC slot, 2 Shorts/day on the 07/12/17/21 IST grid
-  (≥4 h spacing, hard-validated), watch-next chain links, one playlist per lane.
+- **Distribution**: long-form at the 16:45 UTC slot; Short #1 ~2 h later, Short #2 on the next
+  07/12/17/21 IST grid slot (≥4 h spacing, hard-validated); watch-next chain links; one
+  playlist per lane.
 - **Safety/ops**: originality, advice-framing, fact-check and confidence gates; publish-once-per-
   day guard; union state merge; dual retry cron; failure → GitHub issue; cron keepalive;
-  nightly analytics snapshot; **58 unit tests** run on every PR (`test.yml`).
+  nightly analytics snapshot; **63 unit tests** run on every PR (`test.yml`).
 
 ## In Progress
 - **First supervised tool run** — owner dispatches `publish.yml` with `format = tool` (before
   5:53 PM IST) and watches for "Screen-recorded visuals" + the cheat-sheet line.
 - **GitHub Pages** — not enabled yet (github.io URL returns 404). One click: Settings → Pages →
   Deploy from branch → `main` / `docs`. Until then the PDFs open via the GitHub blob viewer.
+  **Verify after the first tool run:** `curl -I <the 📄 link in the description>`. Pushes made
+  with `GITHUB_TOKEN` (the state-save step) may not trigger the Pages build; if the PDF 404s
+  while the file is visible in `docs/tools/` on main, that is the cause — any manual commit or
+  a Pages re-deploy from Settings republishes it.
 
 ## Owner actions (open)
 1. Merge PR #23 (v3-B), then the v3-C PR.
@@ -54,7 +59,7 @@
 ## Known Issues / Limits
 - Product Hunt post pages ground thinly → `script_tool` rejects them → next candidate (3 tries).
 - Recording is capped at 300 s; 900-word scripts (~375 s) loop the last chunks once.
-- One publish run/day by YouTube quota design (~6.8k of 10k units).
+- One publish run/day by YouTube quota design (~5.1k of 10k units at 2 Shorts/day).
 - GitHub cron fires late (up to ~2 h); mitigated by dual crons + the guard.
 - English only; YouTube only (Instagram manual).
 
