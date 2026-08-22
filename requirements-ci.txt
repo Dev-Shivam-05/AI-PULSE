@@ -11,3 +11,8 @@ google-auth-httplib2>=0.1
 faster-whisper>=1.0
 opencv-python-headless>=4.9,<5
 rembg>=2.0
+# v3-B tool-video visuals: screen recording + code cards.
+# playwright is pinned EXACTLY: the CI browser cache key hashes this file, and a
+# floating pin would keep serving a stale Chromium after a playwright release.
+playwright==1.60.0
+pygments>=2.17
