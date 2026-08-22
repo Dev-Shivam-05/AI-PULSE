@@ -1,114 +1,77 @@
 # AI Pulse — Project Status Report
 
-*Updated: 2026-07-20 · Local `main @ c34aeac` (2 commits ahead of GitHub, awaiting push)*
+*Updated: 2026-08-22 · v3-A merged (PR #22) · v3-B in PR #23 · v3-C on `v3-phase-c`*
 
 ## Overall Project Status
-- **Live.** The channel launched 2026-07-19 and publishes autonomously via GitHub Actions (1 long video + 3 spaced Shorts daily), end-to-end: topic selection → script → render → thumbnail → upload → state sync → alerting.
-- The full reliability layer (publish-once-per-day guard, conflict-proof state sync, retry cron) and the engagement engine (stat-cards, two-voice show, citations, chain design, playlists, scheduled Shorts) are implemented, tested (17/17), and committed locally — **they activate on the next `git push`**.
+- **Live and pivoting.** The channel has published autonomously via GitHub Actions since
+  2026-07-19. The 90-day numbers (1,582 views · 5 subscribers · **0:38 average view duration**
+  on 6–9-minute videos) showed the machine works but the product was wrong, so v3 pivots from
+  "about AI" news essays to **"AI you can use today" tool videos** with a deliverable.
+- v3 phases: **A** (signals, tool format, 900-word cap, gate fallback, caption force-align) is
+  on `main`; **B** (screen-recorded visuals, code cards, tool thumbnails, `tool_format: true`)
+  is in PR #23 with tests green; **C** (cheat-sheet PDF on GitHub Pages, affiliate slot, docs)
+  is this branch. **D** (learning loop) waits for ~2 weeks of v3 data.
+- Success metric for v3: average view duration ≥ 2:00 after 10 tool videos.
 
-## Completed Features
-- **Intelligence**: primary-source signal ranking (HN, arXiv, lab blogs, tech RSS), daily LLM viral judge (≥7/10 story overrides the calendar), URL + fuzzy + token-overlap topic dedup, failed-topic quarantine.
-- **Three formats**: viral news explainer (two-voice Host + Analyst show), evergreen search explainer, Sunday top-5 roundup.
-- **Script engine**: retention-engineered prompts (cold-open hook, open loops, pattern interrupts), critique pass (compression-guarded), length enforcement, title variants, thumbnail text.
-- **Production**: Kokoro-82M neural voice (multi-voice), whisper word alignment driving captions *and* scene-visual sync *and* Shorts cut points, animated stat-card scenes, on-screen source citations, karaoke captions, cold-open branding, relevance-ranked Pexels clips (3/scene).
-- **Packaging**: creator-style cutout thumbnails (YuNet face detection + rembg + face-zoom), auto-chapters, byte-safe metadata, tag strategy.
-- **Distribution**: Shorts scheduled on the 07/12/17/21 IST grid via `publishAt` (≥4h spacing, hard-validated), watch-next chain links, auto playlist-by-format, engagement comments (pending re-auth).
-- **Safety/ops**: render QA gate, plagiarism gate, honest exit codes, publish-once-per-day guard, union state merge, dual retry cron, failure→GitHub-issue alerts, cron keepalive, nightly analytics snapshots, 17 unit tests.
+## What the pipeline does today
+- **Intelligence**: GitHub trending + Hugging Face trending + Product Hunt (`kind=tool`) alongside
+  HN / arXiv / lab blogs / RSS; deterministic ranking with tool recency floor; URL + fuzzy +
+  token-overlap dedup; failed-topic quarantine.
+- **Lanes**: Sunday roundup > news (viral judge ≥ 8/10, two voices) > **tool** (default when a
+  tool signal exists) > evergreen. A gate block on an automatic run re-runs the day as evergreen.
+- **Script engine**: retention prompts, critique pass that CUTS repetition, 600–620 word sanity
+  floor, **900-word cap**, required `deliverable` for tool videos, one honest-limitation scene,
+  HF raw-README grounding fallback; every rewrite pass carries the same `_CARRY` key set.
+- **Visuals**: tool videos = headless-Chromium screen recording of the tool's page
+  (`screencap.py`, measured head trim, sequential per-scene chunks, fail-soft to stock) +
+  Pygments code card of the deliverable; news/evergreen = relevance-ranked Pexels + stat-cards.
+- **Production**: Kokoro-82M voice (multi-voice), whisper word alignment force-aligned to the
+  script's spelling, karaoke captions, source chips, cold-open branding, L2 human insight block.
+- **Packaging**: tool thumbnail = real page screenshot + 2–4 words (Inter Black on #DC2626);
+  person-cutout thumbnails for news; auto-chapters; description with the deliverable block
+  above the fold; **1-page cheat-sheet PDF** per tool video (`docs/tools/`, GitHub Pages);
+  `promo_block` affiliate slot.
+- **Distribution**: long-form at the 16:45 UTC slot, 2 Shorts/day on the 07/12/17/21 IST grid
+  (≥4 h spacing, hard-validated), watch-next chain links, one playlist per lane.
+- **Safety/ops**: originality, advice-framing, fact-check and confidence gates; publish-once-per-
+  day guard; union state merge; dual retry cron; failure → GitHub issue; cron keepalive;
+  nightly analytics snapshot; **58 unit tests** run on every PR (`test.yml`).
 
 ## In Progress
-- **Comment chain** (Short→long link comments, episode-chain comments): code shipped, activates after a one-time OAuth re-consent (new `force-ssl` scope) + `YT_TOKEN_B64` secret update.
-- **Learning loop**: data collection is live (`state/runs.jsonl` + `state/analytics.jsonl`); the decision layer that tunes topics/packaging from it is not yet built.
+- **First supervised tool run** — owner dispatches `publish.yml` with `format = tool` (before
+  5:53 PM IST) and watches for "Screen-recorded visuals" + the cheat-sheet line.
+- **GitHub Pages** — not enabled yet (github.io URL returns 404). One click: Settings → Pages →
+  Deploy from branch → `main` / `docs`. Until then the PDFs open via the GitHub blob viewer.
 
-## Pending Features
-- Native vertical (infographic-style) Short as a 4th daily drop — deferred for API-quota headroom; engine already supports vertical rendering.
-- Fact-check pass (verify claims against a second source before publish).
-- Instagram publishing via official Graph API (manual posting until the channel is established).
-- Semantic (embedding-based) topic dedup; Hindi sister channel (pipeline ~95% reusable).
+## Owner actions (open)
+1. Merge PR #23 (v3-B), then the v3-C PR.
+2. Enable GitHub Pages (above).
+3. Dispatch the supervised `tool` run and review the first tool video.
+4. v2 backlog: set one of the duplicate NVIDIA/HF videos to Private; one-time OAuth re-consent
+   (`force-ssl` scope) + `YT_TOKEN_B64` update to activate comment chains.
+5. Fill `promo_block` in `config.json` when there is an affiliate to promote.
 
-## Planned Future Enhancements
-- Learning-loop decision layer (feed CTR/retention back into viral judge, titles, thumbnails).
-- `publishAt` staggering for long-form; end-screen/next-video optimization.
-- Revenue diversification (affiliate links, sponsor-slot readiness) once monetized.
-- Oracle free-tier VM migration if render time or Actions limits ever bind.
-
-## Architecture Overview
-- **Monorepo Python pipeline**: `factverse/` (modern package: pipeline, intelligence, voice, captions, thumbnail, infographics, scheduling, state merge, analytics) reusing `scripts/factverse_engine.py` as a render/upload library (legacy content paths gated behind `legacy-run`).
-- **Runtime**: GitHub Actions daily cron (primary) or the owner's laptop (`smart_scheduler.py`); identical code paths.
-- **State**: flat JSON/JSONL files committed back to the repo each run (topic history, run ledger, production log, analytics) with union-merge semantics.
-- **External services** (all free tier): Gemini (scripts/judging), Pexels (stock), YouTube Data + Analytics APIs (OAuth), GitHub (runtime + state + alerts). Local models: Kokoro TTS, faster-whisper, YuNet, U2Net.
-
-## Current Workflow (daily)
-- Cron fires 12:23 UTC (retry 14:53) → guard checks origin's ledger, exits if today already published → ranks signals, viral judge picks format → script + critique → clips + stat-cards → voice (dialogue or solo) → whisper sync → build → thumbnail → 3 Shorts → captions + citations → cold-open → QA + policy gates → upload long (public) + playlist + chain comments + Shorts (scheduled private, 4h grid) → burn topic → analytics snapshot → union-merge state push → keepalive; on failure, a GitHub issue emails the owner.
-
-## Major Accomplishments
-- Idea → audited → rebuilt → **live channel** with zero paid services.
-- 87-finding engineering audit closed; every silent-failure mode from v1 eliminated.
-- First-48h forensics diagnosed real platform behavior (late crons, state races, stale re-runs) and hardened against all three.
-- Retention design validated by first data: two Shorts already loop >100% (104%, 138.6%).
-
-## Strengths
-- Fails loudly, never silently; every gate is honest (exit codes, statuses, alerts).
-- Zero recurring cost; no server to maintain; state and history fully inspectable in git.
-- Policy-defensive by design (originality gate, source grounding, added-value analysis, quality cadence).
-- Every subsystem has a fallback chain (voice, thumbnails, captions, LLM models).
-
-## Weaknesses
-- Stock footage remains the visual ceiling for non-stat scenes.
-- Kokoro voice is good but recognizably synthetic; no emotional range control.
-- Thumbnail person selection is frame-luck (no gaze/emotion scoring yet).
-- No automated fact-check: an LLM attribution slip can reach a hook overlay.
-
-## Limitations
-- One publish run/day by quota design (~6.8k of 10k YouTube API units used).
-- English only; YouTube-only distribution (IG manual).
-- Analytics API lags ~48h for new channels; learning loop needs weeks of data to matter.
-- Laptop renders are slow and sleep-prone; CI is the reliable runtime.
-
-## Known Issues
-- A near-duplicate video pair (NVIDIA/HF) is live on the channel from a stale re-run — **owner should set one to Private**; the guard + similarity dedup prevent recurrence.
-- Already-published videos carry the "AI" disclosure badge (new uploads won't).
-- Comment features log "skipped" until the OAuth re-consent happens.
-- GitHub cron still fires late (observed up to ~2h); mitigated by dual crons + guard, not eliminated.
-
-## Technical Debt
-- Legacy engine coupled via `sys.path` import; mystery-era prompt code still present (gated, unused).
-- Print-based logging (no structured logs); no CI job running the test suite on push.
-- CI dependencies unpinned (`>=` ranges); mixed LF/CRLF line endings produce git warnings.
+## Known Issues / Limits
+- Product Hunt post pages ground thinly → `script_tool` rejects them → next candidate (3 tries).
+- Recording is capped at 300 s; 900-word scripts (~375 s) loop the last chunks once.
+- One publish run/day by YouTube quota design (~6.8k of 10k units).
+- GitHub cron fires late (up to ~2 h); mitigated by dual crons + the guard.
+- English only; YouTube only (Instagram manual).
 
 ## Risks
-- **Platform policy** (#1): YPP review of an AI-heavy channel; mitigated by originality gates, curation value, disclosure-when-required.
-- Free-tier changes: Gemini model/rate deprecations, Pexels limits, YouTube quota policy.
-- OAuth token invalidation (recoverable in ~10 min via re-auth + secret update; alerts fire).
-- Single-owner bus factor: all accounts/secrets belong to one person.
+- **Platform policy** (#1): YPP review of an AI-heavy channel — mitigated by original screen-
+  recorded visuals, grounded scripts, curation value, honest limitation scenes.
+- Free-tier changes (Gemini, Pexels, YouTube quota), OAuth token invalidation (10-min fix,
+  alerts fire), single-owner bus factor.
+- Pages link 404s until enabled — the description already carries it.
 
-## Assumptions
-- OAuth consent screen stays **Published** (Testing mode kills tokens in 7 days).
-- Free tiers persist at current limits; repo stays public (unlimited Actions minutes).
-- Owner glances at email/Actions ~monthly and can do a 10-minute fix when alerted.
-- One video/day of grounded, transformed content stays within YouTube policy.
+## Next Priorities
+1. Watch the first 10 tool videos' average view duration (the v3 verdict).
+2. v3-D learning loop: feed `state/runs.jsonl` + `state/analytics.jsonl` into topic and
+   packaging choices.
+3. Capture hardening only if CI logs show it (PH/HF page quirks, chromium sandbox).
 
-## Pros / Cons of the Current Implementation
-- **Pros**: fully autonomous; ₹0 cost; self-healing state; data flywheel already recording; each subsystem independently replaceable (provider swaps are config flips).
-- **Cons**: quality ceiling bound to free tools; LLM variability requires gates rather than guarantees; GitHub cron timing is best-effort; two-runtime split (laptop/CI) needs occasional model-file sync.
-
-## Production Readiness
-- **In production now.** Publishing daily with monitoring, alerting, idempotence, and quota discipline. The unpushed local commits complete the reliability + engagement layer.
-
-## Remaining Tasks Before "Release Complete"
-1. `git push origin main` (owner) — activates everything above.
-2. One-time OAuth re-consent + update `YT_TOKEN_B64` (enables comment chains + analytics scope).
-3. Set one of the duplicate NVIDIA/HF videos to Private.
-4. Watch two consecutive cron cycles run green with the new save path.
-
-## Recommended Next Priorities
-1. Learning-loop decision layer (once ~2 weeks of analytics accumulate).
-2. Fact-check pass for news scripts (kills the attribution-slip class).
-3. Native vertical Short (quota-aware) + thumbnail gaze/emotion scoring.
-4. CI test workflow + dependency pinning (repo hygiene).
-
-## Blockers / Dependencies
-- Owner-only: the push, the re-consent, channel-level actions (dupe cleanup, cosmetics).
-- External: YouTube/Gemini/Pexels free-tier stability; GitHub cron behavior.
-
-## Overall Health Assessment
-- **Green.** The system is live, self-publishing, self-reporting, and self-protecting; content quality now has a real upgrade path (dialogue + infographics + citations) and a data flywheel to steer it. The dominant open risk is platform policy at monetization review — addressed by design, provable only by outcome. Momentum is strong; the next leverage is learning from real audience data rather than adding more machinery.
+## Overall Health
+- **Green.** Live, self-publishing, self-reporting, self-protecting, ₹0. The product has been
+  redefined around a measurable payoff (deliverable + cheat sheet) and original visuals; the
+  next two weeks of data decide the tuning, not more machinery.
