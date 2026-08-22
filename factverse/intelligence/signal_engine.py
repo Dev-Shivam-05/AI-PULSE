@@ -130,7 +130,7 @@ def _is_used(title: str, used: set[str]) -> bool:
 
 
 # The same story published as a paper reads worse on video than as news; weight kinds.
-_KIND_WEIGHT = {"news": 1.0, "discussion": 0.9, "research": 0.75}
+_KIND_WEIGHT = {"news": 1.0, "discussion": 0.9, "research": 0.75, "tool": 1.0}
 
 
 def rank(limit: int = 10) -> list[dict]:
@@ -176,6 +176,10 @@ def rank(limit: int = 10) -> list[dict]:
         else:
             src_norm = c.get("score", 0.0) / fm
         rec = _recency_boost(c.get("published", ""))
+        if c.get("kind") == "tool":
+            # trending feeds are pre-filtered for "hot right now"; the item's
+            # created date is not staleness, so don't let the decay bury tools
+            rec = max(rec, 0.5)
         fit = 100 * (0.35 * src_norm + 0.30 * rel + 0.35 * rec)
         fit *= _KIND_WEIGHT.get(c.get("kind", "news"), 1.0)
         item = dict(c)
