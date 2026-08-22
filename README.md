@@ -21,7 +21,7 @@ ordinary people, and broad appeal:
 
 | Condition | Format | Purpose |
 |---|---|---|
-| A story scores ≥ 7/10 | News explainer (~6–7 min), steered by the judge's viral angle | The viral ceiling — hot topics + emotional charge |
+| A story scores ≥ 8/10 | News explainer, steered by the judge's viral angle | The viral ceiling — hot topics + emotional charge |
 | Nothing is hot | Evergreen explainer (~8–9 min) | Search traffic that compounds — the watch-hours floor |
 | Sunday | Weekly top-5 roundup | News appetite, served policy-safely (curation = added value) |
 

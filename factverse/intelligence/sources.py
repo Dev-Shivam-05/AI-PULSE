@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import time
 import xml.etree.ElementTree as ET
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import requests
 
@@ -157,7 +157,8 @@ AI_FEEDS = (
 )
 
 
-def rss(url: str, source: str, max_items: int = 12, niche: bool = True) -> list[dict]:
+def rss(url: str, source: str, max_items: int = 12, niche: bool = True,
+        kind: str = "news") -> list[dict]:
     """Parse an RSS 2.0 or Atom feed defensively."""
     out: list[dict] = []
     try:
@@ -171,7 +172,7 @@ def rss(url: str, source: str, max_items: int = 12, niche: bool = True) -> list[
                 pub = (it.findtext("pubDate") or "").strip()
                 if title:
                     out.append({"title": title, "url": link, "source": source,
-                                "score": 1.0, "published": pub, "kind": "news", "niche": niche})
+                                "score": 1.0, "published": pub, "kind": kind, "niche": niche})
         else:  # Atom
             ns = {"a": "http://www.w3.org/2005/Atom"}
             for e in root.findall("a:entry", ns)[:max_items]:
@@ -182,7 +183,7 @@ def rss(url: str, source: str, max_items: int = 12, niche: bool = True) -> list[
                        or e.findtext("a:published", default="", namespaces=ns) or "")
                 if title:
                     out.append({"title": title, "url": link, "source": source,
-                                "score": 1.0, "published": pub, "kind": "news", "niche": niche})
+                                "score": 1.0, "published": pub, "kind": kind, "niche": niche})
     except Exception:
         pass
     return out
@@ -195,6 +196,80 @@ def ai_blogs() -> list[dict]:
     return out
 
 
+def github_trending(days: int = 14, min_stars: int = 120, max_items: int = 15) -> list[dict]:
+    """Hot NEW AI repos via the official GitHub search API (free, no key needed).
+
+    'Created recently + already heavily starred' is the closest key-free proxy for
+    github.com/trending (which has no official API). kind='tool' marks these as
+    candidates for the v3 hands-on utility format."""
+    out: list[dict] = []
+    try:
+        since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+        r = _get(
+            "https://api.github.com/search/repositories",
+            params={"q": f"ai OR llm OR agent OR diffusion created:>{since} stars:>{min_stars}",
+                    "sort": "stars", "order": "desc", "per_page": max_items},
+            headers={"Accept": "application/vnd.github+json"},
+        )
+        if r.status_code != 200:
+            return []
+        for it in r.json().get("items", []):
+            name = (it.get("full_name") or "").strip()
+            if not name:
+                continue
+            desc = (it.get("description") or "").strip()
+            out.append(
+                {
+                    "title": f"{name}: {desc[:90]}" if desc else name,
+                    "url": it.get("html_url") or f"https://github.com/{name}",
+                    "source": "github/trending",
+                    "score": float(it.get("stargazers_count", 0)),
+                    "published": it.get("created_at", ""),
+                    "kind": "tool",
+                    "niche": True,
+                }
+            )
+    except Exception:
+        pass
+    return out
+
+
+def huggingface_trending(max_items: int = 12) -> list[dict]:
+    """Trending models from the Hugging Face Hub API (free, no key needed)."""
+    out: list[dict] = []
+    try:
+        r = _get("https://huggingface.co/api/models",
+                 params={"sort": "trendingScore", "direction": "-1", "limit": max_items})
+        if r.status_code != 200:
+            return []
+        for m in r.json():
+            mid = (m.get("modelId") or m.get("id") or "").strip()
+            if not mid:
+                continue
+            tag = str(m.get("pipeline_tag") or "model").replace("-", " ")
+            out.append(
+                {
+                    "title": f"{mid} — trending {tag} on Hugging Face",
+                    "url": f"https://huggingface.co/{mid}",
+                    "source": "huggingface/trending",
+                    "score": float(m.get("trendingScore") or m.get("likes") or 0),
+                    "published": m.get("createdAt", ""),
+                    "kind": "tool",
+                    "niche": True,
+                }
+            )
+    except Exception:
+        pass
+    return out
+
+
+def product_hunt() -> list[dict]:
+    """Product Hunt's public feed (free, no key). It lists ALL products, so
+    niche=False on purpose: the ranker's keyword gate keeps only the AI ones."""
+    return rss("https://www.producthunt.com/feed", "producthunt",
+               max_items=20, niche=False, kind="tool")
+
+
 def gather_all() -> list[dict]:
     """Pull every source. A dead source just contributes nothing."""
     candidates: list[dict] = []
@@ -202,4 +277,8 @@ def gather_all() -> list[dict]:
     candidates += ai_blogs()
     candidates += arxiv()
     candidates += reddit()
+    # v3 utility-lane signals: things a viewer can USE today (kind="tool")
+    candidates += github_trending()
+    candidates += huggingface_trending()
+    candidates += product_hunt()
     return candidates
