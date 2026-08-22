@@ -177,3 +177,99 @@ def test_dialogue_segments_grouping():
 
 def test_dialogue_segments_none_for_monologue():
     assert ap._dialogue_segments({"scenes": [{"narration": "x"}] * 6}, "") is None
+
+
+# =============================================================== v3: utility pivot
+# --------------------------------------------------------------- caption force-align
+def test_correct_words_fixes_one_to_one_mistranscription():
+    # whisper misheard the proper noun; the script is ground truth for spelling
+    words = [(0.0, 0.4, "Hoppogja's"), (0.5, 0.9, "video"), (1.0, 1.4, "went"), (1.5, 1.9, "viral")]
+    out = captions.correct_words(words, "Haapoja's video went viral.")
+    assert out[0] == (0.0, 0.4, "Haapoja's")            # text fixed, timing untouched
+    assert [w for (_, _, w) in out] == ["Haapoja's", "video", "went", "viral"]
+
+
+def test_correct_words_keeps_unequal_blocks():
+    # script "14MB" heard as two tokens: unequal alignment must keep whisper's text
+    words = [(0.0, 0.4, "14"), (0.4, 0.9, "megabytes"), (1.0, 1.4, "model")]
+    out = captions.correct_words(words, "14MB model")
+    assert [w for (_, _, w) in out] == ["14", "megabytes", "model"]
+
+
+def test_correct_words_adopts_script_casing():
+    out = captions.correct_words([(0.0, 1.0, "openai")], "OpenAI")
+    assert out[0][2] == "OpenAI"
+    assert captions.correct_words([], "text") == []
+
+
+# --------------------------------------------------------------- format decision
+def _sig(kind="news"):
+    return {"title": "OpenAI ships a new agent model", "url": "https://x.test/a", "source": "s",
+            "score": 50.0, "published": "", "kind": kind, "niche": True, "fit_score": 50.0}
+
+
+def test_decide_format_news_needs_8(monkeypatch):
+    import datetime as dt
+    monday = dt.date(2026, 8, 17)
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 7.5, "angle", "hook"))
+    fmt, _ = ap.decide_format(None, [_sig("tool")], today=monday)
+    assert fmt == "tool"                                 # 7.5 no longer clears the bar
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 8.2, "angle", "hook"))
+    fmt, hint = ap.decide_format(None, [_sig("tool")], today=monday)
+    assert fmt == "news" and hint[1] == 8.2
+
+
+def test_decide_format_tool_lane_gated_by_flag(monkeypatch):
+    import datetime as dt
+    monday = dt.date(2026, 8, 17)
+    monkeypatch.setattr(ap, "viral_pick", lambda r: None)
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: False)
+    fmt, _ = ap.decide_format(None, [_sig("tool")], today=monday)
+    assert fmt == "evergreen"                            # flag off -> v2 behavior intact
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    fmt, _ = ap.decide_format(None, [_sig("news")], today=monday)
+    assert fmt == "evergreen"                            # flag on but no tool signal
+    fmt, hint = ap.decide_format("tool", [])
+    assert fmt == "tool" and hint is None                # forced format honored
+
+
+def test_decide_format_sunday_keeps_roundup(monkeypatch):
+    import datetime as dt
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 9.9, "a", "h"))
+    fmt, _ = ap.decide_format(None, [_sig("tool")], today=dt.date(2026, 8, 16))
+    assert fmt == "roundup"
+
+
+# --------------------------------------------------------------- deliverable contract
+def test_validate_script_normalizes_deliverable():
+    base = {"scenes": [{"narration": f"s {i}", "visual_query": "code"} for i in range(6)]}
+    s = ap._validate_script({**base, "deliverable": {"kind": "command", "text": "pip install x",
+                                                     "url": "https://g.test/r"}}, "t")
+    assert s["deliverable"] == {"kind": "command", "text": "pip install x", "url": "https://g.test/r"}
+    s = ap._validate_script({**base, "deliverable": {"text": "   "}}, "t")
+    assert s["deliverable"] is None                      # blank text -> no deliverable
+    s = ap._validate_script(dict(base), "t")
+    assert s["deliverable"] is None                      # news/evergreen scripts unaffected
+
+
+# --------------------------------------------------------------- length is a cap now
+def test_enforce_max_length_cuts_padded_scripts(monkeypatch):
+    long_script = {"title": "T", "thumb_text": "X", "description": "d", "tags": [],
+                   "source_url": "", "format": "news",
+                   "scenes": [{"narration": " ".join(["word"] * 100), "visual_query": "v"}
+                              for _ in range(10)]}                     # 1000 words
+    tight = {"title": "T", "thumb_text": "X", "description": "d", "tags": [],
+             "scenes": [{"narration": " ".join(["word"] * 80), "visual_query": "v"}
+                        for _ in range(8)]}                            # 640 words
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: dict(tight))
+    out = ap.enforce_max_length(long_script, 900)
+    assert sum(len(sc["narration"].split()) for sc in out["scenes"]) == 640
+    assert out["format"] == "news"                       # metadata carried across the pass
+
+
+def test_enforce_max_length_noop_under_cap(monkeypatch):
+    called = []
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: called.append(1))
+    s = {"scenes": [{"narration": "one two three four five", "visual_query": "v"}] * 5, "title": "t"}
+    assert ap.enforce_max_length(s, 900) is s and not called
