@@ -1,62 +1,73 @@
-# HANDOFF — AI Pulse — Phase v3-A (utility pivot core) — 2026-08-22
+# HANDOFF — AI Pulse — Phase v3-C (income + packaging) — 2026-08-22
+
+*Two phases shipped this session. `v3-phase-b` (original visuals) is PR #23; `v3-phase-c` is
+stacked on top of it — merge #23 first. v3-B's own detail lives in docs/DECISIONS.md.*
 
 ## Done
-- Diagnosed why the channel doesn't earn: 90-day data = 1,582 views, 5 subs, **0:38 avg view
-  duration** on 6-9 min videos → YPP decades away at current rate. Root causes verified in code
-  and on-screen: word FLOORS forced padding (repeated claims in 5 of 17 scenes of the last video),
-  Pexels stock = AI-slop signature, 8 of last 20 runs died at gates with nothing published,
-  whisper typos burned into captions ("Hoppogja's").
-- v3 spec locked and approved (`go`): docs/spec/ai-pulse-v3.md. Pivot = "about AI" news →
-  "AI you can USE today" tool videos with a concrete deliverable.
-- Tool signals LIVE-VERIFIED: github_trending (15 items, top 16.9k★), huggingface_trending (12),
-  product_hunt feed (20). kind="tool", recency-floored in ranker.
-- Pipeline core: `script_tool` format + required `deliverable` field (behind `tool_format:false`
-  flag until visuals land); viral news bar 7→8; MIN floors 850-1000 → 600-620 sanity only;
-  NEW `enforce_max_length` cap 900; critique pass now cuts repetition instead of guarding length;
-  FACTCHECK/ADVICE/POLICY block on auto runs → falls back to forced evergreen (day never wasted);
-  `captions.correct_words` force-aligns caption text to the script (fixes proper-noun typos).
-- **26/26 tests pass** in the CI-mirror venv (17 old + 9 new).
-- Phase-B PoC PROVEN in scratchpad: Playwright headless Chromium recorded a real trending repo
-  (dark GitHub, README scroll, 1920×1080 webm) + page screenshot for thumbnails. Zero stock.
-- Branch `v3-phase-a` pushed. PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-a
-- Capability note: Claude CAN watch published videos (yt-dlp 480p + ffmpeg contact sheets); used
-  it to tear down nXQT0BOL1Wo frame by frame.
+- A tool video now writes **one A4 cheat-sheet PDF** to `docs/tools/<date>-<slug>.pdf`: red
+  header, title, WHAT IT IS, GET IT RUNNING (the exact command in a dark terminal box), MAKE
+  THESE 3 THINGS, SKIP IT IF, footer with source + video links. Verified by rendering two real
+  PDFs (LLM path and LLM-failure fallback) and reading them: one page, selectable text.
+- A tool video's **description opens with the transaction**: hook paragraph, then
+  `🔧 Try it yourself` + command + source, then `📄 Free 1-page cheat sheet: <url>`, then the
+  `promo_block` affiliate slot, then the rest. Running the placement twice changes nothing, and
+  a rewrite pass that mangles the block gets it repaired rather than trusted.
+- Tool videos are illustrated by **the tool itself** (v3-B): headless Chromium records its real
+  page, trimmed by measured load latency and cut into per-scene clips, plus a Pygments code card
+  of the command and a thumbnail built from the page screenshot. Live E2E: 10 of 10 sampled
+  frames were real UI (spec needs ≥7). Falls back to stock if capture fails.
+- `tool_format` is **true** — the tool lane is live at merge.
+- **63/63 tests** pass locally and on each PR (`test.yml`).
 
 ## Files changed
-- docs/spec/ai-pulse-v3.md — the locked v3 contract (10 decisions, acceptance criteria, phasing)
-- docs/spec/GLOSSARY.md — fixed meanings: tool format, deliverable, MAX_WORDS, blocked-day fallback
-- docs/PHASES.md — new phase board (v3-A done, B/C/D queued)
-- factverse/intelligence/sources.py — github_trending / huggingface_trending / product_hunt fetchers
-- factverse/intelligence/signal_engine.py — tool kind weight + recency floor 0.5 for tool items
-- factverse/ai_pipeline.py — script_tool, deliverable contract+description block, threshold 8,
-  MIN/MAX words, enforce_max_length, cut-don't-pad critique, 3× gate fallbacks, correct_words call,
-  tool playlist, CLI "tool" arg, confidence tweak (words≥550, scenes≥8)
-- factverse/captions.py — correct_words (difflib 1:1 force-align, timings untouched)
-- config.json + config.example.json — "tool_format": false
-- tests/test_pipeline_logic.py — 9 new tests
-- README.md — viral bar table 7→8
+- `factverse/deliverable.py` (NEW) — cheat-sheet PDF: naming, public URL, LLM extraction with
+  fallback, one-page renderer.
+- `factverse/screencap.py` (NEW, v3-B) — screen-recording visual provider + code cards.
+- `factverse/ai_pipeline.py` — description blocks, `_has_cheat_sheet`, `_CARRY` (+`cheat_sheet`),
+  `make_cheat_sheet` after upload, capture/code-card/thumbnail seams, `_hf_readme_url`,
+  `filter_segment` fix.
+- `factverse/thumbnail.py` — `make_tool_thumb` (page screenshot + overlay).
+- `config.json` / `config.example.json` — `tool_format: true`, `deliverable_base_url`, `promo_block`.
+- `.github/workflows/publish.yml` — chromium cache + soft install, `format` dispatch input,
+  state-save commits `docs/tools` via a separate `git add`.
+- `.github/workflows/test.yml`, `requirements-ci.txt`, `requirements.txt` — pygments, reportlab,
+  playwright pinned exactly.
+- `tests/test_pipeline_logic.py` — 38 new tests across B and C.
+- `docs/spec/ai-pulse-v3c.md` (NEW), `docs/spec/GLOSSARY.md`, `docs/DECISIONS.md`,
+  `docs/PHASES.md`, `docs/STATUS.md`, `docs/CONTENT_PLAYBOOK.md`, `README.md`, `CLAUDE.md` (NEW).
 
 ## Decisions made
-- Tool lane ships DARK (flag off) until Phase B visuals exist — a tool video illustrated with
-  Pexels stock would be worse than evergreen. Threshold-8 + cap-900 + fallbacks are LIVE at merge.
-- Product Hunt via public RSS feed (keyword-gated), not the OAuth API — zero new secrets.
-- Higgsfield rejected for visuals: 0 credits, and screen recording is better evidence anyway.
-- Keep the existing channel; no reset, no rebrand.
+- The cheat sheet always ships: LLM extraction failure falls back to the deliverable, never to
+  "no PDF". The PDF name is decided before upload, the file written after (it carries the video URL).
+- Links go above the fold, under the hook paragraph — v3-A appended the deliverable at the end
+  of the description, where nobody scrolls.
+- The description block is compared exactly and repaired, because matching the `🔧` marker alone
+  could publish a link to a file that was never written.
+- The affiliate slot (`promo_block`) is wired and empty: adding an affiliate is a config edit.
+- Hosting is GitHub Pages from `main` `/docs` (₹0), not a paid host or a new service.
+- Tool videos get 100% original visuals when capture succeeds; stock is the failure path only.
+- Full list, with reasons: `docs/DECISIONS.md` (Phase B and Phase C sections).
 
 ## Known broken / deliberately skipped
-- Tool videos have NO visual engine yet — that IS Phase B (PoC in scratchpad/poc_screencap.py).
-- PoC recording's first ~2s are blank (page load) — Phase B must trim the head.
-- Screenshot thumbnails, PDF deliverable, README v3 rewrite — Phases B/C per docs/PHASES.md.
-- Duplicate NVIDIA/HF video + OAuth re-consent + old near-dupe cleanup — still owner actions (v2 backlog).
+- **GitHub Pages is not enabled** — `https://dev-shivam-05.github.io/AI-PULSE/` 404s today, so
+  every `📄` link 404s until the owner clicks it on. Needs repo admin; no `gh` CLI here.
+- `GITHUB_TOKEN` pushes may not trigger the Pages build — if a PDF 404s while the file is visible
+  in `docs/tools/` on main, that is why; any manual commit republishes it.
+- `promo_block` is empty — because there is no affiliate or product yet.
+- No PDF for news / evergreen / roundup — because they have no deliverable (spec).
+- Product Hunt pages ground thinly, so `script_tool` often rejects them — the 3-candidate retry
+  covers it; not worth fixing before real logs exist.
+- `REC_MAX` is 300 s, so a 900-word script loops its last recording chunks once — acceptable.
+- v2 backlog untouched: the duplicate NVIDIA/HF video, and the OAuth re-consent that would
+  activate comment chains.
 
 ## Next session starts here
-- Phase v3-B: build `factverse/screencap.py` (Playwright provider: record repo/model page,
-  trim head, segment per scene), Pygments code cards, screenshot thumbnail path, add
-  `playwright install chromium` to publish.yml, then flip `tool_format: true` and force one
-  supervised `tool` run.
-- First command: `/boot` then read docs/spec/ai-pulse-v3.md + scratchpad PoC pattern (rec via
-  browser context record_video_dir, color_scheme="dark").
-- Watch out for: publish.yml CI time/size — chromium adds ~130MB download per run unless cached
-  (use actions/cache on ~/.cache/ms-playwright); and `fetch_text()` on huggingface.co model pages
-  may return thin text (JS-rendered) — script_tool already rejects no-grounding items, but that
-  can starve HF picks; consider the HF API's raw README endpoint in B.
+- Phase v3-D: feed `state/runs.jsonl` + `state/analytics.jsonl` back into topic and packaging
+  choices — but only once ~2 weeks of v3 data exist, so the next session is probably a review of
+  the first tool videos, not a build.
+- First command: `/boot`
+- Watch out for: **judging v3 before the data exists.** The verdict metric is average view
+  duration ≥ 2:00 across the first 10 tool videos (v2 baseline 0:38). If AVD is still under 1:00
+  after 10 videos, the topic choice is wrong, not the packaging — reopen the spec instead of
+  adding machinery. Second trap: any new top-level script key must be added to `_CARRY` or the
+  rewrite passes silently drop it (see `CLAUDE.md`).

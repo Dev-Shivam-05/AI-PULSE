@@ -273,3 +273,378 @@ def test_enforce_max_length_noop_under_cap(monkeypatch):
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: called.append(1))
     s = {"scenes": [{"narration": "one two three four five", "visual_query": "v"}] * 5, "title": "t"}
     assert ap.enforce_max_length(s, 900) is s and not called
+
+
+# === v3-B: original-visuals engine (screencap) ===============================
+from factverse import screencap
+from factverse import thumbnail as thumb_mod
+
+
+# --------------------------------------------------------------- segment planning
+def test_segment_plan_covers_recording_sequentially():
+    plan = screencap.segment_plan(120.0, 12)
+    assert len(plan) == 12 and plan[0] == (0.0, 10.0)
+    starts = [s for s, _ in plan]
+    assert starts == sorted(starts)                      # video progresses down the page
+    assert abs(sum(l for _, l in plan) - 120.0) < 0.1    # nothing recorded is wasted
+
+
+def test_segment_plan_short_recording_yields_fewer_chunks():
+    plan = screencap.segment_plan(10.0, 12)
+    assert len(plan) == 2                                # 4s minimum respected
+    assert all(l >= screencap.MIN_SEG for _, l in plan)
+
+
+def test_segment_plan_degenerate_inputs():
+    assert screencap.segment_plan(0, 5) == []
+    assert screencap.segment_plan(60, 0) == []
+
+
+def test_estimate_video_seconds_tracks_words_and_clamps():
+    assert screencap.estimate_video_seconds({"scenes": []}) == screencap.REC_MIN
+    est = screencap.estimate_video_seconds({"scenes": [{"narration": " ".join(["w"] * 450)}]})
+    assert est == 450 / screencap.WPS
+    long = {"scenes": [{"narration": " ".join(["w"] * 2000)}]}
+    assert screencap.estimate_video_seconds(long) == screencap.REC_MAX
+
+
+# --------------------------------------------------------------- ffmpeg args (built, never run)
+def test_trim_args_seek_past_blank_head():
+    args = screencap._trim_args("in.webm", "out.mp4")
+    assert args.index("-ss") < args.index("-i")          # page-load blank is removed
+    assert args[args.index("-ss") + 1] == str(screencap.HEAD_TRIM)
+
+
+def test_cut_args_carry_start_and_length():
+    args = screencap._cut_args("rec.mp4", "chunk.mp4", 12.5, 8.0)
+    assert args[args.index("-ss") + 1] == "12.5"
+    assert args[args.index("-t") + 1] == "8.0"
+
+
+# --------------------------------------------------------------- capture contract
+def test_capture_rejects_missing_url_or_scenes():
+    assert screencap.capture({"scenes": [], "source_url": "https://x.test"}) is None
+    assert screencap.capture({"scenes": [{"narration": "n"}], "source_url": ""}) is None
+
+
+def test_capture_fails_soft_when_recorder_dies(monkeypatch, tmp_path):
+    def boom(*a, **k):
+        raise RuntimeError("browser gone")
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page", boom)
+    s = {"scenes": [{"narration": "n"}] * 6, "source_url": "https://github.com/x/y"}
+    assert screencap.capture(s) is None                  # caller falls back to stock
+
+
+def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page",
+                        lambda url, out, t: (str(Path(out) / "rec.webm"),
+                                             str(Path(out) / "page.png"), 3.1))
+    seen = []
+    def fake_ffmpeg(args, timeout=600):
+        seen.append(args)
+        Path(args[-1]).write_bytes(b"0" * 2000)
+        return True
+    monkeypatch.setattr(screencap, "_ffmpeg", fake_ffmpeg)
+    monkeypatch.setattr(screencap, "_probe_duration", lambda p: 120.0)
+    s = {"scenes": [{"narration": "n"}] * 12, "source_url": "https://github.com/x/y"}
+    out = screencap.capture(s)
+    assert out and len(out["scene_clips"]) == 12
+    assert all(len(c) == 1 for c in out["scene_clips"])  # same shape as step3_download
+    assert out["scene_clips"][0][0].endswith("chunk_000.mp4")
+    assert out["scene_clips"][-1][0].endswith("chunk_011.mp4")
+    assert seen[0][seen[0].index("-ss") + 1] == "3.1"   # measured head, not the constant
+
+
+def test_capture_shares_chunks_when_recording_is_short(monkeypatch, tmp_path):
+    monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(screencap, "_record_page",
+                        lambda url, out, t: (str(Path(out) / "rec.webm"), "", 2.5))
+    def fake_ffmpeg(args, timeout=600):
+        Path(args[-1]).write_bytes(b"0" * 2000)
+        return True
+    monkeypatch.setattr(screencap, "_ffmpeg", fake_ffmpeg)
+    monkeypatch.setattr(screencap, "_probe_duration", lambda p: 10.0)   # only 2 chunks
+    s = {"scenes": [{"narration": "n"}] * 12, "source_url": "",
+         "deliverable": {"kind": "repo", "text": "x", "url": "https://github.com/x/y"}}
+    out = screencap.capture(s)                           # deliverable URL is the fallback
+    assert out and len(out["scene_clips"]) == 12
+    assert out["scene_clips"][5][0].endswith("chunk_000.mp4")
+    assert out["scene_clips"][6][0].endswith("chunk_001.mp4")
+    assert out["screenshot"] == ""                       # no screenshot -> thumb falls back
+
+
+# --------------------------------------------------------------- code cards
+def test_render_code_card_png_real_render(tmp_path):
+    out = tmp_path / "card.png"
+    res = screencap.render_code_card_png(
+        {"kind": "command", "text": "pip install factverse && factverse run demo",
+         "url": "https://github.com/x/y"}, str(out))
+    assert res and out.exists() and out.stat().st_size > 5000
+
+
+def test_render_code_card_requires_text(tmp_path):
+    assert screencap.render_code_card_png({"kind": "command", "text": "  "},
+                                          str(tmp_path / "c.png")) is None
+
+
+def test_inject_code_card_hits_payoff_scenes(monkeypatch):
+    monkeypatch.setattr(screencap, "make_code_card", lambda dl, out, seconds=6.0: "CARD.mp4")
+    script = {"deliverable": {"kind": "command", "text": "pip install x", "url": "u"},
+              "scenes": [{"narration": "hook"},
+                         {"narration": "you install it with one command"},
+                         {"narration": "uses"},
+                         {"narration": "the exact command is in the description"}]}
+    clips = [["a.mp4"], ["b.mp4"], ["c.mp4"], ["d.mp4"]]
+    assert screencap.inject_code_card(script, clips) == 2
+    assert clips[-1][0] == "CARD.mp4" and clips[1][0] == "CARD.mp4"
+
+
+def test_inject_code_card_skips_hook_and_replaces_stat_card(monkeypatch):
+    monkeypatch.setattr(screencap, "make_code_card", lambda dl, out, seconds=6.0: "CARD.mp4")
+    script = {"deliverable": {"kind": "command", "text": "pip install x", "url": "u"},
+              "scenes": [{"narration": "install it now"},           # hook mentions install
+                         {"narration": "what it is"},
+                         {"narration": "the command is in the description"}]}
+    clips = [["a.mp4"], ["b.mp4"], ["temp/statcard_02.mp4", "c.mp4"]]
+    assert screencap.inject_code_card(script, clips) == 1   # hook never gets the card
+    assert clips[0] == ["a.mp4"] and clips[1] == ["b.mp4"]
+    assert clips[2] == ["CARD.mp4", "c.mp4"]             # stat card replaced, not stacked
+
+
+def test_inject_code_card_noop_without_deliverable(monkeypatch):
+    called = []
+    monkeypatch.setattr(screencap, "make_code_card",
+                        lambda *a, **k: called.append(1) or "C")
+    clips = [["a"]]
+    assert screencap.inject_code_card({"deliverable": None, "scenes": []}, clips) == 0
+    assert not called and clips == [["a"]]
+
+
+# --------------------------------------------------------------- tool thumbnail
+def test_make_tool_thumb_from_screenshot(tmp_path):
+    from PIL import Image
+    shot = tmp_path / "page.png"
+    Image.new("RGB", (1920, 1080), (30, 34, 44)).save(shot)
+    out = tmp_path / "thumb.jpg"
+    res = thumb_mod.make_tool_thumb(str(shot), "free ai tool", str(out))
+    assert res and out.exists() and out.stat().st_size > 5000
+
+
+def test_make_tool_thumb_missing_screenshot(tmp_path):
+    assert thumb_mod.make_tool_thumb(str(tmp_path / "nope.png"), "x",
+                                     str(tmp_path / "o.jpg")) is None
+
+
+# --------------------------------------------------------------- rewrite passes keep v3 keys
+def _tool_script(words_per_scene: int, n: int = 6) -> dict:
+    return {"title": "T", "thumb_text": "X", "description": "d", "tags": [], "format": "tool",
+            "source_url": "https://github.com/x/y", "filter_segment": True,
+            "deliverable": {"kind": "command", "text": "pip install x", "url": "https://github.com/x/y"},
+            "scenes": [{"narration": " ".join(["word"] * words_per_scene), "visual_query": "v"}
+                       for _ in range(n)]}
+
+
+def test_rewrite_passes_carry_deliverable_and_filter(monkeypatch):
+    # the LLM never sees deliverable/filter_segment, so it cannot echo them back
+    rewrite = {"title": "T", "thumb_text": "X", "description": "new", "tags": [],
+               "scenes": [{"narration": " ".join(["word"] * 100), "visual_query": "v"}
+                          for _ in range(6)]}                               # 600 words
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: dict(rewrite))
+    for run_pass, wps in ((ap.critique_pass, 110),                 # 660 -> 600: accepted cut
+                          (lambda s: ap.enforce_length(s, 5000), 50),   # 300 -> 600: expanded
+                          (lambda s: ap.enforce_max_length(s, 100), 110)):  # 660 -> 600: tightened
+        out = run_pass(_tool_script(wps))
+        assert out["description"].startswith("new"), "pass should have applied"
+        assert out["deliverable"]["text"] == "pip install x"
+        assert out["filter_segment"] is True and out["format"] == "tool"
+        assert out["source_url"] == "https://github.com/x/y"
+    assert "deliverable" in ap._CARRY and "filter_segment" in ap._CARRY
+
+
+def test_place_description_blocks_is_idempotent(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", lambda name, default=None: "" if name == "promo_block" else default)
+    s = _tool_script(10)
+    ap.place_description_blocks(s)
+    ap.place_description_blocks(s)                       # advice-gate path calls it again
+    assert s["description"].count("🔧 Try it yourself") == 1
+    assert s["description"].count("📄 Free 1-page cheat sheet") == 1
+    assert "pip install x" in s["description"] and "https://github.com/x/y" in s["description"]
+
+
+# === v3-C: cheat sheet + description blocks ==================================
+import datetime as _dt
+from factverse import deliverable as dlv
+
+
+def _settings(**over):
+    return lambda name, default=None: over.get(name, default)
+
+
+def test_slug_and_pdf_name_are_deterministic():
+    assert dlv.slug("Hello, World!  Tool v2") == "hello-world-tool-v2"
+    assert len(dlv.slug("x" * 100)) == 40
+    assert dlv.slug("???") == "tool"
+    assert dlv.pdf_name("Hello World", _dt.date(2026, 8, 22)) == "2026-08-22-hello-world.pdf"
+
+
+def test_public_url_uses_config_base(monkeypatch):
+    monkeypatch.setattr(dlv.fv, "setting", _settings(deliverable_base_url="https://x.test/site/"))
+    assert dlv.public_url("a.pdf") == "https://x.test/site/tools/a.pdf"
+    monkeypatch.setattr(dlv.fv, "setting", _settings())
+    assert dlv.public_url("a.pdf") == dlv.DEFAULT_BASE_URL + "/tools/a.pdf"
+
+
+def test_description_blocks_land_after_hook_in_order(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block="⭐ Promo: https://aff.test/x"))
+    s = _tool_script(10)
+    s["description"] = "Hook line with keyword.\n\nBody paragraph two.\n\nSource: u\n\n#AI"
+    ap.place_description_blocks(s)
+    d = s["description"]
+    order = [d.index("Hook line"), d.index("🔧 Try it yourself"), d.index("pip install x"),
+             d.index("📄 Free 1-page cheat sheet: "), d.index("⭐ Promo"), d.index("Body paragraph two")]
+    assert order == sorted(order)
+    assert s["cheat_sheet"].endswith("-t.pdf") and s["cheat_sheet"] in d
+    ap.place_description_blocks(s)                       # idempotent incl. promo
+    assert d == s["description"]
+
+
+def test_promo_block_empty_never_appears_and_non_tool_placement(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block=""))
+    news = {"format": "news", "description": "Hook.\n\nBody.", "deliverable": None}
+    ap.place_description_blocks(news)
+    assert news["description"] == "Hook.\n\nBody." and "cheat_sheet" not in news
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block="PROMO"))
+    ap.place_description_blocks(news)
+    assert news["description"] == "Hook.\n\nPROMO\n\nBody."   # after paragraph 1
+
+
+def test_description_clamped_before_blocks(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block=""))
+    s = _tool_script(10)
+    s["description"] = "Hook.\n\n" + "x" * 6000
+    ap.place_description_blocks(s)
+    assert len(s["description"]) < 4400 and "🔧 Try it yourself" in s["description"]
+
+
+def test_cheat_sheet_name_is_carried_across_rewrites():
+    assert "cheat_sheet" in ap._CARRY
+
+
+def test_fallback_sheet_is_the_deliverable():
+    assert dlv.fallback_sheet(_tool_script(5))["steps"] == ["pip install x"]
+    assert dlv.fallback_sheet({"deliverable": None})["steps"] == []
+
+
+def test_extract_sheet_validates_llm_output(monkeypatch):
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {
+        "what": "  A   tool.  ", "steps": ["pip install x", ""], "uses": ["a", "b", "c", "d"], "skip_if": "no"})
+    sh = dlv.extract_sheet(_tool_script(5))
+    assert sh == {"what": "A tool.", "steps": ["pip install x"], "uses": ["a", "b", "c"], "skip_if": "no"}
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: None)
+    assert dlv.extract_sheet(_tool_script(5)) is None
+
+
+def test_build_pdf_real_render_single_page(tmp_path):
+    out = tmp_path / "sheet.pdf"
+    sheet = {"what": "MarkItDown converts Office files and PDFs to Markdown. Built by Microsoft.",
+             "steps": ["pip install markitdown", "markitdown report.pdf -o report.md"],
+             "uses": ["Feed a 200-page PDF to an LLM", "Turn slide decks into notes", "Index a docs folder"],
+             "skip_if": "You need pixel-perfect layout preservation."}
+    res = dlv.build_pdf(_tool_script(5), sheet, str(out), video_url="https://youtu.be/abc")
+    assert res and out.stat().st_size > 5000
+    import re as _re
+    data = out.read_bytes()
+    assert len(_re.findall(rb"/Type\s*/Page[^s]", data)) == 1   # exactly one page
+
+
+def test_make_cheat_sheet_without_llm_uses_fallback(monkeypatch, tmp_path):
+    monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: None)
+    captured = {}
+    def fake_build(script, sheet, out, video_url=""):
+        captured.update(sheet=sheet, out=out, video_url=video_url)
+        Path(out).write_bytes(b"%PDF-1.4 fake" + b"0" * 2000)
+        return out
+    monkeypatch.setattr(dlv, "build_pdf", fake_build)
+    s = _tool_script(5)
+    s["cheat_sheet"] = "2026-08-22-t.pdf"
+    res = dlv.make_cheat_sheet(s, video_url="https://youtu.be/v")
+    assert res and Path(res).name == "2026-08-22-t.pdf"
+    assert captured["sheet"]["steps"] == ["pip install x"] and captured["video_url"] == "https://youtu.be/v"
+
+
+def test_extract_sheet_coerces_string_lists(monkeypatch):
+    # the LLM returns a bare string often enough; iterating one yields CHARACTERS
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {
+        "what": "x", "steps": "pip install x\nmarkitdown a.pdf", "uses": "only one", "skip_if": ""})
+    sh = dlv.extract_sheet(_tool_script(5))
+    assert sh["steps"] == ["pip install x", "markitdown a.pdf"]
+    assert sh["uses"] == ["only one"]
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {"steps": 42, "uses": None})
+    assert dlv.extract_sheet(_tool_script(5))["steps"] == ["pip install x"]   # falls back
+
+
+def test_build_pdf_hard_wraps_unbreakable_commands(tmp_path):
+    long_cmd = "pip install git+https://github.com/some-org/a-really-long-repository-name@v1.2.3#egg=pkg"
+    out = tmp_path / "long.pdf"
+    assert dlv.build_pdf(_tool_script(5), {"what": "", "steps": [long_cmd], "uses": [], "skip_if": ""},
+                         str(out))
+    from reportlab.lib.utils import simpleSplit
+    rows = simpleSplit(long_cmd, "Courier", 11, 499)
+    assert any(len(r) > dlv._MONO_COLS for r in rows)      # simpleSplit alone overflows
+    assert len(long_cmd[:dlv._MONO_COLS]) == dlv._MONO_COLS
+
+
+def test_insert_after_hook_handles_manufactured_blank_line():
+    # _validate_script appends "\n\nSource: ..." — the block must not land below the body
+    d = ap._insert_after_hook("Hook.\nBody two.\nBody three.\n\nSource: u", "BLOCK")
+    assert d.startswith("Hook.\n\nBLOCK\n\nBody two.")
+    assert ap._insert_after_hook("\n\nHook.\n\nBody.", "BLOCK").startswith("Hook.\n\nBLOCK")
+    assert ap._insert_after_hook("Only one line.", "BLOCK") == "Only one line.\n\nBLOCK"
+
+
+def test_cheat_sheet_link_only_when_a_pdf_will_be_written(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    ever = {"format": "evergreen", "description": "Hook.\n\nBody.",
+            "deliverable": {"kind": "command", "text": "pip install x", "url": "u"}}
+    ap.place_description_blocks(ever)                    # make_cheat_sheet skips non-tool
+    assert "cheat_sheet" not in ever and "📄" not in ever["description"]
+    assert "🔧 Try it yourself" in ever["description"]
+
+
+def test_mangled_block_is_repaired_not_trusted(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    s = _tool_script(10)
+    ap.place_description_blocks(s)
+    good = s["description"]
+    # an LLM rewrite echoes the block back without the cheat-sheet line
+    s["description"] = good.replace("\n📄 Free 1-page cheat sheet: "
+                                    + dlv.public_url(s["cheat_sheet"]), "")
+    ap.place_description_blocks(s)
+    assert s["description"].count("🔧 Try it yourself") == 1
+    assert dlv.public_url(s["cheat_sheet"]) in s["description"]   # link == file we write
+
+
+def test_make_cheat_sheet_fails_soft(monkeypatch, tmp_path):
+    monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
+    monkeypatch.setattr(dlv, "extract_sheet", lambda s: (_ for _ in ()).throw(RuntimeError("x")))
+    assert dlv.make_cheat_sheet(_tool_script(5)) is None
+
+
+# --------------------------------------------------------------- grounding + filter fix
+def test_hf_readme_url_models_only():
+    assert (ap._hf_readme_url("https://huggingface.co/org/model")
+            == "https://huggingface.co/org/model/raw/main/README.md")
+    assert (ap._hf_readme_url("https://huggingface.co/gpt2")
+            == "https://huggingface.co/gpt2/raw/main/README.md")
+    assert ap._hf_readme_url("https://github.com/org/repo") == ""
+
+
+def test_validate_script_keeps_filter_marker():
+    base = {"scenes": [{"narration": f"s {i}", "visual_query": "v"} for i in range(6)]}
+    base["scenes"][3]["filter"] = True                   # the honest-limitation scene
+    assert ap._validate_script(base, "t")["filter_segment"] is True
+    plain = {"scenes": [{"narration": f"s {i}"} for i in range(6)]}
+    assert ap._validate_script(plain, "t")["filter_segment"] is False

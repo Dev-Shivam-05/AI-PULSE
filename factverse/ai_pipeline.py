@@ -46,6 +46,8 @@ from factverse import voice
 from factverse import tts_kokoro
 from factverse import thumbnail
 from factverse import infographics
+from factverse import screencap
+from factverse import deliverable
 from factverse import scheduling
 from factverse import gates
 from factverse import l2
@@ -133,6 +135,13 @@ def fetch_text(url: str, limit: int = 4000) -> str:
         return ""
 
 
+def _hf_readme_url(url: str) -> str:
+    """huggingface.co model pages are JS-rendered (thin HTML). The hub serves the
+    model card as plain text at /<id>/raw/main/README.md — use that instead."""
+    m = re.match(r"https?://huggingface\.co/([\w.-]+(?:/[\w.-]+)?)/?$", str(url).strip())
+    return f"https://huggingface.co/{m.group(1)}/raw/main/README.md" if m else ""
+
+
 # --------------------------------------------------------------- policy gates
 def _shingles(text: str, n: int = 8) -> set:
     words = re.sub(r"[^a-z0-9 ]", " ", text.lower()).split()
@@ -184,6 +193,8 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
         return None
+    # read the per-scene "filter" marker BEFORE the rebuild below strips it
+    had_filter = any(sc.get("filter") for sc in s["scenes"])
     scenes = []
     for sc in s["scenes"]:
         narration = str(sc.get("narration", "")).strip()
@@ -227,7 +238,7 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
                             "url": str(dl.get("url", "")).strip()[:300]}
     else:
         s["deliverable"] = None
-    s["filter_segment"] = any(sc.get("filter") for sc in (s.get("scenes") or []))
+    s["filter_segment"] = had_filter
     s["source_url"] = source_url
     return s
 
@@ -382,6 +393,8 @@ def script_tool(item: dict) -> dict | None:
     run in the next ten minutes — not a broadcast about the news."""
     title, source, url = item["title"], item["source"], item.get("url", "")
     grounding = fetch_text(url, limit=5000)
+    if not grounding and _hf_readme_url(url):
+        grounding = fetch_text(_hf_readme_url(url), limit=5000)
     if not grounding:
         return None   # a tool video without its README/model card is guesswork
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
@@ -520,6 +533,86 @@ ROUNDUP RULES:
 
 
 # --------------------------------------------------------------- quality passes
+# Top-level script keys that every LLM rewrite pass must carry across, because the
+# rewrite prompt never sees them and _validate_script resets them (deliverable ->
+# None, filter_segment -> False). Missing one here silently changes the video.
+_CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
+          "filter_segment", "hook_pattern", "deliverable", "cheat_sheet")
+
+
+def _carry_over(src: dict, dst: dict) -> dict:
+    for k in _CARRY:
+        if k in src:
+            dst[k] = src[k]
+    return dst
+
+
+_MAX_DESC = 4000        # spec v3-C #11: YouTube caps at 5000 bytes; our blocks add ~250
+_DL_MARK = "🔧 Try it yourself"
+_PDF_MARK = "📄 Free 1-page cheat sheet: "
+
+
+def _insert_after_hook(desc: str, block: str) -> str:
+    """Put the block directly under the hook paragraph (spec v3-C #7).
+
+    _validate_script appends "\\n\\nSource: …" / "\\n\\n#AI …" to the LLM text, so the
+    first blank line is often the one IT manufactured — splitting there would drop the
+    block below the whole body. Split inside the LLM text: first blank line if the head
+    has no internal newline, else the first newline."""
+    desc = desc.lstrip("\n")
+    if not desc:
+        return block
+    head, sep, tail = desc.partition("\n\n")
+    if not sep or "\n" in head:
+        head, sep, tail = desc.partition("\n")
+        if not sep:
+            return desc.rstrip() + "\n\n" + block
+    return f"{head.rstrip()}\n\n{block}\n\n{tail.lstrip()}"
+
+
+def _has_cheat_sheet(script: dict) -> bool:
+    """The description may only advertise a PDF that run() will actually write —
+    make_cheat_sheet has exactly this condition."""
+    return bool(script.get("format") == "tool" and script.get("deliverable"))
+
+
+def place_description_blocks(script: dict) -> None:
+    """Deliverable + cheat-sheet link + promo block right after the hook paragraph
+    (spec v3-C decisions 7/8) — links above the fold, where the transaction happens.
+    Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
+    desc = str(script.get("description", ""))
+    promo = str(fv.setting("promo_block", "") or "").strip()
+    dl = script.get("deliverable")
+    if (dl or promo) and _DL_MARK not in desc and (not promo or promo not in desc):
+        desc = desc[:_MAX_DESC]   # only when we are about to add to it
+    if dl:
+        if _has_cheat_sheet(script) and not script.get("cheat_sheet"):
+            script["cheat_sheet"] = deliverable.pdf_name(script.get("title", ""))
+        pdf_line = (f"\n{_PDF_MARK}{deliverable.public_url(script['cheat_sheet'])}"
+                    if script.get("cheat_sheet") else "")
+        block = (f"{_DL_MARK}:\n{dl['text']}"
+                 + (f"\n{dl['url']}" if dl.get("url") else "") + pdf_line)
+        if block not in desc:
+            # An LLM rewrite pass can echo the description back with the block
+            # partially mangled (dropped PDF line, altered URL). Trusting the 🔧
+            # marker alone would ship a link to a file we never wrote — so cut any
+            # stale fragment out and re-insert the block we can stand behind.
+            i = desc.find(_DL_MARK)
+            if i >= 0:
+                end = desc.find("\n\n", i)
+                desc = (desc[:i] + (desc[end + 2:] if end >= 0 else "")).strip()
+            desc = _insert_after_hook(desc, block)
+    if promo and promo not in desc:
+        i = desc.find(_PDF_MARK)
+        if i >= 0:                                  # tool: directly under the cheat-sheet line
+            end = desc.find("\n", i)
+            end = len(desc) if end < 0 else end
+            desc = desc[:end] + "\n\n" + promo + desc[end:]
+        else:                                       # other formats: after the hook paragraph
+            desc = _insert_after_hook(desc, promo)
+    script["description"] = desc
+
+
 def critique_pass(script: dict) -> dict:
     """One ruthless retention-editor pass. Falls back to the original on any failure."""
     try:
@@ -549,9 +642,7 @@ Return ONLY the full corrected JSON (same schema)."""
         # against the editor gutting the script entirely
         if (improved and len(improved["scenes"]) >= max(5, len(script["scenes"]) - 6)
                 and new_words >= max(500, old_words * 0.5)):
-            for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                if carry in script:
-                    improved[carry] = script[carry]
+            _carry_over(script, improved)
             print("  ✍️  Critique pass applied.")
             return improved
     except Exception as e:
@@ -578,9 +669,7 @@ Return ONLY the full expanded JSON (same schema)."""
         if bigger:
             new_words = sum(len(sc["narration"].split()) for sc in bigger["scenes"])
             if new_words > words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                    if carry in script:
-                        bigger[carry] = script[carry]
+                _carry_over(script, bigger)
                 print(f"  ✍️  Expanded {words} -> {new_words} words.")
                 return bigger
     except Exception as e:
@@ -612,10 +701,7 @@ Return ONLY the full tightened JSON (same schema)."""
         if smaller:
             new_words = sum(len(sc["narration"].split()) for sc in smaller["scenes"])
             if 500 <= new_words < words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title",
-                              "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                    if carry in script:
-                        smaller[carry] = script[carry]
+                _carry_over(script, smaller)
                 print(f"  ✂️  Tightened {words} -> {new_words} words.")
                 return smaller
     except Exception as e:
@@ -944,13 +1030,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
     script = enforce_max_length(script, MAX_WORDS)
 
-    # v3: the deliverable is the whole point of a tool video — print it where
-    # the viewer will actually look (top block of the description)
-    if script.get("deliverable"):
-        dl = script["deliverable"]
-        script["description"] = (script["description"].rstrip()
-                                 + "\n\n🔧 Try it yourself:\n" + dl["text"]
-                                 + (f"\n{dl['url']}" if dl.get("url") else ""))
+    # v3: the deliverable is the whole point of a tool video
+    place_description_blocks(script)
 
     words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
     print(f"  ✅ Script: '{script['title']}' | {len(script['scenes'])} scenes | "
@@ -984,10 +1065,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                          ensure_ascii=False), max_tokens=8192, temperature=0.3)
         fixed = _validate_script(fixed, script["title"], script.get("source_url", ""))
         if fixed:
-            for carry in ("format", "grounding", "roundup_items", "signal_title"):
-                if carry in script:
-                    fixed[carry] = script[carry]
-            script = fixed
+            script = _carry_over(script, fixed)
             narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
         if gates.advice_framing(narration).get("advice"):
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
@@ -1024,7 +1102,20 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ⚠️ Replication test failed — script derivable from sources alone (O3).")
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
-    scene_clips = eng.step3_download(script)
+    place_description_blocks(script)   # the advice-gate rewrite may have regenerated the description
+    # v3-B: a tool video is illustrated by the tool itself — a screen recording
+    # of its real page — never stock. capture() fails soft; stock is the fallback.
+    scene_clips, tool_shot = None, ""
+    if script.get("format") == "tool":
+        cap = screencap.capture(script)
+        if cap:
+            scene_clips = cap["scene_clips"]
+            tool_shot = cap.get("screenshot") or ""
+            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        else:
+            print("  ⚠️ Screen capture failed — stock visuals for this run.")
+    if scene_clips is None:
+        scene_clips = eng.step3_download(script)
 
     # info-dense motion graphics: stat scenes lead with a generated card, not stock
     src_domain = ""
@@ -1035,6 +1126,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         except Exception:
             src_domain = ""
     infographics.inject_cards(script, scene_clips, source_domain=src_domain)
+    if script.get("format") == "tool":
+        # the deliverable, on screen as a terminal card, in the scenes that speak it
+        screencap.inject_code_card(script, scene_clips)
 
     print("\n[4/10] 🎙️ Voiceover...")
     audio, edge_words = synthesize_voice(narration, script)
@@ -1070,7 +1164,13 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
     # Person-first thumbnail mined from this run's own footage; engine design is the fallback.
     thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
-    thumb = (thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
+    thumb = None
+    if tool_shot:
+        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
+        thumb = thumbnail.make_tool_thumb(
+            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
+    thumb = (thumb
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
              or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
     # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
     # units freed, one fewer templated upload in the channel-level pattern.
@@ -1198,6 +1298,12 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     else:
         print("\n  ⏸️  Render-only (publish skipped).")
 
+    # v3-C: the free cheat sheet — written after upload so it carries the video
+    # link; the description already links its (pre-decided) file name.
+    cheat_sheet = None
+    if script.get("format") == "tool" and script.get("deliverable"):
+        cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "")
+
     # Success — only NOW is the topic burned.
     mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
     for it in script.get("roundup_items", []):
@@ -1215,7 +1321,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
-               deliverable=bool(script.get("deliverable")),
+               deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
