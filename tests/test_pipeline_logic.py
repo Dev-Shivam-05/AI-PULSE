@@ -463,12 +463,122 @@ def test_rewrite_passes_carry_deliverable_and_filter(monkeypatch):
     assert "deliverable" in ap._CARRY and "filter_segment" in ap._CARRY
 
 
-def test_append_deliverable_is_idempotent():
+def test_place_description_blocks_is_idempotent(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", lambda name, default=None: "" if name == "promo_block" else default)
     s = _tool_script(10)
-    ap._append_deliverable(s)
-    ap._append_deliverable(s)                            # advice-gate path calls it again
+    ap.place_description_blocks(s)
+    ap.place_description_blocks(s)                       # advice-gate path calls it again
     assert s["description"].count("🔧 Try it yourself") == 1
+    assert s["description"].count("📄 Free 1-page cheat sheet") == 1
     assert "pip install x" in s["description"] and "https://github.com/x/y" in s["description"]
+
+
+# === v3-C: cheat sheet + description blocks ==================================
+import datetime as _dt
+from factverse import deliverable as dlv
+
+
+def _settings(**over):
+    return lambda name, default=None: over.get(name, default)
+
+
+def test_slug_and_pdf_name_are_deterministic():
+    assert dlv.slug("Hello, World!  Tool v2") == "hello-world-tool-v2"
+    assert len(dlv.slug("x" * 100)) == 40
+    assert dlv.slug("???") == "tool"
+    assert dlv.pdf_name("Hello World", _dt.date(2026, 8, 22)) == "2026-08-22-hello-world.pdf"
+
+
+def test_public_url_uses_config_base(monkeypatch):
+    monkeypatch.setattr(dlv.fv, "setting", _settings(deliverable_base_url="https://x.test/site/"))
+    assert dlv.public_url("a.pdf") == "https://x.test/site/tools/a.pdf"
+    monkeypatch.setattr(dlv.fv, "setting", _settings())
+    assert dlv.public_url("a.pdf") == dlv.DEFAULT_BASE_URL + "/tools/a.pdf"
+
+
+def test_description_blocks_land_after_hook_in_order(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block="⭐ Promo: https://aff.test/x"))
+    s = _tool_script(10)
+    s["description"] = "Hook line with keyword.\n\nBody paragraph two.\n\nSource: u\n\n#AI"
+    ap.place_description_blocks(s)
+    d = s["description"]
+    order = [d.index("Hook line"), d.index("🔧 Try it yourself"), d.index("pip install x"),
+             d.index("📄 Free 1-page cheat sheet: "), d.index("⭐ Promo"), d.index("Body paragraph two")]
+    assert order == sorted(order)
+    assert s["cheat_sheet"].endswith("-t.pdf") and s["cheat_sheet"] in d
+    ap.place_description_blocks(s)                       # idempotent incl. promo
+    assert d == s["description"]
+
+
+def test_promo_block_empty_never_appears_and_non_tool_placement(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block=""))
+    news = {"format": "news", "description": "Hook.\n\nBody.", "deliverable": None}
+    ap.place_description_blocks(news)
+    assert news["description"] == "Hook.\n\nBody." and "cheat_sheet" not in news
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block="PROMO"))
+    ap.place_description_blocks(news)
+    assert news["description"] == "Hook.\n\nPROMO\n\nBody."   # after paragraph 1
+
+
+def test_description_clamped_before_blocks(monkeypatch):
+    monkeypatch.setattr(ap.fv, "setting", _settings(promo_block=""))
+    s = _tool_script(10)
+    s["description"] = "Hook.\n\n" + "x" * 6000
+    ap.place_description_blocks(s)
+    assert len(s["description"]) < 4400 and "🔧 Try it yourself" in s["description"]
+
+
+def test_cheat_sheet_name_is_carried_across_rewrites():
+    assert "cheat_sheet" in ap._CARRY
+
+
+def test_fallback_sheet_is_the_deliverable():
+    assert dlv.fallback_sheet(_tool_script(5))["steps"] == ["pip install x"]
+    assert dlv.fallback_sheet({"deliverable": None})["steps"] == []
+
+
+def test_extract_sheet_validates_llm_output(monkeypatch):
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: {
+        "what": "  A   tool.  ", "steps": ["pip install x", ""], "uses": ["a", "b", "c", "d"], "skip_if": "no"})
+    sh = dlv.extract_sheet(_tool_script(5))
+    assert sh == {"what": "A tool.", "steps": ["pip install x"], "uses": ["a", "b", "c"], "skip_if": "no"}
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: None)
+    assert dlv.extract_sheet(_tool_script(5)) is None
+
+
+def test_build_pdf_real_render_single_page(tmp_path):
+    out = tmp_path / "sheet.pdf"
+    sheet = {"what": "MarkItDown converts Office files and PDFs to Markdown. Built by Microsoft.",
+             "steps": ["pip install markitdown", "markitdown report.pdf -o report.md"],
+             "uses": ["Feed a 200-page PDF to an LLM", "Turn slide decks into notes", "Index a docs folder"],
+             "skip_if": "You need pixel-perfect layout preservation."}
+    res = dlv.build_pdf(_tool_script(5), sheet, str(out), video_url="https://youtu.be/abc")
+    assert res and out.stat().st_size > 5000
+    import re as _re
+    data = out.read_bytes()
+    assert len(_re.findall(rb"/Type\s*/Page[^s]", data)) == 1   # exactly one page
+
+
+def test_make_cheat_sheet_without_llm_uses_fallback(monkeypatch, tmp_path):
+    monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: None)
+    captured = {}
+    def fake_build(script, sheet, out, video_url=""):
+        captured.update(sheet=sheet, out=out, video_url=video_url)
+        Path(out).write_bytes(b"%PDF-1.4 fake" + b"0" * 2000)
+        return out
+    monkeypatch.setattr(dlv, "build_pdf", fake_build)
+    s = _tool_script(5)
+    s["cheat_sheet"] = "2026-08-22-t.pdf"
+    res = dlv.make_cheat_sheet(s, video_url="https://youtu.be/v")
+    assert res and Path(res).name == "2026-08-22-t.pdf"
+    assert captured["sheet"]["steps"] == ["pip install x"] and captured["video_url"] == "https://youtu.be/v"
+
+
+def test_make_cheat_sheet_fails_soft(monkeypatch, tmp_path):
+    monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
+    monkeypatch.setattr(dlv, "extract_sheet", lambda s: (_ for _ in ()).throw(RuntimeError("x")))
+    assert dlv.make_cheat_sheet(_tool_script(5)) is None
 
 
 # --------------------------------------------------------------- grounding + filter fix

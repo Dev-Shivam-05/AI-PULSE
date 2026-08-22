@@ -25,5 +25,7 @@
     "kokoro_voice_b": "am_michael",
     "l2_voice_backend": "kokoro",
     "l2_kokoro_voice": "bm_george",
+    "deliverable_base_url": "https://dev-shivam-05.github.io/AI-PULSE",
+    "promo_block": "",
     "tool_format": true
 }

@@ -47,6 +47,7 @@ from factverse import tts_kokoro
 from factverse import thumbnail
 from factverse import infographics
 from factverse import screencap
+from factverse import deliverable
 from factverse import scheduling
 from factverse import gates
 from factverse import l2
@@ -536,7 +537,7 @@ ROUNDUP RULES:
 # rewrite prompt never sees them and _validate_script resets them (deliverable ->
 # None, filter_segment -> False). Missing one here silently changes the video.
 _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
-          "filter_segment", "hook_pattern", "deliverable")
+          "filter_segment", "hook_pattern", "deliverable", "cheat_sheet")
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -546,14 +547,47 @@ def _carry_over(src: dict, dst: dict) -> dict:
     return dst
 
 
-def _append_deliverable(script: dict) -> None:
-    """Print the deliverable where the viewer actually looks (top block of the
-    description). Idempotent: rewrite passes regenerate the description."""
+_MAX_DESC = 4000        # spec v3-C #11: YouTube caps at 5000 bytes; our blocks add ~250
+_DL_MARK = "🔧 Try it yourself"
+_PDF_MARK = "📄 Free 1-page cheat sheet: "
+
+
+def _insert_after_hook(desc: str, block: str) -> str:
+    """Paragraph 1 = text before the first blank line (else first line; else end)."""
+    for sep in ("\n\n", "\n"):
+        if sep in desc:
+            head, tail = desc.split(sep, 1)
+            return f"{head}\n\n{block}\n\n{tail.lstrip()}"
+    return desc.rstrip() + "\n\n" + block
+
+
+def place_description_blocks(script: dict) -> None:
+    """Deliverable + cheat-sheet link + promo block right after the hook paragraph
+    (spec v3-C decisions 7/8) — links above the fold, where the transaction happens.
+    Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
+    desc = str(script.get("description", ""))
+    promo = str(fv.setting("promo_block", "") or "").strip()
+    first_time = _DL_MARK not in desc and (not promo or promo not in desc)
+    if first_time:
+        desc = desc[:_MAX_DESC]
     dl = script.get("deliverable")
-    if dl and "🔧 Try it yourself" not in str(script.get("description", "")):
-        script["description"] = (str(script.get("description", "")).rstrip()
-                                 + "\n\n🔧 Try it yourself:\n" + dl["text"]
-                                 + (f"\n{dl['url']}" if dl.get("url") else ""))
+    if dl:
+        if not script.get("cheat_sheet"):
+            script["cheat_sheet"] = deliverable.pdf_name(script.get("title", ""))
+        if _DL_MARK not in desc:
+            block = (f"{_DL_MARK}:\n{dl['text']}"
+                     + (f"\n{dl['url']}" if dl.get("url") else "")
+                     + f"\n{_PDF_MARK}{deliverable.public_url(script['cheat_sheet'])}")
+            desc = _insert_after_hook(desc, block)
+    if promo and promo not in desc:
+        i = desc.find(_PDF_MARK)
+        if i >= 0:                                  # tool: directly under the cheat-sheet line
+            end = desc.find("\n", i)
+            end = len(desc) if end < 0 else end
+            desc = desc[:end] + "\n\n" + promo + desc[end:]
+        else:                                       # other formats: after the hook paragraph
+            desc = _insert_after_hook(desc, promo)
+    script["description"] = desc
 
 
 def critique_pass(script: dict) -> dict:
@@ -974,7 +1008,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     script = enforce_max_length(script, MAX_WORDS)
 
     # v3: the deliverable is the whole point of a tool video
-    _append_deliverable(script)
+    place_description_blocks(script)
 
     words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
     print(f"  ✅ Script: '{script['title']}' | {len(script['scenes'])} scenes | "
@@ -1045,7 +1079,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ⚠️ Replication test failed — script derivable from sources alone (O3).")
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
-    _append_deliverable(script)   # the advice-gate rewrite may have regenerated the description
+    place_description_blocks(script)   # the advice-gate rewrite may have regenerated the description
     # v3-B: a tool video is illustrated by the tool itself — a screen recording
     # of its real page — never stock. capture() fails soft; stock is the fallback.
     scene_clips, tool_shot = None, ""
@@ -1241,6 +1275,12 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     else:
         print("\n  ⏸️  Render-only (publish skipped).")
 
+    # v3-C: the free cheat sheet — written after upload so it carries the video
+    # link; the description already links its (pre-decided) file name.
+    cheat_sheet = None
+    if script.get("format") == "tool" and script.get("deliverable"):
+        cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "")
+
     # Success — only NOW is the topic burned.
     mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
     for it in script.get("roundup_items", []):
@@ -1258,7 +1298,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
-               deliverable=bool(script.get("deliverable")),
+               deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)

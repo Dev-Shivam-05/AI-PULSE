@@ -16,3 +16,5 @@ rembg>=2.0
 # floating pin would keep serving a stale Chromium after a playwright release.
 playwright==1.60.0
 pygments>=2.17
+# v3-C: the free 1-page cheat-sheet PDF per tool video
+reportlab>=4.0

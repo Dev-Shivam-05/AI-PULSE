@@ -16,6 +16,6 @@ jobs:
           python-version: "3.11"
           cache: pip
       - name: Install minimal test deps
-        run: pip install pytest requests Pillow edge-tts faster-whisper soundfile numpy pygments
+        run: pip install pytest requests Pillow edge-tts faster-whisper soundfile numpy pygments reportlab
       - name: Run the suite
         run: python -m pytest tests/ -q
