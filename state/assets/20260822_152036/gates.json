@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The ease with which Anthropic's Opus 4.6 model can be steered into generating explicit content, even by older versions still available via API, suggests that current AI safety guardrails are not just about inherent model limitations, but are heavily reliant on an ongoing, resource-intensive arms rac"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific phrasing and a narrative structure that are not directly present in the source text. For example, 'You won't believe this:', 'The real shocker?', 'This isn't some random "
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
