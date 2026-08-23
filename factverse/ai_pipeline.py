@@ -1342,7 +1342,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         thumb = thumbnail.make_tool_thumb(
             tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
     thumb = (thumb
-             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
+                               title=script["title"])
              or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
     # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
     # units freed, one fewer templated upload in the channel-level pattern.

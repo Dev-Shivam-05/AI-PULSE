@@ -1357,3 +1357,44 @@ def test_make_shorts_returns_empty_instead_of_raising_on_bad_moments(monkeypatch
     monkeypatch.setattr(sh.eng, "find_best_moments", lambda s: {"scene_num": "4"})
     script = {"scenes": [{"narration": f"s{i}"} for i in range(12)]}
     assert sh.make_shorts("v.mp4", script, [], max_count=2) == []
+
+
+# --------------------------------------------------------------- thumbnail
+def test_thumbnail_headline_is_measured_against_the_frame():
+    """Both older composers picked a size off a CHARACTER-count ladder and drew
+    it at x=54/56 with no measurement. "OPENAI QUIETLY SHIPPED A NEW REASONING
+    MODEL" measures 1296px at the ladder's own floor of 92px — 72px off a 1280px
+    frame. make_tool_thumb, written later for v3, already measured; the two
+    older composers never got it."""
+    from PIL import Image, ImageDraw
+    from factverse import thumbnail as th
+    d = ImageDraw.Draw(Image.new("RGB", (th.W, th.H)))
+    for text in ("OPENAI QUIETLY SHIPPED A NEW REASONING MODEL",
+                 "AI JUST CHANGED EVERYTHING", "FREE", "GPT-5 BENCHMARKS LEAKED"):
+        lines = th._wrap_two(text)
+        size, font = th._headline_font(lines, th.X_EDGE)
+        assert max(d.textlength(l, font=font) for l in lines) <= th.W - 2 * th.X_EDGE, \
+            f"{text!r} overflows at size {size}"
+
+
+def test_thumbnail_falls_back_to_the_title_when_thumb_text_is_empty(monkeypatch):
+    """thumb_text is optional — _validate_script does not require it — and
+    _wrap_two("") returns [], so both composers skipped the headline block and
+    still SAVED and returned the image: a graded photo with no text on it. The
+    confidence router's packaging term scored the missing thumb_text at 0.7 and
+    never learned the thumbnail came out blank."""
+    from factverse import thumbnail as th
+    assert th._headline("", "OpenAI Ships A New Model") == "OpenAI Ships A New Model"
+    assert th._headline("   ", "OpenAI Ships A New Model") == "OpenAI Ships A New Model"
+    assert th._headline("REAL HOOK", "the title") == "REAL HOOK"
+    assert th._headline("", "") == ""
+
+
+def test_tool_thumb_whitespace_text_still_gets_words():
+    """`thumb_text or "FREE AI TOOL"` never fired for a whitespace string — a
+    whitespace value is truthy, so .split()[:4] produced [] and the tool
+    thumbnail published with no overlay at all."""
+    from factverse import thumbnail as th
+    assert th._headline("   ", "") == ""
+    words = " ".join((th._headline("   ", "") or "FREE AI TOOL").split()[:4])
+    assert words == "FREE AI TOOL"
