@@ -221,7 +221,16 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     if "#AI" not in desc:
         desc += "\n\n#AI #ArtificialIntelligence #TechNews"
     s["description"] = desc
-    s.setdefault("tags", [])
+    # setdefault only fills a MISSING key. The model answers `tags` as a comma
+    # string / null / an object often enough that trusting the type raised out of
+    # a bare _validate_script call and killed the whole unattended run. Coerce it,
+    # the way deliverable._as_list already does for the cheat-sheet fields.
+    raw_tags = s.get("tags")
+    if isinstance(raw_tags, str):
+        raw_tags = re.split(r"[,\n]", raw_tags)
+    elif not isinstance(raw_tags, (list, tuple)):
+        raw_tags = []
+    s["tags"] = [str(t).strip() for t in raw_tags if str(t).strip()][:28]
     brand = ["ai", "artificial intelligence", "ai news", "machine learning",
              "tech news", "ai explained", "technology", "deep learning", fv.CHANNEL_NAME.lower()]
     existing = [str(t).lower() for t in s["tags"]]
@@ -387,6 +396,12 @@ ACCURACY RULES:
 
 
 # --------------------------------------------------------------- format: tool
+# Minimum readable source text before a tool video may be written. Set at 1200
+# because the chrome-only pages that caused this (Product Hunt, ~640 chars) must
+# fail with margin while a real README or model card (~5000) passes untouched.
+TOOL_GROUNDING_MIN = 1200
+
+
 def script_tool(item: dict) -> dict | None:
     """v3 utility lane: a hands-on video about a free AI tool/repo/model.
     The video is a TRANSACTION — the viewer leaves with a deliverable they can
@@ -395,14 +410,18 @@ def script_tool(item: dict) -> dict | None:
     # The hub's HTML page is a JS shell whose readable text is inlined
     # tokenizer_config / chat_template JSON — 5000 chars of it, so the old
     # "repair only if the page came back empty" path could never fire and the
-    # model card was never read. Ask for the raw card FIRST; keep the page as
-    # the fallback for anything the raw URL does not serve.
+    # model card was never read. Ask for the raw card instead, and do NOT fall
+    # back to the page: for a gated or README-less model that fallback grounds
+    # the whole video in a Jinja template, which reads as real and is not.
     readme = _hf_readme_url(url)
-    grounding = fetch_text(readme, limit=5000) if readme else ""
-    if not grounding:
-        grounding = fetch_text(url, limit=5000)
-    if not grounding:
-        return None   # a tool video without its README/model card is guesswork
+    grounding = fetch_text(readme, limit=5000) if readme else fetch_text(url, limit=5000)
+    # spec v3-C: a tool page that is all navigation chrome is not grounding.
+    # Product Hunt's server HTML is ~640 chars of "Overview Reviews Team More",
+    # which cleared fetch_text's 400-char floor AND gates.fact_check's 200-char
+    # one — so claims were verified against nav text and came back unsupported.
+    if len(grounding) < TOOL_GROUNDING_MIN:
+        print(f"     ↻ grounding too thin ({len(grounding)} chars) — not a tool video.")
+        return None   # build_script moves to the next candidate
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
 Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
 DO something concrete in the next ten minutes — that is the entire point of the video.
@@ -603,10 +622,13 @@ def place_description_blocks(script: dict) -> None:
             # partially mangled (dropped PDF line, altered URL). Trusting the 🔧
             # marker alone would ship a link to a file we never wrote — so cut any
             # stale fragment out and re-insert the block we can stand behind.
-            i = desc.find(_DL_MARK)
-            if i >= 0:
-                end = desc.find("\n\n", i)
-                desc = (desc[:i] + (desc[end + 2:] if end >= 0 else "")).strip()
+            # Both markers, and every occurrence: a rewrite that puts a blank line
+            # INSIDE the block leaves the 📄 line stranded as its own paragraph,
+            # and cutting only back to the first blank line shipped it twice.
+            for mark in (_DL_MARK, _PDF_MARK):
+                while (i := desc.find(mark)) >= 0:
+                    end = desc.find("\n\n", i)
+                    desc = (desc[:i] + (desc[end + 2:] if end >= 0 else "")).strip()
             desc = _insert_after_hook(desc, block)
     if promo and promo not in desc:
         i = desc.find(_PDF_MARK)
@@ -975,6 +997,22 @@ def _save_asset_record(script, fc, syn, rep, conf, l2_rec) -> None:
         print(f"   ⚠️ asset store save failed: {e}")
 
 
+def normalize_shorts_meta(meta, n: int, script: dict) -> list[dict]:
+    """step8_meta returns the model's `shorts_meta` unvalidated — it comes back
+    short, with an empty title, or as a list of strings. Each of those used to
+    raise inside the publish block, AFTER the long-form was already on YouTube
+    and BEFORE anything wrote a PUBLISHED row, so the retry cron published a
+    second video for the same day. Give every Short a real title instead."""
+    out = [m if isinstance(m, dict) else {} for m in (meta or [])][:n]
+    out += [{} for _ in range(n - len(out))]
+    for i, m in enumerate(out):
+        if not str(m.get("title", "")).strip():
+            m["title"] = f"{str(script.get('title', ''))[:70]} Part {i + 1} #Shorts"
+        if not str(m.get("description", "")).strip():
+            m["description"] = str(script.get("description", ""))[:400]
+    return out
+
+
 def already_published_today() -> bool:
     """Idempotence guard: exactly ONE published video per UTC day, no matter how
     many times the workflow fires (late cron + retry cron, re-runs, manual runs).
@@ -1229,7 +1267,11 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             script["description"] = script["description"].rstrip() + "\n\n" + chapters
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
-    meta = eng.step8_meta(script, len(shorts))
+    meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script)
+    # Trip the re-hook tripwire HERE, while nothing is uploaded and aborting is
+    # still free. It used to run after the long-form was already on YouTube.
+    if shorts:
+        scheduling.validate_shorts_batch(shorts, [m["title"] for m in meta])
 
     # ---- confidence router: auto / notify(veto window) / hold ----------------
     stat_share = 0.0
@@ -1290,10 +1332,14 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             eng.yt_comment(prev_url, f"📢 The next episode is live: {yt_url}")
 
         # funnel Shorts: first lands ~2h after the long-form publish, the rest on
-        # the 4h grid; validated against the immutable distribution rules
-        slots = scheduling.shorts_slots_after_long(len(shorts), long_publish_at) if shorts else []
-        scheduling.validate_shorts_batch(
-            shorts, [m.get("title", "") for m in meta[:len(shorts)]] or ["x"] * len(shorts))
+        # the 4h grid. The re-hook tripwire already ran before the upload — past
+        # this point the long-form is live and raising would hide it from the
+        # ledger, so nothing here may throw.
+        try:
+            slots = scheduling.shorts_slots_after_long(len(shorts), long_publish_at) if shorts else []
+        except Exception as e:
+            print(f"  ⚠️ Shorts scheduling failed ({e}) — publishing them unscheduled.")
+            slots = []
         for i, sp in enumerate(shorts):
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
@@ -1315,15 +1361,26 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     if script.get("format") == "tool" and script.get("deliverable"):
         cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "")
 
-    # Success — only NOW is the topic burned.
-    mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
-    for it in script.get("roundup_items", []):
-        mark_used(it["title"], it.get("url", ""))
+    # Everything between a successful upload and the ledger row must be
+    # non-fatal. If the video is on YouTube but runs.jsonl carries no PUBLISHED
+    # row, already_published_today() answers False and the 14:53 retry cron
+    # publishes a SECOND video into the same slot — on a channel whose biggest
+    # risk is the inauthentic-content policy. A missed bookkeeping write is
+    # recoverable; a duplicate publish is not.
+    report = None
+    try:
+        # Success — only NOW is the topic burned.
+        mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
+        for it in script.get("roundup_items", []):
+            mark_used(it["title"], it.get("url", ""))
 
-    # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
-    _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+        # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
+        _save_asset_record(script, fc, syn, rep, conf, l2_rec)
 
-    report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
+        report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
+    except Exception as e:
+        print(f"  ⚠️ Post-publish bookkeeping failed ({type(e).__name__}: {e}) — "
+              f"recording the run anyway so today cannot publish twice.")
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts_rendered=len(shorts),
@@ -1338,7 +1395,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
     eng.cleanup()
     print(f"\n  ✅ DONE [{status}] → {video}")
-    return report
+    # save_report may have been the thing that failed above; a published video
+    # must still return truthy so __main__ does not exit(1) on a successful day.
+    return report or {"status": status, "video": video, "youtube_url": yt_url}
 
 
 if __name__ == "__main__":

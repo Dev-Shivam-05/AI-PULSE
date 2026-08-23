@@ -651,18 +651,65 @@ def test_tool_grounding_prefers_the_hf_model_card(monkeypatch):
     assert len(calls) == 1, "the card answered; the junk page must not be fetched at all"
 
 
-def test_tool_grounding_falls_back_to_the_page_when_no_card(monkeypatch):
+def test_gated_hf_model_is_rejected_not_grounded_on_the_js_shell(monkeypatch):
+    """A gated or README-less model 401s on /raw/main/README.md. Falling back to the
+    page would ground the whole video in the shell's inlined chat_template JSON —
+    long enough to look real, so every claim in the video would be invented."""
     calls = []
 
     def fake_fetch(u, limit=4000):
         calls.append(u)
-        return "" if u.endswith("README.md") else "PAGE TEXT. " * 60
+        return "" if u.endswith("README.md") else "{jinja chat_template junk} " * 300
 
     monkeypatch.setattr(ap, "fetch_text", fake_fetch)
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
-    ap.script_tool({"title": "T", "source": "hf", "url": "https://huggingface.co/org/model"})
-    assert calls == ["https://huggingface.co/org/model/raw/main/README.md",
-                     "https://huggingface.co/org/model"]
+    assert ap.script_tool({"title": "T", "source": "hf",
+                           "url": "https://huggingface.co/org/model"}) is None
+    assert calls == ["https://huggingface.co/org/model/raw/main/README.md"]
+
+
+def test_chrome_only_page_is_too_thin_to_ground_a_tool_video(monkeypatch):
+    """Product Hunt's server HTML is ~640 chars of nav chrome. It cleared the old
+    400-char floor and gates.fact_check's 200-char one, so claims were verified
+    against 'Overview Reviews Team More' and came back unsupported."""
+    chrome = ("Notion AI | Product Hunt Overview Reviews 1 Team More "
+              "Visit website Be the first to leave a review ") * 6
+    assert 400 < len(chrome) < ap.TOOL_GROUNDING_MIN
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: chrome)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
+    assert ap.script_tool({"title": "T", "source": "ph",
+                           "url": "https://www.producthunt.com/posts/x"}) is None
+
+
+def test_validate_script_coerces_a_non_list_tags(monkeypatch):
+    """The model answers `tags` as a comma string / null / an object often enough
+    that trusting the type raised out of a bare _validate_script call and killed
+    the whole unattended run."""
+    for bad, want in (("ai, machine learning", "machine learning"),
+                      (None, None), ({"a": 1}, None), (42, None)):
+        base = {"title": "T", "description": "d", "tags": bad,
+                "scenes": [{"narration": f"s {i}", "visual_query": "v"} for i in range(6)]}
+        out = ap._validate_script(base, "t")
+        assert isinstance(out["tags"], list) and out["tags"], "brand tags must still land"
+        assert all(isinstance(t, str) for t in out["tags"])
+        if want:
+            assert want in out["tags"]
+
+
+def test_mangled_block_split_across_a_blank_line_is_fully_excised(monkeypatch):
+    """A rewrite that puts a blank line inside the block strands the 📄 line as its
+    own paragraph; cutting back to the first blank line only shipped it twice."""
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    s = _tool_script(10)
+    ap.place_description_blocks(s)
+    good = s["description"]
+    # the LLM hands back the block reformatted with a blank line before the PDF line
+    s["description"] = good.replace("\n" + ap._PDF_MARK, "\n\n" + ap._PDF_MARK)
+    s["description"] = s["description"].replace("tools/", "tools/STALE-")
+    ap.place_description_blocks(s)
+    assert s["description"].count(ap._PDF_MARK) == 1
+    assert "STALE-" not in s["description"]
+    assert s["description"].count(ap._DL_MARK) == 1
 
 
 def test_non_hf_tool_grounds_on_the_page_only(monkeypatch):
@@ -684,6 +731,26 @@ def test_tool_fallback_returns_an_evergreen_labelled_script(monkeypatch):
     out = ap.build_script("tool", [{"title": "n", "kind": "news"}])
     assert out["format"] == "evergreen"
     assert "format" in ap._CARRY
+
+
+def test_shorts_meta_normalised_so_the_tripwire_cannot_fire_after_upload():
+    """A short/ragged shorts_meta used to raise PipelineViolation inside the publish
+    block — after the long-form was live and before any PUBLISHED row existed, so
+    the retry cron published a second video for the same day."""
+    from factverse import scheduling as sch
+    script = {"title": "A Very Long Tool Title That Goes On", "description": "d" * 900}
+    for bad in (None, [], [{"title": "one #Shorts"}], ["a string", "another"],
+                [{"title": "  "}, {"title": "real #Shorts"}], [{}] * 5):
+        out = ap.normalize_shorts_meta(bad, 2, script)
+        assert len(out) == 2
+        assert all(isinstance(m, dict) for m in out)
+        titles = [m["title"] for m in out]
+        assert all(t and t.strip() for t in titles), f"empty title from {bad!r}"
+        # this is exactly what validate_shorts_batch counts
+        sch.validate_shorts_batch([object(), object()], titles)
+    # a good payload is left alone
+    good = [{"title": "t1 #Shorts", "description": "d1"}, {"title": "t2 #Shorts", "description": "d2"}]
+    assert ap.normalize_shorts_meta(good, 2, script) == good
 
 
 def test_hf_readme_url_models_only():
