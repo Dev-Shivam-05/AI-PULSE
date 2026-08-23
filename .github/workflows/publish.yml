@@ -120,6 +120,14 @@ jobs:
             # published description already links that file, so losing it here is a
             # permanent 404 on the video.
             cp docs/tools/*.pdf /tmp/tools_incoming/ 2>/dev/null || true
+            # A workflow_dispatch runs from a feature branch, where the run's own
+            # writes to tracked state files differ from origin/main. `checkout -B`
+            # then REFUSES ("local changes would be overwritten by checkout") and
+            # under `bash -e` the step dies right here — before state_merge, before
+            # `git add docs/tools`, before the commit. Commit them onto the branch
+            # we are about to throw away: the checkout then always succeeds, and
+            # nothing is lost because state and PDFs are already stashed in /tmp.
+            git commit -am "wip: run artifacts [skip ci]" --quiet || true
             git fetch origin main --quiet
             git checkout -B main origin/main --quiet
             mkdir -p docs/tools
