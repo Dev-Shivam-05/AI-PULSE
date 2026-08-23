@@ -1,4 +1,39 @@
 
+## 2026-08-23 — story-lane hardening (Phase C.2)
+The same treatment C.1 gave the tool lane, applied to news / evergreen / roundup — the lanes
+that publish every day and had never been searched for defects of their own. 12 defects, each
+reproduced before its fix, verified against the live signal engine. Contract:
+`docs/spec/ai-pulse-v3c2.md`.
+- **The story lanes now read story signals only** (`news_candidates`). v3-A put the GitHub / HF /
+  Product Hunt trending feeds into the same `rank()` list, so the viral judge and the weekly
+  countdown were scoring repos as news. Live 2026-08-23: ranked #1 and #2 were both `kind="tool"`
+  and #1 was the AI-provenance stripper — which `gates.tool_unsuitable` refuses to *teach* and
+  guards nowhere else. The news lane could still have written it up.
+- **If the fact-checker cannot run, the lane does not write.** `gates.FACTCHECK_MIN_CHARS` (200,
+  already inside `fact_check`) is now the news/roundup grounding floor. Below it every accuracy
+  gate passed for free and the confidence `facts` component read 1.0 — the same score a fully
+  verified script gets. Evergreen is ungrounded by design and is untouched.
+- **The roundup's gates read the text the prompt read.** They used to re-fetch `picked[:3]`: a
+  transient failure handed `verbatim_overlap` an empty string (a free pass on the copy gate) and
+  stories 4-5 were never checked in either pass. Live pooled grounding is now 6,004 chars.
+- **One outlet may not own the countdown.** The old dedup only skipped a repeat once three
+  distinct sources were banked, so it never fired on a dominant feed: live today it produced five
+  TechCrunch stories out of five, on the one format whose defence is curation. Now three outlets.
+- **The roundup stops misattributing itself.** `source_chip()` — the caption chip and every stat
+  card used to carry story 1's domain across all five stories, and the "Sources in description"
+  branch was unreachable. The description now actually lists all five sources.
+- **The advice gate reads the whole script.** Its LLM confirmation was armed from the first 2,000
+  chars of a ~5,500-char narration.
+- **Evergreen dedup is near-duplicate, at 0.7** (`EVERGREEN_DUP_OVERLAP`). Exact string equality
+  was the only guard; the engine's 0.5 headline default over-blocks this lane's own
+  "how does X actually work" template (measured: 0.67 for two different subjects, 1.0 for the
+  true re-word).
+- A dead roundup falls back to evergreen — Sunday is the only roundup slot there is.
+- `record_run` can no longer raise (`default=str`, broad except): it is the last statement of the
+  publish window C.1 closed. Rows now carry `grounding_chars` for v3-D.
+- `_notify_review` no longer announces a veto window on an HTTP 404 — `requests.post` does not
+  raise on 4xx, so the log claimed a review issue that did not exist.
+
 ## 2026-08-23 — tool-lane pre-flight hardening (Phase C.1)
 Six-surface adversarial audit of the never-executed `format=tool` path, run because the next
 step is a live supervised dispatch. 34 candidate defects → 8 confirmed after refutation, plus

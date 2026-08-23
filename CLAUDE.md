@@ -47,7 +47,14 @@ name that is not written there. If a decision is missing, add a row and get one 
   the run. Coerce every list/dict field you read from the model; `deliverable._as_list` is the
   pattern.
 - The tool lane **teaches** its subject, so `gates.tool_unsuitable` rejects candidates rather than
-  penalising them. It is the only gate in the repo that refuses a topic outright.
+  penalising them. It is the only gate in the repo that refuses a topic outright. It guards the
+  tool lane ONLY — nothing stops another lane picking the same candidate up.
+- **`signal_engine.rank()` returns ONE mixed list**, tool signals included (v3-A added the
+  GitHub/HF/Product Hunt trending feeds for the tool lane). Anything that treats `ranked` as
+  stories must go through `ai_pipeline.news_candidates()` first, or a repo becomes the news story.
+- **A roundup's `source_url` is story 1's URL**, because that is what `_validate_script` is
+  handed. Never read it as "the" source of a roundup: doing so stamped one outlet on the caption
+  chip and every stat card. Use `source_chip()`; per-story data lives in `roundup_items`.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 
