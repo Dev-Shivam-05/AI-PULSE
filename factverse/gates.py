@@ -31,6 +31,31 @@ SENSITIVE = ("finance", "financial", "invest", "stock", "portfolio", "trading",
              "legal", "lawsuit", "law ", "regulation", "tax",
              "politic", "election", "policy maker", "government")
 
+# v3 tool lane: a hands-on "here is how to run it" video is an ENDORSEMENT, which
+# reporting on the same tool would not be. These are the categories this channel
+# will not teach — circumventing provenance/authenticity, defeating safety, and
+# piracy — because a monetised, unattended channel cannot survive one of them.
+# Edit this list; it is deliberately narrow and matches on the title + README.
+UNSUITABLE_TOOL = ("watermark remov", "remove watermark", "watermarks-remover",
+                   "strip provenance", "provenance mark", "c2pa", "synthid",
+                   "ai detector bypass", "detector evasion", "humanize ai text",
+                   "bypass", "jailbreak", "uncensored", "unfiltered", "nsfw",
+                   "deepfake", "face swap", "voice clone", "undress",
+                   "crack", "nulled", "keygen", "piracy", "torrent")
+
+
+def tool_unsuitable(title: str, text: str = "") -> tuple[bool, str]:
+    """Should this tool get a hands-on tutorial? Returns (blocked, matched term).
+
+    Unlike sensitive_topic_risk this DOES reject: the tool lane teaches the viewer
+    to run the thing, and build_script simply moves to the next candidate."""
+    t = f" {title} {text} ".lower()
+    for k in UNSUITABLE_TOOL:
+        if k in t:
+            return True, k
+    return False, ""
+
+
 _ADVICE_PATTERNS = re.compile(
     r"\b(you should (buy|sell|invest|take|sue|vote)|"
     r"(buy|sell) (the stock|shares|now)|"

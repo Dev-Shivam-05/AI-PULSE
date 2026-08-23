@@ -422,6 +422,13 @@ def script_tool(item: dict) -> dict | None:
     if len(grounding) < TOOL_GROUNDING_MIN:
         print(f"     ↻ grounding too thin ({len(grounding)} chars) — not a tool video.")
         return None   # build_script moves to the next candidate
+    # The README is where intent actually shows: a repo titled innocuously can
+    # still be a provenance stripper. A tool video TEACHES the tool, so this
+    # rejects where sensitive_topic_risk only penalises.
+    unsuitable, term = gates.tool_unsuitable(title, grounding)
+    if unsuitable:
+        print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
+        return None
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
 Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
 DO something concrete in the next ten minutes — that is the entire point of the video.
@@ -885,7 +892,15 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             print("     ↻ script failed, trying next story...")
         return None
     if fmt == "tool":
-        tools = [c for c in ranked if c.get("kind") == "tool"]
+        tools = []
+        for c in ranked:
+            if c.get("kind") != "tool":
+                continue
+            blocked, term = gates.tool_unsuitable(c["title"])
+            if blocked:
+                print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            tools.append(c)
         for cand in tools[:3]:
             print(f"  🧰 Trying tool: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
             s = script_tool(cand)

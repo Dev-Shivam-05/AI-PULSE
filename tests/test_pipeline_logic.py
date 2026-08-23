@@ -776,6 +776,35 @@ def test_shorts_meta_normalised_so_the_tripwire_cannot_fire_after_upload():
     assert ap.normalize_shorts_meta(good, 2, script) == good
 
 
+def test_unsuitable_tools_are_skipped_before_a_tutorial_is_written(monkeypatch):
+    """A tool video TEACHES the tool, so this rejects where sensitive_topic_risk
+    only penalises. On 2026-08-23 the live #1 tool candidate was a multi-vendor
+    AI-provenance stripper and two 'Uncensored' model forks sat in the queue."""
+    from factverse import gates
+    assert gates.tool_unsuitable("guillaumemeyer/watermarks-remover: Strip AI provenance")[0]
+    assert gates.tool_unsuitable("orcarouter/Qwen3.8-27B-Uncensored-MLX")[0]
+    assert not gates.tool_unsuitable("unsloth/Qwen3.8-27B-GGUF — trending model")[0]
+    assert not gates.tool_unsuitable("MarkItDown converts Office files to Markdown")[0]
+
+    tried = []
+    monkeypatch.setattr(ap, "script_tool", lambda c: tried.append(c["title"]) or None)
+    monkeypatch.setattr(ap, "mark_failed", lambda t: None)
+    monkeypatch.setattr(ap, "pick_evergreen_topic", lambda r: None)
+    monkeypatch.setattr(ap, "script_news", lambda *a, **k: None)
+    ap.build_script("tool", [{"title": "watermarks-remover: strip provenance", "kind": "tool"},
+                             {"title": "MarkItDown converts files", "kind": "tool"}])
+    assert tried == ["MarkItDown converts files"], "the stripper must never reach script_tool"
+
+
+def test_script_tool_rejects_when_only_the_readme_reveals_it(monkeypatch):
+    """A repo can be titled innocuously; intent shows in the README."""
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: "This tool will strip provenance marks. " * 60)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"scenes": []})
+    assert ap.script_tool({"title": "helpful-utility", "source": "gh",
+                           "url": "https://github.com/x/y"}) is None
+
+
 def test_hf_readme_url_models_only():
     assert (ap._hf_readme_url("https://huggingface.co/org/model")
             == "https://huggingface.co/org/model/raw/main/README.md")

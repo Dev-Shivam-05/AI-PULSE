@@ -82,6 +82,14 @@ jobs:
           echo "$YT_TOKEN_B64" | base64 -d > youtube_token.pickle
 
       - name: Generate + publish a video (+ Shorts)
+        # Actions does not put GITHUB_TOKEN in a step's process environment, so
+        # _notify_review found no token and printed the veto window to the log
+        # instead of opening the review issue — a NOTIFY-routed video published
+        # unattended with nobody able to veto it. `permissions: issues: write` is
+        # already granted above; this just hands the token over, as the
+        # alert-on-failure step already does.
+        env:
+          GH_TOKEN: ${{ github.token }}
         # the forced lane is empty on scheduled runs (the shell drops the empty arg)
         run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
 
