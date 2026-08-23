@@ -2,6 +2,7 @@
 content when they regress (ranking, dedup, caption timing, script validation,
 policy gates). Run:  python -m pytest tests/ -q
 """
+import json
 import sys
 from pathlib import Path
 
@@ -851,3 +852,225 @@ def test_tool_lane_advertises_the_pdf_it_actually_writes(monkeypatch, tmp_path):
     written = dlv.make_cheat_sheet(rewritten, video_url="https://youtu.be/ID")
     assert written and Path(written).name == name
     assert dlv.public_url(name).endswith(Path(written).name)
+
+
+# =============================================================== v3-C.2
+# The news / evergreen / roundup lanes. C.1 audited the tool lane only; its
+# shared fixes (_validate_script, the publish window) already protected these
+# three, but the lanes themselves had never been searched for their own defects.
+
+def _capture(store, result=None):
+    """Stub for llm.generate_json that records the prompt it was handed."""
+    def _f(prompt, **kw):
+        store.append(prompt)
+        return result
+    return _f
+
+
+def _mixed_ranked():
+    """The live top-6 of 2026-08-23, kinds and order preserved. rank() returns ONE
+    list and v3-A added the GitHub/HF/Product Hunt trending feeds to it."""
+    return [
+        {"title": "guillaumemeyer/watermarks-remover: Strip multi-vendor AI provenance marks",
+         "url": "https://github.com/guillaumemeyer/watermarks-remover", "source": "github",
+         "kind": "tool", "fit_score": 70.5},
+        {"title": "Qwen/Qwen3.8-27B - trending image text to text on Hugging Face",
+         "url": "https://huggingface.co/Qwen/Qwen3.8-27B", "source": "hf",
+         "kind": "tool", "fit_score": 70.5},
+        {"title": "Inherent, founded by DeepMind alumni, says its AI teammate outperformed humans",
+         "url": "https://tc.test/inherent", "source": "techcrunch", "kind": "news", "fit_score": 68.1},
+        {"title": "unsloth/Qwen3.8-27B-GGUF - trending model on Hugging Face",
+         "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF", "source": "hf",
+         "kind": "tool", "fit_score": 58.9},
+        {"title": "OpenAI says California should strengthen its AI safety bill",
+         "url": "https://vg.test/openai-ca", "source": "verge", "kind": "news", "fit_score": 55.2},
+        {"title": "Frontier AI labs still won't say how they'd contain a rogue model",
+         "url": "https://ax.test/rogue", "source": "axios", "kind": "news", "fit_score": 55.1},
+    ]
+
+
+# --------------------------------------------------------------- candidate leakage
+def test_news_lane_never_writes_about_a_tool_candidate(monkeypatch):
+    """gates.tool_unsuitable guards the tool lane and nothing else, so the same
+    provenance stripper it refuses to TEACH could still be written up as the day's
+    news story — it was ranked #1 on 2026-08-23 and #2 was a model card."""
+    tried = []
+    monkeypatch.setattr(ap, "script_news", lambda c, **k: tried.append(c["title"]) or None)
+    monkeypatch.setattr(ap, "mark_failed", lambda t: None)
+    monkeypatch.setattr(ap.gates, "pick_hook_pattern", lambda r: "number")
+    monkeypatch.setattr(ap, "_recent_hook_patterns", lambda n=6: [])
+    ap.build_script("news", _mixed_ranked())
+    assert tried, "the news lane must still have candidates to try"
+    assert not any(("watermarks-remover" in t) or ("Qwen" in t) for t in tried), \
+        f"a tool signal reached script_news: {tried}"
+
+
+def test_viral_judge_scores_stories_not_repos(monkeypatch):
+    """viral_pick decides the DAY's format. Scoring 'Strip multi-vendor AI provenance
+    marks' for shock value is how a repo becomes the news story."""
+    prompts = []
+    monkeypatch.setattr(ap.llm, "generate_json", _capture(prompts))
+    ap.viral_pick(_mixed_ranked())
+    listing = prompts[0]
+    assert "Inherent" in listing, "real stories must still be judged"
+    assert "watermarks-remover" not in listing and "Qwen" not in listing
+
+
+def test_roundup_counts_stories_not_model_cards(monkeypatch):
+    """'The 5 AI stories that actually mattered this week' drew from the same mixed
+    list — 4 of the live top 5 were HF/GitHub repos."""
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "real article text " * 60)
+    prompts = []
+    monkeypatch.setattr(ap.llm, "generate_json", _capture(prompts))
+    ap.script_roundup(_mixed_ranked())
+    block = prompts[0]
+    assert "Inherent" in block and "California" in block
+    assert "watermarks-remover" not in block and "GGUF" not in block
+
+
+def test_roundup_keeps_the_sunday_when_stories_are_scarce(monkeypatch):
+    """Filtering must not cost the week: with fewer than 3 story signals the
+    roundup tops up from what is left rather than returning nothing."""
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "text " * 300)
+    prompts = []
+    monkeypatch.setattr(ap.llm, "generate_json", _capture(prompts))
+    thin = [_mixed_ranked()[2]] + [c for c in _mixed_ranked() if c["kind"] == "tool"]
+    ap.script_roundup(thin)
+    assert "STORY 3:" in prompts[0], "a one-story week must still fill the countdown"
+
+
+# --------------------------------------------------------------- roundup grounding
+def test_roundup_gates_read_the_text_the_prompt_read(monkeypatch):
+    """The grounding was fetched TWICE — once for the prompt, once for the gates.
+    A transient failure on the second pass empties script['grounding'], and an
+    empty grounding makes verbatim_overlap 0.0 and fact_check skip: the copy gate
+    then passes trivially on a script written from real source text."""
+    seen_urls = set()
+
+    def flaky(url, limit=4000):
+        # the second fetch of the same page is the one that comes back empty
+        if url in seen_urls:
+            return ""
+        seen_urls.add(url)
+        return "genuine article sentence about the model launch. " * 40
+
+    monkeypatch.setattr(ap, "fetch_text", flaky)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {
+        "title": "This Week in AI",
+        "scenes": [{"narration": f"scene {i} narration text", "visual_query": "v"}
+                   for i in range(6)]})
+    s = ap.script_roundup([c for c in _mixed_ranked() if c["kind"] == "news"])
+    assert s and "genuine article sentence" in s["grounding"],         "the gates must see the same text the prompt was written from"
+    assert ap.verbatim_overlap("genuine article sentence about the model launch . " * 3,
+                               s["grounding"]) > 0.5, "the copy gate must still have teeth"
+
+
+def test_roundup_grounding_covers_every_story(monkeypatch):
+    """Only picked[:3] was re-fetched for the gates, so stories 4 and 5 were never
+    fact-checked or copy-checked — and the tail is where lifted prose hides."""
+    marks = {}
+
+    def per_story(url, limit=4000):
+        marks[url] = f"UNIQUEMARK{len(marks)} " + "body text " * 40
+        return marks[url]
+
+    items = [{"title": f"Story {i}", "url": f"https://s{i}.test/a", "source": f"src{i}",
+              "kind": "news"} for i in range(5)]
+    monkeypatch.setattr(ap, "fetch_text", per_story)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {
+        "title": "This Week in AI",
+        "scenes": [{"narration": f"scene {i} text", "visual_query": "v"} for i in range(6)]})
+    s = ap.script_roundup(items)
+    for i in range(5):
+        assert f"UNIQUEMARK{i}" in s["grounding"], f"story {i + 1} is ungated"
+
+
+def test_roundup_description_lists_every_source(monkeypatch):
+    """The video burns 'Sources in description' on screen. _validate_script adds
+    exactly one Source line — story 1's — so four outlets went uncredited."""
+    monkeypatch.setattr(ap.fv, "setting", lambda k, d=None: "" if k == "promo_block" else d)
+    script = {"format": "roundup", "description": "Hook line.\n\nBody paragraph.",
+              "roundup_items": [{"title": f"Story {i}", "url": f"https://s{i}.test/a"}
+                                for i in range(5)]}
+    ap.place_description_blocks(script)
+    for i in range(5):
+        assert f"https://s{i}.test/a" in script["description"]
+    before = script["description"]
+    ap.place_description_blocks(script)
+    assert script["description"] == before, "must be idempotent — run() calls it twice"
+
+
+def test_roundup_does_not_brand_five_outlets_with_one():
+    """src_domain came from source_url, which _validate_script sets to picked[0]'s
+    URL — so the on-screen chip and every stat card stamped story 1's outlet across
+    the whole video, and the 'Sources in description' branch was unreachable."""
+    roundup = {"format": "roundup", "source_url": "https://techcrunch.test/story-one"}
+    assert ap.source_chip(roundup) == ("", "Sources in description")
+    news = {"format": "news", "source_url": "https://www.theverge.com/2026/x"}
+    assert ap.source_chip(news) == ("theverge.com", "Source: theverge.com")
+    assert ap.source_chip({"format": "evergreen", "source_url": ""}) == ("", "")
+
+
+# --------------------------------------------------------------- advice gate window
+def test_advice_gate_reads_the_whole_narration(monkeypatch):
+    """The LLM confirmation was armed from script_text[:2000]. A 900-word script is
+    ~5,500 chars, so anything prescriptive in the last two thirds was never checked."""
+    from factverse import gates
+    asked = []
+    monkeypatch.setattr(gates.llm, "generate_json",
+                        _capture(asked, {"advice": True, "evidence": "late"}))
+    late = ("A neutral sentence about model design. " * 90
+            + "Put your savings into that stock before the earnings call.")
+    assert len(late) > 3000
+    out = gates.advice_framing(late)
+    assert asked, "a sensitive term past char 2000 must still arm the LLM check"
+    assert out["advice"] is True
+
+
+# --------------------------------------------------------------- evergreen dedup
+def test_evergreen_topic_rejects_a_reworded_repeat(monkeypatch):
+    """Exact lowercase equality was the only dedup, while the signal engine already
+    carries _too_similar for precisely this — a re-worded topic is the same video."""
+    monkeypatch.setattr(ap, "_read_json",
+                        lambda p, d: ["How Do Large Language Models Actually Work"]
+                        if p == ap.USED_TOPICS else d)
+    monkeypatch.setattr(ap, "too_many_failures", lambda t: False)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
+        {"title_idea": "How Large Language Models Actually Work", "search_question": "q"},
+        {"title_idea": "Why AI Chips Cost So Much", "search_question": "q"}]})
+    t = ap.pick_evergreen_topic([])
+    assert t["title_idea"] == "Why AI Chips Cost So Much"
+
+
+# --------------------------------------------------------------- veto window truth
+def test_notify_review_does_not_claim_a_window_it_never_opened(monkeypatch):
+    """requests.post does not raise on 401/404. The log said 'veto window active'
+    while no issue existed and the video published unattended anyway."""
+    monkeypatch.setenv("GITHUB_TOKEN", "t")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "o/r")
+
+    class _R:
+        status_code = 404
+        text = "Not Found"
+
+    monkeypatch.setattr(ap.requests, "post", lambda *a, **k: _R())
+    out = []
+    monkeypatch.setattr("builtins.print", lambda *a, **k: out.append(" ".join(str(x) for x in a)))
+    ap._notify_review({"title": "T"}, None, "https://y.test/v", "2026-08-23T16:45:00Z",
+                      {"score": 0.7, "components": {}})
+    joined = "\n".join(out)
+    assert "veto window active" not in joined
+    assert "404" in joined and "REVIEW WINDOW" in joined, "it must fall back to the log"
+
+
+# --------------------------------------------------------------- ledger cannot raise
+def test_record_run_survives_a_value_json_cannot_serialize(tmp_path, monkeypatch):
+    """record_run caught OSError only. It is the LAST statement of the publish
+    window C.1 closed: if it raises, the video is live with no PUBLISHED row and
+    the 14:53 retry cron publishes a second one into the same slot."""
+    log = tmp_path / "runs.jsonl"
+    monkeypatch.setattr(ap, "RUNS_LOG", log)
+    ap.record_run(status="PUBLISHED", format="news", title="T",
+                  publish_at=Path("x"), odd={1, 2})
+    row = json.loads(log.read_text(encoding="utf-8").splitlines()[-1])
+    assert row["status"] == "PUBLISHED" and row["title"] == "T"

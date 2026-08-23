@@ -80,7 +80,10 @@ def advice_framing(script_text: str) -> dict:
     hit = _ADVICE_PATTERNS.search(script_text or "")
     if hit:
         return {"advice": True, "evidence": hit.group(0), "method": "regex"}
-    if not sensitive_topic_risk(script_text[:2000]):
+    # The window used to be script_text[:2000]. A 900-word script is ~5,500 chars,
+    # so a finance/health/legal turn in the last two thirds never armed this check.
+    # The screen is a keyword scan over a 20-item tuple — the full text is free.
+    if not sensitive_topic_risk(script_text or ""):
         return {"advice": False, "method": "regex"}
     d = llm.generate_json(
         "Does this video script give PRESCRIPTIVE ADVICE to viewers about finance, health, "

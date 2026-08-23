@@ -107,11 +107,16 @@ def too_many_failures(title: str) -> bool:
 def record_run(**fields) -> None:
     """Append one JSON line per run — the ground truth a future learning loop needs."""
     fields.setdefault("timestamp", _dt.datetime.now().isoformat(timespec="seconds"))
+    # This is the LAST statement of the publish window (spec v3-C.1 #5). If it
+    # raises, the video is live on YouTube with no PUBLISHED row, so
+    # already_published_today() answers False and the 14:53 retry cron publishes
+    # a SECOND video into the same slot. default=str absorbs any value a future
+    # caller grows; the broad except absorbs everything else.
     try:
         with open(RUNS_LOG, "a", encoding="utf-8") as f:
-            f.write(json.dumps(fields, ensure_ascii=False) + "\n")
-    except OSError as e:
-        print(f"   ⚠️ could not write run record: {e}")
+            f.write(json.dumps(fields, ensure_ascii=False, default=str) + "\n")
+    except Exception as e:
+        print(f"   ⚠️ could not write run record: {type(e).__name__}: {e}")
 
 
 # --------------------------------------------------------------- grounding
@@ -299,6 +304,19 @@ Return ONLY JSON:
 "scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
 
 
+# --------------------------------------------------------------- candidate kinds
+def news_candidates(ranked: list[dict]) -> list[dict]:
+    """The story lanes read story signals only.
+
+    v3-A added the GitHub / Hugging Face / Product Hunt trending feeds so the TOOL
+    lane would have something to teach, but rank() returns ONE mixed list — so the
+    viral judge and the weekly roundup started drawing from them too. On
+    2026-08-23 the top two ranked items were both kind="tool" and #1 was an
+    AI-provenance stripper: gates.tool_unsuitable keeps that out of the tool lane
+    and nowhere else, so it could still have run as the day's news story."""
+    return [c for c in ranked if c.get("kind") != "tool"]
+
+
 # --------------------------------------------------------------- virality judge
 VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is the default
 
@@ -306,7 +324,7 @@ VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is th
 def viral_pick(ranked: list[dict], top_n: int = 8):
     """Score today's top stories for viral potential. Returns
     (item, score, angle, hook_idea) for the hottest one, or None."""
-    cands = ranked[:top_n]
+    cands = news_candidates(ranked)[:top_n]
     if not cands:
         return None
     listing = "\n".join(f"{i+1}. {c['title']}  ({c['source']})" for i, c in enumerate(cands))
@@ -488,10 +506,14 @@ type","angle":"1-2 sentences on the unique take"}}]}}"""
     d = llm.generate_json(prompt)
     if not d or not d.get("topics"):
         return None
-    used_norm = [t.lower() for t in used]
+    # Exact lowercase equality was the only guard, and the model re-words a topic
+    # every time it is asked. _is_used is the near-duplicate check the signal
+    # engine already applies to headlines — a re-worded topic is the same video,
+    # which is how two near-identical uploads happened once before.
+    used_norm = {signal_engine._norm(t) for t in used}
     for t in d["topics"]:
         idea = str(t.get("title_idea", "")).strip()
-        if idea and idea.lower() not in used_norm and not too_many_failures(idea):
+        if idea and not signal_engine._is_used(idea, used_norm) and not too_many_failures(idea):
             return t
     return None
 
@@ -524,8 +546,13 @@ TIMELESSNESS RULES:
 
 # --------------------------------------------------------------- format: roundup
 def script_roundup(items: list[dict]) -> dict | None:
+    # "the stories that actually mattered this week" is not a countdown of model
+    # cards — but a thin week still beats no week, so top up if stories are scarce.
+    pool = news_candidates(items)
+    if len(pool) < 3:
+        pool = pool + [c for c in items if c.get("kind") == "tool"]
     picked, seen_sources = [], set()
-    for it in items:
+    for it in pool:
         src = it.get("source", "")
         if src in seen_sources and len(seen_sources) > 2:
             continue
@@ -535,9 +562,10 @@ def script_roundup(items: list[dict]) -> dict | None:
             break
     if len(picked) < 3:
         return None
-    stories = []
+    stories, excerpts = [], []
     for i, it in enumerate(picked, 1):
         g = fetch_text(it.get("url", ""), limit=1200)
+        excerpts.append(g)
         stories.append(f"STORY {i}: {it['title']} (source: {it['source']}, {it.get('url','')})\n"
                        f"EXCERPT: {g[:900] if g else '(none — attribute carefully)'}")
     stories_block = "\n\n".join(stories)
@@ -558,7 +586,11 @@ ROUNDUP RULES:
     s = llm.generate_json(prompt, max_tokens=8192)
     s = _validate_script(s, "This Week in AI", picked[0].get("url", ""))
     if s:
-        s["grounding"] = " ".join(fetch_text(it.get("url", ""), limit=1000) for it in picked[:3])
+        # The gates must read exactly what the prompt read. This used to RE-fetch
+        # picked[:3]: a transient failure on the second pass handed
+        # verbatim_overlap an empty string (overlap 0.0 = free pass) and
+        # fact_check its <200-char skip, and stories 4-5 were never checked at all.
+        s["grounding"] = " ".join(g for g in excerpts if g)
         s["format"] = "roundup"
         s["roundup_items"] = [{"title": it["title"], "url": it.get("url", "")} for it in picked]
     return s
@@ -582,6 +614,27 @@ def _carry_over(src: dict, dst: dict) -> dict:
 _MAX_DESC = 4000        # spec v3-C #11: YouTube caps at 5000 bytes; our blocks add ~250
 _DL_MARK = "🔧 Try it yourself"
 _PDF_MARK = "📄 Free 1-page cheat sheet: "
+_SRC_MARK = "🔗 Sources:"
+
+
+def source_chip(script: dict) -> tuple[str, str]:
+    """(domain, on-screen attribution chip) for this script.
+
+    A roundup carries 3-5 different outlets, but _validate_script sets source_url
+    to story 1's URL — so the chip and every generated stat card stamped ONE
+    outlet across all five stories, and the "Sources in description" branch could
+    never fire. The roundup points at the description, which now lists them all."""
+    if script.get("format") == "roundup":
+        return "", "Sources in description"
+    url = str(script.get("source_url") or "")
+    dom = ""
+    if url:
+        try:
+            from urllib.parse import urlparse
+            dom = urlparse(url).netloc.replace("www.", "")
+        except Exception:
+            dom = ""
+    return dom, (f"Source: {dom}" if dom else "")
 
 
 def _insert_after_hook(desc: str, block: str) -> str:
@@ -645,6 +698,13 @@ def place_description_blocks(script: dict) -> None:
             desc = desc[:end] + "\n\n" + promo + desc[end:]
         else:                                       # other formats: after the hook paragraph
             desc = _insert_after_hook(desc, promo)
+    # A roundup burns "Sources in description" on screen for its whole runtime,
+    # while _validate_script credits exactly one URL — story 1's. Keep the promise.
+    if script.get("format") == "roundup" and _SRC_MARK not in desc:
+        lines = [f"{i}. {str(it.get('title', ''))[:90]} — {it['url']}"
+                 for i, it in enumerate(script.get("roundup_items") or [], 1) if it.get("url")]
+        if lines:
+            desc = desc[:_MAX_DESC].rstrip() + "\n\n" + _SRC_MARK + "\n" + "\n".join(lines)
     script["description"] = desc
 
 
@@ -875,8 +935,11 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         return script_roundup(ranked)
     if fmt == "news":
         pattern = gates.pick_hook_pattern(_recent_hook_patterns())
-        # hottest story first, then ranking order
-        order = list(ranked)
+        # hottest story first, then ranking order — stories only (see news_candidates)
+        order = news_candidates(ranked)
+        if not order:
+            print("   ⚠️ No story signals today — the news lane has nothing to write.")
+            return None
         if viral_hint and viral_hint[0] in order:
             order.remove(viral_hint[0])
             order.insert(0, viral_hint[0])
@@ -977,13 +1040,18 @@ def _notify_review(script: dict, thumb, yt_url: str, publish_at: str, conf: dict
     token, repo = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
     if token and repo:
         try:
-            requests.post(f"https://api.github.com/repos/{repo}/issues",
-                          headers={"Authorization": f"Bearer {token}",
-                                   "Accept": "application/vnd.github+json"},
-                          json={"title": f"👀 Review before publish — {script.get('title', '')[:60]}",
-                                "body": body}, timeout=30)
-            print("  👀 Review issue opened (veto window active).")
-            return
+            r = requests.post(f"https://api.github.com/repos/{repo}/issues",
+                              headers={"Authorization": f"Bearer {token}",
+                                       "Accept": "application/vnd.github+json"},
+                              json={"title": f"👀 Review before publish — {script.get('title', '')[:60]}",
+                                    "body": body}, timeout=30)
+            # requests does NOT raise on 401/403/404. Announcing a veto window
+            # that no issue backs is worse than none: the operator stops looking.
+            if r.status_code in (200, 201):
+                print("  👀 Review issue opened (veto window active).")
+                return
+            print(f"   ⚠️ review issue refused: HTTP {r.status_code} "
+                  f"{str(getattr(r, 'text', ''))[:120]} — no veto window.")
         except Exception as e:
             print(f"   ⚠️ review notify failed: {e}")
     print("  👀 REVIEW WINDOW:\n" + body)
@@ -1182,13 +1250,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         scene_clips = eng.step3_download(script)
 
     # info-dense motion graphics: stat scenes lead with a generated card, not stock
-    src_domain = ""
-    if script.get("source_url"):
-        try:
-            from urllib.parse import urlparse
-            src_domain = urlparse(script["source_url"]).netloc.replace("www.", "")
-        except Exception:
-            src_domain = ""
+    src_domain, src_chip = source_chip(script)
     infographics.inject_cards(script, scene_clips, source_domain=src_domain)
     if script.get("format") == "tool":
         # the deliverable, on screen as a terminal card, in the scenes that speak it
@@ -1248,12 +1310,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # on-screen source chips during fact delivery (content timeline; frames carry
     # the overlay through the cold-open re-order untouched)
     cites = []
-    if starts and len(starts) >= 6:
-        chip = f"Source: {src_domain}" if src_domain else (
-            "Sources in description" if script.get("format") == "roundup" else "")
-        if chip:
-            for i in (1, len(starts) // 2, len(starts) - 2):
-                cites.append((starts[i] + 0.4, starts[i] + 6.4, chip))
+    if starts and len(starts) >= 6 and src_chip:
+        for i in (1, len(starts) // 2, len(starts) - 2):
+            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
     video = captions.burn_ass(video, ass, citations=cites)
 
     print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
