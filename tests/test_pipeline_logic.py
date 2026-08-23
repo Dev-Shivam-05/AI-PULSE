@@ -1292,3 +1292,68 @@ def test_build_ass_keeps_a_line_visible_even_when_the_next_starts_instantly():
             h, mm, s = t.split(":")
             return int(h) * 3600 + int(mm) * 60 + float(s)
         assert _s(m.group(2)) > _s(m.group(1))
+
+
+# --------------------------------------------------------------- shorts
+def test_hook_wrap_keeps_every_word_and_fits_the_vertical_frame():
+    """The old wrap used a 16-character budget and, on reaching 2 lines, broke
+    with the pending word still in `cur` — which was then dropped. The in-spec
+    6-word hook below was published as "Anthropic" / "benchmark". It also broke
+    the fact-check contract: gates.fact_check verifies the FULL hook_text, so a
+    silent cut can strip the qualifier off a checked claim."""
+    from PIL import Image, ImageDraw
+    from factverse import shorts as sh
+    from factverse import branding as br
+    d = ImageDraw.Draw(Image.new("RGB", (sh.VW, sh.VH)))
+    for hook in ("Anthropic benchmark methodology quietly changed again",
+                 "The new model beats every open source rival",
+                 "54% already had an incident",
+                 "Why the price drop backfires"):
+        lines, size = sh._wrap_hook(hook, sh._overlay_font)
+        assert 1 <= len(lines) <= 2
+        assert " ".join(lines).replace("…", "").strip() == hook, f"dropped words from {hook!r}"
+        f = sh._overlay_font(size)
+        for ln in lines:
+            assert d.textlength(ln, font=f) <= sh.VW - 2 * sh.HOOK_MARGIN, f"{ln!r} overflows"
+
+
+def test_hook_wrap_ellipsises_rather_than_cutting_silently():
+    """A hook too long for two measured lines is marked as cut, not truncated
+    invisibly — the viewer can see the sentence did not end there."""
+    from factverse import shorts as sh
+    from factverse import branding as br
+    lines, _ = sh._wrap_hook(" ".join(["extraordinarily"] * 12), sh._overlay_font)
+    assert len(lines) == 2 and lines[-1].endswith("…")
+
+
+def test_normalize_moments_survives_raw_llm_shapes():
+    """eng.find_best_moments ends in `return d["moments"]` on raw Gemini JSON and
+    make_shorts indexed it directly: "scene_num": "4" raised TypeError inside
+    min(), "hook_text": null raised AttributeError on .split(), and a dict-shaped
+    "moments" raised on the slice — unwinding past the finished video, the
+    thumbnail and EVERY record_run call, so the render died with no ledger row.
+    Same class as the C.1 `tags` comma-string; same treatment normalize_shorts_meta
+    already gives the sibling call."""
+    from factverse import shorts as sh
+    ok = sh.normalize_moments([{"scene_num": "4", "hook_text": "a real hook"}], 12)
+    assert ok == [{"scene_num": 4, "hook_text": "a real hook"}]
+    assert sh.normalize_moments({"scene_num": 4}, 12) == []          # dict, not list
+    assert sh.normalize_moments("moments", 12) == []
+    assert sh.normalize_moments(None, 12) == []
+    assert sh.normalize_moments([3, "x", None], 12) == []            # bare entries
+    # an unusable scene_num falls back to the module's long-standing default of 3
+    assert sh.normalize_moments([{"scene_num": None, "hook_text": "h"}], 12) == \
+        [{"scene_num": 3, "hook_text": "h"}]
+    assert sh.normalize_moments([{"scene_num": 99, "hook_text": "h"}], 12)[0]["scene_num"] == 12
+    assert sh.normalize_moments([{"scene_num": 4, "hook_text": 54}], 12)[0]["hook_text"] == "54"
+    assert sh.normalize_moments([{"scene_num": 4, "hook_text": "  "}], 12) == []
+
+
+def test_make_shorts_returns_empty_instead_of_raising_on_bad_moments(monkeypatch):
+    """The raise happened after the long-form video and thumbnail were rendered
+    and before anything was uploaded — no ledger row of any status was written."""
+    from factverse import shorts as sh
+    monkeypatch.setattr(sh.eng, "dur", lambda v: 300.0)
+    monkeypatch.setattr(sh.eng, "find_best_moments", lambda s: {"scene_num": "4"})
+    script = {"scenes": [{"narration": f"s{i}"} for i in range(12)]}
+    assert sh.make_shorts("v.mp4", script, [], max_count=2) == []

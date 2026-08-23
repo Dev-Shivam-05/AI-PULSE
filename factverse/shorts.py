@@ -52,6 +52,21 @@ def _ensure_font():
     return fdir
 
 
+def _overlay_font(size):
+    """The font drawtext will ACTUALLY use, so the wrap measures what it burns.
+    br._font prefers Segoe UI Bold while _ensure_font copies Arial Bold to
+    short.ttf — measuring with the wrong face lets a fitted line still overflow.
+    """
+    from PIL import ImageFont
+    fp = fv.ASSETS / "fonts" / "short.ttf"
+    if fp.exists():
+        try:
+            return ImageFont.truetype(str(fp), size)
+        except Exception:
+            pass
+    return br._font(size)
+
+
 # --------------------------------------------------------------- vertical bumpers
 def _make_vintro(out):
     dur, n = 1.3, int(br.FPS * 1.3)
@@ -113,6 +128,90 @@ def ensure_vertical_bumpers():
 # hook text over the first 3.5s, watermark branding throughout, no outro so the
 # loop lands back on the hook.
 MAX_SHORT = 35
+HOOK_MARGIN = 60          # keep the hook clear of the vertical frame's edges
+HOOK_SIZES = (64, 50)     # the two sizes the overlay has always used
+
+
+def _wrap_hook(hook: str, font_for):
+    """Wrap the hook to at most 2 lines that MEASURE inside the 1080px frame.
+
+    The old wrap used a 16-character budget and, on reaching 2 lines, `break`-ed
+    with the pending word still in `cur` — which was then silently dropped: the
+    in-spec 6-word hook "Anthropic benchmark methodology quietly changed again"
+    was published as "Anthropic" / "benchmark". gates.fact_check verifies the
+    FULL hook_text, so that cut also broke the fact-check contract. Returns
+    (lines, fontsize); a hook that will not fit two lines at the smaller size is
+    ellipsised, so the cut is at least visible.
+    """
+    from PIL import Image, ImageDraw
+    d = ImageDraw.Draw(Image.new("L", (8, 8)))
+    budget = VW - 2 * HOOK_MARGIN
+    words = str(hook or "").split()
+    if not words:
+        return [], HOOK_SIZES[0]
+    for size in HOOK_SIZES:
+        f = font_for(size)
+        lines, cur = [], ""
+        for w in words:
+            trial = f"{cur} {w}".strip()
+            if cur and d.textlength(trial, font=f) > budget:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = trial
+        if cur:
+            lines.append(cur)
+        if len(lines) <= 2 and all(d.textlength(l, font=f) <= budget for l in lines):
+            return lines, size
+    # will not fit twice even at the smallest size — cut visibly, not silently
+    f = font_for(HOOK_SIZES[-1])
+    lines, cur = [], ""
+    for w in words:
+        trial = f"{cur} {w}".strip()
+        if cur and d.textlength(trial, font=f) > budget:
+            lines.append(cur)
+            cur = w
+            if len(lines) == 2:
+                break
+        else:
+            cur = trial
+    if len(lines) < 2 and cur:
+        lines.append(cur)
+    lines = lines[:2]
+    while lines and d.textlength(lines[-1] + "…", font=f) > budget and " " in lines[-1]:
+        lines[-1] = lines[-1].rsplit(" ", 1)[0]
+    if lines:
+        lines[-1] = lines[-1] + "…"
+    return lines, HOOK_SIZES[-1]
+
+
+def normalize_moments(raw, num_scenes: int) -> list:
+    """Coerce eng.find_best_moments' RAW LLM output into indexable moments.
+
+    `find_best_moments` ends in `return d["moments"]` on parsed Gemini JSON, and
+    make_shorts sliced and indexed it directly: a string scene_num raised
+    TypeError inside min(), a null hook_text raised AttributeError on .split(),
+    and a dict-shaped "moments" raised on the slice — unwinding past the finished
+    video, the thumbnail and every record_run call, so the day's render died with
+    no ledger row of any status. Same class as the C.1 `tags` comma-string.
+    """
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for m in raw:
+        if not isinstance(m, dict):
+            continue
+        try:
+            sn = int(float(m.get("scene_num", 3)))
+        except (TypeError, ValueError):
+            sn = 3
+        hook = m.get("hook_text")
+        hook = "" if hook is None else str(hook).strip()
+        if not hook:
+            continue
+        out.append({"scene_num": max(1, min(sn, max(1, int(num_scenes)))),
+                    "hook_text": hook})
+    return out
 
 
 def make_shorts(content_video, script, words, scene_starts=None,
@@ -122,15 +221,18 @@ def make_shorts(content_video, script, words, scene_starts=None,
     if vdur <= 0 or num_sc <= 0:
         return []
     scene_dur = vdur / num_sc
-    moments = eng.find_best_moments(script)
+    moments = normalize_moments(eng.find_best_moments(script), num_sc)
+    if not moments:
+        print("  ⚠️ No usable Shorts moments returned — skipping Shorts this run.")
+        return []
     brand = fv.CHANNEL_NAME
     fonts_dir = _ensure_font()
     out_shorts = []
     print(f"\n[6/10] 📱 Creating {max_count} vertical Shorts (9:16, loop-cut, no bumpers)...")
 
     for idx, m in enumerate(moments[:max_count]):
-        sn = max(1, min(m.get("scene_num", 3), num_sc))
-        hook = m.get("hook_text", "Watch this!")
+        sn = m["scene_num"]
+        hook = m["hook_text"]
         # snap to the real start of the chosen scene's narration when we have it
         if scene_starts and sn - 1 < len(scene_starts):
             start = max(0.0, float(scene_starts[sn - 1]))
@@ -148,20 +250,9 @@ def make_shorts(content_video, script, words, scene_starts=None,
             return (t.replace("\\", "").replace("'", "").replace('"', "")
                      .replace(":", "\\:").replace("%", "%%"))
 
-        # Long hooks overflow the 1080px frame — wrap to <=2 lines, ~16 chars each,
-        # and scale the font down for stubborn single words.
-        hwords, hlines, cur = hook.split(), [], ""
-        for w_ in hwords:
-            if cur and len(cur) + len(w_) + 1 > 16:
-                hlines.append(cur)
-                cur = w_
-                if len(hlines) == 2:
-                    break
-            else:
-                cur = f"{cur} {w_}".strip()
-        if cur and len(hlines) < 2:
-            hlines.append(cur)
-        hsize = 64 if max((len(l) for l in hlines), default=0) <= 16 else 50
+        # Long hooks overflow the 1080px frame — wrap to <=2 lines by MEASURED
+        # width, dropping no word (see _wrap_hook).
+        hlines, hsize = _wrap_hook(hook, _overlay_font)
         hook_draws = "".join(
             f"drawtext=fontfile=short.ttf:text='{_esc(l)}':fontsize={hsize}:fontcolor=white:"
             f"borderw=5:bordercolor=black:x=(w-text_w)/2:y=h*0.10+{i * (hsize + 26)}:"
