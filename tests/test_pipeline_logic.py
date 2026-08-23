@@ -1252,3 +1252,43 @@ def test_stat_is_never_cut_mid_word_and_is_drawn_inside_the_card():
     d = ImageDraw.Draw(Image.new("RGB", (1280, 720)))
     size, font = br.fit_font(br._font, ["2,400 percent"], int(720 * 0.30), 1280)
     assert d.textlength("2,400 percent", font=font) <= 1280
+
+
+def test_build_ass_events_never_overlap(tmp_path):
+    """The +0.10s hold had no clamp against the next line's start, and phrases
+    flush on max_words far more often than on a real pause — so the break lands
+    mid-speech where whisper reports word N+1 starting exactly at word N's end.
+    Measured over the 24 archived, actually-burned state/assets/*/captions.ass:
+    5,626 of 6,515 consecutive boundaries overlapped (86.4%), 5,624 of them by
+    exactly 0.10s. libass stacks overlapping events, so two caption phrases were
+    on screen together at ~86% of phrase changes in every video shipped."""
+    import re as _re
+    # four words per line (the default), each abutting the next exactly
+    words = [(i * 0.4, (i + 1) * 0.4, f"w{i}") for i in range(12)]
+    out = captions.build_ass(words, str(tmp_path / "o.ass"))
+    ev = [(m.group(1), m.group(2)) for m in
+          _re.finditer(r"Dialogue: \d+,([\d:.]+),([\d:.]+),", Path(out).read_text(encoding="utf-8"))]
+    assert len(ev) >= 3
+    def _s(t):
+        h, m_, s = t.split(":")
+        return int(h) * 3600 + int(m_) * 60 + float(s)
+    for (a, b) in zip(ev, ev[1:]):
+        assert _s(a[1]) <= _s(b[0]), f"{a} overlaps {b}"
+    # the hold is still there where there IS room for it
+    gapped = captions.build_ass([(0.0, 0.4, "a"), (5.0, 5.4, "b")], str(tmp_path / "g.ass"))
+    ev2 = _re.findall(r"Dialogue: \d+,[\d:.]+,([\d:.]+),", Path(gapped).read_text(encoding="utf-8"))
+    assert _s(ev2[0]) == 0.5
+
+
+def test_build_ass_keeps_a_line_visible_even_when_the_next_starts_instantly():
+    """The clamp must never invert a line into a zero/negative duration."""
+    words = [(0.0, 1.0, "one"), (1.0, 2.0, "two"), (2.0, 3.0, "three"), (3.0, 4.0, "four"),
+             (4.0, 4.05, "five")]
+    import tempfile, os, re as _re
+    p = os.path.join(tempfile.mkdtemp(), "x.ass")
+    captions.build_ass(words, p, max_words=4)
+    for m in _re.finditer(r"Dialogue: \d+,([\d:.]+),([\d:.]+),", Path(p).read_text(encoding="utf-8")):
+        def _s(t):
+            h, mm, s = t.split(":")
+            return int(h) * 3600 + int(mm) * 60 + float(s)
+        assert _s(m.group(2)) > _s(m.group(1))
