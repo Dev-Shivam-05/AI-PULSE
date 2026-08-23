@@ -38,6 +38,16 @@ name that is not written there. If a decision is missing, add a row and get one 
   function that uses them — the `faster_whisper` import in `captions.py:87` is the pattern.
 - Every provider seam must **fail soft** (return `None`), never raise: the daily run is unattended
   and a raise costs the day. The 14:53 UTC cron is the only retry.
+- **Nothing may raise between `eng.yt_upload` and `record_run` in `run()`.** Past that upload the
+  video is live on YouTube; if no `PUBLISHED` row is written, `already_published_today()` answers
+  False and the retry cron publishes a SECOND video into the same slot. Put new validation
+  *before* the upload (see `normalize_shorts_meta`), or wrap it.
+- **Raw LLM output is never type-safe.** `_validate_script` had `setdefault("tags", [])`, which
+  fills a missing key but does not coerce a wrong type — a comma-string answer raised and killed
+  the run. Coerce every list/dict field you read from the model; `deliverable._as_list` is the
+  pattern.
+- The tool lane **teaches** its subject, so `gates.tool_unsuitable` rejects candidates rather than
+  penalising them. It is the only gate in the repo that refuses a topic outright.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 

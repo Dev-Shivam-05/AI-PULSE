@@ -1,4 +1,30 @@
 
+## 2026-08-23 — tool-lane pre-flight hardening (Phase C.1)
+Six-surface adversarial audit of the never-executed `format=tool` path, run because the next
+step is a live supervised dispatch. 34 candidate defects → 8 confirmed after refutation, plus
+2 found by hand. Every one reproduced before its fix. Full contract: `docs/spec/ai-pulse-v3c1.md`.
+- **A tool video is an endorsement, so the tool lane now REJECTS, not just penalises.**
+  `gates.tool_unsuitable` screens title and README for circumvention / safety-defeat / piracy.
+  Verified live: the day's #1 tool candidate was `watermarks-remover: Strip multi-vendor AI
+  provenance marks`, with two `Qwen3.8-27B-Uncensored` forks behind it. Without this the first
+  tool video the channel ever published would have been a guide to defeating AI provenance.
+- **Grounding floor 1200 chars** for the tool lane (owner-approved). Product Hunt's ~640 chars
+  of nav chrome cleared both `fetch_text`'s 400 floor and `gates.fact_check`'s 200 skip, so
+  claims were fact-checked against "Overview Reviews 1 Team More" and blocked the day. This
+  corrects the Phase-C handoff's claim that PH pages "ground thinly, so script_tool often
+  rejects them" — it accepted them.
+- **Hugging Face grounds on the raw model card only**, never the page. The page's readable text
+  is inlined `chat_template` JSON, so the old empty-page repair branch could never fire.
+- **Nothing may raise between `yt_upload` and `record_run`.** A raise there left a video live
+  with no `PUBLISHED` row, so `already_published_today()` said no and the retry cron published a
+  second video into the same slot. The re-hook tripwire now fires before the upload instead.
+- **`fmt` is re-bound from the returned script**, so a `tool → evergreen` fallback stops being
+  logged as a tool video — that ledger is what v3-D is supposed to learn from.
+- The cheat sheet renders the whole command; the wrap used to be sliced to two rows, shipping a
+  command cut mid-flag that still looked copy-pasteable.
+- State-save survives a dispatch from a feature branch by committing the run's tracked writes
+  onto the throwaway branch — **not** by forcing the checkout, which would discard them.
+
 ## 2026-08-22 — v3 utility pivot (Phase A)
 - **Pivot locked:** "about AI" news essays → "AI you can use today" tool videos. Driver: 90-day
   data (0:38 AVD, 5 subs); reference model = HyperAutomation Labs transcript (video as a
