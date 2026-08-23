@@ -634,6 +634,58 @@ def test_make_cheat_sheet_fails_soft(monkeypatch, tmp_path):
 
 
 # --------------------------------------------------------------- grounding + filter fix
+def test_tool_grounding_prefers_the_hf_model_card(monkeypatch):
+    """The hub page is a JS shell whose readable text is inlined tokenizer JSON —
+    and it is LONG, so the old `if not grounding` repair could never fire and the
+    model card was never read. The card must be asked for first."""
+    calls = []
+
+    def fake_fetch(u, limit=4000):
+        calls.append(u)
+        return "REAL MODEL CARD. " * 40 if u.endswith("README.md") else "junk " * 1000
+
+    monkeypatch.setattr(ap, "fetch_text", fake_fetch)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
+    ap.script_tool({"title": "T", "source": "hf", "url": "https://huggingface.co/org/model"})
+    assert calls and calls[0].endswith("/raw/main/README.md")
+    assert len(calls) == 1, "the card answered; the junk page must not be fetched at all"
+
+
+def test_tool_grounding_falls_back_to_the_page_when_no_card(monkeypatch):
+    calls = []
+
+    def fake_fetch(u, limit=4000):
+        calls.append(u)
+        return "" if u.endswith("README.md") else "PAGE TEXT. " * 60
+
+    monkeypatch.setattr(ap, "fetch_text", fake_fetch)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
+    ap.script_tool({"title": "T", "source": "hf", "url": "https://huggingface.co/org/model"})
+    assert calls == ["https://huggingface.co/org/model/raw/main/README.md",
+                     "https://huggingface.co/org/model"]
+
+
+def test_non_hf_tool_grounds_on_the_page_only(monkeypatch):
+    calls = []
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: calls.append(u) or "GITHUB README. " * 60)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
+    ap.script_tool({"title": "T", "source": "gh", "url": "https://github.com/org/repo"})
+    assert calls == ["https://github.com/org/repo"]
+
+
+def test_tool_fallback_returns_an_evergreen_labelled_script(monkeypatch):
+    """run() re-binds fmt from the returned script so the ledger stops stamping a
+    fallback video as format=tool. That is only sound because the fallback really
+    does label itself, and because "format" is carried across the rewrite passes."""
+    monkeypatch.setattr(ap, "pick_evergreen_topic", lambda ranked: {"title_idea": "how x works"})
+    monkeypatch.setattr(ap, "script_evergreen",
+                        lambda topic: {"format": "evergreen", "title": "E", "scenes": []})
+    out = ap.build_script("tool", [{"title": "n", "kind": "news"}])
+    assert out["format"] == "evergreen"
+    assert "format" in ap._CARRY
+
+
 def test_hf_readme_url_models_only():
     assert (ap._hf_readme_url("https://huggingface.co/org/model")
             == "https://huggingface.co/org/model/raw/main/README.md")

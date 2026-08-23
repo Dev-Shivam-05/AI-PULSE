@@ -392,9 +392,15 @@ def script_tool(item: dict) -> dict | None:
     The video is a TRANSACTION — the viewer leaves with a deliverable they can
     run in the next ten minutes — not a broadcast about the news."""
     title, source, url = item["title"], item["source"], item.get("url", "")
-    grounding = fetch_text(url, limit=5000)
-    if not grounding and _hf_readme_url(url):
-        grounding = fetch_text(_hf_readme_url(url), limit=5000)
+    # The hub's HTML page is a JS shell whose readable text is inlined
+    # tokenizer_config / chat_template JSON — 5000 chars of it, so the old
+    # "repair only if the page came back empty" path could never fire and the
+    # model card was never read. Ask for the raw card FIRST; keep the page as
+    # the fallback for anything the raw URL does not serve.
+    readme = _hf_readme_url(url)
+    grounding = fetch_text(readme, limit=5000) if readme else ""
+    if not grounding:
+        grounding = fetch_text(url, limit=5000)
     if not grounding:
         return None   # a tool video without its README/model card is guesswork
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
@@ -1023,6 +1029,11 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ❌ No script produced (LLM/signals down). Failing loudly.")
         record_run(status="NO_SCRIPT", format=fmt)
         return None
+    # build_script falls back (tool -> evergreen -> news), so fmt was only the
+    # REQUEST; the script it returned is the truth. Re-bind, or every record_run
+    # row below stamps a fallback video with the format nobody made and the
+    # learning loop reads a tool video that never existed.
+    fmt = script.get("format", fmt)
 
     # critique first (it now cuts repetition), then the floor (sanity only),
     # then the CAP — padding is the enemy, not brevity
