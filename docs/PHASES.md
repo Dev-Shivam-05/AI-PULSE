@@ -14,7 +14,7 @@ One phase per session. A phase that isn't pushed doesn't exist.
 
 ## Now (owner, in this order)
 1. Merge PR #23 (`v3-phase-b`), then open + merge `v3-phase-c`
-   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 75-test
+   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 93-test
    suite on each PR automatically.
 2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
    done every cheat-sheet link 404s.
@@ -29,6 +29,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `↻ tool is not something this channel teaches`. Those are the new screens working, not errors.
    A forced `tool` run has **no evergreen fallback** — if a gate blocks it, the day publishes
    nothing. That is deliberate for a supervised run.
+5. On the FIRST unattended day after the merge, read the new ledger column `grounding_chars` and
+   watch for two v3-C.2 side effects: `↻ grounding too thin — trying the next story` (the story
+   lanes now refuse a page the fact-checker cannot check) and any `ADVICE_BLOCKED` row (the
+   advice gate now reads the whole script, so expect more LLM confirmations). Both are the new
+   screens working; only a repeat pattern means the thresholds are wrong.
 
 ## Next 3
 1. v3-D — learning loop v1 once ~2 weeks of v3 analytics exist (target: AVD ≥ 2:00).
