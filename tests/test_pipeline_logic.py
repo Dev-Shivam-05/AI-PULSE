@@ -648,3 +648,35 @@ def test_validate_script_keeps_filter_marker():
     assert ap._validate_script(base, "t")["filter_segment"] is True
     plain = {"scenes": [{"narration": f"s {i}"} for i in range(6)]}
     assert ap._validate_script(plain, "t")["filter_segment"] is False
+
+
+# --------------------------------------------------------------- tool lane, composed
+def test_tool_lane_advertises_the_pdf_it_actually_writes(monkeypatch, tmp_path):
+    """The exact chain run() walks: validate -> place blocks -> advice-gate rewrite ->
+    carry -> place again -> write the PDF. Every link is covered above; this asserts
+    they COMPOSE, because a drift between the linked name and the written file is a
+    permanent 404 on a video that is already published."""
+    monkeypatch.setattr(ap.fv, "setting", _settings())
+    monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
+    monkeypatch.setattr(dlv.llm, "generate_json", lambda *a, **k: None)   # fallback sheet
+
+    s = ap._validate_script(_tool_script(20), "fallback", "https://github.com/x/y")
+    ap.place_description_blocks(s)
+    name = s["cheat_sheet"]
+
+    # the advice gate re-generates the script; the LLM echoes back neither v3 key
+    rewritten = ap._validate_script(
+        {"title": "T2", "description": "brand new hook.\n\nbody", "scenes": s["scenes"]},
+        s["title"], s["source_url"])
+    assert rewritten["deliverable"] is None                  # the documented reset
+    rewritten = ap._carry_over(s, rewritten)
+    ap.place_description_blocks(rewritten)
+
+    # a re-slug here would point the description at a file nobody writes
+    assert rewritten["cheat_sheet"] == name
+    assert rewritten["description"].count(ap._PDF_MARK) == 1
+    assert dlv.public_url(name) in rewritten["description"]
+
+    written = dlv.make_cheat_sheet(rewritten, video_url="https://youtu.be/ID")
+    assert written and Path(written).name == name
+    assert dlv.public_url(name).endswith(Path(written).name)
