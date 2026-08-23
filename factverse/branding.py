@@ -49,6 +49,26 @@ def _font(size):
     return ImageFont.load_default()
 
 
+def fit_font(font_for, lines, start: int, budget_px: float, floor: int = 1, step: int = 6):
+    """Largest size <= `start` at which every line MEASURES inside `budget_px`.
+
+    Every surface that burns text onto a frame needs this, and only
+    thumbnail.make_tool_thumb had it: the older composers picked a size off a
+    character-count ladder and drew it unmeasured, so a long headline ran off
+    the 1280px frame. Returns (size, font). `floor` lets a caller prefer
+    overflow to illegibility (make_tool_thumb's original behaviour).
+    """
+    from PIL import Image as _Image
+    d = ImageDraw.Draw(_Image.new("L", (8, 8)))
+    size = max(int(floor), int(start))
+    font = font_for(size)
+    lines = [l for l in (lines or []) if l]
+    while size > floor and lines and max(d.textlength(l, font=font) for l in lines) > budget_px:
+        size = max(int(floor), size - int(step))
+        font = font_for(size)
+    return size, font
+
+
 def _lerp(a, b, t):
     return tuple(int(a[i] + (b[i] - a[i]) * t) for i in range(3))
 

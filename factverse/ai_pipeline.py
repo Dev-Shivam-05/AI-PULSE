@@ -1287,12 +1287,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     if scene_clips is None:
         scene_clips = eng.step3_download(script)
 
-    # info-dense motion graphics: stat scenes lead with a generated card, not stock
     src_domain, src_chip = source_chip(script)
-    infographics.inject_cards(script, scene_clips, source_domain=src_domain)
-    if script.get("format") == "tool":
-        # the deliverable, on screen as a terminal card, in the scenes that speak it
-        screencap.inject_code_card(script, scene_clips)
 
     print("\n[4/10] 🎙️ Voiceover...")
     audio, edge_words = synthesize_voice(narration, script)
@@ -1317,6 +1312,19 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             starts.append(starts[-1] + d)
     print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
           f"scene sync: {'ON' if durs else 'uniform fallback'}")
+
+    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
+    # AFTER the timings exist — step5_build splits a scene's time equally between
+    # its clips, so a card rendered to a fixed length either loops (replaying the
+    # count-up mid-scene) or is cut before the number reaches its real value.
+    infographics.inject_cards(script, scene_clips, source_domain=src_domain,
+                              scene_durs=durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+    if script.get("format") == "tool":
+        # the deliverable, on screen as a terminal card, in the scenes that speak it.
+        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
+        # leading the scene, so that a third clip cannot squeeze the command below
+        # readable length. It is a still, so it stays duration-agnostic.
+        screencap.inject_code_card(script, scene_clips)
 
     video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
     if not video:

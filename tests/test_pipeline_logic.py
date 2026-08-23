@@ -1166,3 +1166,89 @@ def test_roundup_does_not_stack_one_outlet(monkeypatch):
     hosts = {it["url"].split("/")[2] for it in s["roundup_items"]}
     assert len(s["roundup_items"]) == 5, "the countdown must still be full"
     assert hosts == {"tc.test", "hf.test", "oa.test"}, f"one outlet dominated: {hosts}"
+
+
+# --------------------------------------------------------------- v3-C.3 render surfaces
+def test_count_seq_final_frame_is_the_stat_verbatim():
+    """The count-up formatter is not an identity function at its own end point.
+    The frame held longest on screen was re-rendering the number through a
+    format spec: "120.5 billion" became "120 billion" and "154.7%" became
+    "155%" — the card contradicting the narration on a fact-checked channel."""
+    from factverse import infographics as ig
+    for stat in ("54%", "154.7%", "120.5 billion", "1500x", "$2 billion",
+                 "12.5%", "99.9%", "2,400 percent", "3.7 million"):
+        assert ig._count_seq(stat, 1.0) == stat, f"final frame rewrote {stat!r}"
+    # the intermediate frames must still animate
+    assert ig._count_seq("54%", 0.0) == "0%"
+    assert ig._count_seq("54%", 0.3) != "54%"
+
+
+def test_card_duration_matches_the_slot_step5_build_will_give_it():
+    """step5_build splits a scene's time equally between its clips, so a card
+    stacked onto a 2-clip scene gets sdur/3 — not the fixed 4.0s it was rendered
+    at. Long slot: -stream_loop replays the count-up mid-scene. Short slot: the
+    clip is cut before the count finishes and the last frame shows a number that
+    is not the one the script says (measured: 43% for a true 54%)."""
+    from factverse import infographics as ig
+    # a 20s scene with 2 stock clips: the card's real share is 20/3
+    assert ig.card_slot_dur(20.0, 2) == 20.0 / 3
+    # a scene with no stock clips still gets the whole scene
+    assert ig.card_slot_dur(6.0, 0) == 6.0
+    # missing/degenerate duration falls back to the module default, never 0
+    assert ig.card_slot_dur(None, 2) == ig.CARD_DUR
+    assert ig.card_slot_dur(0.0, 2) == ig.CARD_DUR
+
+
+def test_inject_cards_renders_each_card_at_its_own_scene_share(monkeypatch):
+    """The card must be rendered to the slot, not looped or cut to fit it."""
+    from factverse import infographics as ig
+    seen = []
+
+    def _fake_card(stat, label, out, source="", dur=4.0, size=(1280, 720)):
+        seen.append((stat, round(dur, 3)))
+        return out
+
+    monkeypatch.setattr(ig, "plan_cards", lambda s, max_cards=4: [
+        {"n": 1, "stat": "54%", "label": "l1"}, {"n": 2, "stat": "9x", "label": "l2"}])
+    monkeypatch.setattr(ig, "make_card_clip", _fake_card)
+    clips = [["a.mp4", "b.mp4"], ["c.mp4"]]
+    ig.inject_cards({}, clips, source_domain="x.test", scene_durs=[30.0, 8.0])
+    assert seen == [("54%", 10.0), ("9x", 4.0)], seen
+    # and the card really is the scene's lead visual
+    assert "statcard" in clips[0][0] or clips[0][0].endswith(".mp4")
+    assert len(clips[0]) == 3 and len(clips[1]) == 2
+
+
+def test_fit_font_shrinks_until_the_text_measures_inside_the_budget():
+    """The one shrink loop, shared by every surface that draws text on a frame.
+    make_tool_thumb already had it inline; compose, _text_block and the stat card
+    picked a size off a character-count ladder and drew it unmeasured."""
+    from PIL import Image, ImageDraw
+    from factverse import branding as br
+    d = ImageDraw.Draw(Image.new("RGB", (1280, 720)))
+    lines = ["OPENAI QUIETLY SHIPPED", "A NEW REASONING MODEL"]
+    size, font = br.fit_font(br._font, lines, 150, 1280 - 2 * 56)
+    assert size <= 150
+    assert max(d.textlength(l, font=font) for l in lines) <= 1280 - 2 * 56
+    # a floor is honoured when the caller prefers overflow to illegibility
+    size2, _ = br.fit_font(br._font, ["A VERY LONG HEADLINE INDEED"], 130, 50, floor=72)
+    assert size2 == 72
+
+
+def test_stat_is_never_cut_mid_word_and_is_drawn_inside_the_card():
+    """plan_cards capped the stat at 12 characters, so "120.5 billion" reached
+    the screen as "120.5 billio" — and even capped, "2,400 percen" measures
+    1304px on a 1280px card and is clipped at both edges."""
+    from PIL import Image, ImageDraw
+    from factverse import infographics as ig
+    from factverse import branding as br
+    assert ig._cap_stat("120.5 billion") == "120.5 billion"
+    assert ig._cap_stat("2,400 percent") == "2,400 percent"
+    assert ig._cap_stat("54%") == "54%"
+    # an LLM answering with a sentence is still bounded, but on a word boundary
+    long = ig._cap_stat("54 percent of all enterprise deployments surveyed")
+    assert not long.endswith(" ") and " " in long and len(long) <= 24
+    assert long in "54 percent of all enterprise deployments surveyed"
+    d = ImageDraw.Draw(Image.new("RGB", (1280, 720)))
+    size, font = br.fit_font(br._font, ["2,400 percent"], int(720 * 0.30), 1280)
+    assert d.textlength("2,400 percent", font=font) <= 1280
