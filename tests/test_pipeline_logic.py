@@ -597,6 +597,29 @@ def test_build_pdf_hard_wraps_unbreakable_commands(tmp_path):
     assert len(long_cmd[:dlv._MONO_COLS]) == dlv._MONO_COLS
 
 
+def test_long_command_is_not_cut_mid_line_and_stays_one_page(tmp_path):
+    """The wrapped rows used to be sliced [:2], so a 152-char docker line shipped as
+    '... ollama/ollama serve && docker' — still copy-pasteable, no longer valid.
+    A deliverable may be 300 chars (_validate_script), so this is the normal case."""
+    import re as _re
+    from reportlab.lib.utils import simpleSplit
+    cmd = ("docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama "
+           "ollama/ollama serve && docker exec -it ollama ollama pull llama3.1:8b-instruct-q4_K_M")
+    assert len(simpleSplit(cmd, "Courier", 11, 499)) > 2, "must actually overflow two rows"
+    out = tmp_path / "long.pdf"
+    assert dlv.build_pdf(_tool_script(5),
+                         {"what": "w", "steps": [cmd], "uses": ["a", "b", "c"], "skip_if": "s"},
+                         str(out), video_url="https://youtu.be/abc")
+    assert len(_re.findall(rb"/Type\s*/Page[^s]", out.read_bytes())) == 1
+
+    # and an overflowing sheet says it was cut instead of ending mid-command
+    over = tmp_path / "over.pdf"
+    assert dlv.build_pdf(_tool_script(5),
+                         {"what": "w", "steps": [f"step{i} " + "y" * 120 for i in range(5)],
+                          "uses": ["a", "b", "c"], "skip_if": "s"}, str(over))
+    assert len(_re.findall(rb"/Type\s*/Page[^s]", over.read_bytes())) == 1
+
+
 def test_insert_after_hook_handles_manufactured_blank_line():
     # _validate_script appends "\n\nSource: ..." — the block must not land below the body
     d = ap._insert_after_hook("Hook.\nBody two.\nBody three.\n\nSource: u", "BLOCK")

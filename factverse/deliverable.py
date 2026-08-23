@@ -179,13 +179,17 @@ def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str |
         rows = []
         for s in steps[:5]:
             # simpleSplit never breaks a long unbroken token (a git+https:// install
-            # URL is one), so hard-wrap on character count as well.
-            for row in simpleSplit(_clean(s, uni), f["mono"], 11, W - 2 * M - 40)[:2]:
+            # URL is one), so hard-wrap on character count as well. Never slice the
+            # wrapped lines: a deliverable may be 300 chars (ai_pipeline._validate_script)
+            # and keeping only the first two rendered a command that still looks
+            # copy-pasteable and is cut mid-flag — worse than no command at all.
+            for row in simpleSplit(_clean(s, uni), f["mono"], 11, W - 2 * M - 40):
                 while len(row) > _MONO_COLS:
                     rows.append(row[:_MONO_COLS])
                     row = row[_MONO_COLS:]
                 rows.append(row)
-        rows = rows[:8]
+        if len(rows) > 8:            # one page is the contract; say so rather than cut silently
+            rows = rows[:7] + ["... full command in the video description"]
         box_h = 18 * len(rows) + 22
         c.setFillColor(INK)
         c.roundRect(M, y - box_h + 12, W - 2 * M, box_h, 6, stroke=0, fill=1)
