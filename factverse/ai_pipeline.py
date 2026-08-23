@@ -359,6 +359,15 @@ def script_news(item: dict, viral_hint: tuple | None = None,
                 hook_pattern: str | None = None) -> dict | None:
     title, source, url = item["title"], item["source"], item.get("url", "")
     grounding = fetch_text(url)
+    # A news video CLAIMS a source. With grounding this thin every accuracy gate
+    # passes for free — verbatim_overlap scores 0.0, gates.fact_check skips below
+    # its own floor, verify_synthesis has nothing to compare — and the confidence
+    # "facts" component then reads 1.0, identical to a fully verified script. So
+    # if the fact-checker cannot run, this lane does not write; build_script moves
+    # to the next story. (Evergreen is ungrounded BY DESIGN and is untouched.)
+    if len(grounding) < gates.FACTCHECK_MIN_CHARS:
+        print(f"     ↻ grounding too thin ({len(grounding)} chars) — trying the next story.")
+        return None
     hook_block = ""
     if hook_pattern in gates.HOOK_PATTERN_PROMPTS:
         hook_block = (f"\nHOOK STRUCTURE (rotates daily so openings never repeat): "
@@ -487,6 +496,15 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
 
 
 # --------------------------------------------------------------- format: evergreen
+# Token-overlap above which two evergreen topics are the same video. The signal
+# engine's headline default (0.5) blocks this lane's own title template — the
+# prompt below literally asks for "how does X actually work" titles, so
+# "How Transformers Actually Work" scored 0.67 against "How Diffusion Models
+# Actually Work" and was refused. 0.7 still catches the true re-word, which
+# scores 1.0 (spec v3-C.2 #1).
+EVERGREEN_DUP_OVERLAP = 0.7
+
+
 def pick_evergreen_topic(signals: list[dict]) -> dict | None:
     """Turn current signal themes into a durable, search-driven question topic."""
     used = _read_json(USED_TOPICS, [])[-60:]
@@ -513,7 +531,9 @@ type","angle":"1-2 sentences on the unique take"}}]}}"""
     used_norm = {signal_engine._norm(t) for t in used}
     for t in d["topics"]:
         idea = str(t.get("title_idea", "")).strip()
-        if idea and not signal_engine._is_used(idea, used_norm) and not too_many_failures(idea):
+        if (idea and not too_many_failures(idea)
+                and not signal_engine._is_used(idea, used_norm,
+                                               threshold=EVERGREEN_DUP_OVERLAP)):
             return t
     return None
 
@@ -551,15 +571,23 @@ def script_roundup(items: list[dict]) -> dict | None:
     pool = news_candidates(items)
     if len(pool) < 3:
         pool = pool + [c for c in items if c.get("kind") == "tool"]
+    # Curation is this format's added value and its policy defence, so take one
+    # story per outlet FIRST and only then top up with repeats. The old rule
+    # ("skip a repeat once 3 distinct sources are banked") could never fire on a
+    # feed where one outlet dominates: against the live signals of 2026-08-23 it
+    # produced a five-story countdown of five TechCrunch stories.
     picked, seen_sources = [], set()
-    for it in pool:
-        src = it.get("source", "")
-        if src in seen_sources and len(seen_sources) > 2:
-            continue
-        seen_sources.add(src)
-        picked.append(it)
-        if len(picked) == 5:
-            break
+    for distinct_only in (True, False):
+        for it in pool:
+            if len(picked) == 5:
+                break
+            if it in picked:
+                continue
+            src = it.get("source", "")
+            if distinct_only and src in seen_sources:
+                continue
+            seen_sources.add(src)
+            picked.append(it)
     if len(picked) < 3:
         return None
     stories, excerpts = [], []
@@ -568,6 +596,9 @@ def script_roundup(items: list[dict]) -> dict | None:
         excerpts.append(g)
         stories.append(f"STORY {i}: {it['title']} (source: {it['source']}, {it.get('url','')})\n"
                        f"EXCERPT: {g[:900] if g else '(none — attribute carefully)'}")
+    if sum(len(g) for g in excerpts) < gates.FACTCHECK_MIN_CHARS:
+        print("     ↻ roundup grounding too thin — not writing a countdown from headlines.")
+        return None
     stories_block = "\n\n".join(stories)
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}. Write this week's AI ROUNDUP —
 a countdown of the {len(picked)} AI stories that actually mattered this week, best for last.
@@ -932,7 +963,14 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
 def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
     if fmt == "roundup":
         print("  🗞️  Weekly roundup from", len(ranked), "candidates")
-        return script_roundup(ranked)
+        s = script_roundup(ranked)
+        if s:
+            return s
+        # Sunday is the only roundup slot there is; the tool lane already uses
+        # this shape. The fallback labels itself, so run() re-binds fmt and the
+        # ledger does not stamp an evergreen as a roundup.
+        print("   ⚠️ No roundup script — falling back to evergreen.")
+        return build_script("evergreen", ranked, viral_hint)
     if fmt == "news":
         pattern = gates.pick_hook_pattern(_recent_hook_patterns())
         # hottest story first, then ranking order — stories only (see news_candidates)
@@ -1463,6 +1501,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
+               grounding_chars=len(str(script.get("grounding", ""))),
                deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,

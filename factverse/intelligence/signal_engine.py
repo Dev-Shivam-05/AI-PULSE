@@ -116,7 +116,7 @@ def _too_similar(title: str, used: set[str], threshold: float = 0.5) -> bool:
     return False
 
 
-def _is_used(title: str, used: set[str]) -> bool:
+def _is_used(title: str, used: set[str], threshold: float = 0.5) -> bool:
     nt = _norm(title)
     for u in used:
         if not u:
@@ -126,7 +126,7 @@ def _is_used(title: str, used: set[str]) -> bool:
             return True
         if u == nt:
             return True
-    return _too_similar(title, used)
+    return _too_similar(title, used, threshold=threshold)
 
 
 # The same story published as a paper reads worse on video than as news; weight kinds.

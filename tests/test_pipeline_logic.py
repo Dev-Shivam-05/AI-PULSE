@@ -1074,3 +1074,95 @@ def test_record_run_survives_a_value_json_cannot_serialize(tmp_path, monkeypatch
                   publish_at=Path("x"), odd={1, 2})
     row = json.loads(log.read_text(encoding="utf-8").splitlines()[-1])
     assert row["status"] == "PUBLISHED" and row["title"] == "T"
+
+
+# --------------------------------------------------------------- thin grounding
+def test_news_refuses_a_story_it_cannot_fact_check(monkeypatch):
+    """With empty grounding every accuracy gate passes for free: verbatim_overlap
+    scores 0.0, fact_check skips below 200 chars, verify_synthesis has nothing to
+    compare, and the confidence 'facts' component reads 1.0 — identical to a fully
+    verified script. If the fact-checker cannot run, the lane must not write."""
+    called = []
+    monkeypatch.setattr(ap.llm, "generate_json", _capture(called, {"scenes": []}))
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "")
+    assert ap.script_news({"title": "T", "source": "s", "url": "https://x.test/a"}) is None
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "x" * 199)
+    assert ap.script_news({"title": "T", "source": "s", "url": "https://x.test/a"}) is None
+    assert not called, "no LLM call is worth making against an unsourced headline"
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "real reporting. " * 40)
+    ap.script_news({"title": "T", "source": "s", "url": "https://x.test/a"})
+    assert called, "a properly grounded story must still be written"
+
+
+def test_evergreen_stays_ungrounded_by_design(monkeypatch):
+    """The floor applies to the lanes that CLAIM a source. An evergreen explainer
+    has no source URL and gates.fact_check's skip note names it explicitly."""
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {
+        "title": "E", "scenes": [{"narration": f"s {i}", "visual_query": "v"} for i in range(6)]})
+    s = ap.script_evergreen({"title_idea": "How AI chips work"})
+    assert s and s["format"] == "evergreen" and s["grounding"] == ""
+
+
+def test_roundup_refuses_an_unsourced_countdown(monkeypatch):
+    """Five stories that all failed to fetch produce five '(none)' excerpts — a
+    countdown written entirely from headlines, gated by nothing."""
+    called = []
+    monkeypatch.setattr(ap.llm, "generate_json", _capture(called, None))
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "")
+    assert ap.script_roundup([c for c in _mixed_ranked() if c["kind"] == "news"]) is None
+    assert not called
+
+
+def test_roundup_failure_does_not_cost_the_sunday(monkeypatch):
+    """Sunday is the only roundup slot; a dead fetch must not mean no video.
+    Same fallback shape the tool lane already uses, and the script labels itself
+    so run() re-binds fmt and the ledger stays honest."""
+    monkeypatch.setattr(ap, "script_roundup", lambda items: None)
+    monkeypatch.setattr(ap, "pick_evergreen_topic", lambda r: {"title_idea": "how x works"})
+    monkeypatch.setattr(ap, "script_evergreen",
+                        lambda t: {"format": "evergreen", "title": "E", "scenes": []})
+    out = ap.build_script("roundup", _mixed_ranked())
+    assert out and out["format"] == "evergreen"
+
+
+def test_evergreen_dedup_separates_a_reword_from_a_new_subject(monkeypatch):
+    """0.5 (the signal engine's headline default) blocks the lane's own title
+    template — the evergreen prompt literally asks for 'how does X actually work'.
+    0.7 still catches the re-word."""
+    from factverse.intelligence import signal_engine as se
+    used = {se._norm("How Diffusion Models Actually Work")}
+    assert se._is_used("How Transformers Actually Work", used)                    # 0.5: blocked
+    assert not se._is_used("How Transformers Actually Work", used,
+                           threshold=ap.EVERGREEN_DUP_OVERLAP)
+    reword = {se._norm("How Do Large Language Models Actually Work")}
+    assert se._is_used("How Large Language Models Actually Work", reword,
+                       threshold=ap.EVERGREEN_DUP_OVERLAP)
+
+    monkeypatch.setattr(ap, "_read_json",
+                        lambda p, d: ["How Diffusion Models Actually Work"]
+                        if p == ap.USED_TOPICS else d)
+    monkeypatch.setattr(ap, "too_many_failures", lambda t: False)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
+        {"title_idea": "How Transformers Actually Work", "search_question": "q"}]})
+    assert ap.pick_evergreen_topic([])["title_idea"] == "How Transformers Actually Work"
+
+
+def test_roundup_does_not_stack_one_outlet(monkeypatch):
+    """Curation is the roundup's whole added value — and its policy defence. The
+    dedup only skipped a repeat once THREE distinct sources were already banked,
+    so on a feed where one outlet dominates it never fired: the live signals of
+    2026-08-23 produced a five-story countdown of five TechCrunch stories."""
+    items = ([{"title": f"TC story {i}", "url": f"https://tc.test/{i}",
+               "source": "news/techcrunch", "kind": "news"} for i in range(5)]
+             + [{"title": "HF post", "url": "https://hf.test/1",
+                 "source": "blog/huggingface", "kind": "news"},
+                {"title": "OpenAI post", "url": "https://oa.test/1",
+                 "source": "blog/openai", "kind": "news"}])
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "body text " * 60)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {
+        "title": "This Week in AI",
+        "scenes": [{"narration": f"scene {i} text", "visual_query": "v"} for i in range(6)]})
+    s = ap.script_roundup(items)
+    hosts = {it["url"].split("/")[2] for it in s["roundup_items"]}
+    assert len(s["roundup_items"]) == 5, "the countdown must still be full"
+    assert hosts == {"tc.test", "hf.test", "oa.test"}, f"one outlet dominated: {hosts}"

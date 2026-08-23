@@ -119,12 +119,18 @@ def extract_claims(script: dict, hook_texts: list[str]) -> list[dict]:
     return out[:12]
 
 
+# Below this much readable source text the fact-checker cannot say anything
+# useful, so it skips. The story lanes reuse it as their grounding floor: if this
+# gate cannot run, there is nothing to write a sourced video from (spec v3-C.2 #2).
+FACTCHECK_MIN_CHARS = 200
+
+
 def fact_check(script: dict, hook_texts: list[str], sources_text: str) -> dict:
     """Claim-level verification against the bound sources.
     Returns {passed, critical_failures[], soft_failures[], checked}.
     A critical (hook/thumbnail) claim that cannot be traced to a source is a
     HARD FAIL; soft failures strip confidence instead."""
-    if not sources_text or len(sources_text) < 200:
+    if not sources_text or len(sources_text) < FACTCHECK_MIN_CHARS:
         return {"passed": True, "checked": 0, "critical_failures": [],
                 "soft_failures": [], "note": "no grounding available (evergreen) — skipped"}
     claims = extract_claims(script, hook_texts)
