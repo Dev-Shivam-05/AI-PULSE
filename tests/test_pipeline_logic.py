@@ -1471,3 +1471,23 @@ def test_l2_usage_and_stock_ledger_merge_by_their_own_shapes():
     assert _json.loads(led) == {"1": "2026-08-22T10:00:00",     # later sighting wins
                                 "2": "2026-08-24T10:00:00",     # ours only
                                 "3": "2026-08-23T10:00:00"}     # theirs only
+
+
+# --------------------------------------------------------------- step5_build
+def test_scene_keeps_its_full_duration_when_a_clip_fails_to_encode():
+    """The multi-clip branch discarded safe_run's return and appended only the
+    subs that landed, then concatenated whatever survived. One failed clip left
+    the scene short by its whole share — and because the audio is the master
+    track and every later scene simply follows, the REST of the video slid
+    earlier against the narration. Multi-clip scenes are the default
+    (dl_clips(count=2))."""
+    import importlib
+    eng = importlib.import_module("factverse_engine")
+    # 3 clips over a 30s scene = 10s each; if one fails the survivors take 15s
+    assert eng.sub_durations(30.0, 3, 3) == [10.0, 10.0, 10.0]
+    assert eng.sub_durations(30.0, 3, 2) == [15.0, 15.0]
+    assert eng.sub_durations(30.0, 3, 1) == [30.0]
+    assert eng.sub_durations(30.0, 3, 0) == []
+    # the scene's total is always preserved
+    for survived in (1, 2, 3):
+        assert abs(sum(eng.sub_durations(30.0, 3, survived)) - 30.0) < 1e-9
