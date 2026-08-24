@@ -1811,7 +1811,8 @@ def test_pdf_meta_line_renders_the_receipts():
     import datetime as _dt
     s = {"verified_facts": {"stars": 179314, "license": "MIT"}}
     line = deliverable.meta_line(s)
-    assert "★ 179,314" in line and "MIT" in line
+    assert "179,314 stars" in line and "MIT" in line
+    assert "★" not in line, "JetBrainsMono has no star glyph — it renders as tofu"
     assert _dt.date.today().isoformat() in line
     assert deliverable.meta_line({}) == ""
     assert deliverable.meta_line({"verified_facts": {}}) == ""

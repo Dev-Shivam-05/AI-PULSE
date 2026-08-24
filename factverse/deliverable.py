@@ -128,7 +128,8 @@ def meta_line(script: dict) -> str:
         return ""
     parts = []
     if vf.get("stars") is not None:
-        parts.append(f"★ {vf['stars']:,}")
+        # "stars" as a WORD: JetBrainsMono has no ★ glyph — it rendered as tofu.
+        parts.append(f"{vf['stars']:,} stars")
     if vf.get("downloads") is not None:
         parts.append(f"{vf['downloads']:,} downloads")
     if vf.get("license"):
@@ -155,7 +156,7 @@ def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str |
     c.rect(0, H - 40, W, 40, stroke=0, fill=1)
     c.setFillColor("white")
     c.setFont(f["title"], 11)
-    c.drawString(M, H - 26, "AI PULSE  ·  FREE CHEAT SHEET")
+    c.drawString(M, H - 26, _clean(f"{fv.CHANNEL_NAME.upper()}  ·  FREE CHEAT SHEET", uni))
     c.drawRightString(W - M, H - 26, _dt.date.today().strftime("%d %b %Y"))
 
     y = H - 80
@@ -168,6 +169,14 @@ def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str |
         c.setFont(f["title"], size)
         c.drawString(M, y, ln)
         y -= size + 6
+    # spec v3-E #8: the receipts stamp directly under the title — stars/downloads,
+    # license, checked-on date. Skipped cleanly when no verified facts exist.
+    ml = meta_line(script)
+    if ml:
+        c.setFillColor(RED)
+        c.setFont(f["mono"], 10)
+        c.drawString(M, y, _clean(ml, uni))
+        y -= 18
     y -= 10
 
     def label(text):
