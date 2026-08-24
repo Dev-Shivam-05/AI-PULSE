@@ -42,6 +42,18 @@ name that is not written there. If a decision is missing, add a row and get one 
   video is live on YouTube; if no `PUBLISHED` row is written, `already_published_today()` answers
   False and the retry cron publishes a SECOND video into the same slot. Put new validation
   *before* the upload (see `normalize_shorts_meta`), or wrap it.
+- **`_validate_script` mutates the LLM's dict IN PLACE, so a top-level key the model invents
+  SURVIVES into the script.** Any key that run() computes itself (`receipts`) must be popped
+  before the computing code runs, or a planted value impersonates the real one — and a planted
+  non-dict read in the post-upload zone raises into the double-publish window.
+- **requests' `timeout` is never a deadline.** It bounds the gap between socket reads; a
+  slow-drip URL streams forever and holds the unattended run until the CI job kill. Every
+  streamed download needs its own `time.monotonic` wall clock and a byte cap (`receipts.py`
+  is the pattern).
+- **Path strings burned into artifacts must split on BOTH separators** (`receipts._basename`).
+  `pathlib .name` is platform-native: a backslash path keeps its full machine layout on the
+  ubuntu CI runner — the test was green on Windows and red on CI. git's `Cloning into
+  '<abs path>'` stderr is the same leak from the other direction.
 - **Raw LLM output is never type-safe.** `_validate_script` had `setdefault("tags", [])`, which
   fills a missing key but does not coerce a wrong type — a comma-string answer raised and killed
   the run. Coerce every list/dict field you read from the model; `deliverable._as_list` is the

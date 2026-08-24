@@ -222,3 +222,29 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   lands in kokoro→edge unchanged. publish.yml hands the secret through; unset = inert.
 - **Verification is mutation-tested where it matters.** The PDF receipts test spies the
   canvas draw seam because the review deleted the render block and the suite stayed green.
+
+## 2026-08-24 — v3-E.2 receipts.py
+- **The check downloads, it never executes — absolute.** pip pinned to wheels
+  (`--only-binary :all:`, an sdist download runs setup.py), `--no-cache-dir` (a cached
+  wheel is a 0.1s "download" — a lie), shallow clone, wall-clocked+capped fetch. Refusal
+  is the default for anything shell-shaped (`|`, `&&`, `;`, `$(`, backticks, docker, npx,
+  `<(`, `pip install .`/`-e`/`-r`): a refused segment costs the beat, never the day, and
+  never stamps a 10KB installer stub as "the download".
+- **The beat's numbers are our own measurement, not source claims** — inserted AFTER
+  fact_check on purpose, and BEFORE packaging_payoff so a thumb number spoken only in the
+  beat counts as kept.
+- **Only `add_beat` may set `script["receipts"]`.** `_validate_script` mutates the LLM's
+  dict in place, so any top-level key the model invents survives into the script; run()
+  pops `receipts` after the format re-bind and the post-upload ledger read is
+  isinstance-guarded (a planted non-dict raised in the double-publish zone).
+- **requests' `timeout` is never a deadline.** It bounds the gap between socket reads; a
+  slow-drip URL held the run until the CI job kill on both cron firings. Every streamed
+  fetch carries its own `time.monotonic` wall clock and byte cap.
+- **Anything burned into an artifact splits paths on BOTH separators.** `pathlib .name`
+  is platform-native — the Saved-line test was green on the Windows dev box and red on
+  ubuntu CI, and git's `Cloning into '<abs path>'` line re-shipped the same leak.
+- **Glyph width probes cannot detect tofu** (tofu has width). A glyph that must render
+  becomes a word (`OK:`), not a probed fallback — second occurrence of this bug class
+  after the thumbnail star.
+- **Animated clip frame counts CEIL to their slot share** — `int()` flooring left the
+  clip 1/30s short, step5_build looped it, and animation frame 0 flashed at the cut.

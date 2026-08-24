@@ -1,91 +1,73 @@
-# HANDOFF — ToolDojo (was AI Pulse) — Phase v3-E part 1 + the strategy day — 2026-08-24
+# HANDOFF — ToolDojo — Phase v3-E.2 (receipts.py) — 2026-08-24
 
-*One session, three layers. (1) v3-C.4 shipped in the morning (suitability screen measured
-and fixed — see git history). (2) The strategy layer: the owner disclosed that ~94-98% of all
-channel analytics to date were self-generated views; a 9-agent gap audit vs Hyperautomation
-Labs produced 12 ranked actions; the channel rename was decided and verified (**ToolDojo**);
-an 11-agent platform/name audit mapped the distribution rollout; a full demo tool video was
-rendered locally and inspected. (3) **v3-E part 1 built**: the receipts + packaging layer,
-12 locked decisions, then a 16-agent adversarial review of the diff found 11 real defects
-which were all fixed. 129/129 tests. Branch `v3-phase-c` pushed (`dfa72f7`+docs), still
-stacked on `v3-phase-b` — merge PR #23 first.*
+*One phase, done end to end: spec locked (12 decisions), built, live-verified, then a
+70-agent adversarial review over the diff (6 lenses → 32 raw findings → 20 confirmed
+collapsing to 9 root causes + 5 upheld splits, 7 refuted) — every confirmed defect fixed
+and pinned by a regression test. 137/137 tests. Branch `v3-phase-c` pushed (`8f7c377`),
+still stacked on `v3-phase-b` — merge PR #23 first.*
 
-## The strategy facts this session established (do not re-derive)
-- **All analytics before 2026-08-24 are invalid.** Owner: only 2-6% of views were organic —
-  the rest self-generated via different accounts/IPs. Told to stop permanently (fake-engagement
-  policy = termination risk). Real baseline ≈ 45-130 views/28d — a NORMAL day-30 channel.
-  v3-D learns only from post-2026-08-24 data. Board rows updated.
-- **The rename is decided: ToolDojo** (@tooldojo free on YouTube/GitHub/X, clean SERP, no
-  live domains; every proof/stack/tool dictionary compound was taken 4-6x over — verified by
-  11 agents + calibrated curl). Owner must rename in Studio BEFORE the first tool dispatch;
-  config + brand assets already follow (this phase).
-- **Platform rollout order** (from the live API audit): 1. Meta Graph API for IG+FB Reels
-  (never-expiring Page token, ~40 min owner setup), 2. Telegram bot (~5 min, carries the PDF
-  natively), 3. Pinterest (start approval now, 2-4 wks). X free tier is DEAD (Feb 2026,
-  pay-per-use only) — SKIP. TikTok unaudited = private-only — SKIP. **Never run the old
-  instagrapi `ig_upload` from CI** — fresh Azure IPs trigger unanswerable challenges.
-- **ElevenLabs math:** need ~200 min/mo; Starter $6=30min, Creator $22=100min. The one sane
-  buy = Creator first-month ~$11 covering exactly the 10-video verdict window. Seam is built
-  and inert (see below).
-- **HAL reference artifacts** live in `hyperautomation Labs/` (their 3-page field-guide PDF).
-  The demo artifacts live in `output/demo/` (video, thumb, PDFs, contact sheet).
+## Done
+- **`factverse/receipts.py`**: the "we checked this" claim is now true. `check_plan` (pure)
+  turns the README-verbatim deliverable into a download-ONLY check — pip pinned to wheels
+  (`--only-binary :all: --no-deps --no-cache-dir`; sdists execute setup.py, wheels execute
+  nothing), `git clone --depth 1`, or a requests fetch with a real 60s WALL-CLOCK deadline
+  + 2 GB cap and a sanitized filename. Segments with `|`, `&&`, `;`, `$(`, backticks,
+  docker, npx or `<(` are refused; so are `pip install .`/`-e .`/`-r file` (a local dir
+  makes pip execute the build backend). Candidate code is never executed, ever.
+- **The beat**: `run_check` measures the real download (seconds, MB, output lines, PyPI
+  version/date) and `add_beat` appends "Checked by ToolDojo on August 24: the download
+  finished in 8 seconds at 1.7 megabytes." to the install scene — the same scene
+  `inject_code_card` targets, positioned after every reject-gate and BEFORE
+  `packaging_payoff`, so a thumb number spoken only in the beat is a kept promise (tested).
+- **The footage**: `make_terminal_clip` renders the check's real output as a terminal clip
+  (code-card palette, sequential reveal to 70%, then `OK: 1.7 MB in 8s — checked by
+  ToolDojo 2026-08-24` holds in green), rendered to exactly its slot share (frame count
+  CEILS — a floor made step5_build loop a 1-frame flashback). `inject_receipt_clip`
+  replaces the still code card on the install scene; the final scene keeps the card.
+- **Live-verified twice**: real cold check of openai 3.3.1; the FIRST frame inspection
+  caught 3 shipping defects (tofu ✔ → the word OK, pip `[notice]` nags, the machine's
+  own path in the Saved line); the second inspection is clean. Artifacts in
+  `output/demo/receipts_live/`.
+- Ledger rows now carry `receipts={kind, seconds, mb}` for v3-D.
 
-## Done (v3-E part 1 — spec `docs/spec/ai-pulse-v3e.md`, 12 decisions + review addendum)
-- **`_verified_facts`**: real stars/license/last-update per candidate from the official APIs
-  into the prompt, `_CARRY`, the stat cards and the PDF. Live-verified: 179,325 · MIT.
-- **Command containment**: a deliverable not verbatim in the source is replaced by the
-  source's own first fenced block, else rejected. The review proved the repair was DEAD code
-  (`fetch_text` collapsed newlines) and the test had faked the only passable shape —
-  `fetch_text` now preserves newlines; proven live against the real Ollama README.
-- **`gates.packaging_payoff`**: token-exact, suffix-aware ("180K" strips whole — the review
-  reproduced residue "K STARS" burned on a thumbnail), support = narration+grounding+numeric
-  facts, digitless thumb residue blanks, GPT-5.6-style names immune, tool template tool-only.
-- **Limitation scene from the tool's own tracker** (top-commented open issues, PRs filtered).
-  Live: "digest mismatch on download", "Slow first token on CPU" for ollama.
-- **LLM-free tool chapters** (10s YouTube floor, falls back to the LLM path), **per-lane
-  pinned comment** (command + PDF link), **PDF receipts line** (mutation-tested via a canvas
-  spy after the review deleted the render block and the suite stayed green).
-- **Brand follows config**: wordmark/tagline/banner/PDF header render from `channel_name`/
-  `tagline`; `assets/.brand` stamp forces regen on mismatch; ToolDojo bumpers rendered,
-  frame-inspected (TOOL gradient + DOJO white, "AI YOU CAN USE") and committed; brand files
-  ride publish.yml's stash + git add (the tracked-file trap).
-- **ElevenLabs seam** (`tts_eleven.py`): flag+key+voice-id gated, dialogue scripts skip it,
-  punctuation-only words filtered, `ELEVENLABS_API_KEY` passed through publish.yml (unset =
-  inert). **Writer model** → `gemini-2.5-flash` behind `writer_model` (fallback chain absorbs
-  quota misses).
-- **16-agent adversarial review of the diff**: 12 findings, 11 confirmed, all fixed, each
-  pinned by a regression test. 1 refuted (recorded in the spec addendum).
+## Files changed
+- `factverse/receipts.py` — NEW: plan/check/beat/clip, all seams fail-soft `None`
+- `factverse/ai_pipeline.py` — run() wiring (check → beat → rejoin narration → payoff;
+  clip injection after inject_code_card), `receipts` in `_CARRY`, `script.pop("receipts")`
+  after the format re-bind, isinstance-guarded ledger read
+- `tests/test_pipeline_logic.py` — +8 tests (129→137), incl. an endless-stream fetch and
+  both-separator path rules
+- `config.json` / `config.example.json` — `receipts_check: true` (the kill-switch)
+- `docs/spec/ai-pulse-v3e2.md` — the contract: 12 locked decisions + live-inspection
+  amendments + the full review addendum
+- `docs/PHASES.md`, `docs/DECISIONS.md` — board + decisions
 
-## Files changed (v3-E part 1)
-`factverse/gates.py` (+`packaging_payoff`, `_NUM_TOKEN`, `_num_core`), `factverse/ai_pipeline.py`
-(+`_gh_repo`, `_gh_headers`, `_verified_facts`, `_top_issues`, `command_grounded`,
-`_first_fenced`, `_squash`, `tool_chapters`, `pinned_comment`, `_tool_short_name`; `fetch_text`
-newline-preserving; `_CARRY`+verified_facts; script_tool wiring; payoff in run(); eleven-first
-voice), `factverse/tts_eleven.py` (NEW), `factverse/deliverable.py` (`meta_line` + render +
-header), `factverse/branding.py` (`_wordmark_parts`, `_brand_stamp`, config tagline, measured
-wordmark), `factverse/screencap.py` (`INSTALL_KW` hoisted), `factverse/config.py`
-(`WRITER_MODEL`, `TAGLINE`), `config.json`/`config.example.json` (ToolDojo + new keys),
-`.github/workflows/publish.yml` (eleven secret + brand stash/add), `assets/` (ToolDojo bumpers
-+ `.brand`), `tests/` (+12 tests → 129), specs/DECISIONS/PHASES.
+## Decisions made (full table in the spec)
+- Download-only is the security line; refusal is conservative (a refused segment costs the
+  beat, never the day; flag `receipts_check` default true).
+- The beat lands after fact_check deliberately — its numbers are OUR measurement, not
+  source claims to be checked against grounding.
+- Only `add_beat` may set `script["receipts"]`: `_validate_script` mutates the LLM dict in
+  place, so a model-planted top-level key SURVIVES — it could fabricate the receipts
+  footage, and a non-dict raised in the post-upload zone (double-publish). run() pops it.
 
 ## Known broken / deliberately skipped
-- **v3-E.2 queued**: `receipts.py` (safe CI check-execution + terminal footage) — split per
-  the audit's own scoping. v3-F (Pages site + Telegram/Meta seams) queued behind it.
-- **The story lanes don't use `verified_facts`** — tool lane only, by spec.
-- **`stat_card_share` still counts the whole scene** (C.3 leftover, waiting on v3-D).
-- **Owner actions outstanding** (board "Now" list): stop self-views (permanent), Studio
-  rename to ToolDojo + @tooldojo, merge PR #23 then `v3-phase-c`, enable Pages, Telegram/Meta
-  one-time setups, supervised `format=tool` dispatch, weekly L2 batch, promo_block affiliate.
-- The pre-2026-08-24 ledger is analytically dead (self-views) but structurally fine.
+- The fetch kind measures only direct-artifact URLs; `curl … | sh` style installers are
+  refused rather than half-measured (stamping a 10KB stub as "the download" is a lie).
+- Clone seconds include git's negotiation; honest but not pure transfer time.
+- No run()-level integration test (the suite has none); the wiring adds no raise path and
+  the supervised `format=tool` dispatch is the final proof.
+- Everything in the previous handoff's owner list is still outstanding (see board `## Now`).
 
 ## Next session starts here
-- **v3-E.2 (`receipts.py`)** if building; otherwise the next real milestone is entirely on
-  the owner's clicks (merge → rename → Pages → first tool dispatch). After the first live
-  tool run, read its log against the board's step-5 checklist.
+- **v3-F (distribution engine)** if building — but it needs Pages enabled first, so the
+  real next milestone is the owner's click list: merge PR #23 → merge `v3-phase-c` →
+  Studio rename to ToolDojo → enable Pages → supervised `format=tool` dispatch.
 - First command: `/boot`
-- Watch out for: **the payoff gate on the first live runs.** It mutates title/thumb
-  deterministically; expect `✂️ Packaging promised numbers...` lines. One per run is the gate
-  working; every run = the writer model is over-promising and the contract needs tightening,
-  not the gate loosening. And keep the two session traps in mind: a keyword screen means
-  different things on a name vs a document, and narrowing what the writer reads must never
-  narrow what a gate reads.
+- Watch out for: **the receipts beat on the first live run.** Expect one of three log
+  lines — `🧾 Receipts: pip 1.7 MB in 8s` (worked), `↻ deliverable is not
+  download-checkable` (correct refusal, e.g. ollama's `curl | sh`), or `⚠️ receipts check
+  failed — shipping without the beat` (fail-soft). All three ship a video; only a repeat
+  pattern of the third across days means a threshold is wrong. And the standing trap pair:
+  requests' `timeout` is per-read (never trust it as a deadline), and `pathlib .name` is
+  platform-dependent (split on both separators for anything burned into an artifact).

@@ -70,9 +70,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `l2_usage.json` on every run — so the store can now be refilled safely.
 
 ## Next 3
-1. v3-D — learning loop v1 once ~2 weeks of v3 analytics exist (target: AVD ≥ 2:00).
-2. v3-B.1 (only if the first CI tool runs show it) — capture hardening from real logs: PH/HF page
-   quirks, CI chromium sandbox, recording length vs 900-word scripts.
-3. Nothing queued behind v3-D. C.1 (tool lane), C.2 (story lanes) and C.3 (render surfaces)
-   together have now searched the whole path from signal to uploaded file. The next real work
-   needs data from live v3 runs, not more auditing.
+1. v3-F — distribution engine (Pages becomes a real site, Telegram bot, Meta Reels seam) —
+   needs the owner's Pages click first; platform order per audit wf_5c0e184c.
+2. v3-D — learning loop v1 once ~2 weeks of post-2026-08-24 analytics exist (target: AVD ≥ 2:00);
+   the ledger now carries `packaging`, `grounding_chars` and `receipts` columns for it.
+3. v3-B.1 (only if the first CI tool runs show it) — capture hardening from real logs: PH/HF page
+   quirks, CI chromium sandbox, recording length vs 900-word scripts. On the first live tool run,
+   also read the receipts log line (🧾 worked / ↻ not checkable / ⚠️ failed — all three still
+   ship a video; only a repeating ⚠️ across days means a threshold is wrong).
