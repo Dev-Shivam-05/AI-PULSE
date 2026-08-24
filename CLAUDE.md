@@ -55,6 +55,23 @@ name that is not written there. If a decision is missing, add a row and get one 
 - **A roundup's `source_url` is story 1's URL**, because that is what `_validate_script` is
   handed. Never read it as "the" source of a roundup: doing so stamped one outlet on the caption
   chip and every stat card. Use `source_chip()`; per-story data lives in `roundup_items`.
+- **A clip is rendered before its duration is known — unless you move the call.** `step5_build`
+  gives each clip in a scene `scene_dur/len(clips)`, so any GENERATED clip with an animation
+  (the stat card) must be rendered to that exact share or it loops or gets cut mid-animation.
+  `inject_cards` now runs after `scene_durations`; `inject_code_card` must stay after it,
+  because `_lead_with` replaces a leading stat card rather than stacking a third clip.
+- **Text burned on a frame must be MEASURED, never sized by character count.** Every surface got
+  this wrong independently (Shorts hook, both thumbnail composers, the stat card) and every one
+  of them shipped clipped or silently truncated text. `branding.fit_font` is the shared loop —
+  and measure with the font that will actually be drawn (Shorts render with `short.ttf`, not
+  `br._font`).
+- **A tracked state file the run writes must be in BOTH `publish.yml`'s stash list AND
+  `state_merge.FILES`.** `git checkout -B main origin/main` reverts anything that is in neither,
+  silently, on every CI run. `state_merge` also needs merge semantics for its shape first — the
+  fallback is a list union and raises on a dict, which under `bash -e` would lose ALL state.
+- **A fail-soft seam must still SAY whether it worked.** `l2.splice` returned its input on both
+  success and failure, so the caller burned a one-use clip and recorded it as injected on a
+  failure. Fail soft means return `None`, not return something indistinguishable from success.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 

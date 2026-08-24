@@ -116,3 +116,51 @@ step is a live supervised dispatch. 34 candidate defects → 8 confirmed after r
   with `curl -I` after the first tool run rather than assumed.
 - LLM list fields are coerced (`_as_list`): a bare string was being iterated into characters.
   Any future LLM-shaped list field must go through it.
+
+## 2026-08-24 — v3-C.3 render-surface hardening
+*Everything downstream of the finished script. C.1 covered the tool lane and C.2 the story lanes,
+so every lane's selection and scripting path had been searched — the surfaces that turn a
+validated script into what a viewer sees never had. 10 defects, each reproduced by a failing test
+first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
+
+- **A stat card is rendered to the slot it will actually occupy.** `inject_cards` moved to after
+  `scene_durations` and takes `scene_durs`; the card is rendered at `scene_dur/(clips+1)`, the
+  share `step5_build` really gives it. At a fixed 4.0s it either looped (replaying the count-up
+  mid-scene) or was cut before the count finished — measured, a 1.0s share of the 4.0s card
+  displays `43%` for a true `54%`.
+- `inject_code_card` must stay AFTER `inject_cards`: `_lead_with` REPLACES a leading stat card so
+  a third clip cannot squeeze the command below readable length.
+- **The card's final frame is the stat, verbatim.** `_count_seq` re-rendered the number through a
+  format spec at its own end point: `120.5 billion` → `120 billion`, `154.7%` → `155%`. It also
+  used to be cut mid-word by `stat[:12]` (`120.5 billio`) and to overflow the card
+  (`2,400 percent` = 1,304px on 1,280px).
+- **`branding.fit_font` is the one shrink loop.** Extracted from `make_tool_thumb`, the only
+  surface that already measured its text; now used by the card, `compose`, `_text_block` and
+  `make_tool_thumb` itself. A character-count ladder is not a width.
+- **Two caption phrases are never on screen at once.** `build_ass` clamps each event's end to the
+  next event's start. Measured over the 24 archived `state/assets/*/captions.ass`: 5,626 of 6,515
+  boundaries overlapped (86.4%); re-timed, 0 of 6,511. Confirmed on screen — libass stacks
+  overlapping events, so the incoming phrase was shoved up over the outgoing one for 0.1s at
+  ~86% of phrase changes in every video shipped.
+- **A Short's hook is fitted by measurement, not a character count**, using the font drawtext
+  actually loads (`short.ttf`), not `br._font`. The old wrap dropped the pending word on reaching
+  two lines: `Anthropic benchmark methodology quietly changed again` shipped as
+  `Anthropic` / `benchmark`. `gates.fact_check` verifies the FULL hook_text, so that cut also
+  broke the fact-check contract.
+- **`find_best_moments` output is coerced** (`shorts.normalize_moments`). It ends in
+  `return d["moments"]` on raw Gemini JSON; a string `scene_num` or null `hook_text` raised
+  past the finished video, the thumbnail and every `record_run` call.
+- **An empty `thumb_text` falls back to the title.** Both composers skipped the headline and still
+  saved the image — publishing a graded photo with no text. A WHITESPACE value is truthy, so the
+  `or` fallbacks already in the callers never fired for it.
+- **`l2.splice` returns `None` on failure**, so `inject` consumes and records a clip only when it
+  is really in the video. A failed splice used to burn a one-use clip AND satisfy the
+  `require_insight_block` O1 gate with a video containing no human take.
+- **`state/l2_usage.json` and `state/stock_ledger.json` survive the CI state-save.** Both tracked,
+  both written by the run, both absent from the stash list and `state_merge.FILES` — so
+  `git checkout -B main origin/main` reverted them every run. They are dicts and the fallback
+  merger is a list union, so they needed their own semantics (`_merge_used`, `_merge_seen`)
+  before being added, or the state-save step would have raised and lost everything.
+- **A scene keeps its full duration when a clip fails to encode.** Measured with real ffmpeg:
+  one corrupt clip in a 3-clip 30s scene produced a 50.00s video against 60.00s of narration —
+  the tail cut off, and `qa_video` passes it (50 > 60 × 0.75). Now 60.00s, drift 0.00s.
