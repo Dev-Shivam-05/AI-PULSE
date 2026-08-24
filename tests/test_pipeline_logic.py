@@ -1702,8 +1702,37 @@ def test_a_number_the_video_never_says_is_stripped_from_the_packaging():
            "verified_facts": {}}
     r = gates.packaging_payoff(bad)
     assert not r["ok"] and r["fixed"]
-    assert "97" not in bad["thumb_text"] and "FASTER" in bad["thumb_text"]
-    assert "97" not in bad["title"]
+    # digitless residue is mangled by definition — the review reproduced "K STARS"
+    # burned on a thumbnail. Blank it; the composers' `or title` fallback takes over.
+    assert bad["thumb_text"] == ""
+    assert "97" not in bad["title"] and "GPT" in bad["title"]
+
+    # the magnitude suffix strips WITH its number, and rounding is not support:
+    # verified 179,234 does not license a thumb that claims 180K
+    kres = {"title": "A fine tool for everyone", "thumb_text": "180K STARS",
+            "scenes": [{"narration": "one hundred seventy nine thousand stars"}],
+            "verified_facts": {"stars": 179234}}
+    gates.packaging_payoff(kres)
+    assert kres["thumb_text"] == "", f"residue survived: {kres['thumb_text']!r}"
+
+    # token-exact support: a fabricated 10 must not ride on a 2010 in the text
+    fab = {"title": "It makes you 10x faster today", "thumb_text": "FREE",
+           "scenes": [{"narration": "released back in 2010, it is quick"}],
+           "verified_facts": {}}
+    r = gates.packaging_payoff(fab)
+    assert not r["ok"] and "10" not in fab["title"]
+
+    # digits glued into a product name are NOT packaging numbers
+    gpt = {"title": "GPT-5.6 explained for builders", "thumb_text": "FREE",
+           "scenes": [{"narration": "no digits spoken"}], "verified_facts": {}}
+    assert gates.packaging_payoff(gpt)["ok"] and gpt["title"] == "GPT-5.6 explained for builders"
+
+    # the hands-on template is tool-lane ONLY — a gutted news title stays stripped
+    news_gut = {"title": "40% off", "thumb_text": "OK", "format": "news",
+                "signal_title": "reuters.com: markets",
+                "scenes": [{"narration": "no numbers"}], "verified_facts": {}}
+    gates.packaging_payoff(news_gut)
+    assert "How to use" not in news_gut["title"]
 
     # verified_facts count as support — the receipts ARE the source of packaging numbers
     vf = {"title": "179,314 stars: the free private AI", "thumb_text": "179,314 STARS. FREE.",
@@ -1713,7 +1742,7 @@ def test_a_number_the_video_never_says_is_stripped_from_the_packaging():
     assert r["ok"] and "179,314" in vf["thumb_text"]
 
     # stripping that guts the title falls back to the honest template
-    gut = {"title": "40% off", "thumb_text": "OK",
+    gut = {"title": "40% off", "thumb_text": "OK", "format": "tool",
            "signal_title": "ollama/ollama: run models",
            "scenes": [{"narration": "no numbers here"}], "verified_facts": {}}
     gates.packaging_payoff(gut)
@@ -1878,3 +1907,54 @@ def test_the_wordmark_follows_the_configured_name(monkeypatch):
     assert branding._wordmark_parts() == ("AI", "PULSE")
     monkeypatch.setattr(fv2, "CHANNEL_NAME", "Zenith")
     assert branding._wordmark_parts() == ("ZENITH", "")
+
+
+def test_review_fixes_stay_fixed(monkeypatch, tmp_path):
+    """The four remaining confirmed findings from the v3-E adversarial review,
+    each pinned so the fix cannot silently regress."""
+    # 1. A dialogue script never reaches the single-voice paid seam — one voice
+    #    interviewing itself is worse than two free voices.
+    calls = []
+    monkeypatch.setattr(ap.tts_eleven, "available", lambda: True)
+    monkeypatch.setattr(ap.tts_eleven, "synth",
+                        lambda text, out: calls.append("eleven") or ("v.mp3", [(0, 1, "x")]))
+    monkeypatch.setattr(ap.tts_kokoro, "available", lambda: False)
+    monkeypatch.setattr(ap.captions, "synth_with_words", lambda *a, **k: [(0.0, 0.5, "edge")])
+    dialogue = {"scenes": [{"narration": "hello there", "speaker": "a"},
+                           {"narration": "hi back", "speaker": "b"}]}
+    ap.synthesize_voice("hello there . . . hi back", dialogue)
+    assert calls == [], "a two-speaker script must fall through to the free multi-voice chain"
+
+    # 2. The " . . . " scene separators must not become punctuation-only "words" —
+    #    captions and scene sync were never built to receive one.
+    from factverse import tts_eleven
+    span = list("hi . . . yo")
+    n = len(span)
+    words = tts_eleven._words_from_chars(span, [i * 0.1 for i in range(n)],
+                                         [i * 0.1 + 0.1 for i in range(n)])
+    assert [w for _, _, w in words] == ["hi", "yo"]
+
+    # 3. fetch_text preserves newlines so the fenced-block repair CAN fire — the
+    #    review proved the old collapse made _first_fenced dead in production.
+    class _R:
+        status_code = 200
+        headers = {"content-type": "text/plain"}
+        text = ("Intro   prose here.\n\n```shell\ncurl -fsSL https://x.sh | sh\n```\n"
+                + "More prose follows. " * 30)
+    monkeypatch.setattr(ap.requests, "get", lambda *a, **k: _R())
+    g = ap.fetch_text("https://raw.example/readme.md")
+    assert ap._first_fenced(g) == "curl -fsSL https://x.sh | sh"
+    assert "  " not in g, "runs of spaces must still collapse"
+
+    # 4. build_pdf DRAWS the receipts line (the a25ae56 wiring bug): spy on the
+    #    canvas seam, since the TTF encodes glyph ids and CI has no PDF-text lib.
+    from reportlab.pdfgen.canvas import Canvas
+    drawn, orig = [], Canvas.drawString
+    monkeypatch.setattr(Canvas, "drawString",
+                        lambda self, x, y, t, **kw: orig(self, x, y, drawn.append(t) or t, **kw))
+    s = {"title": "T", "verified_facts": {"stars": 179314, "license": "MIT"},
+         "deliverable": {"kind": "command", "text": "x", "url": "u"}}
+    assert deliverable.build_pdf(s, {"what": "w", "steps": ["s"], "uses": [], "skip_if": ""},
+                                 str(tmp_path / "m.pdf"))
+    assert any("179,314 stars" in str(t) for t in drawn), \
+        "meta_line built but never drawn (the a25ae56 regression)"

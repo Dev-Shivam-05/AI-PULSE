@@ -31,9 +31,12 @@ def _words_from_chars(chars, starts, ends):
             cur += c
             en = e
         elif cur:
-            words.append((st, en, cur))
+            # the narration joins scenes with " . . . " — a lone "." is not a word,
+            # and captions/scene-sync were never built to receive one.
+            if any(ch.isalnum() for ch in cur):
+                words.append((st, en, cur))
             cur, st = "", None
-    if cur:
+    if cur and any(ch.isalnum() for ch in cur):
         words.append((st, en, cur))
     return words
 

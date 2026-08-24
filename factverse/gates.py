@@ -130,24 +130,37 @@ _ADVICE_PATTERNS = re.compile(
     r"what this means for your portfolio)\b", re.I)
 
 
-_NUM_TOKEN = re.compile(r"\$ ?\d[\d,.]*|\d[\d,.]*%?")
+# A packaging number: optional $, digits, optional magnitude suffix (K/M/B/X) or %.
+# The suffix is INSIDE the token so a strip removes the whole unit — the review
+# reproduced "180K STARS" stripping to the residue "K STARS" and burning it on the
+# thumbnail. The lookbehind keeps digits glued into a name ("GPT-5") unmatched.
+_NUM_TOKEN = re.compile(r"(?<![\w.-])(?:\$ ?)?\d[\d,.]*(?:\s?[KMBX]\b|%)?", re.I)
+
+
+def _num_core(tok: str) -> str:
+    core = re.sub(r"[KMBX]$", "", str(tok).replace(",", "").strip("$% ."), flags=re.I)
+    return core.strip()
 
 
 def packaging_payoff(script: dict) -> dict:
-    """spec v3-E #3: every digit token in title/thumb_text must be spoken in the
-    narration or present in verified_facts. Mutates the script deterministically:
-    unsupported tokens are stripped; a title gutted below 4 words becomes the honest
-    template. Never raises — this runs inside the unattended publish path.
+    """spec v3-E #3: every number token in title/thumb_text must be supported —
+    spoken in the narration, present in the grounding (the contract licenses "a
+    number from the source"), or a numeric verified fact. Token-exact comparison,
+    not substring: the review showed bare containment lets a fabricated "10" ride
+    on any digit pair anywhere in the text. Mutates the script deterministically,
+    never raises — this runs inside the unattended publish path.
 
     Why it exists: the 2026-08-21 run shipped title "Secret AI Cash Cow?" and hook
     "you won't believe how much" over 17 scenes containing zero dollar figures.
     fact_check verifies claims that exist; an ABSENT promised number passed every gate."""
     spoken = " ".join(sc.get("narration", "") for sc in script.get("scenes") or [])
-    support = spoken.replace(",", "")
-    support += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values())
+    support_text = (spoken + " " + str(script.get("grounding") or "")).replace(",", "")
+    support_text += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values()
+                                   if isinstance(v, (int, float)))
+    support = {_num_core(t) for t in _NUM_TOKEN.findall(support_text)}
 
     def _ok(tok: str) -> bool:
-        core = tok.replace(",", "").strip("$% .")
+        core = _num_core(tok)
         return bool(core) and core in support
 
     fixed, evidence = [], []
@@ -158,11 +171,17 @@ def packaging_payoff(script: dict) -> dict:
         bad = [t for t in _NUM_TOKEN.findall(val) if not _ok(t)]
         if not bad:
             continue
-        newv = val
-        for t in bad:
-            newv = newv.replace(t, " ")
+        newv = _NUM_TOKEN.sub(lambda m: m.group(0) if _ok(m.group(0)) else " ", val)
         newv = re.sub(r"\s{2,}", " ", newv).strip(" .,:—-")
-        if field == "title" and len(newv.split()) < 4:
+        if field == "thumb_text" and not any(c.isdigit() for c in newv):
+            # a thumb only reaches here when a number was stripped, so digitless
+            # residue ("K STARS", "X FASTER") is mangled by definition — blank it
+            # and the composers' existing `or title` fallback takes over.
+            newv = ""
+        # the hands-on template belongs to the tool lane ONLY: the gate runs on
+        # every format, and "How to use <outlet> (free)" on a news video would be
+        # a wrong-lane title carrying a promise nobody scripted.
+        if field == "title" and len(newv.split()) < 4 and script.get("format") == "tool":
             tool = str(script.get("signal_title") or script.get("title") or "").split(":")[0]
             tool = tool.split("/")[-1].strip() or "this tool"
             newv = f"How to use {tool} (free)"

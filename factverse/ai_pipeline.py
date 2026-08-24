@@ -135,7 +135,11 @@ def fetch_text(url: str, limit: int = 4000) -> str:
         t = re.sub(r"(?is)<(script|style|nav|footer|header|noscript|form|aside).*?</\1>", " ", t)
         t = re.sub(r"(?s)<[^>]+>", " ", t)
         t = html.unescape(t)
-        t = re.sub(r"\s+", " ", t).strip()
+        # Newlines survive (spaces still collapse): the review proved the fenced-
+        # block repair in script_tool could NEVER fire because this line flattened
+        # every ``` fence out of the raw README before _first_fenced saw it.
+        t = re.sub(r"[ \t\r\f\v]+", " ", t)
+        t = re.sub(r"\s*\n\s*", "\n", t).strip()
         # A real article has real length; a bot-wall/paywall stub does not.
         return t[:limit] if len(t) > 400 else ""
     except Exception:
@@ -1038,7 +1042,9 @@ def synthesize_voice(narration: str, script: dict | None = None):
 
     # spec v3-E #11: the flagged paid voice runs first and fails soft into the free
     # chain — merging this costs nothing until the key, flag and voice id all exist.
-    if tts_eleven.available():
+    if tts_eleven.available() and not _dialogue_segments(script or {}, narration):
+        # dialogue scripts (two speakers) fall through to kokoro's synth_multi —
+        # one paid voice interviewing itself is worse than two free voices.
         out = tts_eleven.synth(narration, str(fv.TEMP / "voice.mp3"))
         if out:
             print("  🎙️  ElevenLabs voice (verdict-window flag).")
@@ -1094,7 +1100,9 @@ def tool_chapters(script: dict, starts: list, shift: float) -> str:
         return f"{t // 60}:{t % 60:02d}"
 
     secs = [0] + [max(0, int(starts[i] + shift)) for i in idxs[1:]]
-    if any(b <= x for x, b in zip(secs, secs[1:])):   # YouTube needs strictly increasing
+    # YouTube's own rule: a chapter must be at least 10 seconds long, and the list
+    # must ascend. A too-tight anatomy falls back to the LLM path via "".
+    if any(b - x < 10 for x, b in zip(secs, secs[1:])):
         return ""
     labels = [f"What {tool} Does", f"Install {tool}", "3 Things to Build",
               "Who Should Skip It", "The Exact Command"]

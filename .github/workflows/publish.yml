@@ -90,6 +90,9 @@ jobs:
         # alert-on-failure step already does.
         env:
           GH_TOKEN: ${{ github.token }}
+          # v3-E #11: an unset secret expands to "", available() stays False —
+          # the seam costs nothing until the owner creates the secret.
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
         # the forced lane is empty on scheduled runs (the shell drops the empty arg)
         run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
 
@@ -109,7 +112,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           ok=0
           for i in 1 2 3; do
-            mkdir -p /tmp/state_incoming /tmp/tools_incoming
+            mkdir -p /tmp/state_incoming /tmp/tools_incoming /tmp/brand_incoming
             for f in used_topics.json used_urls.json output/production_log.json \
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
                      state/l2_usage.json state/stock_ledger.json; do
@@ -121,6 +124,9 @@ jobs:
             # published description already links that file, so losing it here is a
             # permanent 404 on the video.
             cp docs/tools/*.pdf /tmp/tools_incoming/ 2>/dev/null || true
+            # Brand bumpers + stamp ride together (the CLAUDE.md tracked-file trap):
+            # persisting only .brand would freeze stale old-brand bumpers forever.
+            cp assets/.brand assets/intro.mp4 assets/outro.mp4 /tmp/brand_incoming/ 2>/dev/null || true
             # A workflow_dispatch runs from a feature branch, where the run's own
             # writes to tracked state files differ from origin/main. `checkout -B`
             # then REFUSES ("local changes would be overwritten by checkout") and
@@ -133,11 +139,13 @@ jobs:
             git checkout -B main origin/main --quiet
             mkdir -p docs/tools
             cp /tmp/tools_incoming/*.pdf docs/tools/ 2>/dev/null || true
+            cp /tmp/brand_incoming/.brand /tmp/brand_incoming/*.mp4 assets/ 2>/dev/null || true
             python -m factverse.state_merge /tmp/state_incoming
             git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
             # separate add: an unmatched pathspec fails the WHOLE git add, and losing
             # topic state to a missing cheat-sheet dir would cause duplicate videos
             git add docs/tools 2>/dev/null || true
+            git add assets/.brand assets/intro.mp4 assets/outro.mp4 2>/dev/null || true
             if git commit -m "state update [skip ci]" --quiet; then
               if git push origin main; then ok=1; break; fi
             else
