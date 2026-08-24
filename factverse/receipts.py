@@ -118,6 +118,23 @@ def _dest_bytes(dest: Path) -> int:
     return sum(f.stat().st_size for f in dest.rglob("*") if f.is_file())
 
 
+def _clean_lines(raw: str) -> list[str]:
+    """The footage shows the TOOL's output, not the runner's housekeeping: pip's
+    [notice] upgrade nags are dropped, and the 'Saved <local path>' line keeps
+    only the filename — the live frame inspection caught the machine's own
+    directory layout burned onto a to-be-published video."""
+    out = []
+    for l in str(raw or "").splitlines():
+        l = l.strip()
+        if not l or l.startswith("[notice]"):
+            continue
+        m = re.match(r"(?i)(saved\s+)(\S+)$", l)
+        if m:
+            l = m.group(1) + Path(m.group(2)).name
+        out.append(l)
+    return out[:MAX_LINES]
+
+
 def run_check(plan: dict) -> dict | None:
     """Execute the download-only plan and measure it. None on any failure —
     timeout, nonzero exit, empty destination, network. Removes the destination
@@ -136,8 +153,7 @@ def run_check(plan: dict) -> dict | None:
                                timeout=timeout)
             if r.returncode != 0:
                 return None
-            raw = (r.stdout or "") + "\n" + (r.stderr or "")
-            lines = [l.strip() for l in raw.splitlines() if l.strip()][:MAX_LINES]
+            lines = _clean_lines((r.stdout or "") + "\n" + (r.stderr or ""))
         else:  # fetch — requests stream, no subprocess, never piped anywhere
             import requests
             name = plan["target"].rstrip("/").rsplit("/", 1)[-1] or "download"
@@ -237,11 +253,12 @@ def make_terminal_clip(result: dict, out_mp4: str, seconds: float) -> str | None
         probe = ImageDraw.Draw(Image.new("RGB", (8, 8)))
         cw = probe.textlength("M", font=fnt) or 13
         max_chars = max(10, int((cx1 - 24 - x0) / cw))
-        summary = (f"✔ {_num(result['mb'])} MB in {_num(result['seconds'])}s "
+        # "OK:", never "✔" — the live frame inspection showed the check mark as
+        # tofu in JetBrains Mono, and a width probe cannot detect tofu (it HAS
+        # width). The repo has shipped this class of bug before ("star glyph
+        # becomes a word"); a word is the deterministic fix.
+        summary = (f"OK: {_num(result['mb'])} MB in {_num(result['seconds'])}s "
                    f"— checked by {fv.CHANNEL_NAME} {result['date']}")
-        # the ✔ must actually exist in the font (the repo has shipped tofu before)
-        if not probe.textlength("✔", font=fnt):
-            summary = "OK " + summary[2:]
         content = [_display_cmd(result)] + list(result.get("lines", []))[:MAX_LINES]
         content = [(l[:max_chars - 1] + "…") if len(l) > max_chars else l
                    for l in content]

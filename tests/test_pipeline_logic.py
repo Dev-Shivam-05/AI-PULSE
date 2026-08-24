@@ -2062,6 +2062,22 @@ def test_run_check_measures_the_real_download(monkeypatch, tmp_path):
     assert rc._round_mb(9_440_000) == 9.4 and rc._round_mb(15_500_000) == 16
 
 
+def test_footage_lines_show_the_tool_not_the_runner():
+    """Live-inspection amendments (spec v3-E.2): the first real frames carried pip's
+    [notice] upgrade nags and the machine's own temp path in the 'Saved' line —
+    runner housekeeping burned onto a to-be-published video."""
+    from factverse import receipts as rc
+    raw = ("Collecting openai\n"
+           "Saved d:\\temp\\factverse\\temp\\receipts_dl\\openai-3.3.1-py3-none-any.whl\n"
+           "Successfully downloaded openai\n"
+           "[notice] A new release of pip is available: 24.0 -> 26.2.1\n"
+           "[notice] To update, run: python.exe -m pip install --upgrade pip\n")
+    lines = rc._clean_lines(raw)
+    assert lines == ["Collecting openai", "Saved openai-3.3.1-py3-none-any.whl",
+                     "Successfully downloaded openai"]
+    assert rc._clean_lines("\n".join(f"line {i}" for i in range(20)))[-1] == "line 7"
+
+
 def test_beat_lands_on_the_install_scene_and_nowhere_else():
     """spec v3-E.2 #8/#9: the beat is appended to the SAME scene inject_code_card
     targets (first INSTALL_KW scene, never hook, never finale); a script with no

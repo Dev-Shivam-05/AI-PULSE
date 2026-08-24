@@ -23,6 +23,15 @@ Anything that would need to execute candidate code (docker, npx, piped sh) is re
 | 8 | Beat placement | Append one sentence to the END of the first `INSTALL_KW` scene (index ≥ 1, never hook, never final scene — `inject_code_card`'s own selection); re-join `narration` after. No install scene → skip beat AND clip entirely | One shared definition of "install scene"; the beat lands before TTS so word timings absorb it |
 | 9 | Beat text | `Checked by {fv.CHANNEL_NAME} on {Month D}: the download finished in {seconds} seconds at {mb} megabytes.` — units as words, never "MB" (TTS); date parsed from `result["date"]` so beat and stamp agree | The audit's literal beat, two numbers max, deterministic |
 | 10 | Clip look | 1280×720, FPS 30, code-card palette (bg `13,17,23`, card `22,27,34`, outline `48,54,61`, traffic lights, `_mono_font(22)`, `$` prompt `63,185,80`); command line (derived from kind+target: `pip download <pkg> --only-binary :all:` / `git clone --depth 1 <url>` / `curl -L -o <name> <url>`) + real output lines revealed sequentially over the first 70% of the clip; from 70% the summary line `✔ {mb} MB in {seconds}s — checked by {channel} {date}` holds in `63,185,80`; over-long lines truncate with `…`, never wrap | Same design system as `render_code_card_png`; the summary frame is the receipts identity. The `✔` glyph must survive the live frame inspection (the repo has shipped tofu before — "star glyph becomes a word"); if it renders as tofu it becomes the word `OK` |
+
+## LIVE-INSPECTION AMENDMENTS (2026-08-24, first real frames)
+- **#10 amended — summary prefix is `OK:`, unconditionally.** The `✔` rendered as tofu in
+  JetBrains Mono on the very first live frame, and a width probe cannot detect tofu (tofu HAS
+  width) — so the pre-locked contingency is now the rule, not the fallback.
+- **#6 amended — `lines` are cleaned by `_clean_lines` (pure, tested):** pip's `[notice]`
+  upgrade nags are dropped (runner housekeeping, not tool output) and the `Saved <path>` line
+  keeps only the filename — the raw line burned the machine's own directory layout onto a
+  to-be-published frame.
 | 11 | Clip injection | In `run()`'s tool block AFTER `inject_cards` + `inject_code_card`: lead the same install scene; if `clips[0]` is a statcard/codecard → **replace** (share = `sdur/len(clips)`), else insert (share = `sdur/(len(clips)+1)`); the clip is rendered to exactly that share | The C.3 law: an animated clip is rendered to its real slot or it loops/cuts. The final scene keeps the code card; the install scene upgrades from still card to real footage |
 | 12 | Fail-soft + logs | Any failure → `None` → the video ships in its pre-E.2 shape. Success: `🧾 Receipts: {kind} {mb} MB in {seconds}s`; check failed: `⚠️ receipts check failed — shipping without the beat`; deliverable not checkable: `↻ deliverable is not download-checkable — no receipts beat` | The unattended-run law; a fail-soft seam must still SAY whether it worked |
 
