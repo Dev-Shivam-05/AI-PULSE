@@ -1443,9 +1443,9 @@ def test_every_state_file_the_run_writes_survives_the_ci_state_save():
     run — for l2_usage.json that means "each clip used at most once" is
     unenforceable in CI and the same human cold open would be injected into
     every video."""
-    from pathlib import Path as _P
     from factverse import state_merge
-    wf = _P("​.github/workflows/publish.yml".replace("​", "")).read_text(encoding="utf-8")
+    root = Path(__file__).resolve().parent.parent
+    wf = (root / ".github" / "workflows" / "publish.yml").read_text(encoding="utf-8")
     for name in ("state/l2_usage.json", "state/stock_ledger.json"):
         assert name in state_merge.FILES, f"{name} is not union-merged"
         assert name in wf, f"{name} is not stashed before the checkout"
