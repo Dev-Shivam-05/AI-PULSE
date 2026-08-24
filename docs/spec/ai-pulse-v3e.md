@@ -1,6 +1,6 @@
 # SPEC LOCK — AI Pulse v3-E: receipts + packaging precision (part 1)
 
-Status: building 2026-08-24 on `v3-phase-c`. Source: the 12-rank adversarial gap audit vs
+Status: built 2026-08-24 on `v3-phase-c`. 129/129 tests. Source: the 12-rank adversarial gap audit vs
 Hyperautomation Labs (workflow wf_708a427c, evidence in the session scratchpad) — ranks
 1, 2, 3, 4 (grounding half), 7, 9, 10, 12 plus the voice seam. Rank 5 (`receipts.py` real
 check-execution + terminal footage) is deliberately split to **v3-E.2**: the audit itself
@@ -34,19 +34,42 @@ model-change authorisation ("fark dikhai dena chaiye").
 - Coercing story lanes onto `verified_facts` — tool lane only this phase.
 
 ## ACCEPTANCE CRITERIA (binary)
-- [ ] A tool script's prompt contains real fetched stars/license, and `verified_facts`
+- [x] A tool script's prompt contains real fetched stars/license, and `verified_facts`
       survives every rewrite pass (the `_CARRY` test)
-- [ ] A deliverable not present in the README is replaced by the README's first fenced
+- [x] A deliverable not present in the README is replaced by the README's first fenced
       command, and a README with neither yields no tool script
-- [ ] A title/thumb number the narration never speaks is stripped deterministically;
+- [x] A title/thumb number the narration never speaks is stripped deterministically;
       a supported number passes untouched
-- [ ] With issues available, the tool prompt names them as the only limitation basis
-- [ ] Tool chapters are generated with zero LLM calls for a conforming script and label
+- [x] With issues available, the tool prompt names them as the only limitation basis
+- [x] Tool chapters are generated with zero LLM calls for a conforming script and label
       the real scene starts; a non-conforming script falls back unchanged
-- [ ] The tool lane's auto-comment carries the exact command + PDF URL
-- [ ] The PDF meta line renders with facts and disappears without them (still 1 page)
-- [ ] Writer calls request `gemini-2.5-flash`; a quota miss still produces a script
-- [ ] Brand assets regenerate when name/tagline changes (stamp mismatch), not otherwise
-- [ ] `tts_eleven` OFF by default; with a stubbed API it returns word timings; any
+- [x] The tool lane's auto-comment carries the exact command + PDF URL
+- [x] The PDF meta line renders with facts and disappears without them (still 1 page)
+- [x] Writer calls request `gemini-2.5-flash`; a quota miss still produces a script
+- [x] Brand assets regenerate when name/tagline changes (stamp mismatch), not otherwise
+- [x] `tts_eleven` OFF by default; with a stubbed API it returns word timings; any
       failure reaches kokoro unchanged
-- [ ] Full suite green; the demo re-render shows fetched numbers on at least one surface
+- [x] Full suite green; the demo re-render shows fetched numbers on at least one surface
+
+## REVIEW ADDENDUM (16-agent adversarial pass over the diff, all fixes applied)
+12 findings, 11 CONFIRMED and fixed, 1 refuted. The ones that changed decisions:
+- **#2 amended:** `fetch_text` used to collapse newlines, so the fenced-block repair was
+  DEAD in production and the test only passed on a grounding shape production could never
+  produce. `fetch_text` now preserves newlines (spaces still collapse); proven live: the
+  repair extracts `curl -fsSL https://ollama.com/install.sh | sh` from the real README.
+- **#3 amended:** number tokens carry their magnitude suffix (`180K` strips whole — the
+  review reproduced the residue "K STARS" burned on a thumbnail), support is token-exact
+  (a fabricated 10 no longer rides on a 2010) and includes the grounding (the contract
+  licenses "a number from the source"), a digitless thumb residue blanks so the composers'
+  `or title` fallback fires, digits glued into names (GPT-5.6) never match, and the
+  hands-on title template applies in the tool lane ONLY.
+- **#6 amended:** chapters need a 10s minimum gap — YouTube's own chapter rule; too tight
+  falls back to the LLM path.
+- **#11 amended:** `publish.yml` passes `ELEVENLABS_API_KEY` (unset secret = "", seam stays
+  off — the review caught that the seam could otherwise never activate on CI, silently);
+  the seam skips two-speaker dialogue scripts (one paid voice interviewing itself) and
+  filters punctuation-only "words" (the " . . . " scene separators).
+- **#10 amended:** `assets/.brand` + both bumpers ride publish.yml's stash AND its git add
+  (the CLAUDE.md tracked-file trap — last-writer-wins, so state_merge is not needed).
+- **Refuted:** "the stamp never persists in CI" — `assets/.brand` is committed, content
+  `ToolDojo|AI YOU CAN USE`; regeneration fires only on a real brand change.

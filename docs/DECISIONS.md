@@ -198,3 +198,27 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   README was read: it ships "the two stage FaceShifter face swapping method ... able to generate
   high fidelity identity preserving face swap results". Recorded because the first instinct was
   to force it green.
+
+## v3-E — receipts + packaging precision, part 1 (2026-08-24)
+- **The writer only states numbers it was HANDED.** `_verified_facts` fetches stars/license/
+  last-update from the official APIs per candidate (GH_TOKEN when present, fail-soft {}),
+  goes into the prompt as a VERIFIED FACTS block, rides `_CARRY`, feeds the stat cards and
+  the PDF receipts line ("179,325 stars · MIT · checked 2026-08-24" — rendered and read).
+- **The copy-paste contract is enforced, not requested.** A deliverable not verbatim in the
+  source is replaced by the source's own first fenced block, else the candidate is rejected.
+  This required `fetch_text` to stop collapsing newlines — the review proved the repair was
+  dead code against real grounding, and the test had fabricated the only shape it could pass on.
+- **A number promised on the packaging must exist in the video.** `gates.packaging_payoff`,
+  token-exact, suffix-aware, mutating deterministically; the tool-lane title template never
+  leaks to other lanes; a mangled thumb blanks so the title fallback fires.
+- **The honest-limitation scene cites the tool's own bug tracker** (top-commented open
+  issues, PRs filtered) instead of inventing humility from a vendor README.
+- **Brand surfaces follow config.** Wordmark, tagline, banner and PDF header all render from
+  `channel_name`/`tagline`; `assets/.brand` stamps what the bumpers were rendered for and
+  mismatches force a regen — the ToolDojo rename applied itself and was frame-inspected
+  (TOOL gradient + DOJO white, "AI YOU CAN USE").
+- **The paid voice is a flag, not a dependency.** ElevenLabs runs first only when flag+key+
+  voice id all exist, skips dialogue scripts, drops punctuation-only words, and any failure
+  lands in kokoro→edge unchanged. publish.yml hands the secret through; unset = inert.
+- **Verification is mutation-tested where it matters.** The PDF receipts test spies the
+  canvas draw seam because the review deleted the render block and the suite stayed green.
