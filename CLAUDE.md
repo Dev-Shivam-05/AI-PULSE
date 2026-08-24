@@ -72,6 +72,18 @@ name that is not written there. If a decision is missing, add a row and get one 
 - **A fail-soft seam must still SAY whether it worked.** `l2.splice` returned its input on both
   success and failure, so the caller burned a one-use clip and recorded it as injected on a
   failure. Fail soft means return `None`, not return something indistinguishable from success.
+- **A keyword screen means different things on a name and in a document.** `UNSUITABLE_TOOL`
+  was matched against both a 90-char repo title and 5,000 chars of README, so `bypass` refused
+  unsloth's own PowerShell install line and ComfyUI's ctrl+b hotkey, while `c2pa`/`nsfw`/
+  `deepfake` refused the C2PA SDK and two detectors — the tools that DEFEND against the subject.
+  A term list needs a surface (`UNSUITABLE_NAME_ONLY`) and subject terms need a defensive
+  exemption. Measure a policy list against real candidates before trusting it; every one of
+  those was found by running the gate over live feeds, not by reading it.
+- **Grounding and SCREENING are different jobs.** `script_tool` grounds the writer in the raw
+  README (the rendered GitHub page is a mean 1,637 chars of chrome first) but passes README +
+  page to `gates.tool_unsuitable`, because the page's topic tags are the only place a repo like
+  `facefusion` declares itself. Narrowing what the writer reads must not narrow what the gate
+  reads.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 

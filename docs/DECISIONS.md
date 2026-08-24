@@ -164,3 +164,37 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 - **A scene keeps its full duration when a clip fails to encode.** Measured with real ffmpeg:
   one corrupt clip in a 3-clip 30s scene produced a 50.00s video against 60.00s of narration —
   the tail cut off, and `qa_video` passes it (50 > 60 × 0.75). Now 60.00s, drift 0.00s.
+
+## v3-C.4 — tool suitability screen precision (2026-08-24)
+- **The suitability list is screened by SURFACE.** A term does not mean the same thing in a
+  90-char repo name as in 5,000 chars of prose. Measured over 28 flagship AI tools, `bypass`
+  refused unsloth (its own Windows install line is `-executionpolicy bypass`), ComfyUI
+  (`ctrl+b` bypasses a node) and yt-dlp, and `crack` refused transformers ("a sassy,
+  wise-cracking robot" in an example prompt). `UNSUITABLE_NAME_ONLY` matches the title only.
+- **A tool that DETECTS the thing is not the tool that DOES it.** 6 of 11 defensive tools were
+  refused by their own subject — including the official C2PA SDK and CLI, which the term `c2pa`
+  was added to protect, plus two deepfake detectors and two NSFW safety classifiers.
+  `UNSUITABLE_SUBJECT` exempts a document that reads as defensive within `DETECTOR_WINDOW`,
+  unless an evasion claim ("undetectable", "anti-detection") sits in the same window.
+- **`DETECTOR_WINDOW = 120`** — measured, the nearest defensive word was 5–69 chars away in the
+  six blocked defensive tools and 1,049 in the live stripper. Covers the observed max with
+  ~1.7x margin, ~9x below the control.
+- **Repo punctuation normalises to spaces before matching.** The live
+  `ShadowAqueduct/watermark-remover` PASSED the title screen because the list held
+  `watermark remov` (space) and `watermarks-remover` (plural); it was caught only because its
+  README quotes the other repo's name in ASCII art. One line closes the whole class.
+- **A GitHub tool video is grounded in the raw README, not the rendered page.** Measured mean
+  **1,637 chars of GitHub chrome** ("You signed in with another tab or window", the file
+  listing) preceded every README, so ~1/3 of the 5,000-char window was UI — text the LLM was
+  told to "ground every claim in" and that `gates.fact_check` verified against. Same 28 tools:
+  1/28 blocked on the page window vs 4/28 on the full README, i.e. the verdict depended on
+  where a word fell in a document.
+- **Grounding and screening are different jobs.** The rendered page carries the repo's topic
+  tags, the strongest intent signal GitHub exposes and the one thing the raw README lacks —
+  `facefusion` is declared only by its topics (`deep-fake deepfake face-swap faceswap`), so
+  grounding on the README alone would have let it through. The writer gets the clean README;
+  `tool_unsuitable` reads both.
+- **`FaceForensics` stays refused and that is correct.** It was on the defensive list until its
+  README was read: it ships "the two stage FaceShifter face swapping method ... able to generate
+  high fidelity identity preserving face swap results". Recorded because the first instinct was
+  to force it green.
