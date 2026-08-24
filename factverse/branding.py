@@ -12,6 +12,7 @@ Everything is free + offline. Re-generate anytime with:  python -m factverse.bra
 from __future__ import annotations
 
 import math
+import re
 import os
 import shutil
 import subprocess
@@ -143,18 +144,38 @@ def _emblem(size):
     return img
 
 
+def _wordmark_parts() -> tuple[str, str]:
+    """The two-tone wordmark from the CONFIGURED name (v3-E #10/#12) — the old code
+    hardcoded "AI" + "PULSE", so the ToolDojo rename left the sting selling the old
+    channel. Space splits first; camelCase splits at the second capital ("ToolDojo"
+    -> TOOL + DOJO); a plain word renders whole in white."""
+    name = str(fv.CHANNEL_NAME).strip() or "AI Pulse"
+    if " " in name:
+        a, b = name.split(" ", 1)
+        return a.upper(), b.upper()
+    m = re.search(r"(?<=[a-z])[A-Z]", name)
+    if m:
+        return name[:m.start()].upper(), name[m.start():].upper()
+    return name.upper(), ""
+
+
 def _logo(target_w, tagline=True):
     iw = 430
     img = Image.new("RGBA", (1760, 540), (0, 0, 0, 0))
     img.alpha_composite(_emblem(iw), (10, 540 // 2 - iw // 2))
-    f = _font(190)
-    ai = _grad_text("AI", f)
-    pulse = _white_text("PULSE", f)
+    part_a, part_b = _wordmark_parts()
+    # measured, never assumed: "TOOL DOJO" is wider than "AI PULSE" and the canvas
+    # is fixed at 1760 — shrink from the original 190 until the mark fits.
+    size, f = fit_font(_font, [part_a + ("  " + part_b if part_b else "")],
+                       190, 1760 - 470 - 24)
+    ai = _grad_text(part_a, f)
     midy = 540 // 2 - 40
     x = 470
     img.alpha_composite(ai, (x, midy - ai.size[1] // 2))
-    x += ai.size[0] + 26
-    img.alpha_composite(pulse, (x, midy - pulse.size[1] // 2))
+    if part_b:
+        pulse = _white_text(part_b, f)
+        x += ai.size[0] + 26
+        img.alpha_composite(pulse, (x, midy - pulse.size[1] // 2))
     if tagline:
         ft = _font(50)
         tg = Image.new("RGBA", (1760, 110), (0, 0, 0, 0))

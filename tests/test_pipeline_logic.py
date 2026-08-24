@@ -1866,3 +1866,15 @@ def test_elevenlabs_seam_is_off_by_default_and_fails_soft(monkeypatch, tmp_path)
                         lambda *a, **k: [(0.0, 0.5, "edge")])
     audio, words = ap.synthesize_voice("hi", {})
     assert words == [(0.0, 0.5, "edge")]
+
+
+def test_the_wordmark_follows_the_configured_name(monkeypatch):
+    """v3-E #10/#12: the sting hardcoded AI+PULSE, so the ToolDojo rename would have
+    shipped bumpers selling the old channel — the demo frame caught it."""
+    from factverse import branding, config as fv2
+    monkeypatch.setattr(fv2, "CHANNEL_NAME", "ToolDojo")
+    assert branding._wordmark_parts() == ("TOOL", "DOJO")
+    monkeypatch.setattr(fv2, "CHANNEL_NAME", "AI Pulse")
+    assert branding._wordmark_parts() == ("AI", "PULSE")
+    monkeypatch.setattr(fv2, "CHANNEL_NAME", "Zenith")
+    assert branding._wordmark_parts() == ("ZENITH", "")
