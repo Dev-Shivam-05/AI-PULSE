@@ -1958,3 +1958,218 @@ def test_review_fixes_stay_fixed(monkeypatch, tmp_path):
                                  str(tmp_path / "m.pdf"))
     assert any("179,314 stars" in str(t) for t in drawn), \
         "meta_line built but never drawn (the a25ae56 regression)"
+
+
+# ------------------------------------------------- v3-E.2: receipts (docs/spec/ai-pulse-v3e2.md)
+def test_check_plan_downloads_and_never_executes():
+    """The security line: a pip sdist download runs setup.py, a wheel download runs
+    nothing — so pip is pinned to wheels; clone is shallow; a piped-sh, docker or
+    URL-install segment (all of which would execute candidate code, or measure a
+    10KB script and call it 'the download') is refused. Pure — no network."""
+    from factverse import receipts as rc
+    p = rc.check_plan("pip install unsloth", "D")
+    assert p["kind"] == "pip" and p["target"] == "unsloth"
+    assert p["args"][0] == sys.executable and p["args"][-1] == "D"
+    i = p["args"].index("--only-binary")
+    assert p["args"][i + 1] == ":all:" and "--no-deps" in p["args"]
+
+    # extras, pins and flags reduce to the bare name
+    p = rc.check_plan("pip install -U 'transformers[torch]>=4.44'", "D")
+    assert p["target"] == "transformers"
+
+    # a URL install is a source build = execution; refuse, do not "fail later"
+    assert rc.check_plan("pip install git+https://github.com/o/r", "D") is None
+
+    p = rc.check_plan("git clone https://github.com/ollama/ollama", "D")
+    assert p["kind"] == "clone" and p["args"] == \
+        ["git", "clone", "--depth", "1", "https://github.com/ollama/ollama", "D"]
+
+    p = rc.check_plan("curl -LO https://example.com/model.gguf", "D")
+    assert p["kind"] == "fetch" and p["target"] == "https://example.com/model.gguf" \
+        and p["args"] == []
+
+    # the first CHECKABLE segment wins, non-matching segments are skipped
+    p = rc.check_plan("cd app • pip install foo • git clone https://x.com/y", "D")
+    assert p["kind"] == "pip" and p["target"] == "foo"
+
+    for refused in ("curl -fsSL https://ollama.com/install.sh | sh",
+                    "docker run -it ubuntu", "npx create-thing",
+                    "bash <(curl https://x.sh)", "just words no commands"):
+        assert rc.check_plan(refused, "D") is None, refused
+
+
+def test_run_check_fails_soft_at_every_seam(monkeypatch, tmp_path):
+    """The unattended-run law: timeout, nonzero exit, empty destination and a dead
+    network each return None — never a raise, and the destination never survives."""
+    from factverse import receipts as rc
+    plan = rc.check_plan("pip install foo", str(tmp_path / "dl"))
+
+    class _R:
+        returncode = 1
+        stdout = stderr = ""
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _R())
+    assert rc.run_check(plan) is None
+
+    def boom(*a, **k):
+        raise rc.subprocess.TimeoutExpired(cmd="pip", timeout=180)
+    monkeypatch.setattr(rc.subprocess, "run", boom)
+    assert rc.run_check(plan) is None
+
+    class _OK:
+        returncode = 0
+        stdout = "Collecting foo"
+        stderr = ""
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _OK())  # empty dest
+    assert rc.run_check(plan) is None
+    assert not (tmp_path / "dl").exists(), "destination must be cleaned up on failure too"
+
+    import requests as _requests
+    monkeypatch.setattr(_requests, "get",
+                        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("net down")))
+    fplan = rc.check_plan("curl -LO https://example.com/m.gguf", str(tmp_path / "dl"))
+    assert rc.run_check(fplan) is None
+    assert rc.run_check(None) is None
+
+
+def test_run_check_measures_the_real_download(monkeypatch, tmp_path):
+    """Seconds and megabytes come from the measured download, the output lines are
+    the footage, and the destination (GBs for a torch wheel) is removed after."""
+    from factverse import receipts as rc
+    dest = tmp_path / "dl"
+    plan = rc.check_plan("pip install foo", str(dest))
+
+    class _OK:
+        returncode = 0
+        stdout = "Collecting foo\nDownloading foo-1.0-py3-none-any.whl (15.5 MB)\nSaved foo.whl"
+        stderr = ""
+
+    def fake_run(args, **kw):
+        d = Path(args[-1])
+        d.mkdir(parents=True, exist_ok=True)
+        with open(d / "foo.whl", "wb") as f:
+            f.seek(15_500_000 - 1)
+            f.write(b"x")
+        return _OK()
+    monkeypatch.setattr(rc.subprocess, "run", fake_run)
+    monkeypatch.setattr(rc, "_pypi_info", lambda p: {"version": "1.0", "released": "2026-08-01"})
+    r = rc.run_check(plan)
+    assert r["kind"] == "pip" and r["target"] == "foo"
+    assert r["mb"] == 16 and isinstance(r["seconds"], float)
+    assert r["lines"][0] == "Collecting foo" and len(r["lines"]) <= 8
+    assert r["version"] == "1.0" and len(r["date"]) == 10
+    assert not dest.exists(), "a torch-sized wheel must not be left on the runner"
+    # the rounding contract: 1 decimal under 10 MB, whole numbers from 10 up
+    assert rc._round_mb(9_440_000) == 9.4 and rc._round_mb(15_500_000) == 16
+
+
+def test_beat_lands_on_the_install_scene_and_nowhere_else():
+    """spec v3-E.2 #8/#9: the beat is appended to the SAME scene inject_code_card
+    targets (first INSTALL_KW scene, never hook, never finale); a script with no
+    install scene gets no beat at all; the result survives rewrites via _CARRY."""
+    from factverse import receipts as rc
+    res = {"kind": "pip", "target": "foo", "seconds": 18.4, "mb": 247,
+           "lines": [], "date": "2026-08-24"}
+    s = {"scenes": [{"narration": "Hook - the promise."},
+                    {"narration": "Install it with pip install foo."},
+                    {"narration": "Now build things."},
+                    {"narration": "The exact command is in the description."}]}
+    assert rc.install_scene_idx(s) == 1
+    assert rc.add_beat(s, res)
+    beat = rc.beat_text(res)
+    assert s["scenes"][1]["narration"].endswith(beat)
+    assert beat == (f"Checked by {ap.fv.CHANNEL_NAME} on August 24: the download "
+                    f"finished in 18.4 seconds at 247 megabytes.")
+    assert "megabytes" in beat and "MB" not in beat, "TTS reads units as words"
+    assert s["scenes"][0]["narration"] == "Hook - the promise."
+    assert s["receipts"] is res
+    assert "receipts" in ap._CARRY, \
+        "a script-level key not in _CARRY is DROPPED by every rewrite pass (the documented trap)"
+
+    bare = {"scenes": [{"narration": "Hook."}, {"narration": "Just talk."},
+                       {"narration": "Bye."}]}
+    assert rc.install_scene_idx(bare) is None
+    assert not rc.add_beat(bare, res)
+    assert "receipts" not in bare and bare["scenes"][1]["narration"] == "Just talk."
+
+
+def test_beat_numbers_support_the_packaging():
+    """spec v3-E.2 #7: the beat lands before packaging_payoff reads the narration,
+    so a thumb number spoken only in the beat is a KEPT promise, not a stripped one."""
+    from factverse import gates
+    from factverse import receipts as rc
+    res = {"kind": "pip", "target": "foo", "seconds": 12, "mb": 247,
+           "lines": [], "date": "2026-08-24"}
+    s = {"title": "How to run Foo locally", "thumb_text": "247 MB",
+         "format": "tool", "verified_facts": {},
+         "scenes": [{"narration": "Hook."},
+                    {"narration": "Install it with pip install foo."},
+                    {"narration": "Outro."}]}
+    stripped = gates.packaging_payoff(dict(s, scenes=[dict(x) for x in s["scenes"]]))
+    assert not stripped["ok"], "sanity: without the beat, 247 is an unkept promise"
+    assert rc.add_beat(s, res)
+    kept = gates.packaging_payoff(s)
+    assert kept["ok"] and s["thumb_text"] == "247 MB"
+
+
+def test_receipt_clip_replaces_the_card_and_renders_to_its_exact_slot(monkeypatch):
+    """The C.3 law: a scene's time splits equally between its clips, so the animated
+    clip must be rendered to the share step5_build will actually give it — replacing
+    a leading stat/code card keeps the denominator, joining raises it by one."""
+    from factverse import receipts as rc
+    asked = []
+    monkeypatch.setattr(rc, "make_terminal_clip",
+                        lambda res, out, seconds: asked.append(round(seconds, 3)) or "R.mp4")
+    s = {"receipts": {"kind": "pip", "target": "foo", "seconds": 1, "mb": 1,
+                      "lines": [], "date": "2026-08-24"},
+         "scenes": [{"narration": "Hook."},
+                    {"narration": "Install it with pip install foo."},
+                    {"narration": "Outro."}]}
+    clips = [["shot0.mp4"], ["statcard_02.mp4", "shot1.mp4"], ["shot2.mp4"]]
+    assert rc.inject_receipt_clip(s, clips, [4.0, 8.0, 4.0]) == 1
+    assert clips[1] == ["R.mp4", "shot1.mp4"] and asked[-1] == 4.0  # replaced: 8/2
+
+    clips = [["shot0.mp4"], ["codecard.mp4", "shot1.mp4"], ["shot2.mp4"]]
+    assert rc.inject_receipt_clip(s, clips, [4.0, 8.0, 4.0]) == 1
+    assert clips[1][0] == "R.mp4" and len(clips[1]) == 2 and asked[-1] == 4.0
+
+    clips = [["shot0.mp4"], ["shot1.mp4"], ["shot2.mp4"]]
+    assert rc.inject_receipt_clip(s, clips, [4.0, 8.0, 4.0]) == 1
+    assert clips[1] == ["R.mp4", "shot1.mp4"] and asked[-1] == 4.0  # joined: 8/(1+1)
+
+    assert rc.inject_receipt_clip({"scenes": s["scenes"]}, clips, [4, 8, 4]) == 0
+    assert rc.inject_receipt_clip(s, [], [4, 8, 4]) == 0
+    assert rc.inject_receipt_clip(s, clips, None) == 0, "no timings -> no clip, never a guess"
+
+
+def test_terminal_clip_frames_are_real_and_reveal_the_summary(monkeypatch, tmp_path):
+    """The frames are rendered (1280x720, FPS 30, brand baseline) and the summary
+    line actually ARRIVES at 70% — a reveal that never fires would show a receipt
+    with no verdict. ffmpeg itself is stubbed (tests never run it)."""
+    from PIL import Image
+    from factverse import receipts as rc
+    seen = {}
+
+    def fake_ffmpeg(args, timeout=300):
+        fdir = Path([a for a in args if a.endswith("%04d.png")][0]).parent
+        frames = sorted(fdir.glob("*.png"))
+        seen["n"] = len(frames)
+        seen["fps"] = args[args.index("-framerate") + 1]
+        first, last = Image.open(frames[0]), Image.open(frames[-1])
+        seen["size"] = first.size
+        seen["baseline"] = last.getpixel((640, 716))
+        g = (63, 185, 80)
+        count = lambda im: next((n for n, c in (im.getcolors(1 << 20) or []) if c == g), 0)
+        seen["green_grew"] = count(last) > count(first)
+        with open(args[-1], "wb") as f:
+            f.write(b"\0" * 25000)
+        return True
+    monkeypatch.setattr(rc, "_ffmpeg", fake_ffmpeg)
+    res = {"kind": "pip", "target": "foo", "seconds": 3.2, "mb": 12,
+           "lines": ["Collecting foo", "Saved foo-1.0-py3-none-any.whl"],
+           "date": "2026-08-24"}
+    out = rc.make_terminal_clip(res, str(tmp_path / "receipt.mp4"), 0.2)
+    assert out and seen["n"] == 6 and seen["fps"] == "30"
+    assert seen["size"] == (1280, 720) and seen["baseline"] == (220, 38, 38)
+    assert seen["green_grew"], "the summary line never arrived on the held frame"
+    assert rc.make_terminal_clip(res, str(tmp_path / "x.mp4"), 0) is None
+    assert rc.make_terminal_clip({}, str(tmp_path / "y.mp4"), 3) is None

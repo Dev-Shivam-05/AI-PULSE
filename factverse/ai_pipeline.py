@@ -49,6 +49,7 @@ from factverse import tts_eleven
 from factverse import thumbnail
 from factverse import infographics
 from factverse import screencap
+from factverse import receipts
 from factverse import deliverable
 from factverse import scheduling
 from factverse import gates
@@ -805,7 +806,8 @@ ROUNDUP RULES:
 # None, filter_segment -> False). Missing one here silently changes the video.
 _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
           "filter_segment", "hook_pattern", "deliverable", "cheat_sheet",
-          "verified_facts")   # v3-E #1: fetched numbers must survive every rewrite pass
+          "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
+          "receipts")        # v3-E.2 #6: the measured check must survive them too
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1512,6 +1514,25 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
     place_description_blocks(script)   # the advice-gate rewrite may have regenerated the description
+    # spec v3-E.2: the channel checks the tool before recommending it. Download-only
+    # (wheels / shallow clone / fetch — candidate code is NEVER executed), placed
+    # after every gate that could still reject the video (3 min of network must not
+    # precede a veto) and before the payoff gate, so the beat's numbers can support
+    # the packaging. install_scene_idx first: an unbeatable script costs zero minutes.
+    if script.get("format") == "tool" and fv.flag("receipts_check", True):
+        if receipts.install_scene_idx(script) is not None:
+            _rc_plan = receipts.check_plan(
+                (script.get("deliverable") or {}).get("text", ""),
+                str(fv.TEMP / "receipts_dl"))
+            if not _rc_plan:
+                print("  ↻ deliverable is not download-checkable — no receipts beat")
+            else:
+                _rc = receipts.run_check(_rc_plan)
+                if _rc and receipts.add_beat(script, _rc):
+                    print(f"  🧾 Receipts: {_rc['kind']} {_rc['mb']} MB in {_rc['seconds']}s")
+                    narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+                else:
+                    print("  ⚠️ receipts check failed — shipping without the beat")
     # spec v3-E #3: a number promised on the packaging must be spoken in the video.
     # Deterministic fix, never a raise — fact_check only sees claims that EXIST,
     # so an absent promised number was invisible to every gate until here.
@@ -1570,6 +1591,11 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         # leading the scene, so that a third clip cannot squeeze the command below
         # readable length. It is a still, so it stays duration-agnostic.
         screencap.inject_code_card(script, scene_clips)
+        # spec v3-E.2 #11: real terminal footage of the check leads the install
+        # scene, replacing the still card there (the final scene keeps it).
+        # Animated, so it must render to its exact slot share — the C.3 law.
+        receipts.inject_receipt_clip(script, scene_clips,
+                                     durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
 
     video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
     if not video:
@@ -1756,6 +1782,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
                grounding_chars=len(str(script.get("grounding", ""))),
+               receipts=({k: script["receipts"].get(k) for k in ("kind", "seconds", "mb")}
+                         if script.get("receipts") else None),
                deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
