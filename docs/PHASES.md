@@ -23,9 +23,15 @@ One phase per session. A phase that isn't pushed doesn't exist.
    (AVD) every v3 decision is keyed on. No purge needed — just stop; from today the analytics
    start meaning something. Real organic baseline ≈ 2-6% of 2,220/28d ≈ 45-130 views — that is
    a NORMAL day-30 channel, not a failure.
-0.5. **Rename the channel BEFORE the first format=tool dispatch** (approved 2026-08-24; final
-   name pending the SERP audit — leading candidate "ToolProof Labs", handle @toolprooflabs
-   verified free). Studio rename + 3 config.json keys; assets regenerate on the next run.
+0.5. **Rename the channel to "ToolDojo" BEFORE the first format=tool dispatch** (approved
+   2026-08-24; owner delegated the pick). Verified 2026-08-24: @tooldojo free on YouTube,
+   GitHub and X; Google SERP for "ToolDojo" has NO product, channel or company (only the
+   retired word-order-reversed "Dojo Toolkit" JS library); no live site on
+   tooldojo.com/.ai/.co/.in. The 11-agent audit killed all five dictionary compounds
+   (ToolProof/ProofStack/RunProof/ToolTested/StackProof — each has live exact-name
+   incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
+   `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
+   Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
 1. Merge PR #23 (`v3-phase-b`), then open + merge `v3-phase-c`
    (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 117-test
    suite on each PR automatically.
