@@ -26,26 +26,40 @@ from factverse.screencap import INSTALL_KW, _ffmpeg, _mono_font
 
 PIP_TIMEOUT = 180
 CLONE_TIMEOUT = 180
-FETCH_TIMEOUT = 60
+FETCH_TIMEOUT = 60          # WALL-CLOCK for the whole fetch, not requests' per-read gap
+FETCH_MAX_BYTES = 2_000_000_000   # disk guard: past this the fetch is refused, not measured
 MAX_LINES = 8
 FPS = 30
 
 _PIP_RE = re.compile(r"\bpip3?(?:\.exe)?\s+install\s+(.+)", re.IGNORECASE)
 _CLONE_RE = re.compile(r"\bgit\s+clone\s+(\S+)", re.IGNORECASE)
 _FETCH_RE = re.compile(r"\b(?:curl|wget)\s+(.+)", re.IGNORECASE)
-# A segment that needs a shell to mean anything (pipes, docker, npx, process
-# substitution) is not download-checkable. Measuring the 10KB install.sh of a
-# `curl ... | sh` line and stamping it as "the download" would be a lie.
-_REFUSE_RE = re.compile(r"\||\bdocker\b|\bnpx\b|<\(", re.IGNORECASE)
-_PKG_OK = re.compile(r"^[A-Za-z0-9._-]+$")
+# A segment that needs a shell to mean anything (pipes, chaining, command
+# substitution, docker, npx) is not download-checkable. Measuring the 10KB
+# install.sh of a `curl ... | sh` line — or of its `&& sh install.sh` /
+# `$(curl ...)` cousins, which the review caught slipping through — and
+# stamping it as "the download" would be a lie.
+_REFUSE_RE = re.compile(r"\||&&|;|\$\(|`|\bdocker\b|\bnpx\b|<\(", re.IGNORECASE)
+# leading alphanumeric: kills `.`, `..` and every flag-shaped residue — a local
+# directory target would make pip BUILD it, which executes the build backend
+_PKG_OK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+# flags whose ARGUMENT is not a package (pip install -r requirements.txt would
+# otherwise "check" whatever PyPI squatter owns that literal name)
+_CONSUMING_FLAGS = {"-r", "--requirement", "-c", "--constraint", "-e", "--editable",
+                    "-t", "--target", "-i", "--index-url", "--extra-index-url",
+                    "-f", "--find-links"}
 
 
 def _pip_target(rest: str) -> str:
     """First non-flag token after `install`, reduced to a bare package name.
     A URL install (git+https://...) is a SOURCE build — pip would execute its
     setup.py — so it is refused here, not merely failed later."""
-    for tok in rest.split():
+    toks = rest.split()
+    i = 0
+    while i < len(toks):
+        tok = toks[i]
         if tok.startswith("-"):
+            i += 2 if tok.split("=")[0] in _CONSUMING_FLAGS else 1
             continue
         if "://" in tok or tok.startswith("git+"):
             return ""
@@ -65,27 +79,32 @@ def check_plan(deliverable_text: str, dest: str) -> dict | None:
         if m:
             pkg = _pip_target(m.group(1))
             if pkg:
-                return {"kind": "pip", "target": pkg,
+                return {"kind": "pip", "target": pkg, "dest": dest,
                         "args": [sys.executable, "-m", "pip", "download", pkg,
                                  "--no-deps", "--only-binary", ":all:",
+                                 "--no-cache-dir",  # a cached wheel is a 0.1s "download" — a lie
                                  "--progress-bar", "off", "--no-input", "-d", dest]}
             continue
         m = _CLONE_RE.search(seg)
         if m and m.group(1).startswith(("http://", "https://")):
-            return {"kind": "clone", "target": m.group(1),
+            return {"kind": "clone", "target": m.group(1), "dest": dest,
                     "args": ["git", "clone", "--depth", "1", m.group(1), dest]}
         m = _FETCH_RE.search(seg)
         if m:
             url = next((t.strip("'\"") for t in m.group(1).split()
                         if t.startswith(("http://", "https://"))), "")
             if url:
-                return {"kind": "fetch", "target": url, "args": []}
+                return {"kind": "fetch", "target": url, "dest": dest, "args": []}
     return None
 
 
 def _round_mb(nbytes: int) -> float | int:
+    """1 decimal under 10 MB, whole numbers from 10 up — and never 0 for a real
+    download: a 10KB script would otherwise narrate 'at 0 megabytes'."""
     mb = nbytes / 1e6
-    return int(round(mb)) if mb >= 10 else round(mb, 1)
+    if mb >= 10:
+        return int(round(mb))
+    return max(0.1, round(mb, 1)) if nbytes > 0 else 0
 
 
 def _num(x) -> str:
@@ -118,11 +137,20 @@ def _dest_bytes(dest: Path) -> int:
     return sum(f.stat().st_size for f in dest.rglob("*") if f.is_file())
 
 
+def _basename(p: str) -> str:
+    """Last path segment on EITHER separator — pathlib's .name is a no-op for a
+    backslash path on posix, which turned the Saved rule into a lie on the very
+    CI the suite runs on."""
+    return re.split(r"[\\/]+", str(p).rstrip("\\/"))[-1]
+
+
 def _clean_lines(raw: str) -> list[str]:
     """The footage shows the TOOL's output, not the runner's housekeeping: pip's
-    [notice] upgrade nags are dropped, and the 'Saved <local path>' line keeps
-    only the filename — the live frame inspection caught the machine's own
-    directory layout burned onto a to-be-published video."""
+    [notice] upgrade nags are dropped, and the lines that carry a local path —
+    pip's 'Saved <path>' and git's "Cloning into '<path>'..." — keep only its
+    last segment. The live frame inspection caught the machine's own directory
+    layout burned onto a to-be-published video; the review caught the clone
+    branch re-shipping the same leak."""
     out = []
     for l in str(raw or "").splitlines():
         l = l.strip()
@@ -130,7 +158,10 @@ def _clean_lines(raw: str) -> list[str]:
             continue
         m = re.match(r"(?i)(saved\s+)(\S+)$", l)
         if m:
-            l = m.group(1) + Path(m.group(2)).name
+            l = m.group(1) + _basename(m.group(2))
+        m = re.match(r"(?i)(cloning into ')([^']+)('.*)$", l)
+        if m:
+            l = m.group(1) + _basename(m.group(2)) + m.group(3)
         out.append(l)
     return out[:MAX_LINES]
 
@@ -141,7 +172,8 @@ def run_check(plan: dict) -> dict | None:
     after measuring (a torch wheel is GBs of runner disk)."""
     if not plan:
         return None
-    dest = Path(plan["args"][-1]) if plan.get("args") else fv.TEMP / "receipts_dl"
+    dest = Path(plan.get("dest") or (plan["args"][-1] if plan.get("args")
+                                     else fv.TEMP / "receipts_dl"))
     try:
         shutil.rmtree(dest, ignore_errors=True)
         dest.mkdir(parents=True, exist_ok=True)
@@ -156,13 +188,25 @@ def run_check(plan: dict) -> dict | None:
             lines = _clean_lines((r.stdout or "") + "\n" + (r.stderr or ""))
         else:  # fetch — requests stream, no subprocess, never piped anywhere
             import requests
-            name = plan["target"].rstrip("/").rsplit("/", 1)[-1] or "download"
+            # the URL is README-verbatim = attacker-controlled: the filename is
+            # sanitized so it cannot walk out of dest (backslashes are path
+            # separators on the supervised Windows box), and the stream gets the
+            # WALL-CLOCK deadline requests' own timeout does not provide — a
+            # server dripping one byte a minute would otherwise hold the
+            # unattended run until the CI job kill, on both cron firings.
+            name = re.sub(r"[^A-Za-z0-9._-]", "_",
+                          _basename(plan["target"].split("?")[0])).lstrip(".") or "download"
+            deadline = time.monotonic() + FETCH_TIMEOUT
+            got = 0
             with requests.get(plan["target"], stream=True,
                               timeout=FETCH_TIMEOUT) as r:
                 if r.status_code != 200:
                     return None
                 with open(dest / name, "wb") as f:
                     for chunk in r.iter_content(1 << 20):
+                        got += len(chunk)
+                        if time.monotonic() > deadline or got > FETCH_MAX_BYTES:
+                            return None
                         f.write(chunk)
             lines = [f"fetching {plan['target']}", f"saved {name}"]
         seconds = round(time.monotonic() - t0, 1)
@@ -259,10 +303,16 @@ def make_terminal_clip(result: dict, out_mp4: str, seconds: float) -> str | None
         # becomes a word"); a word is the deterministic fix.
         summary = (f"OK: {_num(result['mb'])} MB in {_num(result['seconds'])}s "
                    f"— checked by {fv.CHANNEL_NAME} {result['date']}")
-        content = [_display_cmd(result)] + list(result.get("lines", []))[:MAX_LINES]
-        content = [(l[:max_chars - 1] + "…") if len(l) > max_chars else l
-                   for l in content]
-        n = max(2, int(FPS * seconds))
+        if len(summary) > max_chars:   # a long configured channel name must not overrun
+            summary = summary[:max_chars - 1] + "…"
+        trunc = lambda l, budget: (l[:budget - 1] + "…") if len(l) > budget else l
+        # the command row is drawn 2 glyphs in (after the $), so its budget is 2 short
+        content = ([trunc(_display_cmd(result), max_chars - 2)]
+                   + [trunc(l, max_chars) for l in list(result.get("lines", []))[:MAX_LINES]])
+        # CEIL, not floor: a clip even 1/30s short of its share makes step5_build
+        # loop it, and the wrapped first frame flashes at the scene cut. A frame
+        # long is cut from the held summary — invisible.
+        n = max(2, -int(-FPS * seconds // 1))
         for fr in range(n):
             t = fr / (n - 1)
             img = Image.new("RGB", (W, H), _BG)

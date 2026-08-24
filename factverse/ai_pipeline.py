@@ -1434,6 +1434,12 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # row below stamps a fallback video with the format nobody made and the
     # learning loop reads a tool video that never existed.
     fmt = script.get("format", fmt)
+    # _validate_script mutates the LLM's dict in place, so a top-level key the
+    # model invents SURVIVES into the script. "receipts" must only ever be set by
+    # receipts.add_beat after a real measured check — a planted value would render
+    # fabricated "we checked this" footage, and a planted non-dict would raise
+    # inside the post-upload record_run call (the double-publish zone).
+    script.pop("receipts", None)
 
     # critique first (it now cuts repetition), then the floor (sanity only),
     # then the CAP — padding is the enemy, not brevity
@@ -1783,7 +1789,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                confidence=conf, stat_card_share=round(stat_share, 3),
                grounding_chars=len(str(script.get("grounding", ""))),
                receipts=({k: script["receipts"].get(k) for k in ("kind", "seconds", "mb")}
-                         if script.get("receipts") else None),
+                         if isinstance(script.get("receipts"), dict) else None),
                deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,

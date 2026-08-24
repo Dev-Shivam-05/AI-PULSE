@@ -1968,17 +1968,25 @@ def test_check_plan_downloads_and_never_executes():
     10KB script and call it 'the download') is refused. Pure — no network."""
     from factverse import receipts as rc
     p = rc.check_plan("pip install unsloth", "D")
-    assert p["kind"] == "pip" and p["target"] == "unsloth"
+    assert p["kind"] == "pip" and p["target"] == "unsloth" and p["dest"] == "D"
     assert p["args"][0] == sys.executable and p["args"][-1] == "D"
+    assert p["args"][1:4] == ["-m", "pip", "download"], \
+        "the verb IS the security invariant — install would execute"
     i = p["args"].index("--only-binary")
     assert p["args"][i + 1] == ":all:" and "--no-deps" in p["args"]
+    assert "--no-cache-dir" in p["args"], "a cached wheel is a 0.1s 'download' — a lie"
 
     # extras, pins and flags reduce to the bare name
     p = rc.check_plan("pip install -U 'transformers[torch]>=4.44'", "D")
     assert p["target"] == "transformers"
 
-    # a URL install is a source build = execution; refuse, do not "fail later"
+    # a URL install is a source build = execution; refuse, do not "fail later".
+    # So is a local directory ('.'), and a consuming flag's argument is not a
+    # package (pip download requirements.txt would fetch a PyPI squatter's wheel).
     assert rc.check_plan("pip install git+https://github.com/o/r", "D") is None
+    assert rc.check_plan("pip install .", "D") is None
+    assert rc.check_plan("pip install -e .", "D") is None
+    assert rc.check_plan("pip install -r requirements.txt", "D") is None
 
     p = rc.check_plan("git clone https://github.com/ollama/ollama", "D")
     assert p["kind"] == "clone" and p["args"] == \
@@ -1994,7 +2002,12 @@ def test_check_plan_downloads_and_never_executes():
 
     for refused in ("curl -fsSL https://ollama.com/install.sh | sh",
                     "docker run -it ubuntu", "npx create-thing",
-                    "bash <(curl https://x.sh)", "just words no commands"):
+                    "bash <(curl https://x.sh)", "just words no commands",
+                    # the review caught the non-piped shell forms slipping through:
+                    "curl https://x.sh -o i.sh && sh i.sh",
+                    "wget https://x.sh; bash x.sh",
+                    'bash -c "$(curl -fsSL https://x.sh)"',
+                    "sh -c `curl https://x.sh`"):
         assert rc.check_plan(refused, "D") is None, refused
 
 
@@ -2030,6 +2043,23 @@ def test_run_check_fails_soft_at_every_seam(monkeypatch, tmp_path):
     assert rc.run_check(fplan) is None
     assert rc.run_check(None) is None
 
+    # the review's high finding: requests' timeout bounds the gap BETWEEN reads,
+    # not the total — an endless stream must trip the byte cap / wall clock, not
+    # hold the unattended run until the 90-minute CI job kill
+    class _Stream:
+        status_code = 200
+        def __enter__(self):
+            return self
+        def __exit__(self, *a):
+            return False
+        def iter_content(self, n):
+            while True:
+                yield b"x" * 1024
+    monkeypatch.setattr(_requests, "get", lambda *a, **k: _Stream())
+    monkeypatch.setattr(rc, "FETCH_MAX_BYTES", 4096)
+    assert rc.run_check(fplan) is None
+    assert not (tmp_path / "dl").exists()
+
 
 def test_run_check_measures_the_real_download(monkeypatch, tmp_path):
     """Seconds and megabytes come from the measured download, the output lines are
@@ -2058,8 +2088,10 @@ def test_run_check_measures_the_real_download(monkeypatch, tmp_path):
     assert r["lines"][0] == "Collecting foo" and len(r["lines"]) <= 8
     assert r["version"] == "1.0" and len(r["date"]) == 10
     assert not dest.exists(), "a torch-sized wheel must not be left on the runner"
-    # the rounding contract: 1 decimal under 10 MB, whole numbers from 10 up
+    # the rounding contract: 1 decimal under 10 MB, whole numbers from 10 up —
+    # and a real download is never spoken as "0 megabytes"
     assert rc._round_mb(9_440_000) == 9.4 and rc._round_mb(15_500_000) == 16
+    assert rc._round_mb(40_000) == 0.1 and rc._round_mb(0) == 0
 
 
 def test_footage_lines_show_the_tool_not_the_runner():
@@ -2076,6 +2108,14 @@ def test_footage_lines_show_the_tool_not_the_runner():
     assert lines == ["Collecting openai", "Saved openai-3.3.1-py3-none-any.whl",
                      "Successfully downloaded openai"]
     assert rc._clean_lines("\n".join(f"line {i}" for i in range(20)))[-1] == "line 7"
+    # ...on BOTH separators (pathlib's .name is a no-op for backslashes on posix —
+    # the exact bug that turned this test red on ubuntu CI), and for the clone
+    # branch's own path leak, git's "Cloning into '<abs path>'..." stderr line
+    assert rc._basename("/home/runner/work/repo/x.whl") == "x.whl"
+    assert rc._basename("d:\\temp\\dl\\x.whl") == "x.whl"
+    posix = rc._clean_lines("Saved /home/runner/work/FactVerse/temp/receipts_dl/x.whl\n"
+                            "Cloning into '/home/runner/work/FactVerse/temp/receipts_dl'...\n")
+    assert posix == ["Saved x.whl", "Cloning into 'receipts_dl'..."]
 
 
 def test_beat_lands_on_the_install_scene_and_nowhere_else():
@@ -2187,5 +2227,9 @@ def test_terminal_clip_frames_are_real_and_reveal_the_summary(monkeypatch, tmp_p
     assert out and seen["n"] == 6 and seen["fps"] == "30"
     assert seen["size"] == (1280, 720) and seen["baseline"] == (220, 38, 38)
     assert seen["green_grew"], "the summary line never arrived on the held frame"
+    # frame count CEILS: a clip even 1/30s short of its share is looped by
+    # step5_build and the wrapped first frame flashes at the scene cut
+    rc.make_terminal_clip(res, str(tmp_path / "z.mp4"), 0.21)
+    assert seen["n"] == 7
     assert rc.make_terminal_clip(res, str(tmp_path / "x.mp4"), 0) is None
     assert rc.make_terminal_clip({}, str(tmp_path / "y.mp4"), 3) is None
