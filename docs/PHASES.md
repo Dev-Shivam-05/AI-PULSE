@@ -15,7 +15,7 @@ One phase per session. A phase that isn't pushed doesn't exist.
 
 ## Now (owner, in this order)
 1. Merge PR #23 (`v3-phase-b`), then open + merge `v3-phase-c`
-   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 93-test
+   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 112-test
    suite on each PR automatically.
 2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
    done every cheat-sheet link 404s.
@@ -30,11 +30,20 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `↻ tool is not something this channel teaches`. Those are the new screens working, not errors.
    A forced `tool` run has **no evergreen fallback** — if a gate blocks it, the day publishes
    nothing. That is deliberate for a supervised run.
-5. On the FIRST unattended day after the merge, read the new ledger column `grounding_chars` and
-   watch for two v3-C.2 side effects: `↻ grounding too thin — trying the next story` (the story
+5. On the FIRST unattended day after the merge, watch the log for the v3-C.3 lines that mean the
+   new screens are working, not erroring: `↻ Scene N: k clip(s) failed — re-timing …` (a scene
+   keeping its slot) and `⚠️ No usable Shorts moments returned` (a malformed LLM answer that used
+   to kill the whole render). Then read the new ledger column `grounding_chars` and watch for two
+   v3-C.2 side effects: `↻ grounding too thin — trying the next story` (the story
    lanes now refuse a page the fact-checker cannot check) and any `ADVICE_BLOCKED` row (the
    advice gate now reads the whole script, so expect more LLM confirmations). Both are the new
    screens working; only a repeat pattern means the thresholds are wrong.
+
+6. **Record the next weekly L2 batch** (`l2_store/cold_opens/`, `l2_store/insight_blocks/`).
+   All 8 clips in the store are marked used, so `l2.inject` is currently a no-op and every video
+   ships with no human take. v3-C.3 fixed the two defects that were waiting on the other side of
+   that — a failed splice used to burn a clip and fake the originality record, and CI reverted
+   `l2_usage.json` on every run — so the store can now be refilled safely.
 
 ## Next 3
 1. v3-D — learning loop v1 once ~2 weeks of v3 analytics exist (target: AVD ≥ 2:00).

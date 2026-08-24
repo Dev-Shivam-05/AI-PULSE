@@ -1,109 +1,134 @@
-# HANDOFF — AI Pulse — Phase v3-C.2 (story-lane hardening) — 2026-08-23
+# HANDOFF — AI Pulse — Phase v3-C.3 (render-surface hardening) — 2026-08-24
 
-*v3-D is still blocked: `docs/tools/` is empty and 0 of the 66 ledger rows are `format="tool"`,
-so there is no v3 data to learn from. C.1 hardened the never-run tool lane; this session gave
-the same treatment to the three lanes that actually publish every day — news, evergreen,
-roundup — which C.1 explicitly left unaudited. 12 defects, **every one reproduced by a failing
-test before it was fixed**, then verified against the live signal engine (real ranking, real
-page fetches; the LLM is stubbed because no key exists locally).
-Contract: `docs/spec/ai-pulse-v3c2.md`. Branch `v3-phase-c` is pushed (`e624fa4`), still stacked
+*C.1 audited the tool lane and C.2 the three story lanes, so every lane's **selection and
+scripting** path had been searched. This session did the surfaces that turn a validated script
+into what a viewer actually sees — `shorts`, `captions`, `branding`, `thumbnail`,
+`infographics`, `l2`, `step5_build` — which had never been searched at all.
+10 defects, **every one reproduced by a failing test before it was fixed**, and every fix
+verified against a rendered artifact, not just a green test. 27 candidates were found and 15
+were refuted and dropped, including three of this session's own early hypotheses; the
+refutations are recorded in the spec so they are not re-found.
+Contract: `docs/spec/ai-pulse-v3c3.md`. Branch `v3-phase-c` is pushed (`cc9383f`), still stacked
 on `v3-phase-b` — merge PR #23 first.*
 
 ## Done
-- **A repo can no longer become the news story.** `rank()` returns ONE list and v3-A put the
-  GitHub / Hugging Face / Product Hunt trending feeds into it, so the viral judge and the weekly
-  countdown were scoring tool signals as news. Verified live today: ranked #1 and #2 are both
-  `kind="tool"` and #1 is `guillaumemeyer/watermarks-remover: Strip multi-vendor AI provenance
-  marks` — the exact candidate C.1 built `gates.tool_unsuitable` to refuse, a gate that guards
-  the tool lane and nothing else. The news lane now tries 3 real stories where it would have
-  tried 2 repos and a story.
-- **A sourced video is no longer written from an unsourced page.** The floor is
-  `gates.FACTCHECK_MIN_CHARS` (200) — the fact-checker's own skip threshold, named rather than
-  invented. Below it `verbatim_overlap` scored 0.0, `fact_check` skipped, `verify_synthesis` had
-  nothing to compare, and the confidence `facts` component read **1.0**, the same score a fully
-  verified script gets. Evergreen is ungrounded by design and is untouched.
-- **The roundup's gates read the text the prompt read.** They used to RE-fetch `picked[:3]`: a
-  transient failure on the second pass handed the copy gate an empty string, and stories 4 and 5
-  were never checked in either pass. Live: 6,004 chars pooled across all five stories.
-- **One outlet no longer owns the countdown.** The old rule skipped a repeat only once three
-  distinct sources were banked, so it could never fire on a dominant feed — against today's live
-  signals it produced five TechCrunch stories out of five, on the one format whose entire policy
-  defence is curation. Now three outlets, still five stories.
-- **The roundup stops misattributing itself.** `source_url` is story 1's URL, so the caption chip
-  and every generated stat card stamped one outlet across all five stories and the
-  `"Sources in description"` branch was unreachable dead code. `source_chip()` fixes both, and
-  the description now lists all five sources — printed and read: 5/5 credited, byte-identical
-  across the two `place_description_blocks` calls `run()` makes.
-- **The advice gate reads the whole script.** Its LLM confirmation was armed from
-  `script_text[:2000]` of a ~5,500-char narration, so anything prescriptive in the last two
-  thirds was never checked. The regex pass always saw everything; only the arming was windowed.
-- **A re-worded evergreen topic no longer republishes the same video.** Exact lowercase equality
-  was the only dedup.
-- **The ledger row cannot raise** (`default=str`, broad `except`) — it is the last statement of
-  the publish window C.1 closed. Rows now carry `grounding_chars` for v3-D.
-- **The veto window is never claimed on a refusal.** `requests.post` does not raise on 4xx, so
-  `_notify_review` printed "veto window active" after an HTTP 404 opened no issue at all.
-- A dead roundup falls back to evergreen — Sunday is the only roundup slot there is.
-- **93/93 tests** (was 75), plus a live 6-section end-to-end verification of both lanes.
+- **Two caption phrases no longer share the screen.** `build_ass` held each finished phrase for
+  0.10s with no clamp against the next one's start, and phrases flush on `max_words` far more
+  often than on a real pause — so the break lands mid-speech, where whisper reports word N+1
+  starting exactly when word N ends. Measured across the 24 archived, actually-burned
+  `state/assets/*/captions.ass`: **5,626 of 6,515 boundaries overlapped (86.4%)**, 5,624 by
+  exactly 0.10s. Re-timed through the clamp: **0 of 6,511**. Confirmed on screen — burning the
+  2026-07-22 file at t=2.15s shows `hacked asterisk an entire` shoved up above
+  `Open AI's AI Asterisk`, a two-row jump at ~86% of phrase changes in every video shipped.
+- **A stat card is rendered to the slot it will actually get.** `step5_build` splits a scene's
+  time equally between its clips, so a card stacked onto a 2-clip scene gets `sdur/3` — but it
+  was always rendered at a fixed 4.0s. On the common path it **looped**, replaying the count-up
+  mid-scene; on a short scene it was cut before the count finished and the last frame showed a
+  number the script never said (measured: `43%` for a true `54%`). `inject_cards` moved to after
+  `scene_durations` and renders each card at `scene_dur/(clips+1)`.
+- **The card stops rewriting its own number** three separate ways: `_count_seq` re-rendered the
+  stat through a format spec at its own end point (`120.5 billion` → `120 billion`, `154.7%` →
+  `155%`); `plan_cards` cut it mid-word with `stat[:12]` (`120.5 billio`); and the proportional
+  size overflowed the card (`2,400 percent` = 1,304px on 1,280px, clipped both edges).
+- **A Short's hook keeps its words.** The wrap used a 16-character budget and, on reaching two
+  lines, broke with the pending word still in `cur` — which was dropped. The in-spec 6-word hook
+  `Anthropic benchmark methodology quietly changed again` was burned as `Anthropic` /
+  `benchmark`: 19 of 53 characters. Rendered both ways through real drawtext to confirm. It also
+  broke the fact-check contract — `gates.fact_check` verifies the FULL hook_text.
+- **A malformed LLM `moments` answer no longer kills the day.** `find_best_moments` ends in
+  `return d["moments"]` on raw Gemini JSON; a string `scene_num` raised inside `min()`, a null
+  `hook_text` on `.split()`. The raise unwound past the finished video, the thumbnail and
+  **every `record_run` call** — the render died with no ledger row of any status.
+- **A thumbnail is never published blank or clipped.** Both older composers sized text off a
+  character-count ladder and drew it unmeasured (`OPENAI QUIETLY SHIPPED A NEW REASONING MODEL`
+  runs 72px off the frame), and an empty `thumb_text` made them skip the headline and still save
+  the image. `branding.fit_font` is now the one shrink loop, shared with `make_tool_thumb`.
+- **A failed L2 splice no longer burns a clip or fakes the record.** `splice` returned its input
+  on success AND failure, so `inject` consumed a one-use clip permanently and recorded it as
+  human insight — which also satisfies the `require_insight_block` O1 gate with a video
+  containing no human take.
+- **`state/l2_usage.json` and `state/stock_ledger.json` survive CI.** Both tracked, both written
+  by the run, both in neither the stash list nor `state_merge.FILES` — so
+  `git checkout -B main origin/main` reverted them on **every run**. Both are dicts and the
+  fallback merger is a list union, so adding them alone would have raised inside the state-save
+  step under `bash -e` and lost *every* state file; they got their own semantics first.
+- **A scene keeps its duration when a clip fails to encode.** Measured with real ffmpeg — one
+  corrupt clip in a 3-clip 30s scene: **before 50.00s video vs 60.00s narration** (the tail cut
+  off, and `qa_video` passes it), **after 60.00s, drift 0.00s**.
+- **112/112 tests** (was 93), plus a full render-seam run: cards → `step5_build` → caption burn →
+  branding, frames inspected at three points across the card's real slot (12% → 47% → 54%, held).
 
 ## Files changed
-- `factverse/ai_pipeline.py` — `news_candidates()` (new) applied in `viral_pick`, the news loop
-  and the roundup pool; the 200-char floor in `script_news` / `script_roundup`; roundup fetches
-  once and gates on every story; outlet-diversity pass; `source_chip()` (new, pure) replacing the
-  inline domain logic in `run()`; the `🔗 Sources:` block in `place_description_blocks`;
-  `EVERGREEN_DUP_OVERLAP` + near-duplicate topic check; roundup→evergreen fallback;
-  `record_run` unraisable + `grounding_chars`; `_notify_review` status check.
-- `factverse/gates.py` — `FACTCHECK_MIN_CHARS = 200` named and reused; `advice_framing` arms on
-  the whole narration.
-- `factverse/intelligence/signal_engine.py` — `_is_used` takes an optional `threshold` (headline
-  default 0.5 unchanged).
-- `tests/test_pipeline_logic.py` — 18 new tests, incl. the live top-6 of 2026-08-23 as a fixture.
-- `docs/spec/ai-pulse-v3c2.md` (NEW), `docs/DECISIONS.md`, `docs/PHASES.md`, `CLAUDE.md`.
+- `factverse/infographics.py` — `CARD_DUR`, `card_slot_dur()` (new, pure), `_cap_stat()` (new,
+  pure), `_count_seq` returns the stat verbatim at t>=1, `make_card_clip` fits stat + label,
+  `inject_cards` takes `scene_durs`.
+- `factverse/captions.py` — `build_ass` clamps each event's end to the next event's start.
+- `factverse/shorts.py` — `_overlay_font()`, `_wrap_hook()` and `normalize_moments()` (all new,
+  pure); `make_shorts` uses them and returns `[]` instead of raising.
+- `factverse/thumbnail.py` — `X_EDGE`, `_headline()`, `_headline_font()` (new, pure); `compose`,
+  `compose_creator` and `make` take `title=`; `make_tool_thumb` shares the one shrink loop.
+- `factverse/branding.py` — `fit_font()` (new, pure), the shared measured-shrink helper.
+- `factverse/l2.py` — `splice` returns `None` on failure; `inject` acts only on a real splice.
+- `factverse/state_merge.py` — `_merge_used`, `_merge_seen`, and the two files in `FILES`.
+- `.github/workflows/publish.yml` — the same two files added to the pre-checkout stash list.
+- `scripts/factverse_engine.py` — `sub_durations()` (new, pure); `step5_build` re-times a scene's
+  surviving clips.
+- `factverse/ai_pipeline.py` — `inject_cards` / `inject_code_card` moved below the timings;
+  `thumbnail.make(..., title=)`.
+- `tests/test_pipeline_logic.py` — 19 new tests. `docs/spec/ai-pulse-v3c3.md` (NEW),
+  `docs/DECISIONS.md`, `docs/PHASES.md`, `CLAUDE.md`.
 
 ## Decisions made
-- **The story lanes read story signals only.** Filtering by `kind` is not a policy judgment about
-  what may be reported — it is the lanes reading the feeds they were given. The trending feeds
-  were added in v3-A for the tool lane and leaked.
-- **Reuse the fact-checker's own floor instead of inventing one.** "If `fact_check` cannot run,
-  the lane does not write" is a rule, not a magic number, and it needs no owner approval.
-- **`EVERGREEN_DUP_OVERLAP = 0.7`.** Chosen, not asked: the engine's 0.5 headline default blocks
-  this lane's own title template. Measured — `How Transformers Actually Work` scores 0.67 against
-  `How Diffusion Models Actually Work` (different videos, blocked at 0.5); the true re-word
-  scores 1.0 and is still caught at 0.7.
-- **A roundup points at its description, never at one domain.** Curation and attribution are the
-  format's whole survival argument.
-- Full list with reasons: `docs/spec/ai-pulse-v3c2.md` and `docs/DECISIONS.md`.
+- **Measure, never count characters.** Four surfaces independently sized burned text by character
+  count and all four shipped clipped or truncated text. `branding.fit_font` is the single loop,
+  and it must be given the font that will really be drawn — Shorts render with `short.ttf`
+  (Arial Bold), not `br._font` (Segoe UI Bold), and measuring with the wrong face still overflows.
+- **A generated clip must be rendered to the share `step5_build` will give it.** The alternative —
+  making the animation loop-safe — hides the problem instead of fixing it, and the durations were
+  already available a few lines later in `run()`.
+- **Fail soft means return `None`.** Returning something indistinguishable from success is worse
+  than raising: `l2.splice` looked like it worked and the caller acted on that.
+- **No new numbers.** Every fix reuses a value already in the file (0.10s, 64/50, 150/118/92,
+  step 6 / floor 72, the 0.58 text band) or derives from the frame. `_STAT_MAX = 24` replaces an
+  inline 12 and is a sentence guard, not a layout number — width is now measured.
+- Full list with reasons: `docs/spec/ai-pulse-v3c3.md` and `docs/DECISIONS.md`.
 
 ## Known broken / deliberately skipped
-- **A forced `format=news` day where every story is paywalled now publishes nothing.** That is
-  the grounding floor working, but it is a real behaviour change. Measured 2026-08-23: 11 of 11
-  live news candidates grounded at 2,464–4,000 chars, so it should be rare. `grounding_chars` in
-  the ledger is how you will know if it fires more than expected.
-- **Expect more `ADVICE_BLOCKED` rows.** The wider arming window means more LLM confirmations and
-  therefore some false positives. Unforced, a false positive costs one rewrite pass and falls
-  back to evergreen; it does not cost the day.
-- **`EVERGREEN_DUP_OVERLAP` is tuned on eight sample titles, not a corpus.** If two genuinely
-  duplicate evergreen topics ship, lower it before adding machinery.
-- **Decision 1 trusts `kind`.** An item the sources layer leaves without a `kind` defaults to a
-  story and stays in the news pool.
-- The roundup description carries story 1 twice (`_validate_script`'s manufactured `Source:` line
-  plus entry 1 of the sources block). Cosmetic; suppressing it means touching `_validate_script`,
-  which every lane and the whole tool-lane test set depends on.
-- **The render surfaces are still unaudited** — `shorts`, `captions`, `branding`, `thumbnail`,
-  `l2`. C.1 + C.2 together cover every lane's *selection and scripting* path; everything
-  downstream of the finished script has never been searched.
-- Unchanged from C.1: **GitHub Pages is still off** (every 📄 link 404s), `UNSUITABLE_TOOL` is
+- **Decisions 8 and 9 (L2) are latent, not live.** `state/l2_usage.json` lists all 8 clips in the
+  store as used, so `l2.inject` is a no-op on every current run. They fire the day the owner
+  records the next weekly batch — which `l2.py` and the docs actively ask for, and which the CI
+  fix is a precondition for. This is the same "harden it before it runs" posture as C.1's tool lane.
+- **Decision 3 changes the timing of every caption line in every future video.** The shortening is
+  at most 0.10s and only where an overlap existed; it can never lengthen a line.
+- **Decision 4 can still ellipsise.** A hook too long for two measured lines is cut — but at a
+  measured boundary with a visible `…`, not silently mid-phrase.
+- **`stat_card_share` (`ai_pipeline.py`) counts a card scene's WHOLE duration, not the card's
+  slice.** It is written to the ledger and read by nothing, and decision 1 changes the slice it
+  should measure. Left for v3-D to define when it actually consumes the column.
+- **`_citation_filters` truncates to 48 chars AFTER escaping**, so a `\:` cut in half would leave
+  a dangling backslash and kill the whole caption burn. Not reachable — `source_chip` only ever
+  yields a bare domain or `Sources in description`. Noted, not fixed.
+- **`burn_ass`'s 100,000-byte success floor is mis-sized for the l2 caller** — measured, a 3s human
+  clip encodes to 96,072 bytes and would be judged a failure. The store's clips are 15-90s and
+  l2's own floor is 3s, so the two thresholds disagree only in a ~0.4s window.
+- **The bumpers are mono and `step5_build` emits stereo.** Investigated and dismissed: running the
+  real `add_intro_outro` on a stereo 44.1kHz content video succeeds on both branches — ffmpeg
+  auto-negotiates. No change made.
+- 15 candidates were refuted outright and are tabled in the spec under REFUTED so the next
+  session does not spend the day re-finding them.
+- Unchanged from C.1/C.2: **GitHub Pages is still off** (every 📄 link 404s), `UNSUITABLE_TOOL` is
   still an unreviewed keyword list, the first `format=tool` dispatch has still never run,
-  `promo_block` is still empty, and the v2 backlog (duplicate NVIDIA/HF video, OAuth re-consent)
-  is untouched.
+  `promo_block` is still empty, and the v2 backlog is untouched.
 
 ## Next session starts here
-- **Phase v3-D is still gated on data, not code** — it needs ~2 weeks of v3 analytics, and the
-  first tool video has not published yet. Until it does, the next session is either the render
-  -surface audit (v3-C.3, needs nothing from you) or a review of the first live tool run.
+- **Phase v3-D is still gated on data, not code.** It needs ~2 weeks of v3 analytics and the first
+  tool video has not published yet. With C.1 + C.2 + C.3 the whole path from signal to uploaded
+  file has now been searched — there is no auditing left to queue. The next session is the review
+  of the first live tool run, or v3-D once the data exists.
 - First command: `/boot`
 - Watch out for: **judging v3 before the data exists.** The verdict metric is average view
   duration ≥ 2:00 across the first 10 tool videos (v2 baseline 0:38). If AVD is still under 1:00
-  after 10 videos the topic choice is wrong, not the packaging — reopen the spec instead of
-  adding machinery. Second trap, now in `CLAUDE.md`: `rank()` is ONE mixed list — anything
-  treating it as stories must go through `news_candidates()` first.
+  after 10 videos the topic choice is wrong, not the packaging — reopen the spec instead of adding
+  machinery. Second trap, now in `CLAUDE.md`: a tracked state file the run writes must be in BOTH
+  `publish.yml`'s stash list AND `state_merge.FILES`, with merge semantics for its shape added
+  first — the fallback merger raises on a dict, which under `bash -e` loses every state file.
