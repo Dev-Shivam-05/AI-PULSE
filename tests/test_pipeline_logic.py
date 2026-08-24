@@ -1398,3 +1398,76 @@ def test_tool_thumb_whitespace_text_still_gets_words():
     assert th._headline("   ", "") == ""
     words = " ".join((th._headline("   ", "") or "FREE AI TOOL").split()[:4])
     assert words == "FREE AI TOOL"
+
+
+# --------------------------------------------------------------- l2 + run state
+def test_failed_splice_does_not_consume_or_record_the_human_clip(monkeypatch, tmp_path):
+    """splice() returned the same `video` string on success and on failure, so
+    inject() could not tell them apart: a failed splice still consumed the clip
+    PERMANENTLY (each is usable at most once) and still wrote it into the run
+    record as evidence of human insight — which also satisfies the
+    require_insight_block O1 gate, the one gate whose whole job is to refuse to
+    publish without a human take."""
+    from factverse import l2
+    marked = []
+    monkeypatch.setattr(l2, "next_clip",
+                        lambda kind: tmp_path / ("c.mp3" if kind == "cold_open" else "i.mp3"))
+    monkeypatch.setattr(l2, "build_human_segment", lambda w, o, label="": str(o))
+    monkeypatch.setattr(l2, "splice", lambda v, s, at: None)          # every splice fails
+    monkeypatch.setattr(l2, "_mark_used", lambda k, n: marked.append((k, n)))
+    monkeypatch.setattr(l2, "_dur", lambda p: 20.0)
+    video, rec = l2.inject("v.mp4", 100.0)
+    assert video == "v.mp4"                       # the untouched video is still returned
+    assert rec == {"cold_open": None, "insight": None}, rec
+    assert marked == [], "a failed splice burned a one-use clip"
+
+
+def test_successful_splice_consumes_and_records_the_clip(monkeypatch, tmp_path):
+    from factverse import l2
+    marked = []
+    monkeypatch.setattr(l2, "next_clip",
+                        lambda kind: tmp_path / ("c.mp3" if kind == "cold_open" else "i.mp3"))
+    monkeypatch.setattr(l2, "build_human_segment", lambda w, o, label="": str(o))
+    monkeypatch.setattr(l2, "splice", lambda v, s, at: v)
+    monkeypatch.setattr(l2, "_mark_used", lambda k, n: marked.append((k, n)))
+    monkeypatch.setattr(l2, "_dur", lambda p: 20.0)
+    _, rec = l2.inject("v.mp4", 100.0)
+    assert rec == {"cold_open": "c.mp3", "insight": "i.mp3"}
+    assert marked == [("cold_open", "c.mp3"), ("insight", "i.mp3")]
+
+
+def test_every_state_file_the_run_writes_survives_the_ci_state_save():
+    """The CI state-save stashes a list of files, then `git checkout -B main
+    origin/main` throws the run's branch away. A tracked state file that is in
+    neither the stash list nor state_merge.FILES is silently reverted on EVERY
+    run — for l2_usage.json that means "each clip used at most once" is
+    unenforceable in CI and the same human cold open would be injected into
+    every video."""
+    from pathlib import Path as _P
+    from factverse import state_merge
+    wf = _P("​.github/workflows/publish.yml".replace("​", "")).read_text(encoding="utf-8")
+    for name in ("state/l2_usage.json", "state/stock_ledger.json"):
+        assert name in state_merge.FILES, f"{name} is not union-merged"
+        assert name in wf, f"{name} is not stashed before the checkout"
+    # everything state_merge knows how to merge must also be stashed, or the
+    # merge runs against origin/main's copy of a file the run already replaced
+    for name in state_merge.FILES:
+        assert name in wf, f"{name} is merged but never stashed"
+
+
+def test_l2_usage_and_stock_ledger_merge_by_their_own_shapes():
+    """Both are dicts, and merge_file's fallback is an ordered LIST union — so
+    simply adding them to FILES would have raised TypeError inside the CI
+    state-save step and lost every state file, not just these two."""
+    import json as _json
+    from factverse import state_merge as sm
+    used = sm.merge_file("state/l2_usage.json",
+                         '{"cold_open": ["a.mp3"], "insight": ["i1.mp3"]}',
+                         '{"cold_open": ["b.mp3", "a.mp3"]}')
+    assert _json.loads(used) == {"cold_open": ["b.mp3", "a.mp3"], "insight": ["i1.mp3"]}
+    led = sm.merge_file("state/stock_ledger.json",
+                        '{"1": "2026-08-20T10:00:00", "2": "2026-08-24T10:00:00"}',
+                        '{"1": "2026-08-22T10:00:00", "3": "2026-08-23T10:00:00"}')
+    assert _json.loads(led) == {"1": "2026-08-22T10:00:00",     # later sighting wins
+                                "2": "2026-08-24T10:00:00",     # ours only
+                                "3": "2026-08-23T10:00:00"}     # theirs only

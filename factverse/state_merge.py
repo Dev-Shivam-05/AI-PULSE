@@ -10,6 +10,8 @@ lost — which later causes duplicate published videos.
 This module knows the merge semantics of every state file:
   * used_topics.json / used_urls.json  -> ordered union of two lists
   * state/failed_topics.json           -> per-key max of two count dicts
+  * state/l2_usage.json                -> per-kind ordered union of used names
+  * state/stock_ledger.json            -> ordered line/entry union
   * output/production_log.json         -> union of entries by (timestamp, title)
   * state/runs.jsonl / analytics.jsonl -> ordered line union
 
@@ -33,6 +35,12 @@ FILES = (
     "output/production_log.json",
     "state/runs.jsonl",
     "state/analytics.jsonl",
+    # Both are TRACKED and written by the run. A tracked state file that is not
+    # stashed AND merged is reverted by `git checkout -B main origin/main` on
+    # every CI run: l2_usage would let the same human clip be injected into every
+    # video, and stock_ledger would forget the 30-day stock repeat guard.
+    "state/l2_usage.json",
+    "state/stock_ledger.json",
 )
 
 
@@ -74,6 +82,36 @@ def _merge_log(a, b) -> list:
     return out[-400:]
 
 
+def _merge_used(a, b) -> dict:
+    """state/l2_usage.json: kind -> list of clip names. Per-key ordered union.
+
+    A name that appears on either side is consumed: an L2 clip is usable at most
+    once, so the union must never lose one.
+    """
+    out = {k: list(v) for k, v in (a or {}).items() if isinstance(v, list)}
+    for k, v in (b or {}).items():
+        if not isinstance(v, list):
+            continue
+        cur = out.setdefault(k, [])
+        for name in v:
+            if name not in cur:
+                cur.append(name)
+    return out
+
+
+def _merge_seen(a, b) -> dict:
+    """state/stock_ledger.json: clip id -> ISO timestamp. Union, latest wins.
+
+    The ledger answers "did we use this stock clip in the last 30 days", so a
+    later sighting is the one that matters and no id may be dropped.
+    """
+    out = dict(a or {})
+    for k, v in (b or {}).items():
+        if k not in out or str(v) > str(out[k]):
+            out[k] = v
+    return out
+
+
 def _merge_jsonl(a: str | None, b: str | None) -> str:
     seen, out = set(), []
     for text in (a, b):
@@ -107,6 +145,10 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         merged = _merge_counts(theirs, ours)
     elif rel == "output/production_log.json":
         merged = _merge_log(theirs, ours)
+    elif rel == "state/l2_usage.json":
+        merged = _merge_used(theirs, ours)
+    elif rel == "state/stock_ledger.json":
+        merged = _merge_seen(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))
