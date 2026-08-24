@@ -45,6 +45,7 @@ from factverse import captions
 from factverse import branding
 from factverse import voice
 from factverse import tts_kokoro
+from factverse import tts_eleven
 from factverse import thumbnail
 from factverse import infographics
 from factverse import screencap
@@ -1035,6 +1036,14 @@ def synthesize_voice(narration: str, script: dict | None = None):
         if out:
             return out, None
 
+    # spec v3-E #11: the flagged paid voice runs first and fails soft into the free
+    # chain — merging this costs nothing until the key, flag and voice id all exist.
+    if tts_eleven.available():
+        out = tts_eleven.synth(narration, str(fv.TEMP / "voice.mp3"))
+        if out:
+            print("  🎙️  ElevenLabs voice (verdict-window flag).")
+            return out
+        print("   ⚠️ ElevenLabs unavailable — falling back to the free chain.")
     if provider in ("kokoro", "clone"):
         if tts_kokoro.available():
             segs = _dialogue_segments(script or {}, narration)
@@ -1052,6 +1061,60 @@ def synthesize_voice(narration: str, script: dict | None = None):
     audio = str(fv.TEMP / "voice.mp3")
     words = captions.synth_with_words(narration, fv.VOICE, fv.RATE, audio)
     return (audio, words) if words else (None, None)
+
+
+def _tool_short_name(script: dict) -> str:
+    t = str(script.get("signal_title") or script.get("title") or "").split(":")[0]
+    return t.split("/")[-1].strip() or "It"
+
+
+def tool_chapters(script: dict, starts: list, shift: float) -> str:
+    """spec v3-E #6: LLM-free chapters for the tool lane. The video's anatomy is fixed
+    by its own prompt (hook / what it is / install / uses / honest limit / command), so
+    the chapters are derivable from scene roles and the REAL scene starts. Any missing
+    role returns "" and the LLM path runs unchanged — never guess a timestamp."""
+    scenes = script.get("scenes") or []
+    if script.get("format") != "tool" or not starts or len(starts) != len(scenes)             or len(scenes) < 5:
+        return ""
+    tool = _tool_short_name(script)
+    inst = next((i for i in range(1, len(scenes) - 1)
+                 if any(k in scenes[i].get("narration", "").lower()
+                        for k in screencap.INSTALL_KW)), None)
+    skip = next((i for i in range(1, len(scenes))
+                 if re.search(r"\bskip\b|honest limit|not for you|should not bother",
+                              scenes[i].get("narration", "").lower())), None)
+    if inst is None or skip is None:
+        return ""
+    idxs = [0, inst, inst + 1, skip, len(scenes) - 1]
+    if any(b <= x for x, b in zip(idxs, idxs[1:])):
+        return ""
+
+    def ts(i):
+        t = max(0, int(starts[i] + shift))
+        return f"{t // 60}:{t % 60:02d}"
+
+    secs = [0] + [max(0, int(starts[i] + shift)) for i in idxs[1:]]
+    if any(b <= x for x, b in zip(secs, secs[1:])):   # YouTube needs strictly increasing
+        return ""
+    labels = [f"What {tool} Does", f"Install {tool}", "3 Things to Build",
+              "Who Should Skip It", "The Exact Command"]
+    rows = ["0:00 " + labels[0]] + [f"{ts(i)} {l}" for i, l in zip(idxs[1:], labels[1:])]
+    return "\n".join(rows)
+
+
+def pinned_comment(script: dict, prev_url: str = "") -> str:
+    """spec v3-E #7: the auto-comment is the only API-writable engagement surface.
+    Under a tool video it carries the two things a viewer opens the comments for —
+    the exact command and the cheat sheet — instead of a news question."""
+    if script.get("format") == "tool" and script.get("deliverable"):
+        txt = "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
+        if script.get("cheat_sheet"):
+            txt += "\n📄 Free cheat sheet: " + deliverable.public_url(script["cheat_sheet"])
+        return txt + "\nWhat should I test next?"
+    base = ("Sources are in the description. What's your take — hype or turning point? 👇")
+    if prev_url:
+        base += f"\n\nMissed the last one: {prev_url}"
+    return base
 
 
 def build_chapters(script: dict, starts: list, shift: float) -> str:
@@ -1557,7 +1620,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
     if starts:
         cold_shift = l2._dur(fv.TEMP / "l2_cold.mp4") if l2_rec.get("cold_open") else 0.0
-        chapters = build_chapters(script, starts, intro_shift + cold_shift)
+        chapters = (tool_chapters(script, starts, intro_shift + cold_shift)
+                    or build_chapters(script, starts, intro_shift + cold_shift))
         if chapters:
             script["description"] = script["description"].rstrip() + "\n\n" + chapters
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
@@ -1620,9 +1684,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         # binge architecture: every long-form lands in exactly one topic playlist
         eng.yt_playlist_add(yt_url, PLAYLIST_BY_FORMAT.get(script.get("format", fmt),
                                                            "AI News, Decoded"))
-        eng.yt_comment(yt_url, "Sources are in the description. What's your take — "
-                               "hype or turning point? 👇"
-                               + (f"\n\nMissed the last one: {prev_url}" if prev_url else ""))
+        eng.yt_comment(yt_url, pinned_comment(script, prev_url))
         if prev_url:
             eng.yt_comment(prev_url, f"📢 The next episode is live: {yt_url}")
 

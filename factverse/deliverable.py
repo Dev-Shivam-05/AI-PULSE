@@ -120,6 +120,23 @@ def _clean(text: str, unicode_ok: bool) -> str:
     return t if unicode_ok else t.encode("latin-1", "ignore").decode("latin-1")
 
 
+def meta_line(script: dict) -> str:
+    """spec v3-E #8: the receipts stamp — stars/downloads, license, checked-on date —
+    exactly the per-item line HAL's field guide carries. Empty when no facts exist."""
+    vf = script.get("verified_facts") or {}
+    if not vf:
+        return ""
+    parts = []
+    if vf.get("stars") is not None:
+        parts.append(f"★ {vf['stars']:,}")
+    if vf.get("downloads") is not None:
+        parts.append(f"{vf['downloads']:,} downloads")
+    if vf.get("license"):
+        parts.append(str(vf["license"]))
+    parts.append("checked " + _dt.date.today().isoformat())
+    return " · ".join(parts)
+
+
 def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str | None:
     """A4 portrait, exactly one page (sections are line-capped, never overflow)."""
     from reportlab.lib.pagesizes import A4

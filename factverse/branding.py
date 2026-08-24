@@ -160,7 +160,7 @@ def _logo(target_w, tagline=True):
         tg = Image.new("RGBA", (1760, 110), (0, 0, 0, 0))
         td = ImageDraw.Draw(tg)
         tx = 482
-        for ch in "AI NEWS, DECODED":
+        for ch in fv.TAGLINE:
             td.text((tx, 12), ch, font=ft, fill=SUBT + (255,))
             bb = td.textbbox((0, 0), ch, font=ft)
             tx += (bb[2] - bb[0]) + 16
@@ -248,7 +248,7 @@ def make_channel_banner(out=None):
     canvas = img.convert("RGBA")
     canvas.alpha_composite(logo, ((BW - logo.width) // 2, BH // 2 - logo.height + 30))
     ft = _font(54)
-    tag = _white_text("AI NEWS, DECODED  ·  NEW VIDEO EVERY DAY", ft, color=SUBT)
+    tag = _white_text(f"{fv.TAGLINE}  ·  NEW VIDEO EVERY DAY", ft, color=SUBT)
     canvas.alpha_composite(tag, ((BW - tag.width) // 2, BH // 2 + 158))
     canvas.convert("RGB").save(str(out), "PNG")
     print(f"  ✅ Channel banner: {out}")
@@ -323,12 +323,28 @@ def make_outro(out):
     return out
 
 
+def _brand_stamp() -> str:
+    return f"{fv.CHANNEL_NAME}|{fv.TAGLINE}"
+
+
 def ensure_assets(force=False):
+    # spec v3-E #10: a Studio rename or tagline change must apply itself on the next
+    # run — the stamp records which brand the bumpers were rendered for.
     intro, outro = fv.ASSETS / "intro.mp4", fv.ASSETS / "outro.mp4"
+    stamp = fv.ASSETS / ".brand"
+    try:
+        if stamp.read_text(encoding="utf-8") != _brand_stamp():
+            force = True
+    except Exception:
+        force = True
     if force or not bumper_ok(intro):
         make_intro(intro)
     if force or not bumper_ok(outro):
         make_outro(outro)
+    try:
+        stamp.write_text(_brand_stamp(), encoding="utf-8")
+    except Exception:
+        pass
     return intro, outro
 
 

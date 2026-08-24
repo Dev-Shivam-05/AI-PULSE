@@ -124,6 +124,7 @@ def flag(name: str, default: bool = False) -> bool:
 # One place to rebrand the channel. Change channel_name in config.json anytime.
 CHANNEL_NAME = setting("channel_name", "AI Pulse")
 CHANNEL_HANDLE = setting("channel_handle", "aipulse")
+TAGLINE = setting("tagline", "AI YOU CAN USE")   # v3-E #10
 CHANNEL_TAGLINE = setting("channel_tagline", "AI news, decoded")
 
 # --------------------------------------------------------------- paths ------

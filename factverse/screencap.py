@@ -264,6 +264,11 @@ def make_code_card(deliverable: dict, out_mp4: str, seconds: float = 6.0) -> str
     return None
 
 
+# Scenes that narrate installing/running the tool — shared with the deterministic
+# chapter builder (spec v3-E #6) so both surfaces agree on what an "install scene" is.
+INSTALL_KW = ("install", "command", "clone", "pip ", "terminal", "run it", "set it up")
+
+
 def _lead_with(clips: list, card: str) -> None:
     """Put the card first. A stat card already leading the scene is replaced —
     step5_build time-shares a scene equally between its clips, and a third clip
@@ -286,7 +291,7 @@ def inject_code_card(script: dict, scene_clips: list) -> int:
         return 0
     _lead_with(scene_clips[-1], card)
     placed = 1
-    kw = ("install", "command", "clone", "pip ", "terminal", "run it", "set it up")
+    kw = INSTALL_KW
     scenes = script.get("scenes") or []
     for i in range(1, min(len(scenes), len(scene_clips)) - 1):   # never the hook
         if any(w in str(scenes[i].get("narration", "")).lower() for w in kw):

@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from factverse import captions
 from factverse.intelligence import signal_engine
 from factverse import ai_pipeline as ap
+from factverse import deliverable
 
 
 # --------------------------------------------------------------- captions
@@ -1755,3 +1756,112 @@ def test_thumb_contract_demands_a_declarative_number():
     line = c.split("thumb_text:")[1].split("\n-")[0]
     assert "?" not in line, "the thumb_text contract line must not model a question"
     assert "FREE" in line
+
+
+def test_tool_chapters_need_no_llm(monkeypatch):
+    """v3-E #6: the tool video's anatomy is fixed by its own prompt, so chapters are
+    derivable — and the LLM version shipped 'Fragile Trust Broken' and auto-titlecased
+    'Ai' on two live public descriptions."""
+    def no_llm(*a, **k):
+        raise AssertionError("tool_chapters must not call the LLM")
+    monkeypatch.setattr(ap.llm, "generate_json", no_llm)
+    script = {"format": "tool", "signal_title": "ollama/ollama: run models",
+              "scenes": [
+                  {"narration": "By the end you will run a private AI."},
+                  {"narration": "The tool is Ollama, open source."},
+                  {"narration": "Getting it is one install command in the terminal."},
+                  {"narration": "Now the fun part, three things to make."},
+                  {"narration": "More uses here."},
+                  {"narration": "Honest limit: skip it if your machine is low on RAM."},
+                  {"narration": "The exact command is in the description."}]}
+    starts = [0.0, 11.0, 22.0, 33.0, 44.0, 55.0, 66.0]
+    out = ap.tool_chapters(script, starts, 6.0)
+    assert out.startswith("0:00 What ollama Does")
+    assert "0:28 Install ollama" in out          # 22 + 6 shift
+    assert "0:39 3 Things to Build" in out
+    assert "1:01 Who Should Skip It" in out
+    assert "1:12 The Exact Command" in out
+
+    # a script without a recognisable install scene falls back (returns "")
+    flat = {"format": "tool", "scenes": [{"narration": f"scene {i}"} for i in range(7)]}
+    assert ap.tool_chapters(flat, starts, 0.0) == ""
+    # a news script never takes this path
+    script["format"] = "news"
+    assert ap.tool_chapters(script, starts, 6.0) == ""
+
+
+def test_pinned_comment_carries_the_command_on_tool_videos():
+    """v3-E #7: the only API-writable engagement surface posted a news question under
+    tool videos; the two things a tool viewer opens comments for are the command and
+    the PDF."""
+    tool = {"format": "tool",
+            "deliverable": {"kind": "command", "text": "pip install ollama"},
+            "cheat_sheet": "2026-08-24-x.pdf"}
+    txt = ap.pinned_comment(tool)
+    assert "pip install ollama" in txt
+    assert deliverable.public_url("2026-08-24-x.pdf") in txt
+    news = {"format": "news"}
+    assert "Sources are in the description" in ap.pinned_comment(news, "https://prev")
+    assert "https://prev" in ap.pinned_comment(news, "https://prev")
+
+
+def test_pdf_meta_line_renders_the_receipts():
+    """v3-E #8: HAL's field guide stamps stars+license+date per item; ours renders the
+    same line from verified_facts and disappears cleanly without them."""
+    import datetime as _dt
+    s = {"verified_facts": {"stars": 179314, "license": "MIT"}}
+    line = deliverable.meta_line(s)
+    assert "★ 179,314" in line and "MIT" in line
+    assert _dt.date.today().isoformat() in line
+    assert deliverable.meta_line({}) == ""
+    assert deliverable.meta_line({"verified_facts": {}}) == ""
+
+
+def test_brand_assets_regenerate_when_the_brand_changes(tmp_path, monkeypatch):
+    """v3-E #10: the sting/banner still sell v2 news ('AI NEWS, DECODED') while the
+    default lane is tools — and a Studio rename must apply itself on the next run,
+    not wait for someone to remember to delete assets/."""
+    from factverse import branding, config as fv2
+    calls = []
+    monkeypatch.setattr(fv2, "ASSETS", tmp_path)
+    monkeypatch.setattr(branding, "make_intro", lambda p: calls.append("intro"))
+    monkeypatch.setattr(branding, "make_outro", lambda p: calls.append("outro"))
+    monkeypatch.setattr(branding, "bumper_ok", lambda p: True)
+
+    branding.ensure_assets()                      # no stamp yet -> regen
+    assert calls == ["intro", "outro"]
+    branding.ensure_assets()                      # stamp matches -> no regen
+    assert calls == ["intro", "outro"]
+    monkeypatch.setattr(fv2, "CHANNEL_NAME", "ToolDojo-Renamed")
+    branding.ensure_assets()                      # brand changed -> regen
+    assert calls == ["intro", "outro", "intro", "outro"]
+
+
+def test_elevenlabs_seam_is_off_by_default_and_fails_soft(monkeypatch, tmp_path):
+    """v3-E #11: the paid voice is a flag + key + voice id, all absent by default —
+    merging it costs nothing. With a stubbed API it yields word timings; any failure
+    must reach the kokoro/edge chain unchanged."""
+    from factverse import tts_eleven
+    monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
+    assert not tts_eleven.available()
+
+    # character alignment -> word timings, pure
+    words = tts_eleven._words_from_chars(
+        list("hi you"), [0.0, 0.1, 0.2, 0.3, 0.4, 0.5],
+        [0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+    assert words == [(0.0, 0.2, "hi"), (0.3, 0.6, "you")]
+
+    # synthesize_voice prefers the seam when available...
+    monkeypatch.setattr(ap.tts_eleven, "available", lambda: True)
+    monkeypatch.setattr(ap.tts_eleven, "synth",
+                        lambda text, out: (str(tmp_path / "v.mp3"), [(0.0, 1.0, "hi")]))
+    audio, words = ap.synthesize_voice("hi", {})
+    assert audio.endswith("v.mp3") and words == [(0.0, 1.0, "hi")]
+
+    # ...and ANY failure falls through to the existing chain
+    monkeypatch.setattr(ap.tts_eleven, "synth", lambda text, out: None)
+    monkeypatch.setattr(ap.tts_kokoro, "available", lambda: False)
+    monkeypatch.setattr(ap.captions, "synth_with_words",
+                        lambda *a, **k: [(0.0, 0.5, "edge")])
+    audio, words = ap.synthesize_voice("hi", {})
+    assert words == [(0.0, 0.5, "edge")]
