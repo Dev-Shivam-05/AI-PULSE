@@ -1609,3 +1609,149 @@ def test_script_tool_falls_back_to_the_page_when_the_raw_readme_is_missing(monke
     ap.script_tool({"title": "o/r", "source": "github", "url": "https://github.com/o/r"})
     assert seen[0] == "https://raw.githubusercontent.com/o/r/HEAD/README.md"
     assert seen[1] == "https://github.com/o/r", "a missing raw README must fall back to the page"
+
+
+# ------------------------------------------------- v3-E: receipts + packaging precision
+class _FakeResp:
+    def __init__(self, code=200, body=None):
+        self.status_code = code
+        self._body = body or {}
+        self.headers = {"content-type": "application/json"}
+    def json(self):
+        return self._body
+
+
+def test_verified_facts_reach_the_writer_and_survive_rewrites(monkeypatch):
+    """v3-E #1: sources.py fetches stars and throws them away; the prompt demands
+    'stars, size, price' with no numbers to satisfy it. Measured: the last two live
+    scripts carried ~0.1-0.25 digit-tokens per 100 words and plan_cards returned []."""
+    def fake_get(url, **kw):
+        if "api.github.com/repos/" in url:
+            return _FakeResp(200, {"stargazers_count": 12345,
+                                   "license": {"spdx_id": "MIT"},
+                                   "pushed_at": "2026-08-20T00:00:00Z",
+                                   "open_issues_count": 42})
+        raise AssertionError("unexpected GET " + url)
+    monkeypatch.setattr(ap.requests, "get", fake_get)
+    facts = ap._verified_facts("https://github.com/org/repo")
+    assert facts["stars"] == 12345 and facts["license"] == "MIT"
+
+    # the fetch NEVER raises the day away
+    def boom(*a, **k):
+        raise RuntimeError("net down")
+    monkeypatch.setattr(ap.requests, "get", boom)
+    assert ap._verified_facts("https://github.com/org/repo") == {}
+    assert ap._verified_facts("https://example.com/x") == {}
+
+    # the writer sees the numbers, the script carries them, the rewrite passes keep them
+    prompts = []
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: "install: ```\npip install repo\n``` prose. " * 40)
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {"stars": 12345, "license": "MIT"})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: [])
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or None)
+    ap.script_tool({"title": "org/repo: helpful", "source": "gh",
+                    "url": "https://github.com/org/repo"})
+    assert "VERIFIED FACTS" in prompts[0] and "12345" in prompts[0].replace(",", "")
+    assert "verified_facts" in ap._CARRY, \
+        "a script-level key not in _CARRY is DROPPED by every rewrite pass (the documented trap)"
+
+
+def test_a_command_the_readme_never_shows_cannot_ship(monkeypatch):
+    """v3-E #2: only prompt text enforces the copy-paste contract; a hallucinated flag
+    lands on the code card, the description AND the PDF. Containment is pure."""
+    g = "Install with:\n```\npip   install\n  ollama\n```\nthen run it."
+    assert ap.command_grounded("pip install ollama", g)
+    assert ap.command_grounded("pip install ollama • run it", g)
+    assert not ap.command_grounded("pip install ollama --turbo-flag", g)
+
+    # script_tool: an ungrounded deliverable is REPLACED by the readme's first fenced block
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: ("intro prose. ```\ncurl -fsSL https://x.sh | sh\n``` "
+                                               "more prose. " * 30))
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: [])
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: {"x": 1})
+    monkeypatch.setattr(ap, "_validate_script", lambda *a, **k: {
+        "title": "T", "deliverable": {"kind": "command",
+                                      "text": "curl -fsSL https://x.sh | sh --invented",
+                                      "url": "https://github.com/o/r"}})
+    s = ap.script_tool({"title": "o/r", "source": "gh", "url": "https://github.com/o/r"})
+    assert s["deliverable"]["text"] == "curl -fsSL https://x.sh | sh"
+
+    # ...and a readme with NO fenced command rejects the candidate like no-deliverable
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: "prose only, no fences. " * 60)
+    assert ap.script_tool({"title": "o/r", "source": "gh",
+                           "url": "https://github.com/o/r"}) is None
+
+
+def test_a_number_the_video_never_says_is_stripped_from_the_packaging():
+    """v3-E #3: the 0821 run shipped 'Secret AI Cash Cow?' + 'AI $$ Backlash' + a
+    'how much' hook over 17 scenes with ZERO dollar figures. fact_check only sees claims
+    that EXIST — an absent promised number is invisible to every gate."""
+    from factverse import gates
+    ok = {"title": "Ollama hits 54% adoption in a year", "thumb_text": "54% FREE",
+          "scenes": [{"narration": "adoption crossed 54 percent this year"}],
+          "verified_facts": {}}
+    r = gates.packaging_payoff(ok)
+    assert r["ok"] and ok["thumb_text"] == "54% FREE"
+
+    bad = {"title": "This tool is 97% faster than GPT", "thumb_text": "97% FASTER",
+           "scenes": [{"narration": "it is very fast, no benchmark was given"}],
+           "verified_facts": {}}
+    r = gates.packaging_payoff(bad)
+    assert not r["ok"] and r["fixed"]
+    assert "97" not in bad["thumb_text"] and "FASTER" in bad["thumb_text"]
+    assert "97" not in bad["title"]
+
+    # verified_facts count as support — the receipts ARE the source of packaging numbers
+    vf = {"title": "179,314 stars: the free private AI", "thumb_text": "179,314 STARS. FREE.",
+          "scenes": [{"narration": "the stars keep climbing"}],
+          "verified_facts": {"stars": 179314}}
+    r = gates.packaging_payoff(vf)
+    assert r["ok"] and "179,314" in vf["thumb_text"]
+
+    # stripping that guts the title falls back to the honest template
+    gut = {"title": "40% off", "thumb_text": "OK",
+           "signal_title": "ollama/ollama: run models",
+           "scenes": [{"narration": "no numbers here"}], "verified_facts": {}}
+    gates.packaging_payoff(gut)
+    assert gut["title"] == "How to use ollama (free)"
+
+
+def test_the_limitation_scene_is_offered_real_issues(monkeypatch):
+    """v3-E #4: the 'honest limitation' is currently invented from a vendor README that
+    never admits limits. Top-commented open issues are the only permitted basis."""
+    def fake_get(url, **kw):
+        if "/issues" in url:
+            return _FakeResp(200, [{"title": "OOM on 8GB machines"},
+                                   {"title": "Slow first token on CPU"}])
+        return _FakeResp(200, {"stargazers_count": 1})
+    monkeypatch.setattr(ap.requests, "get", fake_get)
+    issues = ap._top_issues("https://github.com/org/repo")
+    assert issues == ["OOM on 8GB machines", "Slow first token on CPU"]
+
+    # PRs are issues too in the GitHub API — they must not become "limitations"
+    def pr_get(url, **kw):
+        return _FakeResp(200, [{"title": "PR: add feature", "pull_request": {"url": "x"}},
+                               {"title": "real bug"}])
+    monkeypatch.setattr(ap.requests, "get", pr_get)
+    assert ap._top_issues("https://github.com/org/repo") == ["real bug"]
+
+    prompts = []
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: "x ```\npip install repo\n``` y. " * 40)
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: ["OOM on 8GB machines"])
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or None)
+    ap.script_tool({"title": "org/repo", "source": "gh", "url": "https://github.com/org/repo"})
+    assert "OOM on 8GB machines" in prompts[0]
+
+
+def test_thumb_contract_demands_a_declarative_number():
+    """v3-E #5: both example strings in the old contract were hedge questions
+    ('CHEAPER THAN GPT?'); HAL ships numeric declaratives ('-33%', 'THE FREE ONE')."""
+    c = ap._output_contract("10-14", "50-70")
+    line = c.split("thumb_text:")[1].split("\n-")[0]
+    assert "?" not in line, "the thumb_text contract line must not model a question"
+    assert "FREE" in line

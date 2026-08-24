@@ -104,6 +104,9 @@ TTS_PROVIDER = setting("tts_provider", "edge")
 STOCK_PROVIDER = setting("stock_provider", "pexels")
 VIDEO_PROVIDER = setting("video_provider", "none")
 
+# v3-E #9: the writer gets the stronger free-tier model; gates stay on flash-lite.
+# llm.generate() falls back down the chain on a quota miss, so this can only help.
+WRITER_MODEL = setting("writer_model", "gemini-2.5-flash")
 VOICE = setting("voice", "en-US-GuyNeural")
 RATE = setting("voice_rate", "+5%")
 KOKORO_VOICE = setting("kokoro_voice", "af_heart")

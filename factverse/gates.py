@@ -130,6 +130,48 @@ _ADVICE_PATTERNS = re.compile(
     r"what this means for your portfolio)\b", re.I)
 
 
+_NUM_TOKEN = re.compile(r"\$ ?\d[\d,.]*|\d[\d,.]*%?")
+
+
+def packaging_payoff(script: dict) -> dict:
+    """spec v3-E #3: every digit token in title/thumb_text must be spoken in the
+    narration or present in verified_facts. Mutates the script deterministically:
+    unsupported tokens are stripped; a title gutted below 4 words becomes the honest
+    template. Never raises — this runs inside the unattended publish path.
+
+    Why it exists: the 2026-08-21 run shipped title "Secret AI Cash Cow?" and hook
+    "you won't believe how much" over 17 scenes containing zero dollar figures.
+    fact_check verifies claims that exist; an ABSENT promised number passed every gate."""
+    spoken = " ".join(sc.get("narration", "") for sc in script.get("scenes") or [])
+    support = spoken.replace(",", "")
+    support += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values())
+
+    def _ok(tok: str) -> bool:
+        core = tok.replace(",", "").strip("$% .")
+        return bool(core) and core in support
+
+    fixed, evidence = [], []
+    for field in ("title", "thumb_text"):
+        val = str(script.get(field) or "")
+        if not val:
+            continue
+        bad = [t for t in _NUM_TOKEN.findall(val) if not _ok(t)]
+        if not bad:
+            continue
+        newv = val
+        for t in bad:
+            newv = newv.replace(t, " ")
+        newv = re.sub(r"\s{2,}", " ", newv).strip(" .,:—-")
+        if field == "title" and len(newv.split()) < 4:
+            tool = str(script.get("signal_title") or script.get("title") or "").split(":")[0]
+            tool = tool.split("/")[-1].strip() or "this tool"
+            newv = f"How to use {tool} (free)"
+        evidence.append(f"{field}: {bad}")
+        script[field] = newv
+        fixed.append(field)
+    return {"ok": not fixed, "fixed": fixed, "evidence": evidence}
+
+
 def sensitive_topic_risk(title: str, summary: str = "") -> bool:
     """Cheap keyword screen: does this topic surface finance/health/legal/politics?
     A hit does NOT reject the topic — reporting is allowed. It arms the

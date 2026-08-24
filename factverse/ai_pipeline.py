@@ -32,6 +32,7 @@ from __future__ import annotations
 import datetime as _dt
 import html
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -157,6 +158,107 @@ def _gh_readme_url(url: str) -> str:
     m = re.match(r"https?://github\.com/([\w.-]+)/([\w.-]+?)/?$", str(url).strip())
     return (f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2)}/HEAD/README.md"
             if m else "")
+
+
+def _gh_repo(url: str):
+    """(owner, repo) for a github.com repo URL, else None."""
+    m = re.match(r"https?://github\.com/([\w.-]+)/([\w.-]+?)/?$", str(url).strip())
+    return (m.group(1), m.group(2)) if m else None
+
+
+def _gh_headers() -> dict:
+    """The publish step already exports GH_TOKEN (spec v3-C.1 #7); authenticated
+    calls dodge the shared-runner-IP 60/hr anonymous limit. Fail-soft to anonymous."""
+    h = {"Accept": "application/vnd.github+json", "User-Agent": "Mozilla/5.0 FactVerse"}
+    tok = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if tok:
+        h["Authorization"] = f"Bearer {tok}"
+    return h
+
+
+def _verified_facts(url: str) -> dict:
+    """spec v3-E #1: real numbers from the official API, or {}. The writer's prompt
+    demands "stars, size, price" — until now the pipeline fetched stars in sources.py
+    and threw them away, so every number in a script was the LLM's invention.
+    Fail-soft: this runs unattended; a network miss must cost the numbers, not the day."""
+    try:
+        repo = _gh_repo(url)
+        if repo:
+            r = requests.get(f"https://api.github.com/repos/{repo[0]}/{repo[1]}",
+                             headers=_gh_headers(), timeout=15)
+            if r.status_code != 200:
+                return {}
+            d = r.json()
+            out = {}
+            if d.get("stargazers_count") is not None:
+                out["stars"] = int(d["stargazers_count"])
+            lic = (d.get("license") or {}).get("spdx_id")
+            if lic and lic != "NOASSERTION":
+                out["license"] = lic
+            if d.get("pushed_at"):
+                out["last_update"] = str(d["pushed_at"])[:10]
+            if d.get("open_issues_count") is not None:
+                out["open_issues"] = int(d["open_issues_count"])
+            return out
+        m = re.match(r"https?://huggingface\.co/([\w.-]+(?:/[\w.-]+)?)/?$", str(url).strip())
+        if m:
+            r = requests.get(f"https://huggingface.co/api/models/{m.group(1)}", timeout=15)
+            if r.status_code != 200:
+                return {}
+            d = r.json()
+            out = {}
+            if d.get("downloads") is not None:
+                out["downloads"] = int(d["downloads"])
+            if d.get("likes") is not None:
+                out["likes"] = int(d["likes"])
+            return out
+    except Exception:
+        pass
+    return {}
+
+
+def _top_issues(url: str, n: int = 5) -> list[str]:
+    """spec v3-E #4: the most-commented open issues, titles only. They are the only
+    permitted basis for the honest-limitation scene — a vendor README never admits
+    limits, so that scene was the least grounded one in the video. The GitHub issues
+    endpoint returns PRs too; those are filtered (a PR title is not a limitation)."""
+    try:
+        repo = _gh_repo(url)
+        if not repo:
+            return []
+        r = requests.get(f"https://api.github.com/repos/{repo[0]}/{repo[1]}/issues",
+                         params={"sort": "comments", "state": "open", "per_page": n * 2},
+                         headers=_gh_headers(), timeout=15)
+        if r.status_code != 200:
+            return []
+        return [str(i.get("title", "")).strip() for i in r.json()
+                if not i.get("pull_request") and i.get("title")][:n]
+    except Exception:
+        return []
+
+
+def _squash(s: str) -> str:
+    return " ".join(str(s).split())
+
+
+def command_grounded(text: str, grounding: str) -> bool:
+    """spec v3-E #2: every command segment of the deliverable must appear verbatim
+    (whitespace-normalized) in the source text. Until now only PROMPT TEXT enforced
+    the copy-paste contract, and the string ships on three surfaces at once: the
+    code card, the description and the PDF."""
+    g = _squash(grounding)
+    segs = [p.strip() for p in re.split(r"[•\n]+", str(text or "")) if p.strip()]
+    return bool(segs) and all(_squash(p) in g for p in segs)
+
+
+def _first_fenced(grounding: str) -> str:
+    """The source's own first fenced code block — the substitution when the LLM's
+    deliverable fails containment. <=200 chars, matching the deliverable contract."""
+    m = re.search(r"```[^\n`]*\n(.*?)```", str(grounding or ""), re.S)
+    if not m:
+        return ""
+    lines = [l.strip() for l in m.group(1).splitlines() if l.strip()]
+    return " • ".join(lines)[:200]
 
 
 # --------------------------------------------------------------- policy gates
@@ -299,8 +401,9 @@ def _output_contract(scene_range: str, words_per_scene: str) -> str:
   in the first 30 chars, ONE concrete number where honest, consequence framing over event
   framing, never all-caps, no clickbait lies.
 - title: the strongest of the 3.
-- thumb_text: 2-4 PUNCHY words for the thumbnail (NOT the title — e.g. "CHEAPER THAN GPT?",
-  "NO MORE CODERS?", "10X FASTER").
+- thumb_text: a DECLARATIVE 2-4 word claim for the thumbnail (NOT the title). No question
+  mark. It MUST contain one number taken from the source/verified facts, or the word FREE
+  (e.g. "10X FASTER", "FREE. OFFLINE.", "179K STARS").
 - description: 150+ words; first 2 lines = hook + main keyword; 5-7 hashtags incl. #AI; end with
   "Subscribe to {fv.CHANNEL_NAME}".
 - tags: 8-12 relevant tags.
@@ -487,6 +590,24 @@ def script_tool(item: dict) -> dict | None:
     if unsuitable:
         print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
         return None
+    # spec v3-E #1/#4: hand the writer REAL numbers and REAL complaints. Both are
+    # fail-soft — an API miss costs the block, never the video.
+    facts = _verified_facts(url)
+    issues = _top_issues(url)
+    facts_block = ""
+    if facts:
+        facts_block = ("VERIFIED FACTS (fetched " + _dt.date.today().isoformat()
+                       + " from the official API — use these numbers verbatim; they are the"
+                       " ONLY numbers you may state about the tool itself):\n"
+                       + "\n".join((f"- {k}: {v:,}" if isinstance(v, int) else f"- {k}: {v}")
+                                    for k, v in facts.items()) + "\n\n")
+    lim_rule = ('- ONE honest limitation scene (who should NOT bother; what it can not do '
+                'yet) — mark it "filter": true.')
+    if issues:
+        # spec v3-E #4: real complaints from the tool's own tracker, not invented humility
+        lim_rule = ('- ONE honest limitation scene — mark it "filter": true. Base it ONLY on '
+                    "these real open issues from the tool's own tracker, or on limits stated "
+                    "in the SOURCE EXCERPT: " + "; ".join(issues))
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
 Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
 DO something concrete in the next ten minutes — that is the entire point of the video.
@@ -494,7 +615,7 @@ DO something concrete in the next ten minutes — that is the entire point of th
 TOOL: {title}
 SOURCE: {source}  ({url})
 
-SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
+{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
 {grounding}
 
 STRUCTURE (a transaction, not a broadcast):
@@ -504,7 +625,7 @@ STRUCTURE (a transaction, not a broadcast):
 - GETTING IT RUNNING: the exact real steps/commands from the source. If the source shows an
   install command, quote it EXACTLY — commands are the one place verbatim is required, not banned.
 - What to actually make with it: 3-5 concrete uses, most impressive first.
-- ONE honest limitation scene (who should NOT bother; what it can not do yet) — mark it "filter": true.
+{lim_rule}
 - Final scene: the single next action + "the exact command is in the description" + ONE question
   to the audience + subscribe, all in two sentences.
 {_RETENTION_RULES}
@@ -515,14 +636,29 @@ STRUCTURE (a transaction, not a broadcast):
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
 "url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
-    s = llm.generate_json(prompt, max_tokens=8192)
+    s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
     if s and not s.get("deliverable"):
         print("     ↻ tool script had no deliverable — rejected.")
         return None
     if s:
+        # spec v3-E #2: the copy-paste contract is enforced, not requested. A command
+        # the source never shows is replaced by the source's own first fenced block;
+        # a source with neither is not a tool video.
+        dl = s["deliverable"]
+        if not command_grounded(dl.get("text", ""), grounding):
+            fixed = _first_fenced(grounding)
+            if fixed:
+                print(f"     ✂️ deliverable not verbatim in the source — using its own "
+                      f"first code block ({len(fixed)} chars).")
+                dl["text"] = fixed
+            else:
+                print("     ↻ deliverable not found in the source — rejected.")
+                return None
         s["grounding"] = grounding
         s["format"] = "tool"
+        if facts:
+            s["verified_facts"] = facts
     return s
 
 
@@ -663,7 +799,8 @@ ROUNDUP RULES:
 # rewrite prompt never sees them and _validate_script resets them (deliverable ->
 # None, filter_segment -> False). Missing one here silently changes the video.
 _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
-          "filter_segment", "hook_pattern", "deliverable", "cheat_sheet")
+          "filter_segment", "hook_pattern", "deliverable", "cheat_sheet",
+          "verified_facts")   # v3-E #1: fetched numbers must survive every rewrite pass
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1304,6 +1441,12 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
     place_description_blocks(script)   # the advice-gate rewrite may have regenerated the description
+    # spec v3-E #3: a number promised on the packaging must be spoken in the video.
+    # Deterministic fix, never a raise — fact_check only sees claims that EXIST,
+    # so an absent promised number was invisible to every gate until here.
+    _pk = gates.packaging_payoff(script)
+    if not _pk["ok"]:
+        print(f"  ✂️ Packaging promised numbers the script never says — fixed: {_pk['evidence']}")
     # v3-B: a tool video is illustrated by the tool itself — a screen recording
     # of its real page — never stock. capture() fails soft; stock is the fallback.
     scene_clips, tool_shot = None, ""
@@ -1534,6 +1677,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print(f"  ⚠️ Post-publish bookkeeping failed ({type(e).__name__}: {e}) — "
               f"recording the run anyway so today cannot publish twice.")
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
+               packaging=_pk["fixed"],
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts_rendered=len(shorts),
                viral_score=(viral[1] if viral else None),
