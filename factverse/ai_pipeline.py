@@ -147,6 +147,18 @@ def _hf_readme_url(url: str) -> str:
     return f"https://huggingface.co/{m.group(1)}/raw/main/README.md" if m else ""
 
 
+def _gh_readme_url(url: str) -> str:
+    """github.com repo pages are HTML wrapped around the README. Measured 2026-08-24,
+    fetch_text returns a mean 1,637 chars of chrome first ("You signed in with another
+    tab or window", the file listing), so only ~3,360 of the 5,000-char window is ever
+    README — and that chrome is handed to the LLM as "SOURCE EXCERPT (ground every claim
+    in this)" and to gates.fact_check. `HEAD` resolves the default branch without an API
+    call. Hugging Face got this treatment in spec v3-C.1 #2; GitHub never did."""
+    m = re.match(r"https?://github\.com/([\w.-]+)/([\w.-]+?)/?$", str(url).strip())
+    return (f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2)}/HEAD/README.md"
+            if m else "")
+
+
 # --------------------------------------------------------------- policy gates
 def _shingles(text: str, n: int = 8) -> set:
     words = re.sub(r"[^a-z0-9 ]", " ", text.lower()).split()
@@ -441,7 +453,26 @@ def script_tool(item: dict) -> dict | None:
     # back to the page: for a gated or README-less model that fallback grounds
     # the whole video in a Jinja template, which reads as real and is not.
     readme = _hf_readme_url(url)
-    grounding = fetch_text(readme, limit=5000) if readme else fetch_text(url, limit=5000)
+    screen = ""
+    if readme:
+        grounding = screen = fetch_text(readme, limit=5000)
+    else:
+        # Unlike the hub (spec v3-C.1 #2), GitHub KEEPS its page fallback: the hub's
+        # fallback was a Jinja chat_template that reads as real, while GitHub's is only
+        # chrome-padded — the text shipping today. A repo whose readme is .rst, lowercase
+        # or absent must still reach the same place it reaches now.
+        raw = _gh_readme_url(url)
+        grounding = fetch_text(raw, limit=5000) if raw else ""
+        # Grounding and SCREENING are different jobs. The rendered page carries the
+        # repo's topic tags — the strongest intent signal GitHub exposes and the one
+        # thing the raw README does not have: measured 2026-08-24, facefusion is
+        # declared only by its topics ("deep-fake deepfake face-swap faceswap"), so
+        # grounding on the README alone would have let it through. Write the script
+        # from the clean README; let gates.tool_unsuitable read both.
+        page = fetch_text(url, limit=5000)
+        if len(grounding) < TOOL_GROUNDING_MIN:
+            grounding = page
+        screen = f"{grounding} {page}"
     # spec v3-C: a tool page that is all navigation chrome is not grounding.
     # Product Hunt's server HTML is ~640 chars of "Overview Reviews Team More",
     # which cleared fetch_text's 400-char floor AND gates.fact_check's 200-char
@@ -452,7 +483,7 @@ def script_tool(item: dict) -> dict | None:
     # The README is where intent actually shows: a repo titled innocuously can
     # still be a provenance stripper. A tool video TEACHES the tool, so this
     # rejects where sensitive_topic_risk only penalises.
-    unsuitable, term = gates.tool_unsuitable(title, grounding)
+    unsuitable, term = gates.tool_unsuitable(title, screen or grounding)
     if unsuitable:
         print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
         return None

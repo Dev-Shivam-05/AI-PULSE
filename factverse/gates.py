@@ -35,13 +35,66 @@ SENSITIVE = ("finance", "financial", "invest", "stock", "portfolio", "trading",
 # reporting on the same tool would not be. These are the categories this channel
 # will not teach — circumventing provenance/authenticity, defeating safety, and
 # piracy — because a monetised, unattended channel cannot survive one of them.
-# Edit this list; it is deliberately narrow and matches on the title + README.
-UNSUITABLE_TOOL = ("watermark remov", "remove watermark", "watermarks-remover",
-                   "strip provenance", "provenance mark", "c2pa", "synthid",
-                   "ai detector bypass", "detector evasion", "humanize ai text",
-                   "bypass", "jailbreak", "uncensored", "unfiltered", "nsfw",
-                   "deepfake", "face swap", "voice clone", "undress",
-                   "crack", "nulled", "keygen", "piracy", "torrent")
+#
+# The list is split by SURFACE because a term does not mean the same thing in a
+# 90-char repo name as in 5,000 chars of prose (spec v3-C.4, measured 2026-08-24).
+#
+# Terms that identify a tool by what it IS. Matched on the title AND the README:
+# they carry no innocent meaning in AI-tool documentation. Edit this list; it is
+# deliberately narrow.
+UNSUITABLE_TOOL = ("watermark remov", "watermarks remov", "remove watermark",
+                   "remove any watermark", "remove all watermark", "unwatermark",
+                   "strip provenance", "provenance mark",
+                   "ai detector bypass", "detector evasion",
+                   "humanize ai text", "humanizer",
+                   "uncensored", "abliterated", "obliterated",
+                   "voice clon", "clone voice",
+                   "undress", "nudify", "deepnude",
+                   "nulled", "keygen", "piracy")
+
+# Words that only mean something when they NAME the tool. Title only.
+# Measured over 28 flagship AI tools: unsloth's Windows install line is
+# `set-executionpolicy -scope process -executionpolicy bypass`, ComfyUI binds
+# ctrl+b to "bypass selected nodes", and transformers ships a "wise-cracking
+# robot" example prompt. Screening these against a README refuses the tools this
+# lane exists to teach; screening them against the name still catches "GPTBypass".
+UNSUITABLE_NAME_ONLY = ("bypass", "crack", "torrent", "unfiltered")
+
+# Subjects where the tool that DETECTS the thing is the opposite of the tool that
+# DOES it. Blocked UNLESS the text reads as defensive near the term. Measured:
+# these four terms refused the official C2PA SDK and CLI (added to stop provenance
+# STRIPPERS, they blocked the STANDARD), two deepfake detectors, two NSFW safety
+# classifiers, and NVIDIA NeMo-Guardrails. A "how to detect this" video is the
+# utility lane's best content, not its worst.
+UNSUITABLE_SUBJECT = ("nsfw", "deepfake", "deep fake", "face swap", "faceswap",
+                      "c2pa", "synthid", "jailbreak")
+
+# How close a defensive word must sit to the subject term. Measured across the six
+# blocked defensive tools the nearest defensive word was 5-69 chars away; in the
+# live provenance stripper it was 1,049. 120 covers the observed 69 with ~1.7x
+# margin and sits ~9x below the control — the same derivation as TOOL_GROUNDING_MIN.
+DETECTOR_WINDOW = 120
+
+_DEFENSIVE = re.compile(r"detector|detection|classif|forensic|verif|validat|"
+                        r"display|inspect|moderat|protect|guard|defen|mitigat|benchmark")
+# An evasion claim contains a defensive word and inverts it: "undetectable
+# deepfake", "anti-detection technology". It cancels the exemption.
+_EVASION = re.compile(r"undetect|anti detect|evad|defeat")
+
+
+def _norm_terms(s: str) -> str:
+    """Hyphens, underscores and the owner/name slash are how a repo spells a phrase.
+    Matching them as spaces closes a whole class of misses in one line: measured
+    2026-08-24, the live `ShadowAqueduct/watermark-remover` PASSED the title screen
+    because the list held `watermark remov` (space) and `watermarks-remover`."""
+    return re.sub(r"\s+", " ", re.sub(r"[-_/]+", " ", f" {s} ".lower()))
+
+
+def _reads_as_defensive(text: str, at: int, span: int) -> bool:
+    """Does a defensive word sit within DETECTOR_WINDOW of this occurrence, with no
+    evasion claim in the same window?"""
+    w = text[max(0, at - DETECTOR_WINDOW): at + span + DETECTOR_WINDOW]
+    return bool(_DEFENSIVE.search(w)) and not _EVASION.search(w)
 
 
 def tool_unsuitable(title: str, text: str = "") -> tuple[bool, str]:
@@ -49,9 +102,21 @@ def tool_unsuitable(title: str, text: str = "") -> tuple[bool, str]:
 
     Unlike sensitive_topic_risk this DOES reject: the tool lane teaches the viewer
     to run the thing, and build_script simply moves to the next candidate."""
-    t = f" {title} {text} ".lower()
+    t_title = _norm_terms(title)
+    t_all = _norm_terms(f"{title} {text}")
     for k in UNSUITABLE_TOOL:
-        if k in t:
+        if k in t_all:
+            return True, k
+    for k in UNSUITABLE_NAME_ONLY:
+        if k in t_title:
+            return True, k
+    for k in UNSUITABLE_SUBJECT:
+        # A long README names its subject many times; one defensive mention is
+        # enough to exempt the document, so only reject when NO occurrence reads
+        # as defensive (Falconsai's card mentions "nsfw" 381 chars from the
+        # nearest defensive word once, and adjacent to one five times).
+        found = [m.start() for m in re.finditer(re.escape(k), t_all)]
+        if found and not any(_reads_as_defensive(t_all, i, len(k)) for i in found):
             return True, k
     return False, ""
 

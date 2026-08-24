@@ -736,13 +736,30 @@ def test_mangled_block_split_across_a_blank_line_is_fully_excised(monkeypatch):
     assert s["description"].count(ap._DL_MARK) == 1
 
 
-def test_non_hf_tool_grounds_on_the_page_only(monkeypatch):
-    calls = []
-    monkeypatch.setattr(ap, "fetch_text",
-                        lambda u, limit=4000: calls.append(u) or "GITHUB README. " * 60)
-    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: None)
+def test_github_tool_grounds_on_the_raw_readme_but_screens_the_page_too(monkeypatch):
+    """v3-C.4 #4 supersedes the C.1 behaviour asserted here (page only). Grounding and
+    screening are separate: the writer and gates.fact_check get the clean README, while
+    gates.tool_unsuitable also sees the page, whose topic tags are the only place a repo
+    like facefusion declares itself."""
+    calls, prompts = [], []
+
+    def fake(u, limit=4000):
+        calls.append(u)
+        return ("REAL README PROSE. " * 300 if "raw.githubusercontent.com" in u
+                else "You signed in with another tab or window. CHROME. " * 60)
+
+    monkeypatch.setattr(ap, "fetch_text", fake)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or None)
     ap.script_tool({"title": "T", "source": "gh", "url": "https://github.com/org/repo"})
-    assert calls == ["https://github.com/org/repo"]
+    assert calls == ["https://raw.githubusercontent.com/org/repo/HEAD/README.md",
+                     "https://github.com/org/repo"]
+    assert "REAL README PROSE" in prompts[0]
+    assert "You signed in with another tab" not in prompts[0],         "GitHub chrome must never reach the writer or the fact-checker again"
+
+    # a source that is neither GitHub nor the hub is still read from its page only
+    calls.clear()
+    ap.script_tool({"title": "T", "source": "ph", "url": "https://www.producthunt.com/posts/x"})
+    assert calls == ["https://www.producthunt.com/posts/x"]
 
 
 def test_tool_fallback_returns_an_evergreen_labelled_script(monkeypatch):
@@ -1491,3 +1508,104 @@ def test_scene_keeps_its_full_duration_when_a_clip_fails_to_encode():
     # the scene's total is always preserved
     for survived in (1, 2, 3):
         assert abs(sum(eng.sub_durations(30.0, 3, survived)) - 30.0) < 1e-9
+
+
+# ------------------------------------------- v3-C.4: suitability screen precision
+def test_prose_words_do_not_reject_a_readme():
+    """Measured 2026-08-24 over 28 flagship AI tools: 'bypass' and 'crack' are ordinary
+    documentation words. unsloth's own Windows install line is
+    `set-executionpolicy -scope process -executionpolicy bypass`, ComfyUI binds ctrl+b to
+    'bypass selected nodes', and transformers ships a 'wise-cracking robot' example prompt.
+    All three were refused. A word that only means something when it NAMES the tool must
+    screen the title, not 5,000 chars of prose."""
+    from factverse import gates
+    unsloth = (r"git clone unsloth && cd unsloth && set-executionpolicy -scope process "
+               r"-executionpolicy bypass .\install.ps1 --local. " * 20)
+    assert not gates.tool_unsuitable("unslothai/unsloth: finetune LLMs 2x faster", unsloth)[0]
+    comfy = "Keybindings: ctrl + b bypass selected nodes, ctrl + m mute selected nodes. " * 20
+    assert not gates.tool_unsuitable("comfyanonymous/ComfyUI: node-based diffusion UI", comfy)[0]
+    hf = "chat = [{'role': 'system', 'content': 'you are a sassy, wise-cracking robot'}]. " * 20
+    assert not gates.tool_unsuitable("huggingface/transformers", hf)[0]
+    # ...but a tool NAMED for the act is still refused on the title alone
+    assert gates.tool_unsuitable("GPTBypass: bypass any AI detector in one click")[0]
+    assert gates.tool_unsuitable("cracked-ai: keygen for paid AI apps")[0]
+
+
+def test_a_detector_is_not_blocked_by_its_own_subject():
+    """Measured 2026-08-24: 6 of 11 defensive tools were refused by the subject they defend
+    against — including the official C2PA SDK and CLI (the term was added to block provenance
+    STRIPPERS and it blocked the STANDARD), two deepfake DETECTORS and two NSFW classifiers.
+    A 'how to detect this' video is the utility lane's best content, not its worst."""
+    from factverse import gates
+    nsfw = ("NSFW detection machine learning model trained on 60+ gigs of data. "
+            "Keras model of NSFW detector. " * 20)
+    assert not gates.tool_unsuitable("GantMan/nsfw_model: Keras model of NSFW detector", nsfw)[0]
+    dfdc = "Deepfake detection (DFDC) solution. Face forgery detection articles. " * 20
+    assert not gates.tool_unsuitable("selimsef/dfdc_deepfake_challenge", dfdc)[0]
+    c2pa = ("Rust SDK for the core C2PA (Coalition for Content Provenance and Authenticity) "
+            "specification. Command line tool for displaying and adding C2PA manifests. " * 20)
+    assert not gates.tool_unsuitable("contentauth/c2pa-rs: Rust SDK for C2PA", c2pa)[0]
+
+    # the control: a stripper names the very same standards and is still refused
+    stripper = ("Agent skill + stdlib python service that strips multi-vendor AI provenance "
+                "marks from text and files. Clears C2PA plus metadata, covers class-level "
+                "marks from gemini/synthid-text. " * 20)
+    assert gates.tool_unsuitable("ShadowAqueduct/watermark-remover", stripper)[0]
+    # 'undetectable' and 'anti-detection' are evasion claims, never a detector
+    assert gates.tool_unsuitable("x/y", "Undetectable deepfake generator. " * 40)[0]
+    assert gates.tool_unsuitable("x/y", "Deepfake video with anti-detection technology. " * 40)[0]
+
+
+def test_the_live_stripper_is_caught_on_its_own_name():
+    """Measured 2026-08-24: 'ShadowAqueduct/watermark-remover: Purge multi-vendor AI
+    watermarks' PASSED the title screen. The list held 'watermark remov' (space) and
+    'watermarks-remover' (plural); the repo is 'watermark-remover'. It reached script_tool
+    and was rejected only because its README quotes the OTHER repo's name in ASCII art."""
+    from factverse import gates
+    for title in [
+        "ShadowAqueduct/watermark-remover: Purge multi-vendor AI watermarks",
+        "unwatermark.ai — remove any watermark in one click",
+        "XTTS: instant voice cloning from 6 seconds of audio",
+        "nudify studio", "DeepNude AI",
+        "Qwen3-27B-abliterated", "OBLITERATUS/Qwen3.8-27B-OBLITERATED — trending",
+        "AI Humanizer: make GPT text read as human",
+    ]:
+        assert gates.tool_unsuitable(title)[0], f"passed the title screen: {title}"
+    # the C.1 acceptance criterion still holds — these must stay teachable
+    for ok in ["unsloth/Qwen3.8-27B-GGUF — trending model",
+               "MarkItDown converts Office files to Markdown",
+               "Qwen/Qwen3.8-27B — trending image text to text on Hugging Face"]:
+        assert not gates.tool_unsuitable(ok)[0], f"wrongly refused: {ok}"
+
+
+def test_github_candidates_ground_in_the_raw_readme():
+    """Measured 2026-08-24: fetch_text on a github.com page returns a mean 1,637 chars of
+    GitHub chrome ('You signed in with another tab or window', the file listing) before the
+    README starts, so only ~3,360 chars of README are ever read — and that chrome is handed
+    to the LLM as 'SOURCE EXCERPT (ground every claim in this)' and to gates.fact_check.
+    Hugging Face was given the raw card in C.1 decision 2; GitHub never was."""
+    assert (ap._gh_readme_url("https://github.com/org/repo")
+            == "https://raw.githubusercontent.com/org/repo/HEAD/README.md")
+    assert (ap._gh_readme_url("https://github.com/org/repo/")
+            == "https://raw.githubusercontent.com/org/repo/HEAD/README.md")
+    assert ap._gh_readme_url("https://huggingface.co/org/model") == ""
+    assert ap._gh_readme_url("https://github.com/org") == ""          # an owner, not a repo
+    assert ap._gh_readme_url("https://github.com/org/repo/issues/3") == ""
+
+
+def test_script_tool_falls_back_to_the_page_when_the_raw_readme_is_missing(monkeypatch):
+    """Unlike Hugging Face (C.1 decision 2), the GitHub fallback is kept: the hub's fallback
+    was a Jinja template that reads as real, while GitHub's is merely chrome-padded — the
+    behaviour shipping today. A repo whose readme is .rst or lowercase must still work."""
+    seen = []
+
+    def fake_fetch(u, limit=4000):
+        seen.append(u)
+        return "" if "raw.githubusercontent.com" in u else "genuine readme prose. " * 300
+
+    monkeypatch.setattr(ap, "fetch_text", fake_fetch)
+    monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {})
+    monkeypatch.setattr(ap, "_validate_script", lambda *a, **k: None)
+    ap.script_tool({"title": "o/r", "source": "github", "url": "https://github.com/o/r"})
+    assert seen[0] == "https://raw.githubusercontent.com/o/r/HEAD/README.md"
+    assert seen[1] == "https://github.com/o/r", "a missing raw README must fall back to the page"
