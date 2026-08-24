@@ -1,0 +1,33 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 0,
+    "critical_failures": [],
+    "soft_failures": [],
+    "note": "no grounding available (evergreen) — skipped"
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "note": "no source to compare (evergreen)"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative structure and conceptual explanations (e.g., \"bite-sized pieces,\" \"secret codes,\" \"weigh the importance\") that go beyond simply listing source material. It guides the "
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
