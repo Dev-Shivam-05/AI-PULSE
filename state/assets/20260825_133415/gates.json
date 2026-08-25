@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The elaborate, multi-platform nature of this Russian AI-driven influence campaign, despite its limited reach, signals a significant escalation in the sophistication of state-sponsored disinformation tactics, moving beyond simple text generation to encompass website creation and complex attribution o"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a title and introductory hook ('You won't believe how Russia is using AI to control your thoughts, and who's sec') which are not present in the source text. It also poses a questi"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

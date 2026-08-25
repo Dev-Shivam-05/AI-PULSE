@@ -1,0 +1,206 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.04,Live,,0,0,0,{\k12}You {\k22}won't {\k32}believe {\k28}how
+Dialogue: 0,0:00:00.94,0:00:02.32,Live,,0,0,0,{\k36}Russia {\k32}is {\k32}using {\k28}AI
+Dialogue: 0,0:00:02.22,0:00:03.74,Live,,0,0,0,{\k40}to {\k36}control {\k22}your {\k44}thoughts
+Dialogue: 0,0:00:03.64,0:00:05.38,Live,,0,0,0,{\k58}and {\k28}who's {\k36}secretly {\k42}fighting
+Dialogue: 0,0:00:05.28,0:00:06.94,Live,,0,0,0,{\k30}back {\k56}{\k34}We’re {\k18}about {\k18}to
+Dialogue: 0,0:00:06.84,0:00:08.04,Live,,0,0,0,{\k20}break {\k30}down {\k24}a {\k36}major
+Dialogue: 0,0:00:07.94,0:00:09.86,Live,,0,0,0,{\k46}covert {\k70}operation {\k52}that {\k14}could
+Dialogue: 0,0:00:09.76,0:00:11.00,Live,,0,0,0,{\k46}change {\k36}how {\k18}we {\k14}view
+Dialogue: 0,0:00:10.90,0:00:13.26,Live,,0,0,0,{\k44}online {\k72}information {\k46}{\k38}According {\k26}to
+Dialogue: 0,0:00:13.16,0:00:15.60,Live,,0,0,0,{\k36}open {\k78}AI's {\k58}findings {\k44}{\k18}a
+Dialogue: 0,0:00:15.50,0:00:18.26,Live,,0,0,0,{\k38}new {\k90}sophisticated {\k76}influence {\k62}campaign
+Dialogue: 0,0:00:18.16,0:00:20.42,Live,,0,0,0,{\k86}originating {\k24}from {\k46}Russia {\k60}has
+Dialogue: 0,0:00:20.32,0:00:22.38,Live,,0,0,0,{\k20}been {\k82}identified {\k40}and {\k54}disrupted
+Dialogue: 0,0:00:22.82,0:00:24.60,Live,,0,0,0,{\k48}This {\k66}operation {\k30}aimed {\k24}to
+Dialogue: 0,0:00:24.50,0:00:26.68,Live,,0,0,0,{\k58}manipulate {\k48}public {\k58}opinion {\k44}and
+Dialogue: 0,0:00:26.58,0:00:29.24,Live,,0,0,0,{\k54}influence {\k58}political {\k70}outcomes {\k74}all
+Dialogue: 0,0:00:29.14,0:00:30.48,Live,,0,0,0,{\k32}while {\k40}hiding {\k26}its {\k26}true
+Dialogue: 0,0:00:30.38,0:00:32.22,Live,,0,0,0,{\k60}creators {\k48}{\k24}What {\k16}makes {\k26}this
+Dialogue: 0,0:00:32.12,0:00:33.74,Live,,0,0,0,{\k44}different {\k22}from {\k28}other {\k58}operations
+Dialogue: 0,0:00:33.64,0:00:35.74,Live,,0,0,0,{\k44}we've {\k36}seen {\k30}{\k58}especially {\k32}since
+Dialogue: 0,0:00:35.64,0:00:36.64,Live,,0,0,0,{\k20}the {\k26}war {\k18}in {\k26}Ukraine
+Dialogue: 0,0:00:36.54,0:00:37.10,Live,,0,0,0,{\k46}began
+Dialogue: 0,0:00:37.74,0:00:39.06,Live,,0,0,0,{\k22}This {\k22}one {\k18}was {\k60}particularly
+Dialogue: 0,0:00:38.96,0:00:40.66,Live,,0,0,0,{\k70}elaborate {\k56}and {\k16}went {\k18}to
+Dialogue: 0,0:00:40.56,0:00:41.68,Live,,0,0,0,{\k16}new {\k30}lengths {\k20}to {\k36}disguise
+Dialogue: 0,0:00:41.58,0:00:43.30,Live,,0,0,0,{\k28}its {\k58}origins {\k48}{\k14}At {\k14}the
+Dialogue: 0,0:00:43.20,0:00:44.60,Live,,0,0,0,{\k24}heart {\k22}of {\k14}it {\k40}{\k30}open
+Dialogue: 0,0:00:44.50,0:00:46.02,Live,,0,0,0,{\k56}AI {\k46}banned {\k24}a {\k16}group
+Dialogue: 0,0:00:45.92,0:00:47.84,Live,,0,0,0,{\k26}of {\k28}chat {\k78}GPT {\k50}accounts
+Dialogue: 0,0:00:48.44,0:00:49.62,Live,,0,0,0,{\k24}These {\k36}accounts {\k26}were {\k22}being
+Dialogue: 0,0:00:49.52,0:00:51.12,Live,,0,0,0,{\k34}used {\k18}to {\k52}generate {\k46}social
+Dialogue: 0,0:00:51.02,0:00:53.00,Live,,0,0,0,{\k42}media {\k52}content {\k62}promoting {\k32}an
+Dialogue: 0,0:00:52.90,0:00:55.10,Live,,0,0,0,{\k68}organization {\k52}called {\k26}the {\k64}International
+Dialogue: 0,0:00:55.00,0:00:57.42,Live,,0,0,0,{\k36}Burke {\k62}Institute {\k72}or {\k62}IBI
+Dialogue: 0,0:00:57.32,0:00:59.28,Live,,0,0,0,{\k62}The {\k48}IBI {\k58}claimed {\k18}to
+Dialogue: 0,0:00:59.18,0:01:00.52,Live,,0,0,0,{\k10}be {\k14}an {\k38}expert {\k62}community
+Dialogue: 0,0:01:00.42,0:01:02.44,Live,,0,0,0,{\k46}based {\k24}in {\k40}Israel {\k64}{\k18}But
+Dialogue: 0,0:01:02.34,0:01:04.14,Live,,0,0,0,{\k12}the {\k76}investigation {\k50}revealed {\k32}a
+Dialogue: 0,0:01:04.04,0:01:05.82,Live,,0,0,0,{\k22}much {\k34}deeper {\k64}operation {\k48}built
+Dialogue: 0,0:01:05.72,0:01:07.28,Live,,0,0,0,{\k36}around {\k16}a {\k48}deceptive {\k46}website
+Dialogue: 0,0:01:07.52,0:01:09.34,Live,,0,0,0,{\k28}This {\k46}website {\k52}featured {\k46}academic
+Dialogue: 0,0:01:09.24,0:01:10.48,Live,,0,0,0,{\k48}work {\k26}that {\k14}was {\k26}either
+Dialogue: 0,0:01:10.38,0:01:12.12,Live,,0,0,0,{\k42}copied {\k28}from {\k34}real {\k60}sources
+Dialogue: 0,0:01:12.02,0:01:15.02,Live,,0,0,0,{\k46}or {\k64}poorly {\k74}translated {\k52}{\k54}sometimes
+Dialogue: 0,0:01:14.92,0:01:17.38,Live,,0,0,0,{\k40}with {\k40}false {\k78}attribution {\k66}{\k12}A
+Dialogue: 0,0:01:17.28,0:01:18.48,Live,,0,0,0,{\k22}key {\k38}clue {\k34}was {\k16}an
+Dialogue: 0,0:01:18.38,0:01:21.26,Live,,0,0,0,{\k70}unnatural {\k48}phrase {\k70}used {\k36}{\k54}strongly
+Dialogue: 0,0:01:21.16,0:01:23.18,Live,,0,0,0,{\k66}suggesting {\k24}a {\k32}machine {\k70}translation
+Dialogue: 0,0:01:23.08,0:01:24.66,Live,,0,0,0,{\k42}from {\k12}a {\k40}Slavic {\k54}language
+Dialogue: 0,0:01:24.56,0:01:26.52,Live,,0,0,0,{\k68}For {\k42}example {\k34}{\k8}an {\k34}article
+Dialogue: 0,0:01:26.42,0:01:27.84,Live,,0,0,0,{\k34}about {\k38}Germany {\k44}used {\k16}the
+Dialogue: 0,0:01:27.74,0:01:29.40,Live,,0,0,0,{\k24}phrase {\k34}the {\k52}Svetofor {\k46}coalition
+Dialogue: 0,0:01:29.84,0:01:31.72,Live,,0,0,0,{\k74}Svetofor {\k24}means {\k46}traffic {\k34}light
+Dialogue: 0,0:01:31.62,0:01:32.90,Live,,0,0,0,{\k26}in {\k34}Russian {\k32}and {\k26}other
+Dialogue: 0,0:01:32.80,0:01:33.82,Live,,0,0,0,{\k38}Slavic {\k54}languages
+Dialogue: 0,0:01:34.62,0:01:36.08,Live,,0,0,0,{\k30}Germans {\k34}and {\k28}English {\k44}speakers
+Dialogue: 0,0:01:35.98,0:01:37.40,Live,,0,0,0,{\k32}would {\k32}simply {\k26}say {\k42}traffic
+Dialogue: 0,0:01:37.30,0:01:39.52,Live,,0,0,0,{\k30}light {\k56}coalition {\k52}{\k10}not {\k64}Svetofor
+Dialogue: 0,0:01:39.42,0:01:41.22,Live,,0,0,0,{\k46}coalition {\k54}{\k26}It's {\k4}a {\k40}direct
+Dialogue: 0,0:01:41.42,0:01:43.86,Live,,0,0,0,{\k38}literal {\k74}translation {\k46}{\k22}The {\k54}operators
+Dialogue: 0,0:01:43.76,0:01:46.14,Live,,0,0,0,{\k44}even {\k64}instructed {\k40}chat {\k80}GPT
+Dialogue: 0,0:01:46.04,0:01:47.66,Live,,0,0,0,{\k42}to {\k26}hide {\k28}any {\k56}linguistic
+Dialogue: 0,0:01:47.56,0:01:48.82,Live,,0,0,0,{\k38}clues {\k42}that {\k20}they {\k16}were
+Dialogue: 0,0:01:48.72,0:01:51.38,Live,,0,0,0,{\k38}Russian {\k84}They {\k36}used {\k98}VPNs
+Dialogue: 0,0:01:51.28,0:01:53.08,Live,,0,0,0,{\k10}to {\k36}access {\k58}open {\k66}AI's
+Dialogue: 0,0:01:52.98,0:01:55.10,Live,,0,0,0,{\k42}models {\k68}as {\k54}access {\k38}is
+Dialogue: 0,0:01:55.00,0:01:57.10,Live,,0,0,0,{\k58}restricted {\k28}from {\k40}Russia {\k56}{\k18}So
+Dialogue: 0,0:01:57.00,0:01:58.54,Live,,0,0,0,{\k52}Russia {\k28}is {\k28}using {\k36}AI
+Dialogue: 0,0:01:58.44,0:02:00.24,Live,,0,0,0,{\k32}to {\k38}generate {\k52}content {\k48}and
+Dialogue: 0,0:02:00.14,0:02:02.22,Live,,0,0,0,{\k38}create {\k22}fake {\k74}organizations {\k64}to
+Dialogue: 0,0:02:02.12,0:02:03.40,Live,,0,0,0,{\k46}influence {\k22}our {\k50}perceptions
+Dialogue: 0,0:02:04.02,0:02:05.02,Live,,0,0,0,{\k30}Why {\k14}does {\k20}this {\k26}matter
+Dialogue: 0,0:02:04.92,0:02:06.12,Live,,0,0,0,{\k18}to {\k18}you {\k42}right {\k32}now
+Dialogue: 0,0:02:06.50,0:02:08.36,Live,,0,0,0,{\k18}This {\k52}development {\k74}signifies {\k32}a
+Dialogue: 0,0:02:08.26,0:02:09.94,Live,,0,0,0,{\k54}significant {\k46}step {\k48}in {\k10}the
+Dialogue: 0,0:02:09.84,0:02:11.36,Live,,0,0,0,{\k66}weaponization {\k32}of {\k44}AI
+Dialogue: 0,0:02:12.04,0:02:13.24,Live,,0,0,0,{\k18}It {\k22}means {\k22}the {\k48}content
+Dialogue: 0,0:02:13.14,0:02:15.16,Live,,0,0,0,{\k22}you {\k22}see {\k66}online {\k42}{\k40}even
+Dialogue: 0,0:02:15.06,0:02:17.66,Live,,0,0,0,{\k54}seemingly {\k70}legitimate {\k58}academic {\k68}analysis
+Dialogue: 0,0:02:17.56,0:02:19.64,Live,,0,0,0,{\k66}could {\k18}be {\k42}subtly {\k72}engineered
+Dialogue: 0,0:02:19.54,0:02:21.16,Live,,0,0,0,{\k26}by {\k46}foreign {\k48}actors {\k32}to
+Dialogue: 0,0:02:21.06,0:02:22.62,Live,,0,0,0,{\k26}shape {\k20}your {\k46}views {\k38}{\k16}The
+Dialogue: 0,0:02:22.52,0:02:23.80,Live,,0,0,0,{\k24}goal {\k32}isn't {\k20}just {\k42}spreading
+Dialogue: 0,0:02:23.70,0:02:25.36,Live,,0,0,0,{\k34}fake {\k36}news {\k54}{\k16}it's {\k16}about
+Dialogue: 0,0:02:25.26,0:02:27.12,Live,,0,0,0,{\k54}subtly {\k36}promoting {\k48}narratives {\k38}that
+Dialogue: 0,0:02:27.02,0:02:29.12,Live,,0,0,0,{\k32}favor {\k54}certain {\k76}geopolitical {\k38}interests
+Dialogue: 0,0:02:29.80,0:02:31.12,Live,,0,0,0,{\k20}In {\k16}this {\k30}case {\k44}{\k12}it
+Dialogue: 0,0:02:31.02,0:02:32.26,Live,,0,0,0,{\k8}was {\k12}a {\k46}sovereignty {\k48}index
+Dialogue: 0,0:02:32.16,0:02:33.82,Live,,0,0,0,{\k52}designed {\k30}to {\k30}praise {\k44}Russia
+Dialogue: 0,0:02:33.72,0:02:35.52,Live,,0,0,0,{\k32}and {\k38}criticize {\k56}Western {\k44}countries
+Dialogue: 0,0:02:35.88,0:02:37.78,Live,,0,0,0,{\k20}The {\k56}operation {\k52}primarily {\k52}used
+Dialogue: 0,0:02:37.68,0:02:39.58,Live,,0,0,0,{\k32}chat {\k78}GPT {\k26}to {\k44}generate
+Dialogue: 0,0:02:39.48,0:02:41.12,Live,,0,0,0,{\k38}social {\k46}media {\k40}posts {\k30}that
+Dialogue: 0,0:02:41.02,0:02:42.42,Live,,0,0,0,{\k38}directed {\k48}users {\k32}to {\k12}the
+Dialogue: 0,0:02:42.32,0:02:44.78,Live,,0,0,0,{\k36}IBI {\k76}website {\k88}These {\k36}posts
+Dialogue: 0,0:02:44.68,0:02:46.32,Live,,0,0,0,{\k44}appeared {\k24}on {\k50}platforms {\k36}like
+Dialogue: 0,0:02:46.22,0:02:48.84,Live,,0,0,0,{\k46}X {\k66}{\k14}linked {\k46}in {\k28}{\k52}Facebook
+Dialogue: 0,0:02:49.36,0:02:51.72,Live,,0,0,0,{\k42}Substack {\k28}and {\k54}Telegram {\k36}{\k66}sometimes
+Dialogue: 0,0:02:51.62,0:02:53.68,Live,,0,0,0,{\k52}using {\k24}the {\k76}IBI's {\k44}branding
+Dialogue: 0,0:02:54.10,0:02:55.76,Live,,0,0,0,{\k20}other {\k46}times {\k76}disguised {\k14}as
+Dialogue: 0,0:02:55.66,0:02:58.02,Live,,0,0,0,{\k48}everyday {\k46}user {\k46}comments {\k46}{\k40}What's
+Dialogue: 0,0:02:57.92,0:02:59.30,Live,,0,0,0,{\k30}really {\k48}striking {\k34}is {\k16}the
+Dialogue: 0,0:02:59.20,0:03:00.38,Live,,0,0,0,{\k22}sheer {\k38}effort {\k48}involved
+Dialogue: 0,0:03:01.02,0:03:02.08,Live,,0,0,0,{\k18}This {\k38}wasn't {\k20}just {\k20}a
+Dialogue: 0,0:03:01.98,0:03:03.68,Live,,0,0,0,{\k32}few {\k44}AI {\k58}generated {\k26}tweets
+Dialogue: 0,0:03:04.26,0:03:05.24,Live,,0,0,0,{\k14}It {\k10}was {\k10}a {\k54}coordinated
+Dialogue: 0,0:03:05.14,0:03:06.70,Live,,0,0,0,{\k62}campaign {\k34}with {\k12}a {\k38}dedicated
+Dialogue: 0,0:03:06.60,0:03:09.12,Live,,0,0,0,{\k64}website {\k52}{\k36}carefully {\k40}crafted {\k50}content
+Dialogue: 0,0:03:09.02,0:03:10.76,Live,,0,0,0,{\k64}and {\k10}a {\k32}multi {\k58}platform
+Dialogue: 0,0:03:10.66,0:03:12.82,Live,,0,0,0,{\k62}distribution {\k62}strategy {\k64}While {\k18}this
+Dialogue: 0,0:03:12.72,0:03:15.00,Live,,0,0,0,{\k50}specific {\k58}campaign {\k52}reached {\k58}relatively
+Dialogue: 0,0:03:14.90,0:03:17.66,Live,,0,0,0,{\k62}small {\k76}audiences {\k62}{\k20}its {\k46}elaborate
+Dialogue: 0,0:03:17.56,0:03:19.04,Live,,0,0,0,{\k66}construction {\k34}is {\k10}a {\k28}warning
+Dialogue: 0,0:03:18.94,0:03:21.24,Live,,0,0,0,{\k46}sign {\k44}{\k32}It {\k56}demonstrates {\k42}how
+Dialogue: 0,0:03:21.14,0:03:22.78,Live,,0,0,0,{\k40}AI {\k48}can {\k12}be {\k54}integrated
+Dialogue: 0,0:03:22.68,0:03:24.98,Live,,0,0,0,{\k28}into {\k52}complex {\k64}influence {\k76}operations
+Dialogue: 0,0:03:25.38,0:03:26.70,Live,,0,0,0,{\k32}making {\k26}them {\k38}harder {\k26}to
+Dialogue: 0,0:03:26.60,0:03:28.58,Live,,0,0,0,{\k38}detect {\k28}and {\k52}attribute {\k42}{\k28}This
+Dialogue: 0,0:03:28.48,0:03:29.58,Live,,0,0,0,{\k18}is {\k10}a {\k20}new {\k52}frontier
+Dialogue: 0,0:03:29.48,0:03:31.74,Live,,0,0,0,{\k24}in {\k52}information {\k48}warfare {\k58}{\k34}The
+Dialogue: 0,0:03:31.64,0:03:33.56,Live,,0,0,0,{\k34}ability {\k26}to {\k44}generate {\k78}persuasive
+Dialogue: 0,0:03:33.86,0:03:35.62,Live,,0,0,0,{\k64}contextually {\k38}relevant {\k46}content {\k18}at
+Dialogue: 0,0:03:35.52,0:03:37.72,Live,,0,0,0,{\k42}scale {\k70}combined {\k40}with {\k58}sophisticated
+Dialogue: 0,0:03:37.62,0:03:39.84,Live,,0,0,0,{\k62}cloaking {\k64}techniques {\k44}{\k22}presents {\k20}a
+Dialogue: 0,0:03:39.74,0:03:41.38,Live,,0,0,0,{\k28}growing {\k54}challenge {\k32}for {\k40}governments
+Dialogue: 0,0:03:41.28,0:03:43.38,Live,,0,0,0,{\k32}and {\k52}platforms {\k38}alike {\k24}{\k54}Open
+Dialogue: 0,0:03:43.28,0:03:44.90,Live,,0,0,0,{\k70}AI's {\k32}mission {\k34}is {\k16}to
+Dialogue: 0,0:03:44.80,0:03:46.92,Live,,0,0,0,{\k46}ensure {\k46}AI {\k68}benefits {\k42}all
+Dialogue: 0,0:03:46.82,0:03:47.70,Live,,0,0,0,{\k20}of {\k58}humanity
+Dialogue: 0,0:03:48.40,0:03:50.28,Live,,0,0,0,{\k58}Disrupting {\k54}operations {\k34}like {\k32}this
+Dialogue: 0,0:03:50.18,0:03:51.62,Live,,0,0,0,{\k46}is {\k14}a {\k38}crucial {\k36}part
+Dialogue: 0,0:03:51.52,0:03:53.32,Live,,0,0,0,{\k14}of {\k16}that {\k40}mission {\k60}{\k40}highlighting
+Dialogue: 0,0:03:53.22,0:03:54.68,Live,,0,0,0,{\k32}the {\k28}dual {\k34}use {\k42}nature
+Dialogue: 0,0:03:54.58,0:03:56.86,Live,,0,0,0,{\k26}of {\k54}powerful {\k46}AI {\k92}technologies
+Dialogue: 0,0:03:57.28,0:03:58.56,Live,,0,0,0,{\k20}and {\k14}the {\k40}ongoing {\k44}race
+Dialogue: 0,0:03:58.46,0:03:59.98,Live,,0,0,0,{\k26}to {\k42}secure {\k26}the {\k48}information
+Dialogue: 0,0:03:59.88,0:04:02.26,Live,,0,0,0,{\k100}ecosystem {\k60}The {\k24}key {\k44}takeaway
+Dialogue: 0,0:04:02.90,0:04:04.30,Live,,0,0,0,{\k28}AI {\k52}isn't {\k18}just {\k32}about
+Dialogue: 0,0:04:04.20,0:04:06.16,Live,,0,0,0,{\k60}innovation {\k62}{\k20}it's {\k26}also {\k18}a
+Dialogue: 0,0:04:06.06,0:04:07.72,Live,,0,0,0,{\k42}powerful {\k44}tool {\k24}being {\k46}actively
+Dialogue: 0,0:04:07.62,0:04:09.14,Live,,0,0,0,{\k42}used {\k14}to {\k56}influence {\k30}global
+Dialogue: 0,0:04:09.04,0:04:10.96,Live,,0,0,0,{\k60}events {\k28}{\k20}and {\k38}companies {\k36}like
+Dialogue: 0,0:04:10.86,0:04:12.54,Live,,0,0,0,{\k42}Open {\k38}AI {\k58}are {\k20}on
+Dialogue: 0,0:04:12.44,0:04:13.44,Live,,0,0,0,{\k10}the {\k26}front {\k32}lines {\k22}of
+Dialogue: 0,0:04:13.34,0:04:13.74,Live,,0,0,0,{\k30}defense
+Dialogue: 0,0:04:14.34,0:04:15.04,Live,,0,0,0,{\k22}What {\k10}do {\k8}you {\k20}think
+Dialogue: 0,0:04:14.94,0:04:15.94,Live,,0,0,0,{\k20}about {\k12}the {\k32}future {\k26}of
+Dialogue: 0,0:04:15.84,0:04:17.48,Live,,0,0,0,{\k32}AI {\k38}and {\k34}online {\k50}influence
+Dialogue: 0,0:04:17.82,0:04:19.66,Live,,0,0,0,{\k54}Consider {\k20}the {\k46}sovereignty {\k54}index
+Dialogue: 0,0:04:19.56,0:04:21.82,Live,,0,0,0,{\k30}this {\k48}campaign {\k58}promoted {\k60}{\k20}It
+Dialogue: 0,0:04:21.72,0:04:22.98,Live,,0,0,0,{\k28}wasn't {\k20}just {\k22}a {\k46}neutral
+Dialogue: 0,0:04:22.88,0:04:24.76,Live,,0,0,0,{\k42}academic {\k60}study {\k48}{\k18}it {\k10}was
+Dialogue: 0,0:04:24.66,0:04:25.92,Live,,0,0,0,{\k42}designed {\k28}to {\k28}present {\k18}a
+Dialogue: 0,0:04:25.82,0:04:27.92,Live,,0,0,0,{\k58}specific {\k34}{\k44}favorable {\k38}view {\k26}of
+Dialogue: 0,0:04:27.82,0:04:29.92,Live,,0,0,0,{\k46}Russia's {\k36}global {\k62}standing {\k56}while
+Dialogue: 0,0:04:29.82,0:04:32.14,Live,,0,0,0,{\k48}subtly {\k80}undermining {\k40}Western {\k54}powers
+Dialogue: 0,0:04:32.64,0:04:34.02,Live,,0,0,0,{\k46}This {\k22}is {\k12}a {\k48}classic
+Dialogue: 0,0:04:33.92,0:04:37.08,Live,,0,0,0,{\k58}propaganda {\k74}technique {\k58}{\k18}now {\k98}supercharged
+Dialogue: 0,0:04:36.98,0:04:38.88,Live,,0,0,0,{\k24}by {\k72}AI's {\k38}ability {\k46}to
+Dialogue: 0,0:04:38.78,0:04:40.64,Live,,0,0,0,{\k48}generate {\k50}vast {\k42}amounts {\k36}of
+Dialogue: 0,0:04:40.54,0:04:42.82,Live,,0,0,0,{\k36}seemingly {\k58}credible {\k62}content {\k38}{\k24}The
+Dialogue: 0,0:04:42.72,0:04:44.12,Live,,0,0,0,{\k48}operators {\k44}even {\k20}went {\k18}to
+Dialogue: 0,0:04:44.02,0:04:45.08,Live,,0,0,0,{\k16}lengths {\k28}to {\k30}mask {\k22}their
+Dialogue: 0,0:04:44.98,0:04:47.88,Live,,0,0,0,{\k34}digital {\k52}footprints {\k68}{\k36}Beyond {\k90}VPNs
+Dialogue: 0,0:04:48.12,0:04:49.44,Live,,0,0,0,{\k8}they {\k28}likely {\k58}employed {\k28}other
+Dialogue: 0,0:04:49.34,0:04:51.84,Live,,0,0,0,{\k80}anonymization {\k50}techniques {\k54}{\k12}and {\k44}potentially
+Dialogue: 0,0:04:51.74,0:04:53.70,Live,,0,0,0,{\k46}used {\k58}compromised {\k46}accounts {\k36}to
+Dialogue: 0,0:04:53.60,0:04:55.16,Live,,0,0,0,{\k28}further {\k46}obscure {\k30}their {\k42}origin
+Dialogue: 0,0:04:55.06,0:04:57.98,Live,,0,0,0,{\k96}This {\k66}meticulous {\k58}approach {\k62}highlights
+Dialogue: 0,0:04:57.88,0:04:59.50,Live,,0,0,0,{\k30}the {\k76}sophistication {\k18}of {\k28}state
+Dialogue: 0,0:04:59.40,0:05:01.92,Live,,0,0,0,{\k56}sponsored {\k56}disinformation {\k62}efforts {\k34}{\k34}The
+Dialogue: 0,0:05:01.82,0:05:03.60,Live,,0,0,0,{\k60}implications {\k38}here {\k24}are {\k46}profound
+Dialogue: 0,0:05:04.24,0:05:05.56,Live,,0,0,0,{\k26}If {\k38}AI {\k44}can {\k14}be
+Dialogue: 0,0:05:05.46,0:05:07.04,Live,,0,0,0,{\k24}used {\k12}to {\k46}construct {\k66}entire
+Dialogue: 0,0:05:06.94,0:05:09.62,Live,,0,0,0,{\k66}personas {\k26}and {\k74}organizations {\k60}{\k32}complete
+Dialogue: 0,0:05:09.52,0:05:11.48,Live,,0,0,0,{\k32}with {\k26}fake {\k62}academic {\k66}credentials
+Dialogue: 0,0:05:11.38,0:05:13.18,Live,,0,0,0,{\k32}and {\k48}websites {\k56}{\k22}then {\k12}the
+Dialogue: 0,0:05:13.08,0:05:14.40,Live,,0,0,0,{\k26}very {\k36}trust {\k26}we {\k34}place
+Dialogue: 0,0:05:14.30,0:05:16.36,Live,,0,0,0,{\k28}in {\k44}online {\k46}information {\k78}sources
+Dialogue: 0,0:05:16.26,0:05:18.18,Live,,0,0,0,{\k38}is {\k22}at {\k46}risk {\k54}{\k22}We
+Dialogue: 0,0:05:18.08,0:05:18.82,Live,,0,0,0,{\k18}need {\k18}to {\k10}be {\k18}more
+Dialogue: 0,0:05:18.72,0:05:20.08,Live,,0,0,0,{\k40}critical {\k28}than {\k38}ever {\k20}of
+Dialogue: 0,0:05:19.98,0:05:21.60,Live,,0,0,0,{\k14}what {\k16}we {\k44}consume {\k78}This
+Dialogue: 0,0:05:21.50,0:05:23.46,Live,,0,0,0,{\k44}incident {\k50}also {\k64}underscores {\k28}the
+Dialogue: 0,0:05:23.36,0:05:24.98,Live,,0,0,0,{\k46}evolving {\k54}Catan {\k26}mouse {\k26}game
+Dialogue: 0,0:05:24.88,0:05:27.16,Live,,0,0,0,{\k64}between {\k34}AI {\k70}developers {\k50}and
+Dialogue: 0,0:05:27.06,0:05:29.84,Live,,0,0,0,{\k30}malicious {\k56}actors {\k70}{\k40}Open {\k72}AI's
+Dialogue: 0,0:05:29.74,0:05:31.58,Live,,0,0,0,{\k46}detection {\k22}and {\k44}disruption {\k62}are
+Dialogue: 0,0:05:31.48,0:05:32.42,Live,,0,0,0,{\k10}a {\k38}testament {\k24}to {\k12}their
+Dialogue: 0,0:05:32.32,0:05:34.14,Live,,0,0,0,{\k46}security {\k46}efforts {\k54}{\k18}but {\k8}it
+Dialogue: 0,0:05:34.04,0:05:35.68,Live,,0,0,0,{\k32}also {\k30}means {\k32}that {\k60}adversaries
+Dialogue: 0,0:05:35.58,0:05:36.88,Live,,0,0,0,{\k26}will {\k42}continue {\k22}to {\k30}adapt
+Dialogue: 0,0:05:36.78,0:05:37.82,Live,,0,0,0,{\k30}and {\k20}find {\k22}new {\k22}ways
+Dialogue: 0,0:05:37.72,0:05:38.96,Live,,0,0,0,{\k26}to {\k46}exploit {\k42}AI

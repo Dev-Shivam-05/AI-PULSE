@@ -2282,5 +2282,54 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-25T13:34:15.861021",
+    "title": "OpenAI Disrupts Russian AI Influence Campaign",
+    "description": "Russia is using AI to secretly manipulate public opinion, and OpenAI is fighting back. Discover how a covert influence campaign was built using AI-generated content and a fake Israeli think tank. This report reveals the intricate methods used and the sophisticated countermeasures deployed to protect global information integrity. Learn what this means for the future of online influence and AI's role in it.\n#AI #OpenAI #Russia #InfluenceOperations #CyberSecurity #TechNews\n\nSource: https://openai.com/index/disrupting-malicious-uses-of-ai-influence-campaign-russia\n\nChapters:\n0:00 Russia's AI Control\n0:59 IBI Exposed\n1:58 AI Fake News\n3:13 Elaborate AI Campaign\n4:19 Sovereignty Index Scam\n\n▶ Watch next: https://youtube.com/watch?v=mgdOuVeiZNQ",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Russia",
+      "Influence Operations",
+      "Cybersecurity",
+      "Tech",
+      "Artificial Intelligence",
+      "Propaganda",
+      "Disinformation",
+      "Global Affairs",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenAI_Disrupts_Russian_AI_Influence_Campaign_20260825_132408_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260825_132745.mp4",
+      "output/shorts/short_2_20260825_132841.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260825_132610.jpg",
+    "youtube_url": "https://youtube.com/watch?v=lbDolRMFwG8",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=3xPG_uapvxw",
+      "https://youtube.com/watch?v=GOEWlP30kWQ"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI Exposes Russian AI Lies! 🤫 #Shorts",
+        "description": "OpenAI just shattered a massive Russian AI influence campaign. Discover how they're fighting back against disinformation.  #AI #OpenAI #Russia #Disinformation #TechNews",
+        "instagram_caption": "🤯 OpenAI just shut down a huge Russian AI influence operation! See how they're safeguarding information and fighting back against fake narratives. Follow @aipulse!\n#AI #OpenAI #Russia #Disinformation #TechNews #Cybersecurity #InfluenceCampaign #ArtificialIntelligence #News #BreakingNews #Geopolitics #FactCheck #InformationWarfare #DigitalSecurity #TechUpdate #GlobalAffairs #AIethics #NationalSecurity #TechTrends #FutureofAI"
+      },
+      {
+        "title": "AI Wars: OpenAI vs. Russian Influence 💥 #Shorts",
+        "description": "The battle for digital truth is ON! OpenAI's latest move takes down a sophisticated Russian AI influence campaign.  #AI #OpenAI #Russia #Influence #Tech",
+        "instagram_caption": "🔥 OpenAI just made a massive move, disrupting a Russian AI influence campaign! This is a critical moment in the fight against online manipulation. Follow @aipulse!\n#AI #OpenAI #Russia #Influence #Tech #CyberWarfare #ArtificialIntelligence #AIAdvantage #TechBreakthrough #Disrupt #GlobalSecurity #DigitalFrontier #TechInsights #AIRevolution #TruthMatters #InformationAge #AIforGood #TechDigest #Innovation #DigitalDominance"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
