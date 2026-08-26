@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The next frontier for AI agents isn't just automating creation, but mastering the complex, outcome-driven processes of business growth, potentially democratizing advanced marketing strategies for small businesses."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline is a direct summary of the provided source text. A competent competitor could produce a substantially identical video by simply reading the outline, as it contains no unique interpretation"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
