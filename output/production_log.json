@@ -2380,5 +2380,52 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-27T22:42:09.432927",
+    "title": "LLMs: How AI 'Thinks' Without A Brain",
+    "description": "How do Large Language Models actually think? This video demystifies the complex inner workings of LLMs, moving beyond buzzwords to explain the core concepts of neural networks, training data, and emergent abilities in an accessible way. Understand how AI processes information, generates text, and performs complex tasks. We break down the science behind the 'brain' of AI, revealing the surprising architecture that allows these models to learn and communicate. Discover the role of massive datasets and the intricate connections within artificial neural networks that give rise to remarkable capabilities. Finally, explore what these 'thinking' machines mean for our future.\n\n#AI #LLM #ArtificialIntelligence #TechExplained #NeuralNetworks #MachineLearning\n\nChapters:\n0:00 AI Thinking Explained\n1:20 Massive Text Training\n2:06 No Feelings Here\n2:59 Data Quality Matters\n3:37 Human Feedback Guides\n\n▶ Watch next: https://youtube.com/watch?v=OXU2rWKg_n8",
+    "tags": [
+      "Large Language Models",
+      "AI Thinking",
+      "Neural Networks",
+      "Machine Learning",
+      "AI Explained",
+      "How AI Works",
+      "Artificial Intelligence",
+      "Deep Learning",
+      "AI Training Data",
+      "Emergent Abilities",
+      "ai",
+      "ai news",
+      "tech news",
+      "technology",
+      "ai pulse"
+    ],
+    "video": "output/videos/LLMs_How_AI_Thinks_Without_A_Brain_20260827_223221_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260827_223546.mp4",
+      "output/shorts/short_2_20260827_223652.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260827_223408.jpg",
+    "youtube_url": "https://youtube.com/watch?v=COhPscuCKwE",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=9SnOzZQSnXc",
+      "https://youtube.com/watch?v=Dv86Z3ltgy0"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI's Mind-Blowing 'Thoughts' Revealed! 🧠 #Shorts",
+        "description": "Explore how Large Language Models (LLMs) process information and generate human-like text, all without a biological brain. Uncover the secrets of AI's remarkable 'thinking' process!",
+        "instagram_caption": "🧠 Ever wondered how AI 'thinks'? Discover the incredible mechanisms behind LLMs and their ability to generate text that mimics human thought. \nFollow @aipulse! #AI #LLM #ArtificialIntelligence #MachineLearning #DeepLearning #Tech #Innovation #FutureOfAI #AIChatbot #NLP #GenerativeAI #AIExplained #TechTok #Science #Knowledge #FutureTech #AIRevolution #DigitalTransformation #SmartTech #AITrends"
+      },
+      {
+        "title": "Decode AI's Brainless 'Thinking' 🤯 #Shorts",
+        "description": "Dive deep into the fascinating world of LLMs and understand their unique approach to processing and generating information, defying traditional biological definitions of thought. Prepare to be amazed!",
+        "instagram_caption": "🤯 Unlock the mystery of AI's 'brainless thinking'! Learn how Large Language Models process data and create stunningly coherent outputs. \nFollow @aipulse! #AI #LLM #ArtificialIntelligence #MachineLearning #DeepLearning #Tech #Innovation #FutureOfAI #AIChatbot #NLP #GenerativeAI #AIExplained #TechTok #Science #Knowledge #FutureTech #AIRevolution #DigitalTransformation #SmartTech #AITrends"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
