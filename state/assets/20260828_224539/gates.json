@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "AI is moving beyond being just a tool.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The ability of AI systems to autonomously refine their alignment training signals a fundamental shift from AI being a tool built by humans to AI becoming a co-creator in its own evolution, potentially democratizing advanced AI development while simultaneously raising new questions about control."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a question \"What if the AI building our future could learn and upgrade itself… without us ev\" which is not present in the source text. The outline also uses the phrase \"alignment "
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
