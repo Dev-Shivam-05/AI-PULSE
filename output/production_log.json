@@ -2427,5 +2427,50 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-28T00:26:49.979389",
+    "title": "100+ Firms Warn: Rogue AI Cyberattacks Incoming",
+    "description": "AI's biggest names are admitting the technology could go rogue and demanding action. If you rely on digital systems, this changes everything. OpenAI, Anthropic, and Google, along with over 100 other companies, have signed an urgent open letter calling for a collective defense against escalating AI-driven cyber threats. Learn why traditional security is no longer enough and what this means for the future of our digital world. #AI #Cybersecurity #OpenAI #TechNews #FutureTech #ArtificialIntelligence #Google #Anthropic. Subscribe to AI Pulse.\n\nSource: https://techcrunch.com/2026/08/27/openai-anthropic-google-and-100-other-companies-call-for-action-to-defend-against-rogue-ai/\n\nChapters:\n0:00 Critical Digital Services\n1:07 Daily Essential Services\n2:16 Cascading Threat Potential\n3:26 AI Cybersecurity Era\n4:41 AI Learning Attacks",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Cybersecurity",
+      "OpenAI",
+      "Google",
+      "Anthropic",
+      "Microsoft",
+      "Tech News",
+      "Rogue AI",
+      "Cyber Threats",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/100_Firms_Warn_Rogue_AI_Cyberattacks_Incoming_20260828_001332_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260828_001829.mp4",
+      "output/shorts/short_2_20260828_001939.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260828_001559.jpg",
+    "youtube_url": null,
+    "youtube_shorts": [],
+    "shorts_meta": [
+      {
+        "title": "URGENT: 100+ Firms WARN Rogue AI Cyberattacks Are Incoming! #Shorts",
+        "description": "Over 100 leading firms have issued a dire warning about the imminent threat of rogue AI-driven cyberattacks. This critical alert highlights the unprecedented challenges and advanced threats that artificial intelligence could pose to global cybersecurity. Get ready for a new era of digital warfare.",
+        "instagram_caption": "🚨 The world's leading firms are sounding the alarm on a new wave of cyber threats powered by rogue AI. Prepare for impact as these warnings suggest unprecedented challenges ahead.\nFollow @aipulse!\n#AI #Cybersecurity #RogueAI #Cyberattack #TechWarning #FutureTech #DigitalThreats #AIethics #CyberCrime #TechNews #Innovation #AIsecurity #Warning #TechAlert #DataSecurity #EmergingThreats #AIpower #CyberWarfare #TechForecast #AIpulse"
+      },
+      {
+        "title": "Rogue AI Cyberattacks: UNSTOPPABLE Threat Incoming, Firms Warn! #Shorts",
+        "description": "A coalition of over 100 major firms is predicting an 'unstoppable' wave of rogue AI cyberattacks. This consensus among experts underscores the escalating danger of advanced AI falling into the wrong hands, leading to sophisticated and potentially devastating digital assaults. Stay informed on this critical security development.",
+        "instagram_caption": "⚠️ A coalition of over 100 firms is delivering a stark warning about the next generation of cyberattacks, driven by advanced rogue AI. Understanding this imminent threat is crucial for everyone's digital safety.\nFollow @aipulse!\n#AICybersecurity #CyberThreat #AIAttacks #TechCrisis #DigitalSecurity #FutureOfAI #AIWarning #CyberAwareness #TechPredictions #SecurityAlert #AIRevolution #CyberDefense #TechInsights #Innovation #RogueAITech #AIprotection #CyberWar #InformationSecurity #DigitalFuture #AIpulse"
+      }
+    ],
+    "format": "news",
+    "status": "HELD"
   }
 ]
