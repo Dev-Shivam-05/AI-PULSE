@@ -2518,5 +2518,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-29T17:08:48.307518",
+    "title": "OpenBot AI: Your Own AI Computer, Now",
+    "description": "Forget AI chatbots, imagine AI agents that can actually get their own computer... and use it. OpenBot is a new open-source development that gives AI agents their own dedicated digital workspace, complete with a browser, files, and tools. This means they can perform real-world tasks with a level of autonomy we haven't seen before.  We're diving into what this means for the future of work and how these AI coworkers are built.  Learn about their independent operation, secure access, and how you can bring your own AI agents into this ecosystem. This is not just an upgrade; it's a fundamental shift in how we interact with artificial intelligence. Discover the implications for your job and daily life as AI becomes more capable and independent. #AI #OpenSource #Automation\n\nSource: https://github.com/CopilotKit/OpenBot\n\nChapters:\n0:00 AI Agents Explained\n1:12 Action Logging\n2:34 Agent Flexibility\n4:56 Single Interaction Point\n6:19 AI Autonomy Rise\n\n▶ Watch next: https://youtube.com/watch?v=O_ZiAE03HZk",
+    "tags": [
+      "AI",
+      "Open Source",
+      "Automation",
+      "AGI",
+      "Artificial Intelligence",
+      "Tech Development",
+      "Future of Work",
+      "AI Agents",
+      "CopilotKit",
+      "OpenBot",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/OpenBot_AI_Your_Own_AI_Computer_Now_20260829_165620_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260829_170042.mp4",
+      "output/shorts/short_2_20260829_170137.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260829_165859.jpg",
+    "youtube_url": "https://youtube.com/watch?v=eMbE-1FrjeA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=UKA9sZo2R_8",
+      "https://youtube.com/watch?v=PmzWR53FzXY"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Unleash Your AI! OpenBot: Ultimate Power! #Shorts",
+        "description": "Experience the future of AI with OpenBot. Your personal AI computer, now!",
+        "instagram_caption": "🤯 Ready to build your own AI? OpenBot puts incredible AI power in your hands. Follow @aipulse! #OpenBot #AIComputer #DIYAI #TechInnovation #FutureTech #ArtificialIntelligence #SmartHome #Robotics #Maker #Gadgets #TechGadgets #Innovation #AIRevolution #TechLover #OpenSource #AIProject #CuttingEdge #DigitalTransformation #TechTok #BuildYourOwn"
+      },
+      {
+        "title": "OpenBot: The Future is HERE! 🚀 #Shorts",
+        "description": "Get your own AI computer with OpenBot. Limitless possibilities await!",
+        "instagram_caption": "🚀 The future of AI is here! Discover the incredible potential of OpenBot, your personal AI computer. Follow @aipulse! #OpenBotAI #AIRevolution #TechNews #FutureOfAI #Innovation #DIYTech #RoboticsProject #ArtificialIntelligence #SmartTech #GadgetLover #TechTrends #MakerMovement #OpenSourceAI #AIForEveryone #TechEnthusiast #NewTech #DigitalFuture #InnovationNation #AICreator #TechDiscovery"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

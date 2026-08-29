@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "TensorFlow",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "OpenAI's GPT",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The development of individual, tool-equipped digital 'computers' for AI agents fundamentally shifts the paradigm from AI as a tool to AI as a distributed workforce, where the management challenge becomes akin to managing human employees with specific access rights and responsibilities."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative structure ('N things happened. Only one matters. Here's how to tell.') and uses rhetorical questions ('What does this really mean?', 'Now, you might be thinking this"
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
