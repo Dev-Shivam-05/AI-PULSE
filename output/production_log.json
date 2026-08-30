@@ -2567,5 +2567,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-30T17:04:48.944652",
+    "title": "Large Language Models: How They REALLY Think",
+    "description": "How do large language models actually work? We're pulling back the curtain on the AI brain. Forget the hype; this is the core of how models like GPT and Bard process information. You'll understand the magic behind their ability to write, code, and converse. We demystify transformers, attention, and embeddings. This isn't magic; it's intricate math and massive data. Learn what powers the AI revolution and what it means for the future.  Understand the mechanisms driving intelligent machines. #AI #LLM #ArtificialIntelligence #TechExplained #MachineLearning #DeepLearning #AIExplained #FutureOfTech\nSubscribe to AI Pulse.\n\nChapters:\n0:00 AI Thinks Differently\n1:05 Before Transformers\n1:58 Word Embeddings Explained\n2:56 Complexity Overload\n3:56 Learning Chess Strategies\n\n▶ Watch next: https://youtube.com/watch?v=eMbE-1FrjeA",
+    "tags": [
+      "large language models",
+      "how LLMs work",
+      "AI explained",
+      "transformers",
+      "attention mechanism",
+      "embeddings",
+      "natural language processing",
+      "artificial intelligence",
+      "deep learning",
+      "machine learning",
+      "AI technology",
+      "ai",
+      "ai news",
+      "tech news",
+      "technology",
+      "ai pulse"
+    ],
+    "video": "output/videos/Large_Language_Models_How_They_REALLY_Think_20260830_165505_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260830_165824.mp4",
+      "output/shorts/short_2_20260830_165937.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260830_165649.jpg",
+    "youtube_url": "https://youtube.com/watch?v=4sfhIilndpM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=283SaEfj3Lo",
+      "https://youtube.com/watch?v=IaCQQ2FCzOo"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Unlocking LLM Minds! 🤯 #Shorts",
+        "description": "Dive into the astonishing inner workings of Large Language Models. Discover how they 'think' and process information in ways you won't believe!",
+        "instagram_caption": "🤯 Ever wondered how AI truly processes information? Explore the mind-bending logic of Large Language Models and prepare to be amazed! Follow @aipulse! #AI #LLM #ArtificialIntelligence #TechExplained #MachineLearning #DeepLearning #FutureTech #Innovation #AIExplained #Coding #DataScience #TechTok #LearnAI #AIInsights #BigData #NLP #NeuralNetworks #FutureOfAI #AIRevolution #Technology"
+      },
+      {
+        "title": "LLM Secrets REVEALED! 🤫 #Shorts",
+        "description": "Go beyond the hype! We reveal the secrets behind how Large Language Models truly operate, demystifying their complex thought processes.",
+        "instagram_caption": "🤫 The secrets behind AI's 'brain' are finally unveiled! Understand the incredible mechanisms that power Large Language Models and their fascinating way of 'thinking'. Follow @aipulse! #AISecrets #LLMExplained #ArtificialIntelligenceExplained #TechBreakdown #MachineLearningInsights #DeepLearningExplained #FutureTechnology #TechInnovation #AIforBeginners #Programming #DataAnalytics #TechTrends #AIEducation #Insightful #BigDataAnalytics #NaturalLanguageProcessing #NeuralNet #AIandFuture #TechCommunity #ArtificialIntelligenceArt"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
