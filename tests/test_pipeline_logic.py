@@ -2997,3 +2997,27 @@ def test_notified_state_is_capped_and_survives_corruption(tmp_path):
     p.write_text('["a", 42, null, "  "]', encoding="utf-8")
     assert notify.load_notified(p) == ["a"]
     assert notify.load_notified(tmp_path / "missing.json") == []
+
+
+def test_message_can_never_exceed_the_bot_api_limit(monkeypatch):
+    """sendMessage rejects >4096 chars with a 400 — and a 400 costs the ENTIRE post,
+    i.e. a silent no-post day. A README-derived command and an LLM-written 'what' are
+    both unbounded, so the optional blocks are shed; the title and the video link,
+    which are the whole point of the message, always survive."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    msg = notify.format_message(_row(title="T" * 900),
+                                _entry(command="c" * 5000, what="w" * 5000))
+    assert len(msg) <= notify.MAX_TEXT
+    assert msg.startswith("\U0001F527 <b>" + "T" * 300 + "</b>")
+    assert msg.endswith("▶ https://youtube.com/watch?v=ABCDEFGHIJK")
+    # an escaping-heavy payload (every char becomes 5) sheds by VALUE, not position:
+    # the prose goes first, the command is the last thing to go
+    big = notify.format_message(_row(), _entry(command="&" * 800, what="&" * 600))
+    assert len(big) <= notify.MAX_TEXT and "<code>" in big and "Cheat sheet" not in big
+    # and when even the command cannot fit, the title and the video still ship
+    worst = notify.format_message(_row(title="&" * 300), _entry(command="&" * 800))
+    assert len(worst) <= notify.MAX_TEXT and "<code>" not in worst
+    assert worst.endswith("▶ https://youtube.com/watch?v=ABCDEFGHIJK")
+    # nothing is ever cut mid-tag or mid-entity: the tags still balance
+    for m in (msg, big):
+        assert m.count("<b>") == m.count("</b>") and m.count("<code>") == m.count("</code>")

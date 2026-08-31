@@ -51,6 +51,13 @@ and reads the ledger.
   corrupt/scalar body raised `TypeError` there — inside the one CI step with no `|| true`,
   where `bash -e` loses ALL state, not just this file. Found by the acceptance test, fixed
   in `state_merge`, and it now protects `used_topics.json` / `used_urls.json` too.
+- **The 4096-char Bot API limit is enforced by shedding, not slicing.** `sendMessage`
+  rejects a longer message with a 400 — which, after the #6 retry, costs the *entire* post.
+  A README-derived command and an LLM-written "what" are both unbounded, so the values are
+  bounded up front (title 300 / command 800 / what 600) and, if the escaped result is still
+  over, the optional blocks are dropped **by value**: prose first, then the page line, then
+  the command. Title + video link always survive. A raw slice is never taken — cutting
+  mid-tag or mid-entity is a 400 of its own.
 - **A row is only marked notified after a successful send.** A failed post therefore
   retries on the next firing — by which time the 36 h window usually still holds, and once
   it does not the row simply ages out rather than posting a stale video days later.
@@ -90,7 +97,7 @@ and reads the ledger.
 
 ## Acceptance criteria
 
-- [x] `py -3 -m pytest tests/ -q` passes with ≥8 new tests (161 → **179**, +18)
+- [x] `py -3 -m pytest tests/ -q` passes with ≥8 new tests (161 → **180**, +19)
 - [x] `format_message` on a `tool` row + its catalog entry returns the exact 8-line template
       in #5, with `<b>`/`<code>` intact and `&`, `<`, `>` in title/command escaped (`"` and
       `'` deliberately left literal — see the implementation note above)

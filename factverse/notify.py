@@ -38,6 +38,7 @@ NOTIFIED = fv.STATE / "notified.json"
 MAX_NOTIFIED = 500       # spec #10 — newest N video URLs are remembered
 MAX_AGE_HOURS = 36       # spec #3 — never post a video older than this
 TIMEOUT = 20             # spec #9
+MAX_TEXT = 4096          # Bot API hard limit: one char over is a 400, i.e. no post
 
 
 # --------------------------------------------------------------- config/secrets
@@ -185,7 +186,9 @@ def format_message(row: dict, entry: dict | None = None) -> str:
     A section with no truthful value is omitted rather than left empty — a tool row
     whose PDF/page seam failed still posts its command and its video."""
     row = row if isinstance(row, dict) else {}
-    title = str(row.get("title") or "").strip()
+    # Bounded before escaping (which can multiply a length by five): sendMessage
+    # rejects >4096 chars with a 400, and a 400 costs the whole post.
+    title = str(row.get("title") or "").strip()[:300]
     video = site.safe_link(row.get("youtube_url"))      # never link a scheme we did not check
     if not title or not video:
         return ""
@@ -193,18 +196,31 @@ def format_message(row: dict, entry: dict | None = None) -> str:
     if entry is None:
         return f"📰 <b>{_esc(title)}</b>\n\n▶ {_esc(video)}"
 
-    lines = [f"🔧 <b>{_esc(title)}</b>"]
-    command = str(entry.get("command") or "").strip()
+    head, tail = [f"🔧 <b>{_esc(title)}</b>"], [f"▶ {_esc(video)}"]
+    blocks: list[tuple[str, list[str]]] = []
+    command = str(entry.get("command") or "").strip()[:800]
     if command:
-        lines += ["", f"<code>{_esc(command)}</code>"]
-    what = str(entry.get("what") or "").strip()
+        blocks.append(("command", ["", f"<code>{_esc(command)}</code>"]))
+    what = str(entry.get("what") or "").strip()[:600]
     if what:
-        lines += ["", _esc(what)]
+        blocks.append(("what", ["", _esc(what)]))
     name = site.entry_name(entry)                       # the one answer for the page's name
     if name:
-        lines += ["", f"📄 Cheat sheet: {_esc(site.public_url(name))}"]
-    lines.append(f"▶ {_esc(video)}")
-    return "\n".join(lines)
+        blocks.append(("page", ["", f"📄 Cheat sheet: {_esc(site.public_url(name))}"]))
+
+    def _join(bs) -> str:
+        return "\n".join(head + [ln for _, b in bs for ln in b] + tail)
+
+    # sendMessage rejects >4096 chars with a 400, and a 400 costs the ENTIRE post —
+    # a silent no-post day. Shed by VALUE, not by position: the message exists to
+    # deliver the command and the video, so the prose goes first and the command
+    # last. Never a raw slice — cutting mid-tag or mid-entity is a 400 of its own.
+    for drop in ("what", "page", "command"):
+        text = _join(blocks)
+        if len(text) <= MAX_TEXT:
+            return text
+        blocks = [(k, b) for k, b in blocks if k != drop]
+    return _join(blocks)                                # title + link always fit
 
 
 # --------------------------------------------------------------- send (I/O)

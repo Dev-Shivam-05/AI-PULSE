@@ -315,3 +315,21 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 - **When a fail-soft seam returns `None`, the consumer must be told.** `make_cheat_sheet`
   returning `None` still produced a page advertising the download; `run()` had the answer
   and discarded it. Pass the result, do not re-derive the assumption.
+- **An announcement belongs after the publish slot, not after the upload.** `yt_upload`
+  uploads private with `publishAt`, so anything posted from `run()`'s post-upload zone
+  links a video that is unavailable for four and a half hours. v3-F.2 is therefore a
+  second workflow (16:55 UTC) reading the ledger, not a call inside `run()`. Any future
+  distribution surface (X, Reels) belongs in the same place, for the same reason.
+- **The generic merge fallback needed the same `isinstance` guard as the special cases.**
+  `state/notified.json` was the first file since v3-F.1 to use `_merge_list`, and a
+  corrupt or scalar body raised `TypeError` there - inside the one CI step with no
+  `|| true`, where `bash -e` loses ALL state. Fixed in `_merge_list`, which also protects
+  `used_topics.json` / `used_urls.json`.
+- **A platform's escaping rules are the platform's, not Python's.** `html.escape(quote=True)`
+  emits `&#x27;` for an apostrophe - a numeric character reference the Telegram Bot API
+  documents no promise to decode, and "OpenAI's ..." is the commonest story title shape.
+  Escape exactly what the target documents (`&`, `<`, `>`), and check the rendered output.
+- **A hard API size limit must be handled by shedding, not slicing.** `sendMessage` rejects
+  >4096 chars with a 400, which costs the whole post; a raw truncation can cut mid-tag and
+  earn its own 400. Drop optional blocks by VALUE (prose, then the page link, then the
+  command) and keep what the message exists to deliver.

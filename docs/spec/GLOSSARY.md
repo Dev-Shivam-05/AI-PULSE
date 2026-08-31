@@ -37,3 +37,8 @@
   exists (and flag on), else evergreen.
 - **blocked-day fallback** — a FACTCHECK/ADVICE/POLICY block on an automatic run re-runs the day
   as forced evergreen. Forced runs (`force_format` set) still fail honestly with no fallback.
+- **notified state** - `state/notified.json`, the list of YouTube URLs already announced on
+  Telegram. Written only after a successful send; in `state_merge.FILES` and both workflows'
+  stash lists, so `checkout -B main origin/main` cannot make the bot repeat itself.
+- **announce window** - the 36 hours after `publish_at` in which `notify.pick_row` will still
+  post a video. Older rows age out, so enabling the bot never announces the back catalogue.

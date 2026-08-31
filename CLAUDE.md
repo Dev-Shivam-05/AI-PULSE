@@ -126,6 +126,22 @@ name that is not written there. If a decision is missing, add a row and get one 
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 
+- **The long-form is PRIVATE until `publishAt` fires.** `eng.yt_upload` schedules
+  (`longform_slot_utc`, 16:45 UTC) while the run itself happens at ~12:23 UTC. Anything that
+  ANNOUNCES the video — Telegram (`notify.py`), X, Reels — must run after that slot, off the
+  ledger, not from `run()`'s post-upload zone; a link posted at upload time is dead for four
+  and a half hours. `notify.pick_row` refuses a row whose `publish_at` is still in the future.
+- **A secret in a URL leaks through the library's own exception messages.** `requests` quotes
+  the full request URL inside `ConnectionError` ("Max retries exceeded with url:
+  /bot<TOKEN>/sendMessage"), and Actions logs are public. Any seam that puts a token in a path
+  must redact before printing — `notify._redact` is the pattern. Actions masks its own secrets;
+  a local run and a fork do not.
+- **Escape for the destination, not for Python.** `html.escape(quote=True)` emits the numeric
+  reference `&#x27;` for an apostrophe; Telegram documents only `&`/`<`/`>` and never promises
+  to decode numeric references, so every "OpenAI's …" title was at risk. And a hard size limit
+  (4096 chars) is handled by shedding whole blocks, never by slicing — a cut mid-tag is its own
+  API error.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.
