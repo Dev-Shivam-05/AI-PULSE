@@ -333,3 +333,7 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   >4096 chars with a 400, which costs the whole post; a raw truncation can cut mid-tag and
   earn its own 400. Drop optional blocks by VALUE (prose, then the page link, then the
   command) and keep what the message exists to deliver.
+- **Secrets go in `.env` locally and Actions secrets in CI - never a tracked file.**
+  `config.py` loads `.env` on import and a real environment variable always wins, so the
+  same code path serves both. `.gitignore:3` covers `.env`; after adding any secret,
+  `git grep` for it before committing.

@@ -1,104 +1,106 @@
-# HANDOFF — ToolDojo — Phase v3-F.1 (the site) — 2026-08-31
+# HANDOFF — ToolDojo — Phase v3-F.2 (the Telegram bot) — 2026-08-31
 
-*One phase, done end to end: spec locked (13 decisions), built, rendered and inspected in
-the browser at two widths, then a two-lens adversarial review over the diff — 9 reproduced
-defects, every one fixed and pinned by a regression test. 161/161 tests. Branch
-`v3-phase-f` pushed, stacked on `v3-phase-c` — merge PR #23 (`v3-phase-b`) first, then
-`v3-phase-c`, then this.*
+*Spec locked (13 decisions, approved with `go`), built, self-reviewed over the diff, and
+then wired to a real bot: `notify.main()` delivered a real message to the ToolDojo chat
+through the production code path. 180/180 tests. Branch `v3-phase-f` pushed, stacked on
+`v3-phase-c` — merge PR #23 (`v3-phase-b`) first, then `v3-phase-c`, then this.*
 
 ## Done
 
-- **`factverse/site.py`**: `docs/` is now a real website. One HTML page per tool video
-  (`docs/tools/<date>-<slug>.html`, the same stem as its PDF), a regenerated
-  `docs/index.html` and `docs/sitemap.xml`. Dark theme matching the code cards, the
-  command in a copy-button box, what/uses/skip_if, a `youtube-nocookie` embed, the PDF as
-  a download, OG/Twitter card pointing at the YouTube thumbnail (which is what F.2/F.3
-  will render). No Jekyll, no build step, no CDN, no fonts, no analytics — `docs/.nojekyll`
-  is committed, so Pages serves the directory verbatim.
-- **The catalog is the source of truth.** `state/tools_index.json` holds one entry per
-  tool video; every HTML file is 100% derived from it. CI therefore *regenerates* the site
-  after `state_merge` (`python -m factverse.site`) rather than stashing it — the PDFs still
-  stash to `/tmp`, because an LLM wrote them once and they cannot be reproduced.
-- **The 📄 line now links the PAGE, not the PDF** (spec #5, supersedes v3-C decision 8), in
-  both the description and the pinned comment. A PDF opened from mobile YouTube is a bad
-  experience, and the page is the URL every later platform will share.
-- **`deliverable.sheet_for()`**: one LLM extraction feeds both the PDF and the page. A
-  *raising* extraction now falls back instead of losing the sheet — the module docstring
-  already promised that and only the `return None` path honoured it.
-- **Live-verified**: 3 realistic pages rendered and screenshotted at 1280px and 390px
-  (index, page with video, page without). Zero horizontal overflow on all six; the Copy
-  button really swaps to "Copied" and back after 1.5s under playwright. The first
-  inspection caught 2 shipping defects (the index `<h1>` was not the two-tone wordmark; the
-  last row's border doubled against the footer rule). Artifacts in `output/demo/site/`.
-- **`docs/index.html` + `docs/sitemap.xml` are committed in their empty state**, so the site
-  root is a real page the moment Pages is switched on rather than a 404 until the first run.
+- **`factverse/notify.py`**: one Telegram message per published video. It takes the newest
+  `PUBLISHED` row in `state/runs.jsonl` whose `publish_at` has already fired, is younger
+  than 36 h, and is not in `state/notified.json`; joins `state/tools_index.json` on
+  `video_url` for tool rows; and posts title + tap-to-copy `<code>` command + the v3-F.1
+  page link + the video. Story lanes post title + video. Every seam fail-soft, `main()`
+  always exits 0.
+- **`.github/workflows/notify.yml`** (16:55 UTC + `workflow_dispatch`). A *separate*
+  workflow on purpose: `yt_upload` uploads private with `publishAt` = 16:45 UTC while the
+  pipeline runs at 12:23, so a post from `run()`'s post-upload zone would link a dead video
+  for four and a half hours. The runtime `publish_at`-in-the-past check means an
+  out-of-sync cron is a delay, never a broken link.
+- **Idempotence**: `state/notified.json` (a list of announced URLs, newest 500) got the
+  both-halves treatment — `state_merge.FILES` **and** `publish.yml`'s stash list — plus its
+  own state-save step in `notify.yml`. A URL is recorded only after a successful send.
+- **Live-verified**: the bot `@ToolDojoBot` exists, its token is in the git-ignored `.env`,
+  `getMe`/`getChat` returned 200, and `notify.main()` ran the whole real path
+  (pick_row → format_message → send → save_notified) with `sendMessage` returning
+  `ok: true` — which also proves Telegram accepted the HTML, since it 400s on malformed
+  entities. The delivered message was the story-lane template; the tool-lane body is in
+  `output/demo/telegram/message_tool.txt` and ships with the first `format=tool` video.
+- Earlier, before any token existed, the endpoint and refusal path were proven against the
+  real API with a deliberately invalid token (HTTP 401, handled, token redacted).
 
 ## Files changed
 
-- `factverse/site.py` — NEW: catalog, render, rebuild, publish_page; every seam fail-soft
-- `factverse/ai_pipeline.py` — run() wiring (sheet → PDF → page), the 📄 line and pinned
-  comment point at the page, `_validate_script` pops planted `receipts`/`cheat_sheet`
-- `factverse/deliverable.py` — `sheet_for()`, `safe_name()`, `sheet=` param
-- `factverse/state_merge.py` — `_merge_index` + `state/tools_index.json` in `FILES`
-- `.github/workflows/publish.yml` — catalog in the stash loop; rebuild between
-  `state_merge` and `git add`; `git add docs/index.html docs/sitemap.xml`
-- `tests/test_pipeline_logic.py` — +24 tests (137 → 161)
-- `config.json` / `config.example.json` — `site_pages: true` (the kill-switch)
-- `docs/spec/ai-pulse-v3f1.md` — the contract: 13 locked decisions + the review addendum
-- `docs/PHASES.md` (F.1 done, F.2–F.4 queued), `docs/DECISIONS.md`, `docs/spec/GLOSSARY.md`,
-  `CLAUDE.md` (3 new traps)
+- `factverse/notify.py` — NEW: config/secrets, `_redact`, ledger + catalog reads,
+  `pick_row`, `format_message`, `send`, `main`
+- `.github/workflows/notify.yml` — NEW: the 16:55 UTC cron, the post step, its own
+  state-save/merge/retry dance, cron keepalive
+- `.github/workflows/publish.yml` — `state/notified.json` added to the stash loop
+- `factverse/state_merge.py` — `state/notified.json` in `FILES`; `_merge_list` got the
+  `isinstance` guard `_merge_index` already had
+- `config.json` / `config.example.json` — `"telegram": true` (the kill-switch)
+- `tests/test_pipeline_logic.py` — +19 tests (161 → 180)
+- `docs/spec/ai-pulse-v3f2.md` — NEW: the contract, the owner setup, what was verified
+- `docs/PHASES.md` (F.2 done, owner step 1.5, Next 3 = F.3), `docs/DECISIONS.md`,
+  `docs/spec/GLOSSARY.md`, `CLAUDE.md` (3 new traps)
+- `state/notified.json` — the announced URL from the live run
+- `.env` — **untracked and git-ignored**; holds the two Telegram values locally
 
 ## Decisions made (full table in the spec)
 
-- The catalog is state; the HTML is a build artifact. Only the source of truth needs the
-  both-halves treatment (stash list AND `state_merge.FILES` AND merge semantics).
-- `_merge_index` is a union keyed by `page`, not the generic list union — that one dedups
-  on exact equality, so a retry with a new `video_url` would print the tool twice.
-- The description links the page. Same `<date>-<slug>` stem as the PDF, so the name is
-  still decided before the upload.
-- Scope: v3-F.1 is the site only. Telegram / X / Reels are now board rows F.2 / F.3 / F.4,
-  each needing its own secret and spec — the original F row was four phases of work.
+- **The announcement lives after the publish slot, not after the upload.** Any future
+  surface (X, Reels) belongs in the same place for the same reason.
+- All four lanes post, not just tool — the ledger has no description, so a story post is
+  title + video, and skipping stories would leave the channel dead six days a week.
+- `link_preview_options.url` = the video, with a single retry without that field on a 400:
+  the video is what needs the click, and an API-shape surprise should cost the preview,
+  not the post.
+- Secrets are env-only (`.env` locally, Actions secrets in CI), never `config.json`.
+- A row is recorded as notified only on success, so a failed post may retry tomorrow.
 
-## The review found the first fix was in the wrong place
+## Three defects the self-review found (all fixed and test-pinned)
 
-Worth reading before touching this code. `script.pop("cheat_sheet")` in `run()` only
-covered the FIRST validation — `critique_pass`, `enforce_length` and `enforce_max_length`
-each validate again afterwards, and `_carry_over` restores only a key it finds in the
-source. A name planted in a *later* rewrite answer therefore survived and shipped on the
-live video as `.../tools/` with no file name. **The pop belongs inside `_validate_script`**,
-which every pass runs before `_carry_over` hands the legitimate value back — and that also
-closes the identical, still-open hole for `receipts`. The other 8 defects (an unchecked
-`javascript:` href on our own origin, a download button for a PDF that was never written,
-a single bad file freezing the index forever, a kill-switch that could not be flipped from
-Actions) are in the spec's review addendum with their root causes.
+- `state_merge._merge_list` raised `TypeError` on a scalar body. `state/notified.json` is
+  the first file since v3-F.1 to use the *generic* fallback, and that raise sits in the one
+  CI step with no `|| true` — under `bash -e` it loses ALL state, not just this file.
+- `html.escape(quote=True)` emitted `&#x27;` for an apostrophe — a *numeric* character
+  reference the Bot API never promises to decode, and `OpenAI's …` is the commonest story
+  title shape. Now escapes exactly what Telegram documents (`& < >`).
+- The 4096-char limit: the first version shed message blocks by *position* and threw away
+  the command while keeping the prose. It now sheds by **value** — prose, then the page
+  link, then the command — and never takes a raw slice, because a cut mid-tag is its own
+  400.
 
 ## Known broken / deliberately skipped
 
-- **Nothing is live until Pages is enabled** (owner click, below). Every page and PDF link
-  404s until then — the same state the PDF has been in since v3-C, not a new failure.
-- `GITHUB_TOKEN` pushes may not trigger a Pages rebuild (`docs/DECISIONS.md:115`). If the
-  page is stale after the first tool run, Pages needs the Actions-based deploy instead of
-  branch-deploy — a small F.1b row, not a redesign.
-- No pages exist for past videos; the catalog fills from the next tool run forward.
-- `docs/` also serves `HANDOFF.md`, `STRATEGY.md` and `docs/spec/` verbatim. The repo is
-  public, so this exposes nothing github.com does not already serve, and the sitemap does
-  not list them. If the repo ever goes private, add `docs/robots.txt`.
-- `output/demo/hostile/` is untracked scratch a review agent left in the working tree —
-  delete it whenever you like; I did not, because discarding files is your call.
+- **The two Actions secrets are not set** (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`).
+  `gh` is not installed here and no PAT exists, so this is an owner click. Until then the
+  16:55 workflow logs `↷ Telegram not configured — skipping` and posts nothing.
+- **The configured chat is a private supergroup, not a broadcast channel** (`getChat` →
+  `"type":"supergroup"`). `sendMessage` is identical for both, but a private group cannot
+  be found, followed, or linked from a YouTube description. A public `@tooldojo` channel is
+  a one-secret change, no code.
+- The token was shared in plain text in a chat. Rotating it in @BotFather (`/revoke`) once
+  CI is wired is cheap hygiene — it means updating `.env` and the Actions secret, nothing
+  else.
+- The **tool-lane** message has not been seen in Telegram yet (no tool video has published).
+  Its body is rendered in `output/demo/telegram/message_tool.txt`.
+- Nothing is live on the web until Pages is enabled — the page link in a tool post 404s
+  until then. Same state as the PDF since v3-C.
+- `output/demo/hostile/`, `plugins.rb`, `ri.md`, `rl.md` are untracked scratch in the
+  working tree; deleting files is your call, so I left them.
 - Everything in the previous handoff's owner list is still outstanding.
 
 ## Next session starts here
 
-- **v3-F.2 (Telegram)** if building — the page's OG card is what it will render, so the
-  hard part is already done; it needs a bot token in Actions secrets.
-- The real next milestone is still the owner's click list: merge PR #23 → merge
-  `v3-phase-c` → merge `v3-phase-f` → Studio rename to ToolDojo → **enable Pages**
-  (Settings → Pages → Deploy from branch → `main` / `docs`) → supervised `format=tool`
-  dispatch.
+- **Phase v3-F.3 (X free tier)**: the same shape as F.2 — a second function in `notify.py`
+  off the same ledger row and catalog join, ~500 posts/month on the free tier. The new work
+  is OAuth 1.0a credentials in Actions secrets and a 280-character budget, where F.2's
+  "shed by value, never slice" rule is exactly the right pattern.
 - First command: `/boot`
-- Watch out for, on the first live tool run: the log line `🌐 Page: <url>` (worked) or
-  `⚠️ site page failed — …` (fail-soft; the video still ships). Then `curl -I` both the
-  page and the PDF — they share a stem, so if one 200s and the other 404s the naming
-  drifted. And the standing trap pair: a `_CARRY` key run() computes itself must be popped
-  inside `_validate_script`, and `pathlib .name` is platform-dependent — split on both
-  separators.
+- Watch out for: **anything that announces a video must run after `publishAt`, off the
+  ledger** — never from `run()`'s post-upload zone, where the video is still private. And
+  the standing pair: a tracked state file needs BOTH `state_merge.FILES` and the workflow
+  stash list, and a secret in a URL leaks through the HTTP library's own exception text
+  (`notify._redact` is the pattern).
