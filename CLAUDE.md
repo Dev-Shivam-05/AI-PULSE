@@ -103,11 +103,26 @@ name that is not written there. If a decision is missing, add a row and get one 
   HTML is rebuilt from `state/tools_index.json` in CI; only the source of truth needs the
   both-halves treatment (stash list AND `state_merge.FILES` AND merge semantics). The cheat
   sheet PDFs are the exception — an LLM wrote them once and they cannot be reproduced.
-- **`cheat_sheet` is `receipts`' twin: a `_CARRY` key run() computes itself.** A planted one
-  reached the PUBLISHED description and escaped `docs/tools` via `../../../`. run() pops it;
-  `deliverable.safe_name()` is the second line. **Any artifact name derived from model output
-  goes through `safe_name`** — and note that its first cut split on `/` only, the same
-  Windows-green/CI-red separator trap for the third time in this repo.
+- **A key run() computes itself must be popped inside `_validate_script`, not once in run().**
+  `cheat_sheet` and `receipts` are both `_CARRY` keys the model can plant. Popping in run()
+  only covers the FIRST validation: `critique_pass` / `enforce_length` / `enforce_max_length`
+  each validate again afterwards, and `_carry_over` restores only a key it finds in the source
+  — so a value planted in a later rewrite answer survives. `_validate_script` pops both, and
+  `_carry_over` hands the legitimate value back a line later. A planted `cheat_sheet` reached
+  the PUBLISHED description (`.../tools/` with no file name) and escaped `docs/tools` via
+  `../../../`. **Any artifact name derived from model output goes through
+  `deliverable.safe_name`** — note its first cut split on `/` only, the Windows-green/CI-red
+  separator trap for the third time in this repo.
+- **A URL from the model is not safe to put in an `href` just because it is escaped.**
+  `html.escape` does nothing about a scheme: `deliverable.url` is written by a model grounded
+  in a third-party README, and `javascript:` on our own Pages origin is script execution.
+  `screencap.py` guards this field with `startswith("http")`; `site.safe_link` is the same
+  guard. Any NEW consumer of a model-supplied URL needs it too.
+- **A loop that writes artifacts must isolate each item.** One unreadable page file aborted
+  `site.rebuild`'s loop, skipping the index and sitemap writes below it — the site froze at
+  its last good state on every future run while `publish_page` still returned a URL and the
+  ledger still said `tool_page=True`. Per-item `try/except: continue`; a whole-loop `try` is
+  a silent freeze waiting to happen.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 

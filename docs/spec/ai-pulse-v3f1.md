@@ -83,3 +83,49 @@ dependency. Markdown would serve as raw text; therefore the generator emits HTML
   Actions-based deploy instead of branch-deploy — a small F.1b row, not a redesign.
 - The catalog grows unbounded and every run rewrites every page (~4 KB each). 365 pages is
   ~1.5 MB and sub-second; the 500-entry regeneration cap keeps it that way.
+
+## Review addendum (2026-08-31, two adversarial lenses over the diff)
+
+Two agents reviewed `v3-phase-c..HEAD` — one on correctness and the unattended run, one on
+the published surface and the CI state-save. Both reproduced every finding before reporting
+it. **9 defects confirmed and fixed, each pinned by a regression test.** Two independent
+findings were the same root cause (the pop placement) and are counted once.
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| 1 | A `cheat_sheet` planted in a LATER rewrite pass shipped on the live video — `.../tools/` with no file name when `safe_name` reduced it to `""` | `run()` popped it once, but `critique_pass` / `enforce_length` / `enforce_max_length` all run after that, and `_carry_over` only restores a key it finds in the source | Pop `receipts` and `cheat_sheet` inside `_validate_script`, which every pass runs *before* `_carry_over` restores the legitimate value. This also closes the identical, still-open hole for `receipts` |
+| 2 | The PDF download button pointed where no PDF was written | `entry_for` sanitized `page` but stored `pdf` raw, so they diverged the moment `safe_name` changed anything | `"pdf": deliverable.safe_name(...)` |
+| 3 | A long name lost its extension | `safe_name`'s `[:120]` truncated after the dot | Truncate the stem, keep the extension |
+| 4 | The page offered a download on the day the PDF seam failed | `make_cheat_sheet` returns `None` fail-soft; `run()` had that answer and discarded it | `publish_page(..., pdf=cheat_sheet)`; no `pdf` field → no button |
+| 5 | `javascript:` / `data:` URL clickable on our own Pages origin | `deliverable.url` is written by a model grounded in a third-party README and was never scheme-checked; `html.escape` cannot help — a scheme is not a metacharacter. `screencap.py` already refuses this exact field | `site.safe_link()`: `http://`/`https://` only |
+| 6 | One unreadable page file froze `index.html` and `sitemap.xml` **forever**, invisibly | The `try` wrapped the whole loop, so a raise skipped the index/sitemap writes below it — while `publish_page` still returned a URL and the ledger still said `tool_page=True` | Per-entry `try/except: continue`; only a failure outside the loop returns `-1` |
+| 7 | The canonical, index href and sitemap `<loc>` could advertise a URL the generator had refused to write | `rebuild()` sanitized only the file name; three other surfaces used the raw `page` — and the catalog is merged state read back off `origin/main` | `entry_name()` is the single answer for file, canonical, href and `<loc>` |
+| 8 | `render_sitemap` raised on a non-dict row | The `isinstance` guard filtered `sorted()`'s *output*, so the non-dict reached `.get()` first | Filter before sorting; `max()` reads the filtered rows |
+| 9 | `site_pages` could not be flipped from the environment | `fv.setting` returns an env var as a string and `bool("false")` is `True`; `receipts_check` uses `fv.flag` for exactly this reason | `fv.flag("site_pages", True)` |
+| 10 | `_merge_index` raised `TypeError` on a scalar JSON body, in the one CI step with no `|| true` | `list(a or [])` | `isinstance(a, list)` guard |
+
+### Verified correct (reproduced, no defect)
+
+- **The CI state-save, including retries.** Replayed end-to-end against a real bare origin
+  with iteration 1's push forced to fail and a competing push landing on `origin/main` in
+  between: iteration 2's `checkout -B` deletes the tracked HTML and PDF, the PDF returns
+  from `/tmp/tools_incoming` and the HTML is correctly *regenerated* from the merged
+  catalog. Final `origin/main` had both artifacts, the merged catalog, a correct index row
+  and sitemap, and the concurrent run's `used_topics.json` un-clobbered.
+- **The copy-button JS.** `_JS` is a constant with zero interpolation; a command containing
+  `</script><script>alert(document.domain)</script>`, quotes, backslashes and newlines
+  renders escaped inside `<code>` with no breakout, and `navigator.clipboard` being
+  undefined falls through to the select-text path.
+- **Byte-identical regeneration** (acceptance #2), **relative links** in both directions,
+  and **`publish_page` fail-soft** under an injected `RuntimeError` in all nine seams.
+
+### Known and accepted
+
+- `docs/` is now a sitemapped site and still contains `HANDOFF.md`, `STRATEGY.md`,
+  `ENGINEERING_AUDIT.md` and `docs/spec/`. With `.nojekyll` those serve verbatim. **The
+  repository is public, so this exposes nothing that github.com does not already serve** —
+  but the sitemap lists only the index and the tool pages, so crawlers are not pointed at
+  them. If that changes (a private repo, or a custom domain), add a `docs/robots.txt`.
+- `safe_name` maps `"..."`, `"___"` and `"//"` to `""`. Every consumer now falls back to a
+  name derived from the title, so an empty result costs nothing — but a future consumer
+  must handle `""` rather than assume a name.
