@@ -1,6 +1,7 @@
 # Spec — v3-F.1: GitHub Pages becomes a real site
 
-Status: **locked 2026-08-31** (owner approved the table below with `go`, no changes).
+Status: **locked and BUILT 2026-08-31** (owner approved the table below with `go`, no
+changes). Every acceptance criterion below is ticked; see the review addendum at the end.
 Branch: `v3-phase-f` (stacked on `v3-phase-c`). Predecessor spec: `docs/spec/ai-pulse-v3c.md`
 (the cheat-sheet PDF), `docs/spec/ai-pulse-v3e2.md` (receipts).
 
@@ -60,18 +61,18 @@ dependency. Markdown would serve as raw text; therefore the generator emits HTML
 
 ## Acceptance criteria
 
-- [ ] `py -3 -m pytest tests/ -q` passes with ≥8 new tests (137 → ≥145)
-- [ ] `python -m factverse.site` on a 3-entry catalog writes `docs/index.html`,
+- [x] `py -3 -m pytest tests/ -q` passes with ≥8 new tests — **161 passed** (137 → 161, +24)
+- [x] `python -m factverse.site` on a 3-entry catalog writes `docs/index.html`,
       `docs/sitemap.xml` and 3 `docs/tools/*.html`; re-running produces byte-identical files
-- [ ] A rendered page and the index are screenshotted at 1280px and 390px and read —
+- [x] A rendered page and the index are screenshotted at 1280px and 390px and read —
       command box, embed, PDF button, all three uses visible, no horizontal scroll
-- [ ] `state_merge.merge_file("state/tools_index.json", ours, theirs)` with the same `page`
+- [x] `state_merge.merge_file("state/tools_index.json", ours, theirs)` with the same `page`
       on both sides returns exactly one entry, the later `date`/`video_url` winning
-- [ ] `state/tools_index.json` is in **both** `state_merge.FILES` and the `publish.yml`
+- [x] `state/tools_index.json` is in **both** `state_merge.FILES` and the `publish.yml`
       stash loop; `docs/index.html`, `docs/sitemap.xml`, `docs/tools` are all `git add`ed
-- [ ] The description's 📄 line resolves to `<base>/tools/<date>-<slug>.html` and that exact
+- [x] The description's 📄 line resolves to `<base>/tools/<date>-<slug>.html` and that exact
       file name is what `site.write_page` produces (one test asserts both from one script dict)
-- [ ] A simulated exception inside every `site.*` public function returns `None`, prints a
+- [x] A simulated exception inside every `site.*` public function returns `None`, prints a
       `⚠️`, and `run()` still reaches `record_run`
 
 ## Risks
