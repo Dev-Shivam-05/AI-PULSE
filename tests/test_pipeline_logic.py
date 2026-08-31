@@ -2662,3 +2662,338 @@ def test_catalog_merge_survives_a_scalar_body():
         out = sm.merge_file("state/tools_index.json", junk, good)
         assert json.loads(out) == [{"page": "a.html", "date": "2026-01-01"}], junk
         assert sm.merge_file("state/tools_index.json", good, junk) is not None
+
+
+# =============================================================== v3-F.2: Telegram
+from factverse import notify
+
+
+class _Resp:
+    """A requests.Response stand-in: status + json body, exactly what send() reads."""
+    def __init__(self, status=200, body=None, text=""):
+        self.status_code, self._body, self.text = status, (body or {"ok": True}), text
+
+    def json(self):
+        return self._body
+
+
+def _row(**over):
+    r = {"status": "PUBLISHED", "format": "tool", "title": "A Tool",
+         "youtube_url": "https://youtube.com/watch?v=ABCDEFGHIJK",
+         "publish_at": "2026-08-31T16:45:00Z", "timestamp": "2026-08-31T12:30:00"}
+    r.update(over)
+    return r
+
+
+_NOW = _dt.datetime(2026, 8, 31, 16, 55)
+
+
+def _raiser(name):
+    def _boom(*a, **k):
+        raise RuntimeError(f"{name} exploded")
+    return _boom
+
+
+def test_tool_message_is_the_locked_template(monkeypatch):
+    """v3-F.2 #5: exactly 8 lines, <code> for the tap-to-copy command, the PAGE
+    (not the PDF) as the cheat-sheet link, the video last."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    msg = notify.format_message(_row(), _entry())
+    assert msg.split("\n") == [
+        "\U0001F527 <b>A Tool</b>",
+        "",
+        "<code>pip install x</code>",
+        "",
+        "It does a thing.",
+        "",
+        "\U0001F4C4 Cheat sheet: https://x.test/tools/2026-08-31-a.html",
+        "▶ https://youtube.com/watch?v=ABCDEFGHIJK",
+    ]
+
+
+def test_story_row_posts_title_and_link_only():
+    """#4: the ledger carries no description, so a news/evergreen/roundup post has
+    nothing else it can truthfully say - and saying nothing 6 days a week is worse."""
+    msg = notify.format_message(_row(format="news", title="Big News"), None)
+    assert msg == "\U0001F4F0 <b>Big News</b>\n\n▶ https://youtube.com/watch?v=ABCDEFGHIJK"
+
+
+def test_message_escapes_every_interpolated_value(monkeypatch):
+    """parse_mode=HTML: an unescaped '<' in a repo title is a broken message at best
+    and an injected tag at worst. The command is a model-supplied string too."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    msg = notify.format_message(_row(title='A & B <b>x</b> "q"'),
+                                _entry(command='sh -c "a && b" <in>', what="5 < 6 & rising"))
+    assert "&amp;" in msg and "&lt;b&gt;x&lt;/b&gt;" in msg
+    assert "<b>A &amp; B" in msg                       # our own tags survive
+    assert msg.count("<code>") == 1 and "&lt;in&gt;" in msg
+    assert "5 &lt; 6 &amp; rising" in msg
+    # quote=False: Telegram mandates &/</> only, and a NUMERIC reference (&#x27;
+    # for an apostrophe) is not something the Bot API promises to decode -
+    # "OpenAI's" is the commonest shape a story title has.
+    assert '"q"' in msg and "&quot;" not in msg and "&#x27;" not in msg
+    assert notify.format_message(_row(title="OpenAI's agent"), None).startswith(
+        "\U0001F4F0 <b>OpenAI's agent</b>")
+
+
+def test_message_omits_a_section_it_has_no_value_for(monkeypatch):
+    """A tool row whose PDF/page seam failed still posts its command and its video."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    msg = notify.format_message(_row(), _entry(command="", what="", page=""))
+    assert msg == "\U0001F527 <b>A Tool</b>\n▶ https://youtube.com/watch?v=ABCDEFGHIJK"
+    assert notify.format_message(_row(title=""), None) == ""      # no title -> no message
+    assert notify.format_message({}, None) == "" and notify.format_message(None, None) == ""
+
+
+def test_message_refuses_a_scheme_it_did_not_check(monkeypatch):
+    """site.safe_link is the existing guard: html escaping does nothing about a
+    scheme, and Telegram auto-links a bare URL wherever it lands."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    assert notify.format_message(_row(youtube_url="javascript:alert(1)"), _entry()) == ""
+    msg = notify.format_message(_row(), _entry(page="javascript:alert(1)"))
+    assert "javascript" not in msg and "\U0001F4C4" not in msg
+
+
+def test_pick_row_only_takes_a_public_recent_unposted_video():
+    """#3 - the five ways a row must be refused, and the one way it is taken."""
+    assert notify.pick_row([], [], _NOW) is None
+    assert notify.pick_row([_row(status="UPLOAD_FAILED"), _row(status="SKIPPED_DUPLICATE_DAY")],
+                           [], _NOW) is None
+    assert notify.pick_row([_row(youtube_url="")], [], _NOW) is None
+    # still private: publishAt has not fired yet
+    assert notify.pick_row([_row(publish_at="2026-08-31T17:45:00Z")], [], _NOW) is None
+    # 40 h old: the first-ever run must not announce a video from the old ledger
+    assert notify.pick_row([_row(publish_at="2026-08-30T00:00:00Z")], [], _NOW) is None
+    assert notify.pick_row([_row()], ["https://youtube.com/watch?v=ABCDEFGHIJK"], _NOW) is None
+    assert notify.pick_row([_row()], [], _NOW)["title"] == "A Tool"
+
+
+def test_pick_row_takes_the_newest_and_skips_an_untimed_row():
+    old = _row(title="Older", youtube_url="https://youtu.be/OLDOLDOLDOL",
+               publish_at="2026-08-31T04:00:00Z")
+    new = _row(title="Newer")
+    assert notify.pick_row([new, old], [], _NOW)["title"] == "Newer"
+    assert notify.pick_row([old, new], [], _NOW)["title"] == "Newer"
+    # eligibility cannot be proven without a time -> refuse rather than guess
+    assert notify.pick_row([_row(publish_at="", timestamp="")], [], _NOW) is None
+    assert notify.pick_row([_row(publish_at="not-a-date", timestamp="also-not")], [], _NOW) is None
+    # publish_at missing but timestamp present: record_run always writes one
+    assert notify.pick_row([_row(publish_at="", timestamp="2026-08-31T16:00:00")], [], _NOW)
+
+
+def test_load_rows_survives_a_corrupt_ledger_line(tmp_path):
+    p = tmp_path / "runs.jsonl"
+    p.write_text('{"status": "PUBLISHED"}\nnot json\n\n42\n{"status": "HELD"}\n', encoding="utf-8")
+    rows = notify.load_rows(p)
+    assert [r["status"] for r in rows] == ["PUBLISHED", "HELD"]
+    assert notify.load_rows(tmp_path / "missing.jsonl") == []
+
+
+def test_catalog_entry_joins_on_the_video_url():
+    rows = [_entry(page="a.html", video_url="https://youtu.be/AAAAAAAAAAA"),
+            _entry(page="b.html", video_url="https://youtu.be/BBBBBBBBBBB")]
+    assert notify.catalog_entry("https://youtu.be/BBBBBBBBBBB", rows)["page"] == "b.html"
+    assert notify.catalog_entry("https://youtu.be/CCCCCCCCCCC", rows) is None
+    assert notify.catalog_entry("", rows) is None and notify.catalog_entry("x", []) is None
+
+
+def test_send_posts_the_locked_payload(monkeypatch):
+    """#6/#9: the video link is what previews - without link_preview_options
+    Telegram previews the FIRST link in the message, which is the page."""
+    seen = {}
+
+    def fake_post(url, json=None, timeout=None):
+        seen.update(url=url, payload=json, timeout=timeout)
+        return _Resp()
+
+    monkeypatch.setattr(notify.requests, "post", fake_post)
+    assert notify.send("hello", "https://youtu.be/ABCDEFGHIJK", token="T0K", chat="@c") is True
+    assert seen["url"] == "https://api.telegram.org/botT0K/sendMessage"
+    assert seen["timeout"] == 20
+    assert seen["payload"]["chat_id"] == "@c" and seen["payload"]["parse_mode"] == "HTML"
+    assert seen["payload"]["text"] == "hello"
+    assert seen["payload"]["link_preview_options"] == {
+        "url": "https://youtu.be/ABCDEFGHIJK", "prefer_large_media": True}
+    # nothing to say, or nowhere to say it -> no HTTP call at all
+    calls = []
+    monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
+    assert notify.send("", "x", token="T", chat="@c") is False
+    assert notify.send("hi", "x", token="", chat="@c") is False
+    assert notify.send("hi", "x", token="T", chat="") is False
+    assert calls == []
+
+
+def test_send_retries_once_without_the_preview_field_on_400(monkeypatch):
+    """A 400 is the request's shape, not the network: an API change should cost the
+    preview, not the post. Exactly one retry - never a loop against a live API."""
+    calls = []
+
+    def fake_post(url, json=None, timeout=None):
+        calls.append(dict(json))
+        if len(calls) == 1:
+            return _Resp(400, {"ok": False}, "Bad Request: unknown field")
+        return _Resp()
+
+    monkeypatch.setattr(notify.requests, "post", fake_post)
+    assert notify.send("hi", "https://youtu.be/ABCDEFGHIJK", token="T", chat="@c") is True
+    assert len(calls) == 2
+    assert "link_preview_options" in calls[0] and "link_preview_options" not in calls[1]
+
+    # a 400 with no preview field to drop is final
+    hits = []
+
+    def only_400(url, json=None, timeout=None):
+        hits.append(1)
+        return _Resp(400, {"ok": False}, "Bad Request")
+
+    monkeypatch.setattr(notify.requests, "post", only_400)
+    assert notify.send("hi", "", token="T", chat="@c") is False and len(hits) == 1
+
+
+def test_send_never_calls_a_refusal_a_success(monkeypatch, capsys):
+    """The _notify_review lesson (v3-C.2 #12): requests does NOT raise on 401/403,
+    and a 200 can still carry ok:false. Announcing a post nobody received is worse
+    than announcing none, because then nobody goes looking."""
+    for resp in (_Resp(200, {"ok": False, "description": "chat not found"}),
+                 _Resp(401, {"ok": False}, "Unauthorized"),
+                 _Resp(403, {"ok": False}, "bot is not a member of the channel chat")):
+        monkeypatch.setattr(notify.requests, "post",
+                            lambda url, json=None, timeout=None, _r=resp: _r)
+        assert notify.send("hi", "", token="T", chat="@c") is False
+    out = capsys.readouterr().out
+    assert out.count("telegram failed") == 3 and "HTTP 401" in out
+
+    class _Junk(_Resp):
+        def json(self):
+            raise ValueError("not json")
+
+    monkeypatch.setattr(notify.requests, "post", lambda url, json=None, timeout=None: _Junk(200))
+    assert notify.send("hi", "", token="T", chat="@c") is False
+
+
+def test_the_token_never_reaches_the_log(monkeypatch, capsys):
+    """requests quotes the request URL inside its own exception message -
+    'Max retries exceeded with url: /bot<TOKEN>/sendMessage' - and Actions logs are
+    public. Actions masks secrets; a local run and a fork do not."""
+    import requests as _rq
+    tok = "123456:AAH-REAL-LOOKING-TOKEN"
+
+    def boom(url, json=None, timeout=None):
+        raise _rq.exceptions.ConnectionError(
+            f"HTTPSConnectionPool(host='api.telegram.org'): Max retries exceeded "
+            f"with url: /bot{tok}/sendMessage")
+
+    monkeypatch.setattr(notify.requests, "post", boom)
+    assert notify.send("hi", "", token=tok, chat="@c") is False
+    out = capsys.readouterr().out
+    assert tok not in out and "AAH-REAL-LOOKING-TOKEN" not in out
+    assert "bot***" in out and "telegram failed" in out
+    assert notify._redact(f"x {tok} y", tok) == "x *** y"
+    assert notify._redact("nothing", "") == "nothing"
+
+
+def test_main_is_a_no_op_when_it_is_switched_off_or_unconfigured(monkeypatch, capsys):
+    """#7/#11: the seam costs nothing until the owner creates the secret, and the
+    kill switch must be flippable from Actions (fv.flag, not fv.setting)."""
+    calls = []
+    monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
+    monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("TELEGRAM_CHAT_ID", raising=False)
+    monkeypatch.delenv("TELEGRAM", raising=False)
+    assert notify.main() == 0 and calls == []
+    assert "not configured" in capsys.readouterr().out
+
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
+    monkeypatch.setenv("TELEGRAM", "false")             # a string env var, not a bool
+    assert notify.enabled() is False
+    assert notify.main() == 0 and calls == []
+    monkeypatch.delenv("TELEGRAM")
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(notify.fv, "setting", _settings(telegram="false"))
+        assert notify.enabled() is False                # a string in config.json too
+
+
+def test_main_records_a_url_only_after_a_successful_post(monkeypatch, tmp_path, capsys):
+    """The whole idempotence contract: post once, remember it, never post it twice -
+    and on a failure remember NOTHING, so the next firing may still try."""
+    runs, state = tmp_path / "runs.jsonl", tmp_path / "notified.json"
+    now = _dt.datetime.utcnow().isoformat(timespec="seconds")
+    runs.write_text(json.dumps(_row(publish_at=now, timestamp=now)) + "\n", encoding="utf-8")
+    monkeypatch.setattr(notify, "RUNS_LOG", runs)
+    monkeypatch.setattr(notify, "NOTIFIED", state)
+    monkeypatch.setattr(notify.site, "CATALOG", tmp_path / "cat.json")
+    monkeypatch.setattr(notify.fv, "setting", _settings(telegram=True))
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
+    monkeypatch.delenv("TELEGRAM", raising=False)
+
+    sent = []
+
+    def _fail(text, link=""):
+        sent.append((text, link))
+        return False
+
+    monkeypatch.setattr(notify, "send", _fail)
+    assert notify.main() == 0
+    assert len(sent) == 1 and not state.exists()        # a failure records nothing
+
+    def _ok(text, link=""):
+        sent.append((text, link))
+        return True
+
+    monkeypatch.setattr(notify, "send", _ok)
+    assert notify.main() == 0
+    assert notify.load_notified(state) == ["https://youtube.com/watch?v=ABCDEFGHIJK"]
+    assert "Telegram: posted" in capsys.readouterr().out
+    assert sent[-1][1] == "https://youtube.com/watch?v=ABCDEFGHIJK"   # the preview target
+
+    assert notify.main() == 0                            # second firing: already sent
+    assert len(sent) == 2 and "nothing new to post" in capsys.readouterr().out
+
+
+def test_main_never_raises_and_never_fails_the_workflow(monkeypatch):
+    """An unattended announcement job that exits non-zero turns the repo red for a
+    message nobody missed. Every seam is stubbed to raise; main() still returns 0."""
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
+    monkeypatch.delenv("TELEGRAM", raising=False)
+    for name in ("load_notified", "load_rows", "pick_row", "catalog_entry",
+                 "format_message", "send", "save_notified"):
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(notify.fv, "setting", _settings(telegram=True))
+            mp.setattr(notify, name, _raiser(name))
+            assert notify.main() == 0, name
+
+
+def test_notified_state_gets_the_both_halves_treatment():
+    """The standing trap: a tracked file the run writes must be in BOTH
+    state_merge.FILES and the workflow's stash list, or `checkout -B main
+    origin/main` reverts it silently and every day re-posts the same video."""
+    assert "state/notified.json" in sm.FILES
+    root = Path(__file__).resolve().parents[1]
+    pub = (root / ".github/workflows/publish.yml").read_text(encoding="utf-8")
+    assert "state/notified.json" in pub
+    nyml = (root / ".github/workflows/notify.yml").read_text(encoding="utf-8")
+    assert "state/notified.json" in nyml and "python -m factverse.state_merge" in nyml
+    # the post must happen BEFORE the state-save, or the URL is never remembered
+    assert nyml.index("python -m factverse.notify") < nyml.index("python -m factverse.state_merge")
+    # a list of strings: the generic ordered union is already the right semantics
+    merged = json.loads(sm.merge_file("state/notified.json",
+                                      json.dumps(["a", "b"]), json.dumps(["b", "c"])))
+    assert sorted(merged) == ["a", "b", "c"]
+    # a corrupt or scalar body must not raise inside a `bash -e` CI step
+    for junk in ("42", "null", '"str"', "{}"):
+        assert sm.merge_file("state/notified.json", junk, json.dumps(["a"])) is not None
+
+
+def test_notified_state_is_capped_and_survives_corruption(tmp_path):
+    p = tmp_path / "n.json"
+    notify.save_notified([f"u{i}" for i in range(600)], p)
+    kept = notify.load_notified(p)
+    assert len(kept) == 500 and kept[0] == "u100" and kept[-1] == "u599"
+    p.write_text("{not json", encoding="utf-8")
+    assert notify.load_notified(p) == []
+    p.write_text('["a", 42, null, "  "]', encoding="utf-8")
+    assert notify.load_notified(p) == ["a"]
+    assert notify.load_notified(tmp_path / "missing.json") == []

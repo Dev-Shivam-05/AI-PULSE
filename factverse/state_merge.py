@@ -47,6 +47,10 @@ FILES = (
     # index on the next rebuild. Basenames must stay unique — main() reads the
     # incoming copy by basename, not by path.
     "state/tools_index.json",
+    # v3-F.2: the video URLs already announced on Telegram. A list of strings, so
+    # the generic ordered union below is already the right semantics. Losing it to
+    # `checkout -B main origin/main` would re-post the same video every day.
+    "state/notified.json",
 )
 
 
@@ -58,8 +62,14 @@ def _read_text(p: Path) -> str | None:
 
 
 def _merge_list(a, b) -> list:
+    # A side that is not a list (a corrupt/hand-edited body: a dict, a scalar) used
+    # to raise TypeError here — inside the ONE CI step with no `|| true`, where
+    # `bash -e` then kills the state-save and loses ALL state, not just this file.
+    # _merge_index got this guard in v3-F.1; the generic fallback never had it.
+    a = a if isinstance(a, list) else []
+    b = b if isinstance(b, list) else []
     seen, out = set(), []
-    for item in (a or []) + (b or []):
+    for item in a + b:
         key = json.dumps(item, ensure_ascii=False, sort_keys=True)
         if key not in seen:
             seen.add(key)

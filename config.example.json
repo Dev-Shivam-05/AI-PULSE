@@ -34,5 +34,6 @@
     "elevenlabs_model": "eleven_turbo_v2_5",
     "writer_model": "gemini-2.5-flash",
     "receipts_check": true,
-    "site_pages": true
+    "site_pages": true,
+    "telegram": true
 }
