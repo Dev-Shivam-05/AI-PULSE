@@ -2615,5 +2615,55 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-08-31T19:24:51.597493",
+    "title": "Blue Voice: $6M for AI Cop Decisions",
+    "description": "What if an AI could decide a cop's next move in a high-stakes situation? Blue Voice is raising $6 million to build an AI tool for police officers, aiming to provide real-time policy guidance. This development raises significant questions about justice, accountability, and the future of policing. We explore how this AI works, its potential benefits, and the crucial implications for civil rights and public safety. Can AI truly augment human judgment in critical law enforcement scenarios without introducing new biases or errors? #AI #Policing #TechCrunch #BlueVoice #LawEnforcement #ArtificialIntelligence #FutureOfWork #CivilRights\n\nSubscribe to AI Pulse\n\nSource: https://techcrunch.com/2026/08/31/harvard-law-dropout-raises-6m-for-blue-voice-to-build-a-harvey-for-police-officers/\n\nChapters:\n0:00 AI Saves Lives\n1:05 Blue Voice Explained\n1:56 Ensuring AI Accuracy\n3:10 AI Underdog Story\n4:03 Future Of Policing\n\n▶ Watch next: https://youtube.com/watch?v=4sfhIilndpM",
+    "tags": [
+      "AI in Policing",
+      "Blue Voice",
+      "Law Enforcement Technology",
+      "Artificial Intelligence",
+      "TechCrunch",
+      "Harvard",
+      "Public Safety",
+      "AI Ethics",
+      "Decision Support Systems",
+      "Startup Funding",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "ai pulse"
+    ],
+    "video": "output/videos/Blue_Voice_6M_for_AI_Cop_Decisions_20260831_191522_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260831_191845.mp4",
+      "output/shorts/short_2_20260831_191944.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260831_191708.jpg",
+    "youtube_url": "https://youtube.com/watch?v=K7i8RmbjXSE",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=bqIcCXFZ0pU",
+      "https://youtube.com/watch?v=SUY-WGfPke8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Cops: $6M Decision Power! #Shorts",
+        "description": "Unpacking the $6 million investment in AI for police decision-making. Is it progress or peril? #AICops #FutureOfLawEnforcement",
+        "instagram_caption": "🚨 Controversial AI: $6 million for AI to assist police decisions. What are the implications for justice and accountability? \n\nFollow @aipulse!\n#AI #ArtificialIntelligence #LawEnforcement #Policing #Tech #Innovation #Future #Ethics #Justice #Debate #News #CurrentEvents #BigTech #Government #Security #Surveillance #CriminalJustice #ACabinet #BlueLights #AIRevolution"
+      },
+      {
+        "title": "AI in Blue: $6M for Cop AI! #Shorts",
+        "description": "The $6M AI cop debate is here. Exploring the power and potential pitfalls of AI in law enforcement. #AICopilot #TechNews",
+        "instagram_caption": "🤖 AI is stepping into law enforcement! A $6 million push for AI to guide cop decisions. Are we ready for this shift? \n\nFollow @aipulse!\n#AI #Tech #Police #FutureOfPolicing #ArtificialIntelligence #Innovation #LawAndOrder #EthicsInAI #AIforGood #AIvsHuman #DecisionMaking #PublicSafety #GovernmentTech #PolicingTech #AIAnalysis #NextGen #DigitalAge #CrimeFighting #TechTrends #AIRevolution"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

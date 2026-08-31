@@ -1,0 +1,182 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.88,Live,,0,0,0,{\k14}What {\k16}if {\k16}an {\k32}AI
+Dialogue: 0,0:00:00.78,0:00:01.64,Live,,0,0,0,{\k26}could {\k16}tell {\k14}a {\k20}police
+Dialogue: 0,0:00:01.54,0:00:03.38,Live,,0,0,0,{\k56}officer {\k62}exactly {\k40}what {\k16}to
+Dialogue: 0,0:00:03.28,0:00:04.02,Live,,0,0,0,{\k16}do {\k18}in {\k8}a {\k22}split
+Dialogue: 0,0:00:03.92,0:00:05.48,Live,,0,0,0,{\k44}second {\k50}{\k16}life {\k20}or {\k16}death
+Dialogue: 0,0:00:05.38,0:00:07.66,Live,,0,0,0,{\k60}situation {\k68}{\k26}This {\k32}isn't {\k32}science
+Dialogue: 0,0:00:07.56,0:00:08.46,Live,,0,0,0,{\k40}fiction {\k40}anymore
+Dialogue: 0,0:00:09.08,0:00:10.44,Live,,0,0,0,{\k18}A {\k42}startup {\k36}called {\k30}Blue
+Dialogue: 0,0:00:10.34,0:00:11.66,Live,,0,0,0,{\k34}Voice {\k30}has {\k20}just {\k38}secured
+Dialogue: 0,0:00:11.56,0:00:13.52,Live,,0,0,0,{\k72}6 {\k42}million {\k36}in {\k36}funding
+Dialogue: 0,0:00:13.42,0:00:14.52,Live,,0,0,0,{\k22}to {\k18}build {\k22}an {\k38}AI
+Dialogue: 0,0:00:14.42,0:00:16.20,Live,,0,0,0,{\k56}that {\k20}does {\k46}precisely {\k46}that
+Dialogue: 0,0:00:16.10,0:00:18.00,Live,,0,0,0,{\k28}for {\k24}law {\k60}enforcement {\k34}{\k34}The
+Dialogue: 0,0:00:17.90,0:00:19.42,Live,,0,0,0,{\k34}idea {\k42}came {\k26}from {\k40}David
+Dialogue: 0,0:00:19.32,0:00:21.30,Live,,0,0,0,{\k46}Lawrence {\k58}{\k22}a {\k36}Harvard {\k26}Law
+Dialogue: 0,0:00:21.20,0:00:22.68,Live,,0,0,0,{\k52}student {\k24}who {\k28}dropped {\k34}out
+Dialogue: 0,0:00:22.58,0:00:24.32,Live,,0,0,0,{\k38}after {\k44}witnessing {\k24}a {\k58}controversial
+Dialogue: 0,0:00:24.22,0:00:26.64,Live,,0,0,0,{\k56}police {\k48}shooting {\k84}He {\k44}realized
+Dialogue: 0,0:00:26.54,0:00:28.32,Live,,0,0,0,{\k48}many {\k48}errors {\k28}in {\k44}policing
+Dialogue: 0,0:00:28.22,0:00:30.16,Live,,0,0,0,{\k40}stem {\k22}from {\k64}officers {\k58}not
+Dialogue: 0,0:00:30.06,0:00:32.18,Live,,0,0,0,{\k36}having {\k52}immediate {\k58}access {\k56}to
+Dialogue: 0,0:00:32.08,0:00:33.82,Live,,0,0,0,{\k12}the {\k32}correct {\k86}departmental {\k34}rules
+Dialogue: 0,0:00:33.72,0:00:35.40,Live,,0,0,0,{\k30}and {\k62}regulations {\k56}when {\k10}it
+Dialogue: 0,0:00:35.30,0:00:37.10,Live,,0,0,0,{\k28}matters {\k44}most {\k50}{\k28}Think {\k20}about
+Dialogue: 0,0:00:37.00,0:00:38.78,Live,,0,0,0,{\k18}it {\k36}{\k50}officers {\k16}are {\k48}expected
+Dialogue: 0,0:00:38.68,0:00:40.42,Live,,0,0,0,{\k24}to {\k70}internalize {\k46}thousands {\k24}of
+Dialogue: 0,0:00:40.32,0:00:42.34,Live,,0,0,0,{\k38}pages {\k30}of {\k32}laws {\k52}{\k40}policies
+Dialogue: 0,0:00:42.62,0:00:44.38,Live,,0,0,0,{\k8}and {\k62}ordinances {\k50}{\k34}When {\k12}they
+Dialogue: 0,0:00:44.28,0:00:45.72,Live,,0,0,0,{\k22}need {\k14}a {\k40}specific {\k58}protocol
+Dialogue: 0,0:00:46.00,0:00:47.06,Live,,0,0,0,{\k20}like {\k14}the {\k30}seventh {\k32}step
+Dialogue: 0,0:00:46.96,0:00:48.00,Live,,0,0,0,{\k20}at {\k6}a {\k20}crime {\k48}scene
+Dialogue: 0,0:00:48.30,0:00:49.38,Live,,0,0,0,{\k12}they {\k38}can’t {\k14}just {\k34}Google
+Dialogue: 0,0:00:49.28,0:00:51.12,Live,,0,0,0,{\k32}it {\k64}Traditional {\k46}methods {\k32}like
+Dialogue: 0,0:00:51.02,0:00:52.98,Live,,0,0,0,{\k36}flipping {\k34}through {\k44}massive {\k72}manuals
+Dialogue: 0,0:00:52.88,0:00:54.98,Live,,0,0,0,{\k26}or {\k48}contacting {\k80}supervisors {\k46}are
+Dialogue: 0,0:00:54.88,0:00:56.80,Live,,0,0,0,{\k26}too {\k50}slow {\k60}{\k8}and {\k38}generic
+Dialogue: 0,0:00:56.70,0:00:58.06,Live,,0,0,0,{\k34}AI {\k54}models {\k28}can {\k10}be
+Dialogue: 0,0:00:57.96,0:01:00.24,Live,,0,0,0,{\k54}surprisingly {\k54}wrong {\k74}sometimes {\k36}up
+Dialogue: 0,0:01:00.14,0:01:01.28,Live,,0,0,0,{\k16}to {\k32}30% {\k32}{\k14}of {\k10}the
+Dialogue: 0,0:01:01.18,0:01:02.90,Live,,0,0,0,{\k38}time {\k16}{\k58}according {\k26}to {\k24}news
+Dialogue: 0,0:01:02.80,0:01:04.58,Live,,0,0,0,{\k36}slash {\k28}tech {\k28}crunch {\k30}{\k46}That's
+Dialogue: 0,0:01:04.48,0:01:05.60,Live,,0,0,0,{\k14}where {\k24}Blue {\k42}Voice {\k22}comes
+Dialogue: 0,0:01:05.50,0:01:07.18,Live,,0,0,0,{\k36}in {\k62}{\k18}It's {\k10}an {\k32}AI
+Dialogue: 0,0:01:07.08,0:01:09.08,Live,,0,0,0,{\k72}platform {\k48}trained {\k24}on {\k46}specific
+Dialogue: 0,0:01:08.98,0:01:11.62,Live,,0,0,0,{\k62}department {\k38}laws {\k52}{\k40}local {\k62}ordinances
+Dialogue: 0,0:01:11.84,0:01:13.48,Live,,0,0,0,{\k8}and {\k48}guidelines {\k46}that {\k52}general
+Dialogue: 0,0:01:13.38,0:01:15.64,Live,,0,0,0,{\k38}AI {\k66}tools {\k64}simply {\k48}can't
+Dialogue: 0,0:01:15.54,0:01:17.66,Live,,0,0,0,{\k44}access {\k64}{\k40}This {\k30}means {\k24}it
+Dialogue: 0,0:01:17.56,0:01:19.00,Live,,0,0,0,{\k14}can {\k34}provide {\k46}real {\k40}time
+Dialogue: 0,0:01:18.90,0:01:20.92,Live,,0,0,0,{\k64}policy {\k42}guidance {\k50}directly {\k36}to
+Dialogue: 0,0:01:20.82,0:01:22.34,Live,,0,0,0,{\k50}officers {\k28}in {\k12}the {\k52}field
+Dialogue: 0,0:01:22.24,0:01:23.90,Live,,0,0,0,{\k60}right {\k22}on {\k14}their {\k60}phones
+Dialogue: 0,0:01:24.20,0:01:25.24,Live,,0,0,0,{\k22}They're {\k44}likening {\k10}it {\k18}to
+Dialogue: 0,0:01:25.14,0:01:26.94,Live,,0,0,0,{\k26}Harvey {\k52}{\k8}the {\k32}AI {\k52}used
+Dialogue: 0,0:01:26.84,0:01:28.42,Live,,0,0,0,{\k18}by {\k42}lawyers {\k44}or {\k44}open
+Dialogue: 0,0:01:28.32,0:01:29.58,Live,,0,0,0,{\k44}evidence {\k30}for {\k42}doctors
+Dialogue: 0,0:01:30.22,0:01:31.52,Live,,0,0,0,{\k28}It’s {\k34}designed {\k26}to {\k32}offer
+Dialogue: 0,0:01:31.42,0:01:33.80,Live,,0,0,0,{\k50}immediate {\k40}{\k22}accurate {\k66}information {\k50}so
+Dialogue: 0,0:01:33.70,0:01:35.02,Live,,0,0,0,{\k50}officers {\k28}can {\k24}act {\k20}with
+Dialogue: 0,0:01:34.92,0:01:37.22,Live,,0,0,0,{\k54}confidence {\k72}knowing {\k40}they're {\k54}adhering
+Dialogue: 0,0:01:37.12,0:01:39.70,Live,,0,0,0,{\k12}to {\k50}protocol {\k98}Currently {\k40}{\k48}officers
+Dialogue: 0,0:01:39.60,0:01:42.46,Live,,0,0,0,{\k30}in {\k134}225 {\k50}county {\k62}agencies
+Dialogue: 0,0:01:42.36,0:01:44.74,Live,,0,0,0,{\k38}across {\k76}25 {\k70}states {\k44}are
+Dialogue: 0,0:01:44.64,0:01:46.28,Live,,0,0,0,{\k34}using {\k32}Blue {\k48}Voice {\k40}daily
+Dialogue: 0,0:01:46.76,0:01:48.72,Live,,0,0,0,{\k24}The {\k44}platform {\k68}reportedly {\k50}answers
+Dialogue: 0,0:01:48.62,0:01:50.14,Live,,0,0,0,{\k24}a {\k40}question {\k42}every {\k36}minute
+Dialogue: 0,0:01:50.50,0:01:52.58,Live,,0,0,0,{\k66}demonstrating {\k34}a {\k52}significant {\k46}need
+Dialogue: 0,0:01:52.48,0:01:53.40,Live,,0,0,0,{\k24}for {\k22}this {\k20}kind {\k16}of
+Dialogue: 0,0:01:53.30,0:01:55.28,Live,,0,0,0,{\k40}instant {\k56}support {\k42}{\k20}But {\k30}here's
+Dialogue: 0,0:01:55.18,0:01:57.00,Live,,0,0,0,{\k10}the {\k28}crucial {\k52}question {\k64}{\k18}how
+Dialogue: 0,0:01:56.90,0:01:58.36,Live,,0,0,0,{\k14}does {\k28}this {\k32}AI {\k62}ensure
+Dialogue: 0,0:01:58.26,0:01:59.72,Live,,0,0,0,{\k30}its {\k38}answers {\k28}are {\k40}always
+Dialogue: 0,0:01:59.62,0:02:02.12,Live,,0,0,0,{\k40}correct {\k40}and {\k66}unbiased {\k32}{\k62}especially
+Dialogue: 0,0:02:02.02,0:02:03.36,Live,,0,0,0,{\k30}when {\k36}lives {\k30}and {\k28}liberties
+Dialogue: 0,0:02:03.26,0:02:04.24,Live,,0,0,0,{\k30}are {\k22}on {\k8}the {\k28}line
+Dialogue: 0,0:02:04.14,0:02:06.02,Live,,0,0,0,{\k88}It’s {\k18}not {\k24}just {\k48}generating
+Dialogue: 0,0:02:05.92,0:02:07.86,Live,,0,0,0,{\k52}answers {\k54}{\k24}it’s {\k34}designed {\k20}to
+Dialogue: 0,0:02:07.76,0:02:09.46,Live,,0,0,0,{\k20}point {\k52}officers {\k52}directly {\k36}to
+Dialogue: 0,0:02:09.36,0:02:11.30,Live,,0,0,0,{\k10}the {\k36}original {\k76}regulations {\k32}{\k30}The
+Dialogue: 0,0:02:11.20,0:02:13.06,Live,,0,0,0,{\k34}system {\k42}doesn't {\k34}dictate {\k66}actions
+Dialogue: 0,0:02:13.50,0:02:15.38,Live,,0,0,0,{\k44}Instead {\k60}it {\k42}provides {\k32}the
+Dialogue: 0,0:02:15.28,0:02:17.20,Live,,0,0,0,{\k44}relevant {\k42}laws {\k30}and {\k66}policies
+Dialogue: 0,0:02:17.54,0:02:19.00,Live,,0,0,0,{\k44}allowing {\k22}the {\k48}officer {\k22}to
+Dialogue: 0,0:02:18.90,0:02:20.70,Live,,0,0,0,{\k36}combine {\k38}that {\k72}information {\k24}with
+Dialogue: 0,0:02:20.60,0:02:22.42,Live,,0,0,0,{\k20}their {\k34}own {\k42}field {\k76}experience
+Dialogue: 0,0:02:22.32,0:02:23.94,Live,,0,0,0,{\k48}for {\k12}the {\k38}final {\k54}decision
+Dialogue: 0,0:02:24.36,0:02:26.36,Live,,0,0,0,{\k40}This {\k50}preserves {\k44}human {\k56}judgment
+Dialogue: 0,0:02:26.26,0:02:28.54,Live,,0,0,0,{\k32}while {\k72}enhancing {\k42}legal {\k72}accuracy
+Dialogue: 0,0:02:28.86,0:02:30.02,Live,,0,0,0,{\k20}The {\k30}company {\k32}says {\k24}its
+Dialogue: 0,0:02:29.92,0:02:31.52,Live,,0,0,0,{\k44}customer {\k32}base {\k34}grew {\k40}11
+Dialogue: 0,0:02:31.42,0:02:32.42,Live,,0,0,0,{\k32}fold {\k24}in {\k10}the {\k24}last
+Dialogue: 0,0:02:32.32,0:02:34.42,Live,,0,0,0,{\k30}year {\k60}with {\k50}departments {\k60}reporting
+Dialogue: 0,0:02:34.32,0:02:36.40,Live,,0,0,0,{\k52}concrete {\k54}results {\k54}like {\k38}reduced
+Dialogue: 0,0:02:36.30,0:02:38.72,Live,,0,0,0,{\k52}crime {\k40}and {\k26}fewer {\k114}controversies
+Dialogue: 0,0:02:38.92,0:02:40.78,Live,,0,0,0,{\k26}For {\k42}example {\k58}{\k14}Blue {\k36}Voice
+Dialogue: 0,0:02:40.68,0:02:42.00,Live,,0,0,0,{\k38}helped {\k12}a {\k20}rookie {\k52}officer
+Dialogue: 0,0:02:41.90,0:02:43.28,Live,,0,0,0,{\k52}intervene {\k32}in {\k6}a {\k38}potential
+Dialogue: 0,0:02:43.18,0:02:45.18,Live,,0,0,0,{\k54}kidnapping {\k68}by {\k50}confirming {\k18}the
+Dialogue: 0,0:02:45.08,0:02:47.20,Live,,0,0,0,{\k56}situation {\k32}met {\k44}legal {\k70}criteria
+Dialogue: 0,0:02:47.10,0:02:49.58,Live,,0,0,0,{\k52}for {\k44}child {\k64}enticement {\k78}instantly
+Dialogue: 0,0:02:49.74,0:02:51.62,Live,,0,0,0,{\k32}In {\k26}another {\k60}instance {\k48}{\k12}it
+Dialogue: 0,0:02:51.52,0:02:52.94,Live,,0,0,0,{\k48}reminded {\k18}a {\k36}chief {\k30}that
+Dialogue: 0,0:02:52.84,0:02:54.38,Live,,0,0,0,{\k10}a {\k48}specific {\k48}mental {\k38}health
+Dialogue: 0,0:02:54.28,0:02:56.70,Live,,0,0,0,{\k50}evaluation {\k46}was {\k64}required {\k72}before
+Dialogue: 0,0:02:56.60,0:02:58.22,Live,,0,0,0,{\k56}returning {\k20}an {\k54}officer {\k22}to
+Dialogue: 0,0:02:58.12,0:02:59.56,Live,,0,0,0,{\k38}active {\k34}duty {\k48}after {\k14}a
+Dialogue: 0,0:02:59.46,0:03:01.72,Live,,0,0,0,{\k42}shooting {\k100}These {\k24}are {\k50}critical
+Dialogue: 0,0:03:02.02,0:03:04.10,Live,,0,0,0,{\k36}often {\k60}complex {\k46}legal {\k56}nuances
+Dialogue: 0,0:03:04.00,0:03:05.56,Live,,0,0,0,{\k62}that {\k18}can {\k16}be {\k50}easily
+Dialogue: 0,0:03:05.46,0:03:07.50,Live,,0,0,0,{\k48}missed {\k26}under {\k42}pressure {\k50}{\k28}What's
+Dialogue: 0,0:03:07.40,0:03:08.74,Live,,0,0,0,{\k26}really {\k52}interesting {\k32}is {\k14}the
+Dialogue: 0,0:03:08.64,0:03:09.32,Live,,0,0,0,{\k58}competition
+Dialogue: 0,0:03:10.02,0:03:11.06,Live,,0,0,0,{\k18}Blue {\k34}Voice {\k24}is {\k18}up
+Dialogue: 0,0:03:10.96,0:03:12.90,Live,,0,0,0,{\k44}against {\k40}PE {\k48}backed {\k52}lexipal
+Dialogue: 0,0:03:12.80,0:03:14.48,Live,,0,0,0,{\k52}and {\k14}has {\k40}recently {\k52}developed
+Dialogue: 0,0:03:14.38,0:03:16.36,Live,,0,0,0,{\k48}features {\k58}to {\k18}help {\k64}detectives
+Dialogue: 0,0:03:16.26,0:03:17.52,Live,,0,0,0,{\k36}solve {\k38}cold {\k42}cases
+Dialogue: 0,0:03:18.16,0:03:19.50,Live,,0,0,0,{\k22}This {\k48}indicates {\k28}a {\k26}broader
+Dialogue: 0,0:03:19.40,0:03:21.18,Live,,0,0,0,{\k42}trend {\k44}of {\k26}AI {\k56}entering
+Dialogue: 0,0:03:21.08,0:03:23.14,Live,,0,0,0,{\k50}specialized {\k62}public {\k40}service {\k44}sectors
+Dialogue: 0,0:03:23.04,0:03:25.48,Live,,0,0,0,{\k66}The {\k52}controversy {\k76}surrounding {\k40}AI
+Dialogue: 0,0:03:25.38,0:03:27.58,Live,,0,0,0,{\k46}in {\k48}policing {\k34}{\k26}like {\k56}license
+Dialogue: 0,0:03:27.48,0:03:29.66,Live,,0,0,0,{\k36}plate {\k56}surveillance {\k60}systems {\k32}{\k24}is
+Dialogue: 0,0:03:29.56,0:03:30.60,Live,,0,0,0,{\k24}well {\k70}documented
+Dialogue: 0,0:03:31.36,0:03:32.84,Live,,0,0,0,{\k26}Lawrence {\k36}hopes {\k34}Blue {\k42}Voice
+Dialogue: 0,0:03:32.74,0:03:34.34,Live,,0,0,0,{\k20}can {\k40}prove {\k24}that {\k66}AI
+Dialogue: 0,0:03:34.56,0:03:36.62,Live,,0,0,0,{\k30}when {\k48}deployed {\k72}thoughtfully {\k36}{\k10}can
+Dialogue: 0,0:03:36.52,0:03:38.36,Live,,0,0,0,{\k40}benefit {\k44}public {\k54}safety {\k36}without
+Dialogue: 0,0:03:38.26,0:03:40.90,Live,,0,0,0,{\k86}compromising {\k42}civil {\k36}rights {\k60}{\k30}It’s
+Dialogue: 0,0:03:40.80,0:03:41.90,Live,,0,0,0,{\k6}a {\k38}fine {\k28}line {\k28}to
+Dialogue: 0,0:03:41.80,0:03:43.52,Live,,0,0,0,{\k30}walk {\k48}{\k14}The {\k26}dollar {\k44}six
+Dialogue: 0,0:03:43.42,0:03:45.16,Live,,0,0,0,{\k42}million {\k50}funding {\k40}{\k14}led {\k18}by
+Dialogue: 0,0:03:45.06,0:03:46.44,Live,,0,0,0,{\k34}Signal {\k42}Fire {\k34}and {\k18}Las
+Dialogue: 0,0:03:46.34,0:03:48.04,Live,,0,0,0,{\k46}Olas {\k40}VC {\k44}{\k18}is {\k12}a
+Dialogue: 0,0:03:47.94,0:03:49.74,Live,,0,0,0,{\k38}strong {\k54}signal {\k26}that {\k52}investors
+Dialogue: 0,0:03:49.64,0:03:51.44,Live,,0,0,0,{\k30}see {\k56}significant {\k54}potential {\k30}here
+Dialogue: 0,0:03:51.86,0:03:53.34,Live,,0,0,0,{\k36}The {\k38}question {\k40}isn't {\k24}just
+Dialogue: 0,0:03:53.24,0:03:55.06,Live,,0,0,0,{\k66}asterisk {\k18}if {\k54}asterisk {\k34}AI
+Dialogue: 0,0:03:54.96,0:03:56.06,Live,,0,0,0,{\k32}will {\k14}be {\k34}used {\k20}by
+Dialogue: 0,0:03:55.96,0:03:57.90,Live,,0,0,0,{\k36}police {\k56}{\k18}but {\k52}asterisk {\k22}how
+Dialogue: 0,0:03:57.80,0:03:58.80,Live,,0,0,0,{\k62}asterisk {\k8}it {\k8}will {\k12}be
+Dialogue: 0,0:03:58.70,0:04:00.10,Live,,0,0,0,{\k44}used {\k36}{\k14}and {\k18}who {\k18}is
+Dialogue: 0,0:04:00.00,0:04:01.22,Live,,0,0,0,{\k54}accountable {\k32}when {\k8}it {\k18}makes
+Dialogue: 0,0:04:01.12,0:04:03.04,Live,,0,0,0,{\k10}a {\k32}mistake {\k48}{\k20}This {\k72}technology
+Dialogue: 0,0:04:02.94,0:04:04.80,Live,,0,0,0,{\k24}could {\k52}fundamentally {\k68}change {\k32}how
+Dialogue: 0,0:04:04.70,0:04:07.46,Live,,0,0,0,{\k62}officers {\k32}make {\k72}decisions {\k44}{\k56}potentially
+Dialogue: 0,0:04:07.36,0:04:08.94,Live,,0,0,0,{\k38}leading {\k24}to {\k18}more {\k68}consistent
+Dialogue: 0,0:04:08.84,0:04:10.48,Live,,0,0,0,{\k28}and {\k30}legally {\k50}sound {\k46}actions
+Dialogue: 0,0:04:11.10,0:04:13.36,Live,,0,0,0,{\k42}However {\k50}{\k18}it {\k42}also {\k64}introduces
+Dialogue: 0,0:04:13.26,0:04:14.90,Live,,0,0,0,{\k36}new {\k34}layers {\k20}of {\k64}complexity
+Dialogue: 0,0:04:14.80,0:04:18.00,Live,,0,0,0,{\k70}regarding {\k86}oversight {\k56}{\k32}training {\k66}and
+Dialogue: 0,0:04:17.90,0:04:19.40,Live,,0,0,0,{\k52}ensuring {\k36}that {\k16}the {\k36}AI
+Dialogue: 0,0:04:19.30,0:04:21.26,Live,,0,0,0,{\k58}itself {\k52}doesn't {\k36}develop {\k40}blind
+Dialogue: 0,0:04:21.16,0:04:23.74,Live,,0,0,0,{\k48}spots {\k34}or {\k54}biases {\k54}{\k58}Ultimately
+Dialogue: 0,0:04:24.00,0:04:25.10,Live,,0,0,0,{\k14}Blue {\k38}Voice {\k24}aims {\k24}to
+Dialogue: 0,0:04:25.00,0:04:26.88,Live,,0,0,0,{\k38}reduce {\k34}errors {\k56}by {\k50}providing
+Dialogue: 0,0:04:26.78,0:04:29.00,Live,,0,0,0,{\k56}instant {\k34}{\k42}accurate {\k42}legal {\k38}guidance
+Dialogue: 0,0:04:29.36,0:04:31.20,Live,,0,0,0,{\k48}The {\k38}challenge {\k32}is {\k56}ensuring
+Dialogue: 0,0:04:31.10,0:04:33.14,Live,,0,0,0,{\k22}this {\k28}tool {\k54}enhances {\k64}{\k26}rather
+Dialogue: 0,0:04:33.04,0:04:34.86,Live,,0,0,0,{\k20}than {\k46}replaces {\k60}{\k16}the {\k30}critical
+Dialogue: 0,0:04:34.76,0:04:36.78,Live,,0,0,0,{\k46}judgment {\k36}and {\k34}ethical {\k76}considerations
+Dialogue: 0,0:04:36.68,0:04:38.68,Live,,0,0,0,{\k72}required {\k36}of {\k24}law {\k58}enforcement
+Dialogue: 0,0:04:38.58,0:04:40.78,Live,,0,0,0,{\k58}professionals {\k80}So {\k42}will {\k30}AI
+Dialogue: 0,0:04:40.68,0:04:42.92,Live,,0,0,0,{\k60}become {\k28}an {\k64}indispensable {\k62}partner
+Dialogue: 0,0:04:42.82,0:04:45.10,Live,,0,0,0,{\k20}for {\k30}police {\k76}officers {\k28}{\k64}ensuring
+Dialogue: 0,0:04:45.00,0:04:47.14,Live,,0,0,0,{\k54}justice {\k32}and {\k50}safety {\k50}{\k18}or
+Dialogue: 0,0:04:47.04,0:04:48.32,Live,,0,0,0,{\k24}will {\k18}it {\k40}create {\k36}new
+Dialogue: 0,0:04:48.22,0:04:49.60,Live,,0,0,0,{\k48}forms {\k16}of {\k36}error {\k28}and
+Dialogue: 0,0:04:49.50,0:04:51.90,Live,,0,0,0,{\k58}accountability {\k72}issues {\k62}{\k26}Let {\k12}us
+Dialogue: 0,0:04:51.80,0:04:53.06,Live,,0,0,0,{\k22}know {\k18}your {\k30}thoughts {\k46}below

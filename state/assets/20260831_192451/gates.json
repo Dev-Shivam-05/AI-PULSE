@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 8,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "By bridging the gap between vast legal documentation and the immediate demands of policing, Blue Voice's AI is not just a tool for efficiency, but a potential redefinition of how on-the-ground legal interpretation is applied in high-stakes public service."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline presents a narrative flow and framing that is not explicitly present in the source text. For example, the opening question 'What if an AI could tell a police officer exactly what to do in "
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
