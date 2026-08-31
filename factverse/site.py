@@ -148,6 +148,7 @@ a{{color:{FG}}}
 font-size:15px;margin-bottom:28px}}
 .brand span{{color:{ACCENT}}}
 h1{{font-size:30px;line-height:1.25;margin:0 0 8px}}
+h1 span{{color:{ACCENT}}}
 h2{{font-size:13px;letter-spacing:.10em;text-transform:uppercase;color:{MUTED};
 margin:36px 0 10px;font-weight:600}}
 .meta{{color:{MUTED};font-size:14px;margin:0 0 28px}}
@@ -170,6 +171,7 @@ footer{{margin-top:44px;padding-top:18px;border-top:1px solid {LINE};color:{MUTE
 .row .d{{color:{MUTED};font-size:13px}}
 .row .t{{font-weight:600;font-size:18px;margin:2px 0 4px}}
 .row .w{{color:{MUTED};font-size:14px}}
+.row:last-of-type{{border-bottom:0}}
 @media(max-width:520px){{body{{font-size:15px}}h1{{font-size:25px}}
 .cmd{{flex-direction:column}}.copy{{align-self:flex-start}}}}"""
 
@@ -203,15 +205,19 @@ def _head(title: str, desc: str, canonical: str, image: str) -> str:
     return "".join(tags)
 
 
-def _brand() -> str:
-    """The wordmark, two-tone like branding.wordmark: last word in the accent."""
-    name = str(fv.CHANNEL_NAME or "ToolDojo").strip()
+def _wordmark(name: str) -> tuple[str, str]:
+    """Split the channel name for the two-tone wordmark: "Tool" + "Dojo"."""
+    name = str(name or "ToolDojo").strip()
     parts = name.split()
     if len(parts) > 1:
-        head, tail = " ".join(parts[:-1]), parts[-1]
-    else:                       # "ToolDojo" -> "Tool" + "Dojo"
-        m = re.match(r"^([A-Z][a-z0-9]+)([A-Z].*)$", name)
-        head, tail = (m.group(1), m.group(2)) if m else (name, "")
+        return " ".join(parts[:-1]) + " ", parts[-1]
+    m = re.match(r"^([A-Z][a-z0-9]+)([A-Z].*)$", name)      # "ToolDojo" -> Tool + Dojo
+    return (m.group(1), m.group(2)) if m else (name, "")
+
+
+def _brand() -> str:
+    """The wordmark, two-tone like branding.wordmark: last word in the accent."""
+    head, tail = _wordmark(fv.CHANNEL_NAME)
     return f'<a class="brand" href="../index.html">{_esc(head)}<span>{_esc(tail)}</span></a>'
 
 
@@ -268,7 +274,8 @@ def render_index(entries: list[dict]) -> str:
     handle = str(fv.setting("channel_handle", "aipulse") or "aipulse")
     out = [f"<!doctype html><html lang=\"en\"><head>"
            f"{_head(name, pitch, site_url(), '')}</head><body><div class=\"wrap\">",
-           f"<h1>{_esc(name)}</h1><p class=\"meta\">{_esc(pitch)} · "
+           f"<h1>{_esc(_wordmark(name)[0])}<span>{_esc(_wordmark(name)[1])}</span></h1>"
+           f"<p class=\"meta\">{_esc(pitch)} · "
            f'<a href="https://youtube.com/@{_esc(handle)}">youtube.com/@{_esc(handle)}</a></p>']
     if rows:
         out.append(f"<h2>{len(rows)} tool{'s' if len(rows) != 1 else ''}</h2>")
