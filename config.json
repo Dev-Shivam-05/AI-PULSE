@@ -33,5 +33,6 @@
     "elevenlabs_voice_id": "",
     "elevenlabs_model": "eleven_turbo_v2_5",
     "writer_model": "gemini-2.5-flash",
-    "receipts_check": true
+    "receipts_check": true,
+    "site_pages": true
 }

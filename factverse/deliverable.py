@@ -265,13 +265,30 @@ def build_pdf(script: dict, sheet: dict, out: str, video_url: str = "") -> str |
     return str(p) if p.exists() and p.stat().st_size > 1000 else None
 
 
-def make_cheat_sheet(script: dict, video_url: str = "") -> str | None:
+def sheet_for(script: dict) -> dict:
+    """The extracted sheet, or the fallback. Never raises, never returns None.
+
+    v3-F.1: the PDF and the tool page render the SAME sheet, so the one LLM
+    extraction happens here and both consumers are handed the result — calling
+    extract_sheet twice would pay for it twice and could disagree with itself.
+    """
+    try:
+        return extract_sheet(script) or fallback_sheet(script)
+    except Exception as e:
+        print(f"   ⚠️ sheet extraction failed: {e}")
+        try:
+            return fallback_sheet(script)
+        except Exception:
+            return {"what": "", "steps": [], "uses": [], "skip_if": ""}
+
+
+def make_cheat_sheet(script: dict, video_url: str = "", sheet: dict | None = None) -> str | None:
     """Write docs/tools/<name>.pdf for this tool video. Fail-soft (None)."""
     try:
         name = script.get("cheat_sheet") or pdf_name(script.get("title", ""))
         TOOLS_DIR.mkdir(parents=True, exist_ok=True)
         out = TOOLS_DIR / name
-        sheet = extract_sheet(script) or fallback_sheet(script)
+        sheet = sheet if isinstance(sheet, dict) and sheet else sheet_for(script)
         path = build_pdf(script, sheet, str(out), video_url)
         if path:
             print(f"  📄 Cheat sheet: {name} → {public_url(name)}")

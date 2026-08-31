@@ -14,6 +14,7 @@ This module knows the merge semantics of every state file:
   * state/stock_ledger.json            -> ordered line/entry union
   * output/production_log.json         -> union of entries by (timestamp, title)
   * state/runs.jsonl / analytics.jsonl -> ordered line union
+  * state/tools_index.json             -> union by page name, later entry wins
 
 Usage (from the repo root, typically in CI after `git checkout -B main origin/main`):
     python -m factverse.state_merge <incoming_dir>
@@ -41,6 +42,11 @@ FILES = (
     # video, and stock_ledger would forget the 30-day stock repeat guard.
     "state/l2_usage.json",
     "state/stock_ledger.json",
+    # v3-F.1: the site catalog. Every docs/*.html file is DERIVED from this, so
+    # losing it to `checkout -B main origin/main` would silently empty the site
+    # index on the next rebuild. Basenames must stay unique — main() reads the
+    # incoming copy by basename, not by path.
+    "state/tools_index.json",
 )
 
 
@@ -112,6 +118,30 @@ def _merge_seen(a, b) -> dict:
     return out
 
 
+def _merge_index(a, b) -> list:
+    """state/tools_index.json: union keyed by `page`, later entry wins.
+
+    The generic list union dedups on exact equality, so a retry that re-uploads
+    the same tool with a different video_url would print that tool TWICE on the
+    index. `page` is the identity (one page per tool video); between two rows
+    with that key the later date wins, and on an equal date the side that has a
+    video_url does (a page written before the upload carries none).
+    """
+    out: dict[str, dict] = {}
+    order: list[str] = []
+    for e in list(a or []) + list(b or []):
+        if not isinstance(e, dict) or not e.get("page"):
+            continue
+        key = str(e["page"])
+        cur = out.get(key)
+        if key not in out:
+            order.append(key)
+        if cur is None or (str(e.get("date", "")), bool(e.get("video_url"))) >= (
+                str(cur.get("date", "")), bool(cur.get("video_url"))):
+            out[key] = e
+    return [out[k] for k in order]
+
+
 def _merge_jsonl(a: str | None, b: str | None) -> str:
     seen, out = set(), []
     for text in (a, b):
@@ -149,6 +179,8 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         merged = _merge_used(theirs, ours)
     elif rel == "state/stock_ledger.json":
         merged = _merge_seen(theirs, ours)
+    elif rel == "state/tools_index.json":
+        merged = _merge_index(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))

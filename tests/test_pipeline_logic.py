@@ -507,7 +507,8 @@ def test_description_blocks_land_after_hook_in_order(monkeypatch):
     order = [d.index("Hook line"), d.index("🔧 Try it yourself"), d.index("pip install x"),
              d.index("📄 Free 1-page cheat sheet: "), d.index("⭐ Promo"), d.index("Body paragraph two")]
     assert order == sorted(order)
-    assert s["cheat_sheet"].endswith("-t.pdf") and s["cheat_sheet"] in d
+    # the PDF name is still what run() writes; the description links the PAGE (v3-F.1 #5)
+    assert s["cheat_sheet"].endswith("-t.pdf") and site.page_name(s["cheat_sheet"]) in d
     ap.place_description_blocks(s)                       # idempotent incl. promo
     assert d == s["description"]
 
@@ -649,13 +650,29 @@ def test_mangled_block_is_repaired_not_trusted(monkeypatch):
                                     + dlv.public_url(s["cheat_sheet"]), "")
     ap.place_description_blocks(s)
     assert s["description"].count("🔧 Try it yourself") == 1
-    assert dlv.public_url(s["cheat_sheet"]) in s["description"]   # link == file we write
+    # link == the page we write (v3-F.1 #5)
+    assert site.public_url(site.page_name(s["cheat_sheet"])) in s["description"]
 
 
 def test_make_cheat_sheet_fails_soft(monkeypatch, tmp_path):
     monkeypatch.setattr(dlv, "TOOLS_DIR", tmp_path)
-    monkeypatch.setattr(dlv, "extract_sheet", lambda s: (_ for _ in ()).throw(RuntimeError("x")))
+    monkeypatch.setattr(dlv, "build_pdf", lambda *a, **k: None)
     assert dlv.make_cheat_sheet(_tool_script(5)) is None
+
+
+def test_sheet_for_survives_a_raising_extraction():
+    """v3-F.1: the module promises the sheet still ships with title + deliverable when
+    extraction fails. extract_sheet returning None took that path; extract_sheet RAISING
+    used to skip it and lose the whole PDF — and now also the page."""
+    import factverse.deliverable as d
+    real = d.extract_sheet
+    try:
+        d.extract_sheet = lambda s: (_ for _ in ()).throw(RuntimeError("boom"))
+        sheet = d.sheet_for(_tool_script(5))
+    finally:
+        d.extract_sheet = real
+    assert isinstance(sheet, dict)
+    assert sheet["steps"] == [_tool_script(5)["deliverable"]["text"]]
 
 
 # --------------------------------------------------------------- grounding + filter fix
@@ -865,11 +882,21 @@ def test_tool_lane_advertises_the_pdf_it_actually_writes(monkeypatch, tmp_path):
     # a re-slug here would point the description at a file nobody writes
     assert rewritten["cheat_sheet"] == name
     assert rewritten["description"].count(ap._PDF_MARK) == 1
-    assert dlv.public_url(name) in rewritten["description"]
+    page = site.page_name(name)
+    assert site.public_url(page) in rewritten["description"]     # v3-F.1 #5: the PAGE
+    assert page == name[:-4] + ".html"                           # one slug, two files
 
     written = dlv.make_cheat_sheet(rewritten, video_url="https://youtu.be/ID")
     assert written and Path(written).name == name
     assert dlv.public_url(name).endswith(Path(written).name)
+
+    # ...and the page the description links is the file site.publish_page writes
+    monkeypatch.setattr(site, "CATALOG", tmp_path / "tools_index.json")
+    monkeypatch.setattr(site, "DOCS", tmp_path / "docs")
+    monkeypatch.setattr(site, "TOOLS_DIR", tmp_path / "docs" / "tools")
+    url = site.publish_page(rewritten, dlv.fallback_sheet(rewritten), "https://youtu.be/ID")
+    assert url == site.public_url(page)
+    assert (tmp_path / "docs" / "tools" / page).exists()
 
 
 # =============================================================== v3-C.2
@@ -1828,7 +1855,7 @@ def test_pinned_comment_carries_the_command_on_tool_videos():
             "cheat_sheet": "2026-08-24-x.pdf"}
     txt = ap.pinned_comment(tool)
     assert "pip install ollama" in txt
-    assert deliverable.public_url("2026-08-24-x.pdf") in txt
+    assert site.public_url("2026-08-24-x.html") in txt
     news = {"format": "news"}
     assert "Sources are in the description" in ap.pinned_comment(news, "https://prev")
     assert "https://prev" in ap.pinned_comment(news, "https://prev")
@@ -2233,3 +2260,213 @@ def test_terminal_clip_frames_are_real_and_reveal_the_summary(monkeypatch, tmp_p
     assert seen["n"] == 7
     assert rc.make_terminal_clip(res, str(tmp_path / "x.mp4"), 0) is None
     assert rc.make_terminal_clip({}, str(tmp_path / "y.mp4"), 3) is None
+
+
+# =============================================================== v3-F.1: the site
+import pytest
+
+from factverse import site
+from factverse import state_merge as sm
+
+
+def _entry(page="2026-08-31-a.html", **over):
+    e = {"page": page, "pdf": page[:-5] + ".pdf", "title": "A Tool", "slug": "a",
+         "date": "2026-08-31", "tool": "x/y", "command": "pip install x",
+         "source_url": "https://github.com/x/y",
+         "video_url": "https://youtube.com/watch?v=ABCDEFGHIJK",
+         "video_id": "ABCDEFGHIJK", "what": "It does a thing.",
+         "uses": ["one", "two", "three"], "skip_if": "You use Windows."}
+    e.update(over)
+    return e
+
+
+def test_page_name_shares_the_pdf_stem():
+    """v3-F.1 #6: one slug, two files. A second naming rule would drift and 404."""
+    assert site.page_name("2026-08-31-hello.pdf") == "2026-08-31-hello.html"
+    assert site.page_name("2026-08-31-hello.PDF") == "2026-08-31-hello.html"
+    assert site.page_name("") == ""
+    assert site.page_name(None) == ""
+
+
+def test_video_id_survives_every_url_form():
+    for u in ("https://youtube.com/watch?v=ABCDEFGHIJK",
+              "https://youtu.be/ABCDEFGHIJK",
+              "https://www.youtube-nocookie.com/embed/ABCDEFGHIJK",
+              "https://youtube.com/shorts/ABCDEFGHIJK"):
+        assert site.video_id(u) == "ABCDEFGHIJK", u
+    assert site.video_id("") == "" and site.video_id(None) == ""
+    assert site.video_id("https://example.com/watch?v=short") == ""
+
+
+def test_render_page_carries_every_locked_section(monkeypatch):
+    """v3-F.1 #7/#9/#10 - the sections, the copy button and the share card."""
+    monkeypatch.setattr(site.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    h = site.render_page(_entry())
+    assert "<h1>A Tool</h1>" in h
+    assert 'id="cmd">pip install x<' in h and 'id="c"' in h        # command + Copy button
+    assert "It does a thing." in h
+    for u in ("one", "two", "three"):
+        assert "<li>" + u + "</li>" in h
+    assert "You use Windows." in h
+    assert "youtube-nocookie.com/embed/ABCDEFGHIJK" in h           # #7 embed
+    assert 'href="2026-08-31-a.pdf"' in h                          # PDF download, same dir
+    assert "https://github.com/x/y" in h
+    # #10: the card F.2/F.3 will rely on
+    assert ('property="og:image" content='
+            '"https://i.ytimg.com/vi/ABCDEFGHIJK/maxresdefault.jpg"') in h
+    assert 'rel="canonical" href="https://x.test/tools/2026-08-31-a.html"' in h
+    assert 'name="twitter:card" content="summary_large_image"' in h
+    # no network dependencies (#9): no CDN, no font host, no analytics
+    for bad in ("cdn.", "fonts.googleapis", "google-analytics", "gtag"):
+        assert bad not in h
+
+
+def test_render_page_escapes_everything_it_interpolates():
+    """A repo title or README-derived command is untrusted text. It is HTML-escaped
+    everywhere, including in the copy button's source - the command lives in the DOM
+    as text, never as a JS string literal."""
+    h = site.render_page(_entry(title="<script>alert(1)</script>",
+                                command='echo "<b>&</b>"',
+                                what="a & b", source_url="https://x/?a=1&b=2"))
+    assert "<script>alert(1)</script>" not in h
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in h
+    assert "&lt;b&gt;&amp;&lt;/b&gt;" in h
+    assert h.count("<script>") == 1                    # only our own copy handler
+
+
+def test_render_page_degrades_when_fields_are_missing():
+    """A run with no upload, no PDF and a failed extraction still gets a page."""
+    h = site.render_page({"page": "p.html", "title": "T", "date": "2026-08-31"})
+    assert "<h1>T</h1>" in h
+    for absent in ("<iframe", "og:image", "Download the 1-page PDF", 'id="cmd"'):
+        assert absent not in h
+    assert site.render_page({}).startswith("<!doctype html>")
+    assert site.render_page(None).startswith("<!doctype html>")
+
+
+def test_index_is_newest_first_and_survives_an_empty_catalog(monkeypatch):
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    rows = [_entry("2026-08-29-a.html", date="2026-08-29", title="Older"),
+            _entry("2026-08-31-b.html", date="2026-08-31", title="Newer")]
+    h = site.render_index(rows)
+    assert h.index("Newer") < h.index("Older")          # #11 newest first
+    assert 'href="tools/2026-08-31-b.html"' in h
+    assert "2 tools" in h
+    empty = site.render_index([])
+    assert "The first tool page lands here" in empty and "<h1>" in empty
+
+
+def test_rebuild_is_deterministic_and_only_writes_on_change(monkeypatch, tmp_path):
+    """Acceptance #2: same catalog in, byte-identical files out - so CI can rebuild
+    the site after state_merge instead of stashing HTML the way it stashes PDFs."""
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    monkeypatch.setattr(site, "DOCS", tmp_path)
+    monkeypatch.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+    rows = [_entry("2026-08-2%d-t.html" % i, date="2026-08-2%d" % i) for i in (1, 2, 3)]
+    assert site.rebuild(rows) == 5                       # 3 pages + index + sitemap
+    before = {p.name: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    assert len(before) == 5 and "index.html" in before and "sitemap.xml" in before
+    assert site.rebuild(rows) == 0                       # nothing changed -> git stays clean
+    after = {p.name: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    assert before == after
+    xml = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    assert xml.count("<url>") == 4 and "2026-08-23-t.html" in xml
+
+
+def test_rebuild_caps_the_pages_it_rewrites(monkeypatch, tmp_path):
+    """The catalog grows forever; regeneration must not. Older pages stay on disk."""
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    monkeypatch.setattr(site, "DOCS", tmp_path)
+    monkeypatch.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+    monkeypatch.setattr(site, "MAX_PAGES", 2)
+    rows = [_entry("2026-08-1%d-t.html" % i, date="2026-08-1%d" % i) for i in (1, 2, 3)]
+    site.rebuild(rows)
+    assert sorted(p.name for p in (tmp_path / "tools").iterdir()) == \
+        ["2026-08-12-t.html", "2026-08-13-t.html"]
+    assert "2026-08-11-t.html" in (tmp_path / "index.html").read_text(encoding="utf-8")
+
+
+def test_every_site_seam_fails_soft(monkeypatch, tmp_path):
+    """#12: this runs between yt_upload and record_run. A raise here publishes a
+    SECOND video into the same slot, so no path may raise - ever."""
+    boom = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom"))
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(site.fv, "setting", _settings())
+        mp.setattr(site, "DOCS", tmp_path)
+        mp.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+        mp.setattr(site, "render_page", boom)
+        assert site.rebuild([_entry()]) == -1
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(site.fv, "setting", _settings())
+        mp.setattr(site, "CATALOG", tmp_path / "cat.json")
+        mp.setattr(site, "entry_for", boom)
+        assert site.publish_page({"cheat_sheet": "a.pdf"}, {}, "u") is None
+    # an unwritable catalog is reported, not raised
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(site.fv, "setting", _settings())
+        mp.setattr(site, "CATALOG", tmp_path / "cat.json")
+        mp.setattr(site, "save_catalog", boom)
+        assert site.publish_page(_entry(), {}, "u") is None
+    # a corrupt or missing catalog reads as empty, never as a crash
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not json", encoding="utf-8")
+    assert site.load_catalog(bad) == []
+    assert site.load_catalog(tmp_path / "nope.json") == []
+    bad.write_text('{"page": "x"}', encoding="utf-8")     # a dict, not a list
+    assert site.load_catalog(bad) == []
+
+
+def test_kill_switch_stops_the_page(monkeypatch, tmp_path):
+    monkeypatch.setattr(site, "CATALOG", tmp_path / "cat.json")
+    monkeypatch.setattr(site.fv, "setting", _settings(site_pages=False))
+    assert site.publish_page(_tool_script(5), {}, "https://youtu.be/ABCDEFGHIJK") is None
+    assert not (tmp_path / "cat.json").exists()
+
+
+def test_entry_and_upsert_replace_rather_than_stack(monkeypatch):
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    s = dict(_tool_script(5), cheat_sheet="2026-08-31-t.pdf", signal_title="x/y")
+    e = site.entry_for(s, {"what": "w", "uses": "a\nb\nc\nd", "skip_if": "s"},
+                       "https://youtu.be/ABCDEFGHIJK")
+    assert e["page"] == "2026-08-31-t.html" and e["pdf"] == "2026-08-31-t.pdf"
+    assert e["command"] == "pip install x" and e["video_id"] == "ABCDEFGHIJK"
+    assert e["uses"] == ["a", "b", "c"]           # a string answer is coerced, then capped
+    assert e["tool"] == "x/y"
+    rows = site.upsert([e], dict(e, title="Corrected"))
+    assert len(rows) == 1 and rows[0]["title"] == "Corrected"
+
+
+def test_catalog_merge_keeps_one_row_per_page():
+    """The generic list union dedups on exact equality, so a retry with a new
+    video_url would print the same tool twice on the index."""
+    assert "state/tools_index.json" in sm.FILES
+    ours = json.dumps([_entry(video_url="https://youtu.be/NEWNEWNEW1", title="Ours")])
+    theirs = json.dumps([_entry(video_url=""),
+                         _entry("2026-08-30-b.html", date="2026-08-30")])
+    merged = json.loads(sm.merge_file("state/tools_index.json", ours, theirs))
+    assert len(merged) == 2
+    row = next(r for r in merged if r["page"] == "2026-08-31-a.html")
+    assert row["title"] == "Ours" and row["video_url"] == "https://youtu.be/NEWNEWNEW1"
+    # a later date wins over an earlier one regardless of side
+    late = json.dumps([_entry(date="2026-09-02", title="Later")])
+    m2 = json.loads(sm.merge_file("state/tools_index.json", theirs, late))
+    assert next(r for r in m2 if r["page"] == "2026-08-31-a.html")["title"] == "Later"
+    # junk rows never reach the renderer
+    m3 = json.loads(sm.merge_file("state/tools_index.json",
+                                  json.dumps(["x", {}, None]), theirs))
+    assert all(isinstance(r, dict) and r.get("page") for r in m3)
+
+
+def test_ci_stashes_and_rebuilds_the_site():
+    """The tracked-state trap: a file the run writes must be in BOTH the stash list
+    and state_merge.FILES, or `checkout -B main origin/main` reverts it silently."""
+    wf = (Path(__file__).resolve().parents[1] / ".github/workflows/publish.yml").read_text(
+        encoding="utf-8")
+    assert "state/tools_index.json" in wf
+    # the rebuild must run AFTER the merge (the merged catalog is the source of truth)
+    # and BEFORE the add, or the regenerated HTML is never committed
+    merge_at = wf.index("python -m factverse.state_merge")
+    build_at = wf.index("python -m factverse.site")
+    add_at = wf.index("git add docs/index.html")
+    assert merge_at < build_at < add_at
+    assert "git add docs/tools" in wf and "docs/sitemap.xml" in wf

@@ -51,6 +51,7 @@ from factverse import infographics
 from factverse import screencap
 from factverse import receipts
 from factverse import deliverable
+from factverse import site
 from factverse import scheduling
 from factverse import gates
 from factverse import l2
@@ -879,7 +880,10 @@ def place_description_blocks(script: dict) -> None:
     if dl:
         if _has_cheat_sheet(script) and not script.get("cheat_sheet"):
             script["cheat_sheet"] = deliverable.pdf_name(script.get("title", ""))
-        pdf_line = (f"\n{_PDF_MARK}{deliverable.public_url(script['cheat_sheet'])}"
+        # v3-F.1 #5: the link is the tool PAGE, not the PDF — it opens on a phone,
+        # carries the copy-button command and offers the PDF as a download. The page
+        # shares the PDF's stem, so this name is still decided before the upload.
+        pdf_line = (f"\n{_PDF_MARK}{site.public_url(site.page_name(script['cheat_sheet']))}"
                     if script.get("cheat_sheet") else "")
         block = (f"{_DL_MARK}:\n{dl['text']}"
                  + (f"\n{dl['url']}" if dl.get("url") else "") + pdf_line)
@@ -1119,7 +1123,9 @@ def pinned_comment(script: dict, prev_url: str = "") -> str:
     if script.get("format") == "tool" and script.get("deliverable"):
         txt = "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
         if script.get("cheat_sheet"):
-            txt += "\n📄 Free cheat sheet: " + deliverable.public_url(script["cheat_sheet"])
+            # same promise as the description, so the same destination (v3-F.1 #5)
+            txt += ("\n📄 Free cheat sheet: "
+                    + site.public_url(site.page_name(script["cheat_sheet"])))
         return txt + "\nWhat should I test next?"
     base = ("Sources are in the description. What's your take — hype or turning point? 👇")
     if prev_url:
@@ -1755,8 +1761,15 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # v3-C: the free cheat sheet — written after upload so it carries the video
     # link; the description already links its (pre-decided) file name.
     cheat_sheet = None
+    tool_page = None
     if script.get("format") == "tool" and script.get("deliverable"):
-        cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "")
+        # One extraction, two consumers: the PDF and the tool page render the same
+        # sheet (a second extract_sheet call would pay twice and could disagree).
+        sheet = deliverable.sheet_for(script)
+        cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "", sheet=sheet)
+        # v3-F.1: the page the description already links. publish_page swallows
+        # everything — this runs inside the double-publish window.
+        tool_page = site.publish_page(script, sheet, yt_url or "")
 
     # Everything between a successful upload and the ledger row must be
     # non-fatal. If the video is on YouTube but runs.jsonl carries no PUBLISHED
@@ -1791,6 +1804,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                receipts=({k: script["receipts"].get(k) for k in ("kind", "seconds", "mb")}
                          if isinstance(script.get("receipts"), dict) else None),
                deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
+               tool_page=bool(tool_page),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)

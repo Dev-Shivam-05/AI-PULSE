@@ -115,7 +115,7 @@ jobs:
             mkdir -p /tmp/state_incoming /tmp/tools_incoming /tmp/brand_incoming
             for f in used_topics.json used_urls.json output/production_log.json \
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
-                     state/l2_usage.json state/stock_ledger.json; do
+                     state/l2_usage.json state/stock_ledger.json state/tools_index.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is
@@ -141,10 +141,15 @@ jobs:
             cp /tmp/tools_incoming/*.pdf docs/tools/ 2>/dev/null || true
             cp /tmp/brand_incoming/.brand /tmp/brand_incoming/*.mp4 assets/ 2>/dev/null || true
             python -m factverse.state_merge /tmp/state_incoming
+            # v3-F.1: the site is DERIVED from the merged catalog, so it is rebuilt
+            # here rather than stashed — regenerating cannot lose a page the way
+            # copying a stale copy over the merged one could. Never fatal.
+            python -m factverse.site || true
             git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
             # separate add: an unmatched pathspec fails the WHOLE git add, and losing
             # topic state to a missing cheat-sheet dir would cause duplicate videos
             git add docs/tools 2>/dev/null || true
+            git add docs/index.html docs/sitemap.xml 2>/dev/null || true
             git add assets/.brand assets/intro.mp4 assets/outro.mp4 2>/dev/null || true
             if git commit -m "state update [skip ci]" --quiet; then
               if git push origin main; then ok=1; break; fi
