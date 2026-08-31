@@ -41,13 +41,19 @@ One phase per session. A phase that isn't pushed doesn't exist.
    (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c) → `v3-phase-f`
    (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-f). test.yml runs the
    161-test suite on each PR automatically.
-1.5. **Create the Telegram bot + 2 Actions secrets** (v3-F.2, ~3 min, full steps in
-   `docs/spec/ai-pulse-v3f2.md`): @BotFather → `/newbot` → create the public channel `@tooldojo`
-   → add the bot as an admin with "Post messages" → repo Settings → Secrets → Actions →
-   `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. Until both exist the 16:55 UTC workflow logs
-   `↷ Telegram not configured — skipping` and costs nothing. After they exist, Actions tab →
-   "ToolDojo — Telegram" → Run workflow, and expect `📣 Telegram: posted` plus the message in
-   the channel (tap the command — it should copy).
+1.5. **Add the 2 Telegram Actions secrets** (v3-F.2). The bot exists (`@ToolDojoBot`), its
+   token is in the git-ignored local `.env`, and a real message has already been delivered to
+   the ToolDojo chat from the production code path. What is left is CI: repo Settings →
+   Secrets and variables → Actions → New repository secret, twice — `TELEGRAM_BOT_TOKEN` and
+   `TELEGRAM_CHAT_ID` (same two values as in `.env`). `gh` is not installed here, so this is a
+   click. Until both exist the 16:55 UTC workflow logs `↷ Telegram not configured — skipping`
+   and costs nothing. Then: Actions tab → "ToolDojo — Telegram" → Run workflow → expect
+   `📣 Telegram: posted`.
+   Two notes: the chat id is a **private supergroup**, not a broadcast channel — for
+   distribution create the public channel `@tooldojo`, make the bot an admin, and change that
+   one secret (no code change). And the token has been shared in plain text; rotating it in
+   @BotFather (`/revoke`) once CI is wired is cheap hygiene, and only means updating the same
+   two places.
 2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
    done every cheat-sheet link AND every tool page 404s. After the first tool run, `curl -I`
    BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.

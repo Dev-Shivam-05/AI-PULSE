@@ -121,10 +121,32 @@ and reads the ledger.
       **live `api.telegram.org` call** with a deliberately invalid token returns HTTP 401,
       which `send()` reports as a failure with the token redacted — the endpoint, the
       payload shape and the refusal path verified against the real API without a secret
-- [ ] A real message is delivered to a real Telegram channel and screenshotted — command
-      tap-to-copy, video preview card. **OUTSTANDING**: no bot token exists on this machine
-      or in Actions secrets (see the owner setup above). Everything else was verified against
-      a stubbed Bot API and a rendered message body.
+- [x] A real message is delivered to the real Telegram chat — **done 2026-08-31**: the bot
+      (`@ToolDojoBot`) was created, its token put in the git-ignored `.env`, and
+      `notify.main()` ran the full production path (pick_row → format_message → send →
+      save_notified) against the live API. `getMe` and `getChat` both returned HTTP 200,
+      `sendMessage` returned `ok: true` — which also proves Telegram accepted the HTML, as
+      it rejects malformed entities with a 400 — and `state/notified.json` recorded the URL.
+      The message delivered was the **story lane** template (the newest `PUBLISHED` ledger
+      row); the tool-lane template ships with the first `format=tool` video, and its body is
+      in `output/demo/telegram/message_tool.txt`.
+- [ ] **Still owner-side**: the same two values as Actions secrets (`TELEGRAM_BOT_TOKEN`,
+      `TELEGRAM_CHAT_ID`). `gh` is not installed on this machine and no PAT exists, so they
+      cannot be set from here — until they are, the 16:55 UTC workflow logs
+      `↷ Telegram not configured — skipping` and posts nothing.
+
+### The live target, as configured 2026-08-31
+
+`TELEGRAM_CHAT_ID` currently points at a **supergroup** (`getChat` → `"type":"supergroup"`,
+title "ToolDojo", private invite link), not a broadcast channel. `sendMessage` behaves
+identically for both, so nothing in this module changes — but a private group cannot be
+found, followed or linked from a YouTube description, and every member can post into it.
+If the goal is distribution rather than a private log, create the public channel `@tooldojo`,
+add the bot as an admin, and change that one secret to `@tooldojo`. No code change.
+
+Secrets live in the git-ignored `.env` locally (`.gitignore:3`) and in Actions secrets in CI;
+`config.py` loads `.env` on import, a real environment variable always wins. The token is in
+no tracked file — `git grep` over the repo confirms it.
 
 ## Risks
 
