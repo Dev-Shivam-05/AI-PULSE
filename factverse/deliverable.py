@@ -42,7 +42,12 @@ def safe_name(name: str) -> str:
     path on the ubuntu runner.
     """
     base = re.split(r"[\\/]+", str(name or "").strip().rstrip("\\/"))[-1]
-    base = re.sub(r"[^A-Za-z0-9._-]+", "-", base).lstrip(".-")[:120]
+    base = re.sub(r"[^A-Za-z0-9._-]+", "-", base).lstrip(".-")
+    stem, dot, ext = base.rpartition(".")
+    if dot and 0 < len(ext) <= 5:            # truncating must not eat the extension:
+        base = stem[:120 - len(ext) - 1] + "." + ext   # a name with no .pdf/.html is
+    else:                                    # a file the other consumer cannot find
+        base = base[:120]
     return base if re.search(r"[A-Za-z0-9]", base) else ""
 
 

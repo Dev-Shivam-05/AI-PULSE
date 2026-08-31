@@ -319,6 +319,16 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
         return None
+    # This function mutates the LLM's dict IN PLACE, so a top-level key the model
+    # invents SURVIVES. Two of them are run()'s OWN to compute, and a planted value
+    # impersonates the real one: "receipts" would fabricate the measured-check beat
+    # and footage, and "cheat_sheet" is stamped into the published description and
+    # joined onto TOOLS_DIR. Popping them HERE (not once in run()) is what closes the
+    # hole for the rewrite passes too: every pass validates, then _carry_over copies
+    # the legitimate value back from the previous script. Measured: without this, a
+    # name planted in critique_pass's answer shipped a dead ".../tools/" link.
+    for planted in ("receipts", "cheat_sheet"):
+        s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
     scenes = []
@@ -1774,7 +1784,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "", sheet=sheet)
         # v3-F.1: the page the description already links. publish_page swallows
         # everything — this runs inside the double-publish window.
-        tool_page = site.publish_page(script, sheet, yt_url or "")
+        tool_page = site.publish_page(script, sheet, yt_url or "", pdf=cheat_sheet)
 
     # Everything between a successful upload and the ledger row must be
     # non-fatal. If the video is on YouTube but runs.jsonl carries no PUBLISHED

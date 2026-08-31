@@ -66,7 +66,9 @@ def video_id(url: str) -> str:
 
 
 def enabled() -> bool:
-    return bool(fv.setting("site_pages", True))
+    # fv.flag, not fv.setting: setting() returns an env var as a STRING and
+    # bool("false") is True — the switch would be un-flippable from Actions.
+    return fv.flag("site_pages", True)
 
 
 # --------------------------------------------------------------- catalog (pure)
@@ -79,24 +81,38 @@ def _as_list(v) -> list[str]:
     return [str(x).strip() for x in v if str(x).strip()]
 
 
+def safe_link(url: str) -> str:
+    """An href we are willing to put on our own origin. `deliverable.url` is written
+    by a model grounded in a third-party README, and html.escape cannot help with a
+    scheme — `javascript:` is not a metacharacter. screencap.py already refuses this
+    same field before handing it to a browser; the site refuses it before linking it."""
+    u = str(url or "").strip()
+    return u if u.lower().startswith(("http://", "https://")) else ""
+
+
 def entry_for(script: dict, sheet: dict | None = None, video_url: str = "",
-              date: _dt.date | None = None) -> dict:
+              date: _dt.date | None = None, pdf: str | None = None) -> dict:
     """The catalog row for one tool video. Pure — no I/O, no LLM."""
     script = script if isinstance(script, dict) else {}
     sheet = sheet if isinstance(sheet, dict) else {}
     dl = script.get("deliverable") if isinstance(script.get("deliverable"), dict) else {}
-    pdf = str(script.get("cheat_sheet") or "")
+    # `pdf` is the file make_cheat_sheet actually wrote (None when that seam failed) —
+    # the page must not offer a download that does not exist. Falling back to the
+    # script's name keeps entry_for usable on its own.
+    name = pdf if pdf is not None else script.get("cheat_sheet")
+    pdf_file = deliverable.safe_name(name or "")     # never an un-sanitized href
     d = date or _dt.date.today()
     return {
-        "page": page_name(pdf) or f"{d.isoformat()}-{deliverable.slug(script.get('title', ''))}.html",
-        "pdf": pdf,
+        "page": (page_name(script.get("cheat_sheet") or "")
+                 or f"{d.isoformat()}-{deliverable.slug(script.get('title', ''))}.html"),
+        "pdf": pdf_file,
         "title": str(script.get("title", "")).strip(),
         "slug": deliverable.slug(script.get("title", "")),
         "date": d.isoformat(),
         # the repo/model name the signal carried; `deliverable` holds only kind/text/url
         "tool": str(script.get("signal_title") or "").strip(),
         "command": str(dl.get("text", "")).strip(),
-        "source_url": str(dl.get("url") or script.get("source_url") or "").strip(),
+        "source_url": safe_link(dl.get("url") or script.get("source_url") or ""),
         "video_url": str(video_url or "").strip(),
         "video_id": video_id(video_url),
         "what": str(sheet.get("what", "")).strip(),
@@ -221,11 +237,20 @@ def _brand() -> str:
     return f'<a class="brand" href="../index.html">{_esc(head)}<span>{_esc(tail)}</span></a>'
 
 
+def entry_name(entry: dict) -> str:
+    """The one file name for a catalog row: the file written, the canonical URL, the
+    index href and the sitemap <loc> must all be THIS. rebuild() sanitized only the
+    file, so the other three could advertise a URL the generator had refused to write
+    — and the catalog is merged state read back off origin/main, not our own output."""
+    name = deliverable.safe_name((entry or {}).get("page") if isinstance(entry, dict) else "")
+    return name if name.endswith(".html") else ""
+
+
 def render_page(entry: dict) -> str:
     """One tool page. Pure: same entry in, same bytes out (spec acceptance #2)."""
     e = entry if isinstance(entry, dict) else {}
     title, what = str(e.get("title", "")), str(e.get("what", ""))
-    canonical = public_url(str(e.get("page", "")))
+    canonical = public_url(entry_name(e))
     vid = str(e.get("video_id") or video_id(e.get("video_url", "")))
     img = f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg" if vid else ""
     out = [f"<!doctype html><html lang=\"en\"><head>{_head(title, what, canonical, img)}"
@@ -267,7 +292,7 @@ def render_page(entry: dict) -> str:
 
 def render_index(entries: list[dict]) -> str:
     """Newest-first list of every catalog entry (spec #11). Pure."""
-    rows = sorted([e for e in entries if isinstance(e, dict) and e.get("page")],
+    rows = sorted([e for e in entries if entry_name(e)],
                   key=lambda e: (str(e.get("date", "")), str(e.get("page", ""))), reverse=True)
     name = str(fv.CHANNEL_NAME or "ToolDojo")
     pitch = "One free AI tool a day, actually run and checked before it ships."
@@ -280,7 +305,7 @@ def render_index(entries: list[dict]) -> str:
     if rows:
         out.append(f"<h2>{len(rows)} tool{'s' if len(rows) != 1 else ''}</h2>")
         for e in rows:
-            out.append(f'<a class="row" href="tools/{_esc(e["page"])}">'
+            out.append(f'<a class="row" href="tools/{_esc(entry_name(e))}">'
                        f'<div class="d">{_esc(e.get("date", ""))}</div>'
                        f'<div class="t">{_esc(e.get("title", ""))} →</div>'
                        + (f'<div class="w">{_esc(str(e.get("what", ""))[:150])}</div>'
@@ -294,10 +319,10 @@ def render_index(entries: list[dict]) -> str:
 
 
 def render_sitemap(entries: list[dict]) -> str:
-    urls = [(site_url(), max((str(e.get("date", "")) for e in entries), default=""))]
-    urls += [(public_url(str(e["page"])), str(e.get("date", "")))
-             for e in sorted(entries, key=lambda e: str(e.get("date", "")), reverse=True)
-             if isinstance(e, dict) and e.get("page")]
+    rows = [e for e in entries if entry_name(e)]
+    urls = [(site_url(), max((str(e.get("date", "")) for e in rows), default=""))]
+    urls += [(public_url(entry_name(e)), str(e.get("date", "")))
+             for e in sorted(rows, key=lambda e: str(e.get("date", "")), reverse=True)]
     body = "".join(
         f"<url><loc>{_esc(u)}</loc>" + (f"<lastmod>{_esc(d)}</lastmod>" if d else "") + "</url>"
         for u, d in urls)
@@ -331,10 +356,17 @@ def rebuild(entries: list[dict] | None = None) -> int:
                         reverse=True)[:MAX_PAGES]
         n = 0
         for e in recent:
-            name = deliverable.safe_name(e.get("page"))
-            if not name.endswith(".html"):     # a catalog row is data, not a path
+            name = entry_name(e)               # a catalog row is data, not a path
+            if not name:
                 continue
-            n += int(_write(TOOLS_DIR / name, render_page(e)))
+            try:
+                n += int(_write(TOOLS_DIR / name, render_page(e)))
+            except Exception as ex:
+                # One unreadable page file used to abort the loop, which skipped the
+                # index and sitemap writes BELOW it — the site then froze at its
+                # pre-corruption state on every future run, while publish_page still
+                # returned a URL and the ledger still said tool_page=True.
+                print(f"   ⚠️ page skipped ({name}): {type(ex).__name__}: {ex}")
         n += int(_write(DOCS / "index.html", render_index(entries)))
         n += int(_write(DOCS / "sitemap.xml", render_sitemap(entries)))
         print(f"  🌐 Site: {len(recent)} page(s), {n} file(s) written")
@@ -344,7 +376,8 @@ def rebuild(entries: list[dict] | None = None) -> int:
         return -1
 
 
-def publish_page(script: dict, sheet: dict | None = None, video_url: str = "") -> str | None:
+def publish_page(script: dict, sheet: dict | None = None, video_url: str = "",
+                 pdf: str | None = None) -> str | None:
     """Add this video to the catalog and rebuild the site. Returns the page URL.
 
     Called in the post-upload zone, so EVERY path returns instead of raising:
@@ -353,13 +386,13 @@ def publish_page(script: dict, sheet: dict | None = None, video_url: str = "") -
     if not enabled():
         return None
     try:
-        entry = entry_for(script, sheet, video_url)
-        if not entry.get("page"):
+        entry = entry_for(script, sheet, video_url, pdf=pdf)
+        if not entry_name(entry):
             return None
         entries = upsert(load_catalog(), entry)
         save_catalog(entries)
         rebuild(entries)
-        url = public_url(entry["page"])
+        url = public_url(entry_name(entry))
         print(f"  🌐 Page: {url}")
         return url
     except Exception as e:

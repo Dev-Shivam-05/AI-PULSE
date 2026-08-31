@@ -129,7 +129,9 @@ def _merge_index(a, b) -> list:
     """
     out: dict[str, dict] = {}
     order: list[str] = []
-    for e in list(a or []) + list(b or []):
+    # `list(a or [])` raises TypeError on a scalar, and merge_file's caller in CI has
+    # no `|| true` — under `bash -e` that would abort the whole state-save step.
+    for e in ((a if isinstance(a, list) else []) + (b if isinstance(b, list) else [])):
         if not isinstance(e, dict) or not e.get("page"):
             continue
         key = str(e["page"])
