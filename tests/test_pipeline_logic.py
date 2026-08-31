@@ -2470,3 +2470,54 @@ def test_ci_stashes_and_rebuilds_the_site():
     add_at = wf.index("git add docs/index.html")
     assert merge_at < build_at < add_at
     assert "git add docs/tools" in wf and "docs/sitemap.xml" in wf
+
+
+def test_planted_cheat_sheet_name_cannot_escape_or_ship(monkeypatch, tmp_path):
+    """The _CARRY trap in a new place. `cheat_sheet` is in _CARRY and
+    `_validate_script` mutates the LLM's dict IN PLACE, so a model-planted key
+    SURVIVES. Measured before the fix: the planted name was stamped into the
+    published description AND joined onto TOOLS_DIR, so '../../../x.pdf' wrote an
+    HTML page outside docs/ while _write reported success.
+
+    Two defences, both pinned here: run() pops the key (it computes it itself, the
+    way it pops `receipts`), and safe_name() refuses a path either way.
+    """
+    # 1. the name is basenamed on BOTH separators, then charset-filtered
+    assert dlv.safe_name("../../../PLANTED.pdf") == "PLANTED.pdf"
+    assert dlv.safe_name(r"..\..\windows\PLANTED.pdf") == "PLANTED.pdf"
+    assert dlv.safe_name("/etc/passwd") == "passwd"
+    assert dlv.safe_name("a b;rm -rf.pdf") == "a-b-rm--rf.pdf"
+    assert dlv.safe_name("...") == "" and dlv.safe_name("") == "" and dlv.safe_name(None) == ""
+    assert len(dlv.safe_name("x" * 400)) == 120
+
+    # 2. a planted page name never becomes a path when the site is rebuilt
+    monkeypatch.setattr(site.fv, "setting", _settings())
+    monkeypatch.setattr(site, "DOCS", tmp_path)
+    monkeypatch.setattr(site, "TOOLS_DIR", tmp_path / "tools")
+    site.rebuild([_entry(page="../../../ESCAPED.html"), _entry(page="../evil"), _entry()])
+    written = sorted(p.name for p in tmp_path.rglob("*.html"))
+    assert written == ["2026-08-31-a.html", "ESCAPED.html", "index.html"]
+    assert not list(tmp_path.parent.glob("ESCAPED.html"))     # nothing above the root
+    assert not list(tmp_path.glob("evil"))                    # not even an extensionless one
+
+
+def test_run_pops_a_planted_cheat_sheet_before_it_is_published():
+    """The description link is a permanent artifact of a live video: it must be the
+    name run() derives from the title, never one the model handed us."""
+    src = (Path(ap.__file__)).read_text(encoding="utf-8")
+    i_pop = src.index('script.pop("cheat_sheet", None)')
+    i_place = src.index("def place_description_blocks")
+    i_recpop = src.index('script.pop("receipts", None)')
+    assert abs(i_pop - i_recpop) < 800          # popped beside receipts, same reason
+    # and the value the description ends up with is derived, not carried
+    s = ap._validate_script(
+        {"title": "Real Title", "description": "hook.\n\nbody", "tags": [],
+         "cheat_sheet": "../../../PLANTED.pdf",
+         "scenes": [{"narration": "w " * 40, "visual_query": "v"} for _ in range(6)]},
+        "Real Title", "https://github.com/x/y")
+    s.pop("cheat_sheet", None)                  # what run() does at that line
+    s["format"] = "tool"
+    s["deliverable"] = {"kind": "command", "text": "pip install x", "url": "https://x/y"}
+    ap.place_description_blocks(s)
+    assert "PLANTED" not in s["description"]
+    assert s["cheat_sheet"].endswith("-real-title.pdf")

@@ -1446,6 +1446,11 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # fabricated "we checked this" footage, and a planted non-dict would raise
     # inside the post-upload record_run call (the double-publish zone).
     script.pop("receipts", None)
+    # Same trap, same fix: "cheat_sheet" is run()'s to compute (place_description_blocks
+    # derives it from the title). A planted one is published in the description as the
+    # cheat-sheet link and joined onto TOOLS_DIR, where "../../../x.pdf" writes outside
+    # docs/ — measured, not theorised. _CARRY still preserves the real one afterwards.
+    script.pop("cheat_sheet", None)
 
     # critique first (it now cuts repetition), then the floor (sanity only),
     # then the CAP — padding is the enemy, not brevity

@@ -30,6 +30,22 @@ def slug(title: str, max_len: int = 40) -> str:
     return s[:max_len].rstrip("-") or "tool"
 
 
+def safe_name(name: str) -> str:
+    """A file name we are willing to write and to publish in a description.
+
+    `cheat_sheet` is in `_CARRY`, and `_validate_script` mutates the LLM's dict IN
+    PLACE — so a model-planted `cheat_sheet` key SURVIVES into the script. Left
+    alone it is stamped into the published description (a permanent bad link on a
+    live video) and joined onto TOOLS_DIR, where `../../../x.pdf` silently escapes
+    docs/. run() pops the planted key; this is the second line of defence, and it
+    splits on BOTH separators because pathlib's .name is a no-op for a backslash
+    path on the ubuntu runner.
+    """
+    base = re.split(r"[\\/]+", str(name or "").strip().rstrip("\\/"))[-1]
+    base = re.sub(r"[^A-Za-z0-9._-]+", "-", base).lstrip(".-")[:120]
+    return base if re.search(r"[A-Za-z0-9]", base) else ""
+
+
 def pdf_name(title: str, date: _dt.date | None = None) -> str:
     date = date or _dt.date.today()
     return f"{date.isoformat()}-{slug(title)}.pdf"
@@ -285,7 +301,7 @@ def sheet_for(script: dict) -> dict:
 def make_cheat_sheet(script: dict, video_url: str = "", sheet: dict | None = None) -> str | None:
     """Write docs/tools/<name>.pdf for this tool video. Fail-soft (None)."""
     try:
-        name = script.get("cheat_sheet") or pdf_name(script.get("title", ""))
+        name = safe_name(script.get("cheat_sheet") or "") or pdf_name(script.get("title", ""))
         TOOLS_DIR.mkdir(parents=True, exist_ok=True)
         out = TOOLS_DIR / name
         sheet = sheet if isinstance(sheet, dict) and sheet else sheet_for(script)

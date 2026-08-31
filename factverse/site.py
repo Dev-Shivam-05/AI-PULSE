@@ -44,7 +44,7 @@ LINE = "#30363D"
 # --------------------------------------------------------------- naming (pure)
 def page_name(pdf: str) -> str:
     """The page shares the PDF's <date>-<slug> stem (spec #6): one slug, no drift."""
-    stem = str(pdf or "").strip()
+    stem = deliverable.safe_name(pdf)      # never join an LLM-supplied path onto DOCS
     return (stem[:-4] if stem.lower().endswith(".pdf") else stem) + ".html" if stem else ""
 
 
@@ -331,7 +331,10 @@ def rebuild(entries: list[dict] | None = None) -> int:
                         reverse=True)[:MAX_PAGES]
         n = 0
         for e in recent:
-            n += int(_write(TOOLS_DIR / str(e["page"]), render_page(e)))
+            name = deliverable.safe_name(e.get("page"))
+            if not name.endswith(".html"):     # a catalog row is data, not a path
+                continue
+            n += int(_write(TOOLS_DIR / name, render_page(e)))
         n += int(_write(DOCS / "index.html", render_index(entries)))
         n += int(_write(DOCS / "sitemap.xml", render_sitemap(entries)))
         print(f"  🌐 Site: {len(recent)} page(s), {n} file(s) written")
