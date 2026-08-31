@@ -96,6 +96,18 @@ name that is not written there. If a decision is missing, add a row and get one 
   page to `gates.tool_unsuitable`, because the page's topic tags are the only place a repo like
   `facefusion` declares itself. Narrowing what the writer reads must not narrow what the gate
   reads.
+- **Anything published under `docs/` must be HTML.** `docs/.nojekyll` is committed, so
+  GitHub Pages serves the directory verbatim — markdown is served as raw text and no Jekyll
+  plugin (readme-index, relative-links) is available. `factverse/site.py` renders the pages.
+- **A DERIVED artifact should be regenerated after `state_merge`, not stashed.** The site's
+  HTML is rebuilt from `state/tools_index.json` in CI; only the source of truth needs the
+  both-halves treatment (stash list AND `state_merge.FILES` AND merge semantics). The cheat
+  sheet PDFs are the exception — an LLM wrote them once and they cannot be reproduced.
+- **`cheat_sheet` is `receipts`' twin: a `_CARRY` key run() computes itself.** A planted one
+  reached the PUBLISHED description and escaped `docs/tools` via `../../../`. run() pops it;
+  `deliverable.safe_name()` is the second line. **Any artifact name derived from model output
+  goes through `safe_name`** — and note that its first cut split on `/` only, the same
+  Windows-green/CI-red separator trap for the third time in this repo.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 

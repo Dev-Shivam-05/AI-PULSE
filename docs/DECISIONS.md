@@ -248,3 +248,36 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   after the thumbnail star.
 - **Animated clip frame counts CEIL to their slot share** — `int()` flooring left the
   clip 1/30s short, step5_build looped it, and animation frame 0 flashed at the cut.
+
+
+## 2026-08-31 — v3-F.1 the site (spec: docs/spec/ai-pulse-v3f1.md)
+- **`docs/.nojekyll` is committed, so Pages serves the directory verbatim.** There is no
+  Jekyll, no plugin allowlist and no build step — markdown would be served as raw text.
+  Anything published under `docs/` must therefore be written as HTML. (This closes the
+  jekyll-readme-index / jekyll-relative-links question: those plugins are irrelevant here.)
+- **The catalog is the source of truth, the HTML is a build artifact.**
+  `state/tools_index.json` is state (stashed + union-merged); `docs/*.html` is regenerated
+  from it after `state_merge` on every CI run. The PDFs still stash to /tmp because an LLM
+  wrote them once and they cannot be reproduced — HTML can, so regenerating beats copying.
+- **A derived artifact needs no stash, but its SOURCE needs both halves of the trap.**
+  `state/tools_index.json` is in `state_merge.FILES` *and* the publish.yml stash list, with
+  its own merge semantics (union keyed by `page`) — the generic list union dedups on exact
+  equality, so a retry with a new `video_url` would have printed the same tool twice.
+- **The description's 📄 line links the PAGE, not the PDF** (supersedes v3-C decision 8).
+  A PDF opened from mobile YouTube is a bad experience; the page carries the copy-button
+  command, the embed and the PDF as a download, and it is the URL F.2/F.3 will share. The
+  pinned comment carries the same promise, so it links the same place. One `<date>-<slug>`
+  stem serves both files, so the name is still decided before the upload.
+- **One extraction, two consumers** (`deliverable.sheet_for`): the PDF and the page render
+  the same sheet. A second `extract_sheet` call would pay for it twice and could disagree
+  with itself. A *raising* extraction now falls back instead of losing the sheet — the
+  module's own docstring already promised that, and only the `return None` path honoured it.
+- **`cheat_sheet` was the `_CARRY` trap in a new place, and it was already live.**
+  `_validate_script` mutates the LLM dict in place, so a model-planted `cheat_sheet` key
+  survived: it was stamped into the PUBLISHED description and joined onto `TOOLS_DIR`,
+  where `../../../x.pdf` wrote outside `docs/` while the writer reported success. run()
+  now pops it beside the `receipts` pop (run() computes the name itself), and
+  `deliverable.safe_name()` basenames on BOTH separators and filters the charset.
+  Any future artifact name derived from model output goes through `safe_name`.
+- The first cut of `safe_name` split on `/` only — green on Windows, red on the ubuntu
+  runner. That is the **third** time this exact trap has been hit in this repo.
