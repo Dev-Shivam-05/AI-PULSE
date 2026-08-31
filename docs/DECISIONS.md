@@ -281,3 +281,37 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   Any future artifact name derived from model output goes through `safe_name`.
 - The first cut of `safe_name` split on `/` only — green on Windows, red on the ubuntu
   runner. That is the **third** time this exact trap has been hit in this repo.
+
+### v3-F.1 review pass — what the 9 defects taught (2026-08-31)
+
+- **Popping a plantable `_CARRY` key ONCE in `run()` is not a fix.** `critique_pass`,
+  `enforce_length` and `enforce_max_length` each validate again afterwards, and
+  `_carry_over` restores only a key it finds in the source — so a value planted in a
+  *later* rewrite answer survives. The pop belongs inside `_validate_script`, which every
+  pass runs before `_carry_over` hands the legitimate value back. This is why v3-E.2's
+  `receipts` fix was incomplete too: both keys are now popped in one place.
+- **`html.escape` is not URL validation.** A scheme is not a metacharacter, so an escaped
+  `javascript:` href is still script execution — on our own Pages origin, from a URL a
+  model wrote while grounded in a third-party README. `screencap.py` had guarded this exact
+  field with `startswith("http")` since v3-B; the site did not inherit it. When a field is
+  already treated as untrusted somewhere in the repo, find that guard before writing a new
+  consumer.
+- **A whole-loop `try` around artifact writes is a silent freeze.** One unreadable page
+  file aborted `rebuild`'s loop, skipping the index and sitemap writes below it — the site
+  froze at its last good state on every future run, while `publish_page` still returned a
+  URL and the ledger still recorded `tool_page=True`. Per-item `try/except: continue`.
+- **Sanitising the write path is not enough if other surfaces publish the raw value.**
+  `rebuild` cleaned the file name; the canonical, the index href and the sitemap `<loc>`
+  used the raw one, so they could advertise a URL the generator had refused to create. One
+  function (`entry_name`) now answers for all four.
+- **A guard placed after `sorted()` never runs.** `render_sitemap`'s `isinstance` filter
+  ran on the sorted output, so the non-dict it was written for reached `.get()` first.
+  Filter, then sort.
+- **A boolean config key must use `fv.flag`, never `fv.setting`.** `setting` returns an env
+  var as a string and `bool("false")` is `True`, so `site_pages` could not be turned off
+  from Actions. Every new kill-switch goes through `flag`.
+- **Truncating a file name must not eat its extension.** `safe_name`'s `[:120]` cut after
+  the dot, leaving the PDF writer and the page linker looking for different files.
+- **When a fail-soft seam returns `None`, the consumer must be told.** `make_cheat_sheet`
+  returning `None` still produced a page advertising the download; `run()` had the answer
+  and discarded it. Pass the result, do not re-derive the assumption.

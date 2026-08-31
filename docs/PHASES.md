@@ -14,7 +14,7 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-C.4: tool suitability screen precision** | the never-reviewed `UNSUITABLE_TOOL` list measured against live feeds, 28 flagship tools and 11 defensive tools: prose words (`bypass`/`crack`) screen the title only, subject terms exempt a defensive reading, repo punctuation normalises, GitHub grounds on the raw README while the screen still reads the page | ✅ done 2026-08-24 (117/117; 5 defects, each reproduced then fixed; verified against live network) | `v3-phase-c`; spec: docs/spec/ai-pulse-v3c4.md |
 | **v3-E: receipts + packaging precision** | the 12-rank gap audit vs Hyperautomation Labs, code side: `verified_facts` (stars/size/license fetched per candidate, fed to writer + cards + thumb), command-containment gate (deliverable.text must be a substring of the README), packaging-payoff gate (every number in title/thumb must be spoken in narration), limitation scene grounded in the repo's top GitHub issues, `receipts.py` (safe CI checks: pip download timing/size, registry lookups → 'Checked by <channel> on <date>' beat + real terminal footage), declarative numeric thumb contract, deterministic tool chapters, per-lane pinned comment (command + PDF link), PDF upgraded to HAL-style field guide (per-item stars/license/'Honest:' line), post-rename brand asset regen ('AI YOU CAN USE'), ElevenLabs seam behind a flag for the 10-video verdict window (~$11 once, Creator first-month; fail-soft to kokoro) | ✅ part 1 done 2026-08-24 (129/129; 11 review findings fixed; artifacts inspected: PDF receipts line, ToolDojo bumpers, live API fetches) | `v3-phase-c`; spec: docs/spec/ai-pulse-v3e.md |
 | **v3-E.2: receipts.py** | safe CI check-execution (download-only: wheels via `--only-binary :all:` `--no-cache-dir`, shallow clone, wall-clock+size-capped fetch — candidate code never executes), 'Checked by ToolDojo on <date>' narration beat on the install scene (before `packaging_payoff`, so its numbers support the thumb), real terminal footage rendered to its exact slot share, `receipts` ledger column | ✅ done 2026-08-24 (137/137; live cold check openai 3.3.1 + frames inspected twice — 1st inspection caught 3 defects incl. the tofu ✔; 70-agent adversarial review: 9 root-cause defects + 5 upheld splits, all fixed & test-pinned, incl. an unbounded fetch that could hang both cron firings and an LLM-plantable `script["receipts"]` in the double-publish zone) | `v3-phase-c`; spec: docs/spec/ai-pulse-v3e2.md |
-| **v3-F.1: the site** | `factverse/site.py`: one HTML page per tool video + regenerated index + sitemap, rendered from `state/tools_index.json` (in `state_merge.FILES` with its own union-by-`page` semantics AND the publish.yml stash list); the description's 📄 line now links the PAGE, not the PDF; `deliverable.sheet_for` feeds both from one extraction | ✅ done 2026-08-31 (153/153; site rendered and screenshotted at 1280/390 — 2 defects found by inspection and fixed; a probed path-traversal via a model-planted `cheat_sheet` closed at two layers) | `v3-phase-f` (stacked on `v3-phase-c`); spec: docs/spec/ai-pulse-v3f1.md; needs the Pages click to go live |
+| **v3-F.1: the site** | `factverse/site.py`: one HTML page per tool video + regenerated index + sitemap, rendered from `state/tools_index.json` (in `state_merge.FILES` with its own union-by-`page` semantics AND the publish.yml stash list); the description's 📄 line now links the PAGE, not the PDF; `deliverable.sheet_for` feeds both from one extraction | ✅ done 2026-08-31 (161/161; site rendered and screenshotted at 1280/390 — 2 defects found by inspection and fixed; then a 2-lens adversarial review found 9 reproduced defects, all fixed and test-pinned, incl. a planted `cheat_sheet` that survived the LATER rewrite passes and shipped in the published description, an unchecked `javascript:` href on our own Pages origin, and one bad file freezing the index forever) | `v3-phase-f` (stacked on `v3-phase-c`); spec: docs/spec/ai-pulse-v3f1.md; needs the Pages click to go live |
 | v3-F.2: Telegram channel bot | the day's video + command + page link pushed to a Telegram channel (bot token in Actions secrets), fail-soft | ⏳ queued | needs a bot token; the page's OG card is what it will render |
 | v3-F.3: X free tier | one post per video off the same catalog row | ⏳ queued | free tier is ~500 posts/mo — enough for 1/day |
 | v3-F.4: IG/FB Reels | the existing Shorts re-used as-is via the Graph API | ⏳ queued | platform order per audit wf_5c0e184c |
@@ -36,11 +36,16 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. Merge PR #23 (`v3-phase-b`), then open + merge `v3-phase-c`
-   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c). test.yml runs the 117-test
-   suite on each PR automatically.
+1. Merge the branch stack IN ORDER — each is stacked on the one before it:
+   PR #23 (`v3-phase-b`) → `v3-phase-c`
+   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c) → `v3-phase-f`
+   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-f). test.yml runs the
+   161-test suite on each PR automatically.
 2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
-   done every cheat-sheet link 404s.
+   done every cheat-sheet link AND every tool page 404s. After the first tool run, `curl -I`
+   BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.
+   If the page is stale after a run, `GITHUB_TOKEN` pushes did not trigger the Pages build and
+   it needs the Actions-based deploy instead of branch-deploy (a small F.1b row).
 3. **`gates.UNSUITABLE_TOOL` has now been measured and fixed** (v3-C.4) — it was refusing
    ComfyUI, unsloth, transformers, the official C2PA SDK/CLI, two deepfake detectors, two NSFW
    classifiers and NeMo-Guardrails, while the day's live provenance stripper passed its title
@@ -73,11 +78,14 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `l2_usage.json` on every run — so the store can now be refilled safely.
 
 ## Next 3
-1. v3-F — distribution engine (Pages becomes a real site, Telegram bot, Meta Reels seam) —
-   needs the owner's Pages click first; platform order per audit wf_5c0e184c.
+1. **v3-F.2 — Telegram channel bot.** The natural next build: the tool page already emits the
+   OG card Telegram renders, so the remaining work is a bot token in Actions secrets, a
+   fail-soft `notify.py` seam, and one post per published video (title + command + page link).
+   Needs no Pages click to develop — only to look right when clicked.
 2. v3-D — learning loop v1 once ~2 weeks of post-2026-08-24 analytics exist (target: AVD ≥ 2:00);
-   the ledger now carries `packaging`, `grounding_chars` and `receipts` columns for it.
+   the ledger now carries `packaging`, `grounding_chars`, `receipts` and `tool_page` columns.
 3. v3-B.1 (only if the first CI tool runs show it) — capture hardening from real logs: PH/HF page
    quirks, CI chromium sandbox, recording length vs 900-word scripts. On the first live tool run,
    also read the receipts log line (🧾 worked / ↻ not checkable / ⚠️ failed — all three still
-   ship a video; only a repeating ⚠️ across days means a threshold is wrong).
+   ship a video; only a repeating ⚠️ across days means a threshold is wrong) and the site line
+   (🌐 Page: <url> worked / ⚠️ site page failed — the video still ships either way).
