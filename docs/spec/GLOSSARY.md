@@ -16,6 +16,15 @@
   non-empty = inserted verbatim after the cheat-sheet line (tool) / after paragraph 1 (others).
 - **deliverable block** — the description lines `🔧 Try it yourself:` + command + source +
   `📄 Free 1-page cheat sheet: <url>`, placed after paragraph 1 (spec v3-C decision 7).
+  Since v3-F.1 that `<url>` is the **tool page**, not the PDF.
+- **tool page** — the v3-F.1 HTML page written per tool video to `docs/tools/<date>-<slug>.html`
+  (same stem as its PDF) by `factverse/site.py`: command + Copy button, what/uses/skip_if, the
+  video embed, the PDF as a download. What the description and pinned comment link.
+- **catalog** — `state/tools_index.json`, the list of tool-page entries. The single source of
+  truth for the site: `docs/index.html`, `docs/sitemap.xml` and every tool page are regenerated
+  from it (`python -m factverse.site`) after `state_merge` on every CI run.
+- **safe_name** — `deliverable.safe_name()`: basenames on BOTH separators and filters the
+  charset. Every artifact file name derived from model output must pass through it.
 - **_CARRY** — the top-level script keys every LLM rewrite pass must copy across
   (`format, grounding, roundup_items, signal_title, synthesis_claim, filter_segment,
   hook_pattern, deliverable, cheat_sheet`). A pass that forgets one silently changes the video.
