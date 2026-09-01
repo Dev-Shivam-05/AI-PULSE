@@ -62,6 +62,16 @@ F.2 already built for exactly this reason.
   `_post_telegram` had the same shape (`enabled()` / `_token()`) and was fixed with it;
   its handler now redacts with the token it captured, not by calling `_token()` again,
   because the read that raised must not be re-run inside the handler meant to survive it.
+- **The last-resort title cut measures the RESULT, not the sum of its characters.**
+  Found in the self-review: `weighted_len` charges a URL 23 whatever its length, so a
+  title carrying a *short* URL measures more as a whole than character by character —
+  a `"https://a.io " * 40` title produced a **486**-weighted post, i.e. a 403 and a
+  silent no-post day. `_fit_title` now shrinks against the real measurement.
+- **`_URL_RE` is deliberately more permissive than X's own URL extractor.** The only
+  place that can under-count is a scheme-like token inside a `title` that X would not
+  treat as a link — and a title comes from YouTube, which caps it at 100 characters,
+  far below the point where the 280 budget bites at all. Accepted as a residual rather
+  than reimplementing `twitter-text`'s host grammar.
 - **A row is marked notified only after a successful post**, per surface. A failed post
   retries on the next firing and otherwise ages out of the 36 h window.
 

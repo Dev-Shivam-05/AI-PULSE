@@ -271,7 +271,10 @@ def format_message(row: dict, entry: dict | None = None) -> str:
 _WEIGHT_1_RANGES = ((0, 4351), (8192, 8205), (8208, 8210), (8214, 8238),
                     (8240, 8286), (8304, 8348), (8352, 8383))
 # We write every URL in these posts ourselves, so a whitespace-delimited scheme
-# match is the whole grammar we need.
+# match is the whole grammar we need. It is deliberately MORE permissive than X's
+# own extractor: the only place that could under-count is a scheme-like token
+# inside a `title`, and a title arrives from YouTube, which caps it at 100 chars —
+# far below the point where the budget bites at all.
 _URL_RE = re.compile(r"https?://\S+")
 
 
@@ -311,6 +314,13 @@ def _fit_title(title: str, budget: int) -> str:
     if " " in cut.strip():
         cut = cut[:cut.rstrip().rfind(" ")]
     cut = cut.rstrip()
+    # The per-character accumulation above can UNDER-count: weighted_len charges a
+    # URL 23 whatever its length, so a title containing a short URL measures more
+    # as a whole than as the sum of its characters. Measuring the real result and
+    # shrinking is the only exact answer, and an over-long post is a 403, i.e. a
+    # silent no-post day.
+    while cut and weighted_len(cut + "…") > budget:
+        cut = cut[:-1].rstrip()
     return (cut + "…") if cut else ""
 
 
@@ -455,7 +465,10 @@ def send_x(text: str, secrets=None) -> bool:
 
     No retry (F.3 #5): X answers a repeated post with 403 `duplicate content`, so
     retrying a call that may have half-succeeded is how one video becomes two."""
-    ck, cs, at, ats = _x_secrets() if secrets is None else tuple(secrets)
+    try:
+        ck, cs, at, ats = _x_secrets() if secrets is None else tuple(secrets)
+    except (TypeError, ValueError):     # not four values: unconfigured, not a crash
+        return False
     if not (text and ck and cs and at and ats):
         return False
     hide = (cs, ats, at, ck)

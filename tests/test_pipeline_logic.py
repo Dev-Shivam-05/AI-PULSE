@@ -3224,8 +3224,13 @@ def test_post_sheds_by_value_and_only_then_cuts_the_title(monkeypatch):
     assert p3.startswith("\U0001F527 word word") and p3.endswith(video)
     assert p3.count("…") == 1 and p3.split("\n")[0].endswith("word…")
 
-    # 4. a title with no spaces at all still fits, and so does a CJK one (2 apiece)
-    for title in ("A" * 600, "日" * 400, "\U0001F600" * 300):
+    # 4. a title with no spaces at all still fits, and so does a CJK one (2 apiece).
+    #    The URL cases are the ones a per-character cut gets wrong on its own:
+    #    weighted_len charges a URL 23 whatever its length, so a title carrying a
+    #    SHORT url measures more as a whole than as the sum of its characters.
+    for title in ("A" * 600, "日" * 400, "\U0001F600" * 300,
+                  "https://a.io " * 40, ("word " * 60 + "https://a.io ") * 3,
+                  "https://a.io" + "B" * 400):
         post = notify.format_post(_row(title=title), _entry())
         assert notify.weighted_len(post) <= notify.MAX_POST, title[:4]
         assert post.endswith(video)
@@ -3254,6 +3259,9 @@ def test_send_x_posts_the_locked_payload(monkeypatch):
         creds = ["CK", "CS", "AT", "ATS"]
         creds[i] = ""
         assert notify.send_x("hi", tuple(creds)) is False, i
+    # a malformed credential tuple is "unconfigured", not a crash
+    for bad in ((), ("CK",), ("CK", "CS", "AT", "ATS", "EXTRA"), 42):
+        assert notify.send_x("hi", bad) is False, bad
     assert calls == []
 
 
