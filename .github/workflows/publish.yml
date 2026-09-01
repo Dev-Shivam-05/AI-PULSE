@@ -10,7 +10,12 @@ on:
   schedule:
     - cron: "23 12 * * *"     # 12:23 UTC ≈ 5:53 PM IST — primary
     - cron: "53 14 * * *"     # 14:53 UTC ≈ 8:23 PM IST — retry (skips if day is done)
-  workflow_dispatch: {}        # manual trigger from the Actions tab (also guard-protected)
+  workflow_dispatch:           # manual trigger from the Actions tab (also guard-protected)
+    inputs:
+      format:
+        description: "Force a lane for a supervised run: news | evergreen | roundup | tool (blank = automatic)"
+        required: false
+        default: ""
 
 permissions:
   contents: write              # save used-topics / production-log state back to the repo
@@ -51,6 +56,20 @@ jobs:
       - name: Install Python deps
         run: pip install -r requirements-ci.txt
 
+      # v3-B: tool videos are illustrated by screen-recording the tool's page.
+      # The browser is ~130MB — cache it so only the first run downloads.
+      - name: Cache Playwright Chromium
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('requirements-ci.txt') }}
+
+      # Never a hard gate: screencap.capture() falls back to stock visuals when
+      # the browser is missing, so a download hiccup must not cost the day's video.
+      - name: Install Playwright Chromium
+        continue-on-error: true
+        run: python -m playwright install --with-deps chromium
+
       - name: Write credentials from secrets
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -63,7 +82,38 @@ jobs:
           echo "$YT_TOKEN_B64" | base64 -d > youtube_token.pickle
 
       - name: Generate + publish a video (+ Shorts)
-        run: python -m factverse.ai_pipeline publish
+        # Actions does not put GITHUB_TOKEN in a step's process environment, so
+        # _notify_review found no token and printed the veto window to the log
+        # instead of opening the review issue — a NOTIFY-routed video published
+        # unattended with nobody able to veto it. `permissions: issues: write` is
+        # already granted above; this just hands the token over, as the
+        # alert-on-failure step already does.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # v3-E #11: an unset secret expands to "", available() stays False —
+          # the seam costs nothing until the owner creates the secret.
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        # the forced lane is empty on scheduled runs (the shell drops the empty arg)
+        run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
+
+      # v3-F.4: the day's first Short, re-uploaded as an IG Reel and an FB Reel.
+      # It runs HERE, not on notify.yml with Telegram/X, because output/shorts/ is
+      # gitignored and dies with this runner — announcing a link can happen
+      # anywhere, re-uploading a file can only happen where the file is. The
+      # caption carries no YouTube URL, so the long-form still being private until
+      # 16:45 UTC costs nothing. Own process, always exits 0, and it must stay
+      # ABOVE the state-save or state/notified_{ig,fb}.json are never persisted.
+      - name: Post the Short as IG / FB Reels
+        if: always()
+        continue-on-error: true
+        env:
+          # v3-F.4 #5: an unset secret expands to "" and the module logs
+          # "not configured" and exits 0 — the seam costs nothing until the owner
+          # creates the Meta app (docs/spec/ai-pulse-v3f4.md).
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+          META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+        run: python -m factverse.reels
 
       # Learning-loop data: daily channel/video performance snapshot (never fatal)
       - name: Collect channel analytics
@@ -81,15 +131,47 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           ok=0
           for i in 1 2 3; do
-            mkdir -p /tmp/state_incoming
+            mkdir -p /tmp/state_incoming /tmp/tools_incoming /tmp/brand_incoming
             for f in used_topics.json used_urls.json output/production_log.json \
-                     state/failed_topics.json state/runs.jsonl state/analytics.jsonl; do
+                     state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
+                     state/l2_usage.json state/stock_ledger.json state/tools_index.json \
+                     state/notified.json state/notified_x.json \
+                     state/notified_ig.json state/notified_fb.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
+            # Cheat sheets need the same stashing as state. On pass 1 the PDF is
+            # untracked and survives the checkout; on a RETRY it is committed to the
+            # local main we are about to discard, and `checkout -B` deletes it. The
+            # published description already links that file, so losing it here is a
+            # permanent 404 on the video.
+            cp docs/tools/*.pdf /tmp/tools_incoming/ 2>/dev/null || true
+            # Brand bumpers + stamp ride together (the CLAUDE.md tracked-file trap):
+            # persisting only .brand would freeze stale old-brand bumpers forever.
+            cp assets/.brand assets/intro.mp4 assets/outro.mp4 /tmp/brand_incoming/ 2>/dev/null || true
+            # A workflow_dispatch runs from a feature branch, where the run's own
+            # writes to tracked state files differ from origin/main. `checkout -B`
+            # then REFUSES ("local changes would be overwritten by checkout") and
+            # under `bash -e` the step dies right here — before state_merge, before
+            # `git add docs/tools`, before the commit. Commit them onto the branch
+            # we are about to throw away: the checkout then always succeeds, and
+            # nothing is lost because state and PDFs are already stashed in /tmp.
+            git commit -am "wip: run artifacts [skip ci]" --quiet || true
             git fetch origin main --quiet
             git checkout -B main origin/main --quiet
+            mkdir -p docs/tools
+            cp /tmp/tools_incoming/*.pdf docs/tools/ 2>/dev/null || true
+            cp /tmp/brand_incoming/.brand /tmp/brand_incoming/*.mp4 assets/ 2>/dev/null || true
             python -m factverse.state_merge /tmp/state_incoming
+            # v3-F.1: the site is DERIVED from the merged catalog, so it is rebuilt
+            # here rather than stashed — regenerating cannot lose a page the way
+            # copying a stale copy over the merged one could. Never fatal.
+            python -m factverse.site || true
             git add used_topics.json used_urls.json output/production_log.json state 2>/dev/null || true
+            # separate add: an unmatched pathspec fails the WHOLE git add, and losing
+            # topic state to a missing cheat-sheet dir would cause duplicate videos
+            git add docs/tools 2>/dev/null || true
+            git add docs/index.html docs/sitemap.xml 2>/dev/null || true
+            git add assets/.brand assets/intro.mp4 assets/outro.mp4 2>/dev/null || true
             if git commit -m "state update [skip ci]" --quiet; then
               if git push origin main; then ok=1; break; fi
             else

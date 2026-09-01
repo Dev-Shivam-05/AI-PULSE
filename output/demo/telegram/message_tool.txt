@@ -1,0 +1,8 @@
+🔧 <b>Run any LLM locally in 2 minutes (Ollama)</b>
+
+<code>curl -fsSL https://ollama.com/install.sh | sh</code>
+
+A one-binary local model runner: pull a model, chat with it offline, no API key and no data leaving the machine.
+
+📄 Cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-08-31-run-any-llm-locally-in-2-minutes-ollama.html
+▶ https://youtube.com/watch?v=dQw4w9WgXcQ

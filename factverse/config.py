@@ -104,6 +104,9 @@ TTS_PROVIDER = setting("tts_provider", "edge")
 STOCK_PROVIDER = setting("stock_provider", "pexels")
 VIDEO_PROVIDER = setting("video_provider", "none")
 
+# v3-E #9: the writer gets the stronger free-tier model; gates stay on flash-lite.
+# llm.generate() falls back down the chain on a quota miss, so this can only help.
+WRITER_MODEL = setting("writer_model", "gemini-2.5-flash")
 VOICE = setting("voice", "en-US-GuyNeural")
 RATE = setting("voice_rate", "+5%")
 KOKORO_VOICE = setting("kokoro_voice", "af_heart")
@@ -121,6 +124,7 @@ def flag(name: str, default: bool = False) -> bool:
 # One place to rebrand the channel. Change channel_name in config.json anytime.
 CHANNEL_NAME = setting("channel_name", "AI Pulse")
 CHANNEL_HANDLE = setting("channel_handle", "aipulse")
+TAGLINE = setting("tagline", "AI YOU CAN USE")   # v3-E #10
 CHANNEL_TAGLINE = setting("channel_tagline", "AI news, decoded")
 
 # --------------------------------------------------------------- paths ------

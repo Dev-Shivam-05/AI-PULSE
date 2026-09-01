@@ -273,6 +273,19 @@ def step4_voice(script):
 # ============================================================
 # STEP 5: BUILD VIDEO (SPEED OPTIMIZED)
 # ============================================================
+def sub_durations(scene_dur, planned, survived):
+    """Per-clip durations for a scene, re-timed to the clips that actually encoded.
+
+    The scene's total must be preserved no matter how many clips landed: the
+    audio is the master track and every later scene simply follows, so a scene
+    that comes out short slides the WHOLE REST of the video earlier against the
+    narration. `planned` is kept in the signature so the caller reads as intent.
+    """
+    if survived <= 0:
+        return []
+    return [scene_dur / survived] * survived
+
+
 def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
     print("\n[5/10] 🎬 Building video (720p, ultrafast)...")
 
@@ -318,26 +331,39 @@ def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
             
         else:
             # Multiple clips — join for variety
-            clip_dur = sdur / len(clips)
-            subs = []
-            
-            for j, clip in enumerate(clips):
-                sub = TEMP / f"sub_{i:03d}_{j}.ts"
-                cd = dur(clip)
-                if cd <= 0: cd = 5
-                loops = max(0, int(math.ceil(clip_dur/cd)) - 1)
-                
-                ok = safe_run([
-                    "ffmpeg","-y","-stream_loop",str(loops),
-                    "-i",clip,"-t",str(clip_dur),
-                    "-vf",f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease,pad={WIDTH}:{HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,fps={FPS}",
-                    "-c:v","libx264","-preset",PRESET,"-crf","23",
-                    "-an","-f","mpegts",str(sub)
-                ], timeout=600, label=f"sub{i}_{j}")
-                
-                if sub.exists() and sub.stat().st_size > 1000:
-                    subs.append(str(sub))
-            
+            def _encode_subs(sources, each_dur):
+                out = []
+                for j, clip in enumerate(sources):
+                    sub = TEMP / f"sub_{i:03d}_{j}.ts"
+                    cd = dur(clip)
+                    if cd <= 0: cd = 5
+                    loops = max(0, int(math.ceil(each_dur/cd)) - 1)
+
+                    safe_run([
+                        "ffmpeg","-y","-stream_loop",str(loops),
+                        "-i",clip,"-t",str(each_dur),
+                        "-vf",f"scale={WIDTH}:{HEIGHT}:force_original_aspect_ratio=decrease,pad={WIDTH}:{HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,fps={FPS}",
+                        "-c:v","libx264","-preset",PRESET,"-crf","23",
+                        "-an","-f","mpegts",str(sub)
+                    ], timeout=600, label=f"sub{i}_{j}")
+
+                    if sub.exists() and sub.stat().st_size > 1000:
+                        out.append((clip, str(sub)))
+                return out
+
+            planned = len(clips)
+            made = _encode_subs(clips, sdur / planned)
+            # A clip that failed to encode used to just vanish, leaving the scene
+            # short by its whole share — and since the audio is the master track,
+            # every later scene slid earlier against the narration. Re-time the
+            # survivors so the scene still fills its slot.
+            if made and len(made) < planned:
+                print(f"  ↻ Scene {i+1}: {planned - len(made)} clip(s) failed — "
+                      f"re-timing {len(made)} to keep the scene's {sdur:.1f}s")
+                durs_ = sub_durations(sdur, planned, len(made))
+                made = _encode_subs([c for (c, _s) in made], durs_[0])
+            subs = [s for (_c, s) in made]
+
             if subs:
                 ci = "concat:" + "|".join(subs)
                 safe_run(["ffmpeg","-y","-i",ci,"-c","copy","-f","mpegts",str(seg)],

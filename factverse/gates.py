@@ -31,6 +31,96 @@ SENSITIVE = ("finance", "financial", "invest", "stock", "portfolio", "trading",
              "legal", "lawsuit", "law ", "regulation", "tax",
              "politic", "election", "policy maker", "government")
 
+# v3 tool lane: a hands-on "here is how to run it" video is an ENDORSEMENT, which
+# reporting on the same tool would not be. These are the categories this channel
+# will not teach — circumventing provenance/authenticity, defeating safety, and
+# piracy — because a monetised, unattended channel cannot survive one of them.
+#
+# The list is split by SURFACE because a term does not mean the same thing in a
+# 90-char repo name as in 5,000 chars of prose (spec v3-C.4, measured 2026-08-24).
+#
+# Terms that identify a tool by what it IS. Matched on the title AND the README:
+# they carry no innocent meaning in AI-tool documentation. Edit this list; it is
+# deliberately narrow.
+UNSUITABLE_TOOL = ("watermark remov", "watermarks remov", "remove watermark",
+                   "remove any watermark", "remove all watermark", "unwatermark",
+                   "strip provenance", "provenance mark",
+                   "ai detector bypass", "detector evasion",
+                   "humanize ai text", "humanizer",
+                   "uncensored", "abliterated", "obliterated",
+                   "voice clon", "clone voice",
+                   "undress", "nudify", "deepnude",
+                   "nulled", "keygen", "piracy")
+
+# Words that only mean something when they NAME the tool. Title only.
+# Measured over 28 flagship AI tools: unsloth's Windows install line is
+# `set-executionpolicy -scope process -executionpolicy bypass`, ComfyUI binds
+# ctrl+b to "bypass selected nodes", and transformers ships a "wise-cracking
+# robot" example prompt. Screening these against a README refuses the tools this
+# lane exists to teach; screening them against the name still catches "GPTBypass".
+UNSUITABLE_NAME_ONLY = ("bypass", "crack", "torrent", "unfiltered")
+
+# Subjects where the tool that DETECTS the thing is the opposite of the tool that
+# DOES it. Blocked UNLESS the text reads as defensive near the term. Measured:
+# these four terms refused the official C2PA SDK and CLI (added to stop provenance
+# STRIPPERS, they blocked the STANDARD), two deepfake detectors, two NSFW safety
+# classifiers, and NVIDIA NeMo-Guardrails. A "how to detect this" video is the
+# utility lane's best content, not its worst.
+UNSUITABLE_SUBJECT = ("nsfw", "deepfake", "deep fake", "face swap", "faceswap",
+                      "c2pa", "synthid", "jailbreak")
+
+# How close a defensive word must sit to the subject term. Measured across the six
+# blocked defensive tools the nearest defensive word was 5-69 chars away; in the
+# live provenance stripper it was 1,049. 120 covers the observed 69 with ~1.7x
+# margin and sits ~9x below the control — the same derivation as TOOL_GROUNDING_MIN.
+DETECTOR_WINDOW = 120
+
+_DEFENSIVE = re.compile(r"detector|detection|classif|forensic|verif|validat|"
+                        r"display|inspect|moderat|protect|guard|defen|mitigat|benchmark")
+# An evasion claim contains a defensive word and inverts it: "undetectable
+# deepfake", "anti-detection technology". It cancels the exemption.
+_EVASION = re.compile(r"undetect|anti detect|evad|defeat")
+
+
+def _norm_terms(s: str) -> str:
+    """Hyphens, underscores and the owner/name slash are how a repo spells a phrase.
+    Matching them as spaces closes a whole class of misses in one line: measured
+    2026-08-24, the live `ShadowAqueduct/watermark-remover` PASSED the title screen
+    because the list held `watermark remov` (space) and `watermarks-remover`."""
+    return re.sub(r"\s+", " ", re.sub(r"[-_/]+", " ", f" {s} ".lower()))
+
+
+def _reads_as_defensive(text: str, at: int, span: int) -> bool:
+    """Does a defensive word sit within DETECTOR_WINDOW of this occurrence, with no
+    evasion claim in the same window?"""
+    w = text[max(0, at - DETECTOR_WINDOW): at + span + DETECTOR_WINDOW]
+    return bool(_DEFENSIVE.search(w)) and not _EVASION.search(w)
+
+
+def tool_unsuitable(title: str, text: str = "") -> tuple[bool, str]:
+    """Should this tool get a hands-on tutorial? Returns (blocked, matched term).
+
+    Unlike sensitive_topic_risk this DOES reject: the tool lane teaches the viewer
+    to run the thing, and build_script simply moves to the next candidate."""
+    t_title = _norm_terms(title)
+    t_all = _norm_terms(f"{title} {text}")
+    for k in UNSUITABLE_TOOL:
+        if k in t_all:
+            return True, k
+    for k in UNSUITABLE_NAME_ONLY:
+        if k in t_title:
+            return True, k
+    for k in UNSUITABLE_SUBJECT:
+        # A long README names its subject many times; one defensive mention is
+        # enough to exempt the document, so only reject when NO occurrence reads
+        # as defensive (Falconsai's card mentions "nsfw" 381 chars from the
+        # nearest defensive word once, and adjacent to one five times).
+        found = [m.start() for m in re.finditer(re.escape(k), t_all)]
+        if found and not any(_reads_as_defensive(t_all, i, len(k)) for i in found):
+            return True, k
+    return False, ""
+
+
 _ADVICE_PATTERNS = re.compile(
     r"\b(you should (buy|sell|invest|take|sue|vote)|"
     r"(buy|sell) (the stock|shares|now)|"
@@ -38,6 +128,67 @@ _ADVICE_PATTERNS = re.compile(
     r"(medical|legal|financial) advice|"
     r"talk to your (doctor|lawyer) is not needed|"
     r"what this means for your portfolio)\b", re.I)
+
+
+# A packaging number: optional $, digits, optional magnitude suffix (K/M/B/X) or %.
+# The suffix is INSIDE the token so a strip removes the whole unit — the review
+# reproduced "180K STARS" stripping to the residue "K STARS" and burning it on the
+# thumbnail. The lookbehind keeps digits glued into a name ("GPT-5") unmatched.
+_NUM_TOKEN = re.compile(r"(?<![\w.-])(?:\$ ?)?\d[\d,.]*(?:\s?[KMBX]\b|%)?", re.I)
+
+
+def _num_core(tok: str) -> str:
+    core = re.sub(r"[KMBX]$", "", str(tok).replace(",", "").strip("$% ."), flags=re.I)
+    return core.strip()
+
+
+def packaging_payoff(script: dict) -> dict:
+    """spec v3-E #3: every number token in title/thumb_text must be supported —
+    spoken in the narration, present in the grounding (the contract licenses "a
+    number from the source"), or a numeric verified fact. Token-exact comparison,
+    not substring: the review showed bare containment lets a fabricated "10" ride
+    on any digit pair anywhere in the text. Mutates the script deterministically,
+    never raises — this runs inside the unattended publish path.
+
+    Why it exists: the 2026-08-21 run shipped title "Secret AI Cash Cow?" and hook
+    "you won't believe how much" over 17 scenes containing zero dollar figures.
+    fact_check verifies claims that exist; an ABSENT promised number passed every gate."""
+    spoken = " ".join(sc.get("narration", "") for sc in script.get("scenes") or [])
+    support_text = (spoken + " " + str(script.get("grounding") or "")).replace(",", "")
+    support_text += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values()
+                                   if isinstance(v, (int, float)))
+    support = {_num_core(t) for t in _NUM_TOKEN.findall(support_text)}
+
+    def _ok(tok: str) -> bool:
+        core = _num_core(tok)
+        return bool(core) and core in support
+
+    fixed, evidence = [], []
+    for field in ("title", "thumb_text"):
+        val = str(script.get(field) or "")
+        if not val:
+            continue
+        bad = [t for t in _NUM_TOKEN.findall(val) if not _ok(t)]
+        if not bad:
+            continue
+        newv = _NUM_TOKEN.sub(lambda m: m.group(0) if _ok(m.group(0)) else " ", val)
+        newv = re.sub(r"\s{2,}", " ", newv).strip(" .,:—-")
+        if field == "thumb_text" and not any(c.isdigit() for c in newv):
+            # a thumb only reaches here when a number was stripped, so digitless
+            # residue ("K STARS", "X FASTER") is mangled by definition — blank it
+            # and the composers' existing `or title` fallback takes over.
+            newv = ""
+        # the hands-on template belongs to the tool lane ONLY: the gate runs on
+        # every format, and "How to use <outlet> (free)" on a news video would be
+        # a wrong-lane title carrying a promise nobody scripted.
+        if field == "title" and len(newv.split()) < 4 and script.get("format") == "tool":
+            tool = str(script.get("signal_title") or script.get("title") or "").split(":")[0]
+            tool = tool.split("/")[-1].strip() or "this tool"
+            newv = f"How to use {tool} (free)"
+        evidence.append(f"{field}: {bad}")
+        script[field] = newv
+        fixed.append(field)
+    return {"ok": not fixed, "fixed": fixed, "evidence": evidence}
 
 
 def sensitive_topic_risk(title: str, summary: str = "") -> bool:
@@ -55,7 +206,10 @@ def advice_framing(script_text: str) -> dict:
     hit = _ADVICE_PATTERNS.search(script_text or "")
     if hit:
         return {"advice": True, "evidence": hit.group(0), "method": "regex"}
-    if not sensitive_topic_risk(script_text[:2000]):
+    # The window used to be script_text[:2000]. A 900-word script is ~5,500 chars,
+    # so a finance/health/legal turn in the last two thirds never armed this check.
+    # The screen is a keyword scan over a 20-item tuple — the full text is free.
+    if not sensitive_topic_risk(script_text or ""):
         return {"advice": False, "method": "regex"}
     d = llm.generate_json(
         "Does this video script give PRESCRIPTIVE ADVICE to viewers about finance, health, "
@@ -91,12 +245,18 @@ def extract_claims(script: dict, hook_texts: list[str]) -> list[dict]:
     return out[:12]
 
 
+# Below this much readable source text the fact-checker cannot say anything
+# useful, so it skips. The story lanes reuse it as their grounding floor: if this
+# gate cannot run, there is nothing to write a sourced video from (spec v3-C.2 #2).
+FACTCHECK_MIN_CHARS = 200
+
+
 def fact_check(script: dict, hook_texts: list[str], sources_text: str) -> dict:
     """Claim-level verification against the bound sources.
     Returns {passed, critical_failures[], soft_failures[], checked}.
     A critical (hook/thumbnail) claim that cannot be traced to a source is a
     HARD FAIL; soft failures strip confidence instead."""
-    if not sources_text or len(sources_text) < 200:
+    if not sources_text or len(sources_text) < FACTCHECK_MIN_CHARS:
         return {"passed": True, "checked": 0, "critical_failures": [],
                 "soft_failures": [], "note": "no grounding available (evergreen) — skipped"}
     claims = extract_claims(script, hook_texts)

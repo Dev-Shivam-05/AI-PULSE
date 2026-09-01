@@ -169,9 +169,18 @@ def build_ass(words, out_ass: str, play_w: int = 1280, play_h: int = 720,
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text\n"
     )
     events = []
-    for ln in lines:
+    for li, ln in enumerate(lines):
         start = ln[0][0]
+        # Hold the finished phrase for 0.10s — but never past the next one's start.
+        # Phrases flush on max_words far more often than on a real pause, so the
+        # break usually lands mid-speech where word N+1 begins exactly when word N
+        # ends: unclamped, 86.4% of consecutive events in the 24 archived
+        # captions.ass files overlap, and libass STACKS overlapping events, putting
+        # the outgoing and incoming phrase on screen together.
         end = ln[-1][1] + 0.10
+        if li + 1 < len(lines):
+            end = min(end, lines[li + 1][0][0])
+        end = max(end, ln[-1][1])
         cursor = start
         text = ""
         for (st, en, w) in ln:

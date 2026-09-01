@@ -1,0 +1,6 @@
+🔧 Run Whisper locally in 3 commands (no API key)
+
+pip install faster-whisper && whisper-ctranslate2 audio.mp3
+
+📄 https://dev-shivam-05.github.io/AI-PULSE/tools/run-whisper-locally.html
+▶ https://www.youtube.com/watch?v=dQw4w9WgXcQ

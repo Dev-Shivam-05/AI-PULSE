@@ -124,8 +124,14 @@ def build_human_segment(wav, out: str, label: str = "THE TAKE") -> str | None:
     return str(out)
 
 
-def splice(video: str, segment: str, at: float) -> str:
-    """Insert `segment` into `video` at time `at` (re-encode concat, atomic)."""
+def splice(video: str, segment: str, at: float) -> str | None:
+    """Insert `segment` into `video` at `at` (re-encode concat, atomic).
+
+    Returns the video path on success and **None** on failure. It used to return
+    the untouched input either way, so the caller could not tell them apart: a
+    failed splice still consumed the clip permanently and still recorded it as
+    injected. The video itself is never lost — inject() keeps the input path.
+    """
     out = str(video).replace(".mp4", "_l2.mp4")
     nv = "scale=1280:720,setsar=1,fps=30"
     # every audio branch is format-normalized — concat requires identical
@@ -154,7 +160,7 @@ def splice(video: str, segment: str, at: float) -> str:
     except OSError:
         pass
     print("   ⚠️ human segment splice failed — continuing without it")
-    return video
+    return None
 
 
 def inject(video: str, insight_at: float | None):
@@ -165,20 +171,26 @@ def inject(video: str, insight_at: float | None):
     if co:
         seg = build_human_segment(co, str(fv.TEMP / "l2_cold.mp4"), label=fv.CHANNEL_NAME.upper())
         if seg:
-            video = splice(video, seg, 0.01)
-            _mark_used("cold_open", co.name)
-            record["cold_open"] = co.name
-            print(f"  🎙️ Human cold open injected: {co.name}")
+            spliced = splice(video, seg, 0.01)
+            # only a clip that is really IN the video may be consumed or recorded:
+            # every clip is usable once, and the record is the originality evidence
+            if spliced:
+                video = spliced
+                _mark_used("cold_open", co.name)
+                record["cold_open"] = co.name
+                print(f"  🎙️ Human cold open injected: {co.name}")
     ib = next_clip("insight")
     if ib and insight_at:
         seg = build_human_segment(ib, str(fv.TEMP / "l2_insight.mp4"), label="THE TAKE")
         if seg:
             # position shifts if a cold open was just prepended
             shift = _dur(fv.TEMP / "l2_cold.mp4") if record["cold_open"] else 0.0
-            video = splice(video, seg, insight_at + shift)
-            _mark_used("insight", ib.name)
-            record["insight"] = ib.name
-            print(f"  🎙️ Human insight block injected: {ib.name}")
+            spliced = splice(video, seg, insight_at + shift)
+            if spliced:
+                video = spliced
+                _mark_used("insight", ib.name)
+                record["insight"] = ib.name
+                print(f"  🎙️ Human insight block injected: {ib.name}")
     if not record["insight"]:
         print("  ⚠️ NO HUMAN INSIGHT BLOCK available (l2_store/insight_blocks/ is empty).")
         print("     This is the originality requirement — record a weekly batch. See docs/PROCESS.md.")

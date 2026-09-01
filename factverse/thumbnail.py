@@ -204,6 +204,38 @@ def _fit_cover(img: Image.Image, face=None) -> Image.Image:
     return img.crop((x0, y0, x0 + W, y0 + H))
 
 
+X_EDGE = 54               # the left inset both composers already drew at
+_SIZE_LADDER = (150, 118, 92)
+_FIT_FLOOR, _FIT_STEP = 72, 6    # make_tool_thumb's own shrink, reused
+
+
+def _headline(thumb_text: str, title: str) -> str:
+    """The words to burn: thumb_text if it has any, else the title.
+
+    thumb_text is optional (`_validate_script` never requires it) and run()
+    passes `script.get("thumb_text", "")`. `_wrap_two("")` returns [], so both
+    composers skipped the headline block and still saved and returned the
+    image — publishing a graded photo with no text on it. A whitespace value is
+    truthy, so the `or` fallbacks already in the callers never fired for it.
+    """
+    return " ".join(str(thumb_text or "").split()) or " ".join(str(title or "").split())
+
+
+def _headline_font(lines, x_edge: int = X_EDGE, start: int | None = None):
+    """Pick the ladder size for these lines, then MEASURE it against the frame.
+
+    The ladder is keyed on character count, which is not width: "OPENAI QUIETLY
+    SHIPPED A NEW REASONING MODEL" measures 1296px at the ladder's own floor of
+    92px, 72px off a 1280px frame.
+    """
+    from factverse import branding as _br
+    longest = max((len(l) for l in lines), default=0)
+    if start is None:
+        start = _SIZE_LADDER[0] if longest <= 9 else (
+            _SIZE_LADDER[1] if longest <= 13 else _SIZE_LADDER[2])
+    return _br.fit_font(_font, lines, start, W - 2 * x_edge, floor=_FIT_FLOOR, step=_FIT_STEP)
+
+
 def _wrap_two(text: str) -> list[str]:
     words = text.upper().split()
     if len(words) <= 2:
@@ -314,12 +346,10 @@ def _text_block(img: Image.Image, d: ImageDraw.ImageDraw, thumb_text: str):
     lines = _wrap_two(thumb_text or "")
     if not lines:
         return
-    longest = max(len(l) for l in lines)
-    size = 148 if longest <= 9 else (116 if longest <= 13 else 92)
-    f = _font(size)
+    size, f = _headline_font(lines)
     line_h = size + 30
     y = H // 2 - (line_h * len(lines)) // 2 + 6
-    x = 54
+    x = X_EDGE
     for i, line in enumerate(lines):
         last = i == len(lines) - 1
         if last and len(lines) > 1:
@@ -342,7 +372,7 @@ def _text_block(img: Image.Image, d: ImageDraw.ImageDraw, thumb_text: str):
         y += line_h
 
 
-def compose_creator(frame: Path, face, thumb_text: str, out: str) -> str | None:
+def compose_creator(frame: Path, face, thumb_text: str, out: str, title: str = "") -> str | None:
     """Cutout-person creator-style thumbnail. None if segmentation fails."""
     try:
         src = Image.open(frame).convert("RGB")
@@ -367,7 +397,7 @@ def compose_creator(frame: Path, face, thumb_text: str, out: str) -> str | None:
 
         d = ImageDraw.Draw(canvas, "RGBA")
         _accents(d)
-        _text_block(canvas, d, thumb_text)
+        _text_block(canvas, d, _headline(thumb_text, title))
         _brand(canvas, d)
         d.rectangle([(0, H - 10), (W, H)], fill=RED + (255,))
 
@@ -378,7 +408,7 @@ def compose_creator(frame: Path, face, thumb_text: str, out: str) -> str | None:
         return None
 
 
-def compose(frame: Path, thumb_text: str, out: str, face=None) -> str | None:
+def compose(frame: Path, thumb_text: str, out: str, face=None, title: str = "") -> str | None:
     try:
         img = Image.open(frame).convert("RGB")
         img = _fit_cover(img, face)
@@ -399,14 +429,13 @@ def compose(frame: Path, thumb_text: str, out: str, face=None) -> str | None:
         d.polygon([(33, 33), (33, 53), (49, 43)], fill=(255, 255, 255, 255))
         d.text((66, 30), fv.CHANNEL_NAME.upper(), font=_font(30), fill=(255, 255, 255, 235))
 
-        lines = _wrap_two(thumb_text or "")
+        lines = _wrap_two(_headline(thumb_text, title))
         if lines:
-            size = 150 if max(len(l) for l in lines) <= 9 else (118 if max(len(l) for l in lines) <= 13 else 92)
-            f = _font(size)
+            size, f = _headline_font(lines)
             line_h = size + 18
             y = H // 2 - (line_h * len(lines)) // 2 + 10
             for i, line in enumerate(lines):
-                x = 56
+                x = X_EDGE
                 for ox in range(-4, 5, 2):
                     for oy in range(-4, 5, 2):
                         if ox or oy:
@@ -422,7 +451,7 @@ def compose(frame: Path, thumb_text: str, out: str, face=None) -> str | None:
         return None
 
 
-def make(video: str, temp_root: Path, thumb_text: str, out: str) -> str | None:
+def make(video: str, temp_root: Path, thumb_text: str, out: str, title: str = "") -> str | None:
     """Person-first thumbnail from the run's own footage. None if we can't do
     better than the engine's fallback design."""
     try:
@@ -437,11 +466,67 @@ def make(video: str, temp_root: Path, thumb_text: str, out: str) -> str | None:
         print(f"  🖼️ Thumbnail base: best {kind} frame (score {best_score:.1f}, {len(frames)} candidates)")
         if face:
             # creator-style cutout first; graceful fall-through to the framed style
-            res = compose_creator(frame, face, thumb_text, out)
+            res = compose_creator(frame, face, thumb_text, out, title=title)
             if res:
                 print("  🖼️ Creator-style cutout thumbnail composed.")
                 return res
-        return compose(frame, thumb_text, out, face)
+        return compose(frame, thumb_text, out, face, title=title)
     except Exception as e:
         print(f"   ⚠️ thumbnail engine failed: {e}")
+        return None
+
+
+# ------------------------------------------------------------------ v3 tool style
+TOOL_RED = (220, 38, 38)   # spec decision 6: #DC2626, not the brand RED above
+
+
+def _tool_font(size: int):
+    try:
+        return ImageFont.truetype(str(fv.FONTS / "Inter-Black.ttf"), size)
+    except Exception:
+        return _font(size)
+
+
+def make_tool_thumb(screenshot: str, thumb_text: str, out: str) -> str | None:
+    """v3 tool-format thumbnail (spec decision 6): the tool's REAL page frame +
+    2-4 word overlay — Inter Black ~130px, white on #DC2626 — + red baseline.
+    Person-cutout is retired for tool videos; caller falls back on None."""
+    try:
+        p = Path(screenshot or "")
+        if not p.exists():
+            return None
+        img = Image.open(p).convert("RGB").resize((W, H), Image.LANCZOS)
+        img = ImageEnhance.Contrast(img).enhance(1.15)
+        img = ImageEnhance.Color(img).enhance(1.25)
+        d = ImageDraw.Draw(img, "RGBA")
+        y_scrim = int(H * 0.45)
+        for y in range(y_scrim, H):              # legibility scrim over bottom half
+            a = int(165 * ((y - y_scrim) / (H - y_scrim)))
+            d.rectangle([(0, y), (W, y + 1)], fill=(0, 0, 0, a))
+
+        words = " ".join((_headline(thumb_text, "") or "FREE AI TOOL").split()[:4])
+        lines = _wrap_two(words)
+        from factverse import branding as _br
+        size, pad_x, pad_y, gap, x_edge = 130, 28, 10, 14, 48
+        size, f = _br.fit_font(_tool_font, lines, size, W - 2 * x_edge - 2 * pad_x,
+                               floor=_FIT_FLOOR, step=_FIT_STEP)
+        metrics = []
+        for ln in lines:
+            bb = d.textbbox((0, 0), ln, font=f)
+            metrics.append((ln, bb, bb[3] - bb[1]))
+        total = sum(h + 2 * pad_y for _, _, h in metrics) + gap * (len(metrics) - 1)
+        y = H - 12 - 26 - total                  # block sits above the baseline bar
+        for ln, bb, h in metrics:
+            tw = d.textlength(ln, font=f)
+            d.rectangle([(x_edge, y), (x_edge + tw + 2 * pad_x, y + h + 2 * pad_y)],
+                        fill=TOOL_RED + (255,))
+            d.text((x_edge + pad_x, y + pad_y - bb[1]), ln, font=f,
+                   fill=(255, 255, 255, 255))
+            y += h + 2 * pad_y + gap
+        d.rectangle([(0, H - 12), (W, H)], fill=TOOL_RED + (255,))
+        img.save(out, "JPEG", quality=92)
+        print("  🖼️ Tool thumbnail: real page screenshot + overlay.")
+        return out if Path(out).exists() else None
+    except Exception as e:
+        print(f"   ⚠️ tool thumbnail failed: {e}")
         return None

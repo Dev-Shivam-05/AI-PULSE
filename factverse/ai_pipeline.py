@@ -32,6 +32,7 @@ from __future__ import annotations
 import datetime as _dt
 import html
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -44,8 +45,13 @@ from factverse import captions
 from factverse import branding
 from factverse import voice
 from factverse import tts_kokoro
+from factverse import tts_eleven
 from factverse import thumbnail
 from factverse import infographics
+from factverse import screencap
+from factverse import receipts
+from factverse import deliverable
+from factverse import site
 from factverse import scheduling
 from factverse import gates
 from factverse import l2
@@ -105,11 +111,16 @@ def too_many_failures(title: str) -> bool:
 def record_run(**fields) -> None:
     """Append one JSON line per run — the ground truth a future learning loop needs."""
     fields.setdefault("timestamp", _dt.datetime.now().isoformat(timespec="seconds"))
+    # This is the LAST statement of the publish window (spec v3-C.1 #5). If it
+    # raises, the video is live on YouTube with no PUBLISHED row, so
+    # already_published_today() answers False and the 14:53 retry cron publishes
+    # a SECOND video into the same slot. default=str absorbs any value a future
+    # caller grows; the broad except absorbs everything else.
     try:
         with open(RUNS_LOG, "a", encoding="utf-8") as f:
-            f.write(json.dumps(fields, ensure_ascii=False) + "\n")
-    except OSError as e:
-        print(f"   ⚠️ could not write run record: {e}")
+            f.write(json.dumps(fields, ensure_ascii=False, default=str) + "\n")
+    except Exception as e:
+        print(f"   ⚠️ could not write run record: {type(e).__name__}: {e}")
 
 
 # --------------------------------------------------------------- grounding
@@ -126,11 +137,135 @@ def fetch_text(url: str, limit: int = 4000) -> str:
         t = re.sub(r"(?is)<(script|style|nav|footer|header|noscript|form|aside).*?</\1>", " ", t)
         t = re.sub(r"(?s)<[^>]+>", " ", t)
         t = html.unescape(t)
-        t = re.sub(r"\s+", " ", t).strip()
+        # Newlines survive (spaces still collapse): the review proved the fenced-
+        # block repair in script_tool could NEVER fire because this line flattened
+        # every ``` fence out of the raw README before _first_fenced saw it.
+        t = re.sub(r"[ \t\r\f\v]+", " ", t)
+        t = re.sub(r"\s*\n\s*", "\n", t).strip()
         # A real article has real length; a bot-wall/paywall stub does not.
         return t[:limit] if len(t) > 400 else ""
     except Exception:
         return ""
+
+
+def _hf_readme_url(url: str) -> str:
+    """huggingface.co model pages are JS-rendered (thin HTML). The hub serves the
+    model card as plain text at /<id>/raw/main/README.md — use that instead."""
+    m = re.match(r"https?://huggingface\.co/([\w.-]+(?:/[\w.-]+)?)/?$", str(url).strip())
+    return f"https://huggingface.co/{m.group(1)}/raw/main/README.md" if m else ""
+
+
+def _gh_readme_url(url: str) -> str:
+    """github.com repo pages are HTML wrapped around the README. Measured 2026-08-24,
+    fetch_text returns a mean 1,637 chars of chrome first ("You signed in with another
+    tab or window", the file listing), so only ~3,360 of the 5,000-char window is ever
+    README — and that chrome is handed to the LLM as "SOURCE EXCERPT (ground every claim
+    in this)" and to gates.fact_check. `HEAD` resolves the default branch without an API
+    call. Hugging Face got this treatment in spec v3-C.1 #2; GitHub never did."""
+    m = re.match(r"https?://github\.com/([\w.-]+)/([\w.-]+?)/?$", str(url).strip())
+    return (f"https://raw.githubusercontent.com/{m.group(1)}/{m.group(2)}/HEAD/README.md"
+            if m else "")
+
+
+def _gh_repo(url: str):
+    """(owner, repo) for a github.com repo URL, else None."""
+    m = re.match(r"https?://github\.com/([\w.-]+)/([\w.-]+?)/?$", str(url).strip())
+    return (m.group(1), m.group(2)) if m else None
+
+
+def _gh_headers() -> dict:
+    """The publish step already exports GH_TOKEN (spec v3-C.1 #7); authenticated
+    calls dodge the shared-runner-IP 60/hr anonymous limit. Fail-soft to anonymous."""
+    h = {"Accept": "application/vnd.github+json", "User-Agent": "Mozilla/5.0 FactVerse"}
+    tok = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if tok:
+        h["Authorization"] = f"Bearer {tok}"
+    return h
+
+
+def _verified_facts(url: str) -> dict:
+    """spec v3-E #1: real numbers from the official API, or {}. The writer's prompt
+    demands "stars, size, price" — until now the pipeline fetched stars in sources.py
+    and threw them away, so every number in a script was the LLM's invention.
+    Fail-soft: this runs unattended; a network miss must cost the numbers, not the day."""
+    try:
+        repo = _gh_repo(url)
+        if repo:
+            r = requests.get(f"https://api.github.com/repos/{repo[0]}/{repo[1]}",
+                             headers=_gh_headers(), timeout=15)
+            if r.status_code != 200:
+                return {}
+            d = r.json()
+            out = {}
+            if d.get("stargazers_count") is not None:
+                out["stars"] = int(d["stargazers_count"])
+            lic = (d.get("license") or {}).get("spdx_id")
+            if lic and lic != "NOASSERTION":
+                out["license"] = lic
+            if d.get("pushed_at"):
+                out["last_update"] = str(d["pushed_at"])[:10]
+            if d.get("open_issues_count") is not None:
+                out["open_issues"] = int(d["open_issues_count"])
+            return out
+        m = re.match(r"https?://huggingface\.co/([\w.-]+(?:/[\w.-]+)?)/?$", str(url).strip())
+        if m:
+            r = requests.get(f"https://huggingface.co/api/models/{m.group(1)}", timeout=15)
+            if r.status_code != 200:
+                return {}
+            d = r.json()
+            out = {}
+            if d.get("downloads") is not None:
+                out["downloads"] = int(d["downloads"])
+            if d.get("likes") is not None:
+                out["likes"] = int(d["likes"])
+            return out
+    except Exception:
+        pass
+    return {}
+
+
+def _top_issues(url: str, n: int = 5) -> list[str]:
+    """spec v3-E #4: the most-commented open issues, titles only. They are the only
+    permitted basis for the honest-limitation scene — a vendor README never admits
+    limits, so that scene was the least grounded one in the video. The GitHub issues
+    endpoint returns PRs too; those are filtered (a PR title is not a limitation)."""
+    try:
+        repo = _gh_repo(url)
+        if not repo:
+            return []
+        r = requests.get(f"https://api.github.com/repos/{repo[0]}/{repo[1]}/issues",
+                         params={"sort": "comments", "state": "open", "per_page": n * 2},
+                         headers=_gh_headers(), timeout=15)
+        if r.status_code != 200:
+            return []
+        return [str(i.get("title", "")).strip() for i in r.json()
+                if not i.get("pull_request") and i.get("title")][:n]
+    except Exception:
+        return []
+
+
+def _squash(s: str) -> str:
+    return " ".join(str(s).split())
+
+
+def command_grounded(text: str, grounding: str) -> bool:
+    """spec v3-E #2: every command segment of the deliverable must appear verbatim
+    (whitespace-normalized) in the source text. Until now only PROMPT TEXT enforced
+    the copy-paste contract, and the string ships on three surfaces at once: the
+    code card, the description and the PDF."""
+    g = _squash(grounding)
+    segs = [p.strip() for p in re.split(r"[•\n]+", str(text or "")) if p.strip()]
+    return bool(segs) and all(_squash(p) in g for p in segs)
+
+
+def _first_fenced(grounding: str) -> str:
+    """The source's own first fenced code block — the substitution when the LLM's
+    deliverable fails containment. <=200 chars, matching the deliverable contract."""
+    m = re.search(r"```[^\n`]*\n(.*?)```", str(grounding or ""), re.S)
+    if not m:
+        return ""
+    lines = [l.strip() for l in m.group(1).splitlines() if l.strip()]
+    return " • ".join(lines)[:200]
 
 
 # --------------------------------------------------------------- policy gates
@@ -184,6 +319,18 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
         return None
+    # This function mutates the LLM's dict IN PLACE, so a top-level key the model
+    # invents SURVIVES. Two of them are run()'s OWN to compute, and a planted value
+    # impersonates the real one: "receipts" would fabricate the measured-check beat
+    # and footage, and "cheat_sheet" is stamped into the published description and
+    # joined onto TOOLS_DIR. Popping them HERE (not once in run()) is what closes the
+    # hole for the rewrite passes too: every pass validates, then _carry_over copies
+    # the legitimate value back from the previous script. Measured: without this, a
+    # name planted in critique_pass's answer shipped a dead ".../tools/" link.
+    for planted in ("receipts", "cheat_sheet"):
+        s.pop(planted, None)
+    # read the per-scene "filter" marker BEFORE the rebuild below strips it
+    had_filter = any(sc.get("filter") for sc in s["scenes"])
     scenes = []
     for sc in s["scenes"]:
         narration = str(sc.get("narration", "")).strip()
@@ -210,7 +357,16 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     if "#AI" not in desc:
         desc += "\n\n#AI #ArtificialIntelligence #TechNews"
     s["description"] = desc
-    s.setdefault("tags", [])
+    # setdefault only fills a MISSING key. The model answers `tags` as a comma
+    # string / null / an object often enough that trusting the type raised out of
+    # a bare _validate_script call and killed the whole unattended run. Coerce it,
+    # the way deliverable._as_list already does for the cheat-sheet fields.
+    raw_tags = s.get("tags")
+    if isinstance(raw_tags, str):
+        raw_tags = re.split(r"[,\n]", raw_tags)
+    elif not isinstance(raw_tags, (list, tuple)):
+        raw_tags = []
+    s["tags"] = [str(t).strip() for t in raw_tags if str(t).strip()][:28]
     brand = ["ai", "artificial intelligence", "ai news", "machine learning",
              "tech news", "ai explained", "technology", "deep learning", fv.CHANNEL_NAME.lower()]
     existing = [str(t).lower() for t in s["tags"]]
@@ -227,7 +383,7 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
                             "url": str(dl.get("url", "")).strip()[:300]}
     else:
         s["deliverable"] = None
-    s["filter_segment"] = any(sc.get("filter") for sc in (s.get("scenes") or []))
+    s["filter_segment"] = had_filter
     s["source_url"] = source_url
     return s
 
@@ -262,8 +418,9 @@ def _output_contract(scene_range: str, words_per_scene: str) -> str:
   in the first 30 chars, ONE concrete number where honest, consequence framing over event
   framing, never all-caps, no clickbait lies.
 - title: the strongest of the 3.
-- thumb_text: 2-4 PUNCHY words for the thumbnail (NOT the title — e.g. "CHEAPER THAN GPT?",
-  "NO MORE CODERS?", "10X FASTER").
+- thumb_text: a DECLARATIVE 2-4 word claim for the thumbnail (NOT the title). No question
+  mark. It MUST contain one number taken from the source/verified facts, or the word FREE
+  (e.g. "10X FASTER", "FREE. OFFLINE.", "179K STARS").
 - description: 150+ words; first 2 lines = hook + main keyword; 5-7 hashtags incl. #AI; end with
   "Subscribe to {fv.CHANNEL_NAME}".
 - tags: 8-12 relevant tags.
@@ -279,6 +436,19 @@ Return ONLY JSON:
 "scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
 
 
+# --------------------------------------------------------------- candidate kinds
+def news_candidates(ranked: list[dict]) -> list[dict]:
+    """The story lanes read story signals only.
+
+    v3-A added the GitHub / Hugging Face / Product Hunt trending feeds so the TOOL
+    lane would have something to teach, but rank() returns ONE mixed list — so the
+    viral judge and the weekly roundup started drawing from them too. On
+    2026-08-23 the top two ranked items were both kind="tool" and #1 was an
+    AI-provenance stripper: gates.tool_unsuitable keeps that out of the tool lane
+    and nowhere else, so it could still have run as the day's news story."""
+    return [c for c in ranked if c.get("kind") != "tool"]
+
+
 # --------------------------------------------------------------- virality judge
 VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is the default
 
@@ -286,7 +456,7 @@ VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is th
 def viral_pick(ranked: list[dict], top_n: int = 8):
     """Score today's top stories for viral potential. Returns
     (item, score, angle, hook_idea) for the hottest one, or None."""
-    cands = ranked[:top_n]
+    cands = news_candidates(ranked)[:top_n]
     if not cands:
         return None
     listing = "\n".join(f"{i+1}. {c['title']}  ({c['source']})" for i, c in enumerate(cands))
@@ -321,6 +491,15 @@ def script_news(item: dict, viral_hint: tuple | None = None,
                 hook_pattern: str | None = None) -> dict | None:
     title, source, url = item["title"], item["source"], item.get("url", "")
     grounding = fetch_text(url)
+    # A news video CLAIMS a source. With grounding this thin every accuracy gate
+    # passes for free — verbatim_overlap scores 0.0, gates.fact_check skips below
+    # its own floor, verify_synthesis has nothing to compare — and the confidence
+    # "facts" component then reads 1.0, identical to a fully verified script. So
+    # if the fact-checker cannot run, this lane does not write; build_script moves
+    # to the next story. (Evergreen is ungrounded BY DESIGN and is untouched.)
+    if len(grounding) < gates.FACTCHECK_MIN_CHARS:
+        print(f"     ↻ grounding too thin ({len(grounding)} chars) — trying the next story.")
+        return None
     hook_block = ""
     if hook_pattern in gates.HOOK_PATTERN_PROMPTS:
         hook_block = (f"\nHOOK STRUCTURE (rotates daily so openings never repeat): "
@@ -376,14 +555,76 @@ ACCURACY RULES:
 
 
 # --------------------------------------------------------------- format: tool
+# Minimum readable source text before a tool video may be written. Set at 1200
+# because the chrome-only pages that caused this (Product Hunt, ~640 chars) must
+# fail with margin while a real README or model card (~5000) passes untouched.
+TOOL_GROUNDING_MIN = 1200
+
+
 def script_tool(item: dict) -> dict | None:
     """v3 utility lane: a hands-on video about a free AI tool/repo/model.
     The video is a TRANSACTION — the viewer leaves with a deliverable they can
     run in the next ten minutes — not a broadcast about the news."""
     title, source, url = item["title"], item["source"], item.get("url", "")
-    grounding = fetch_text(url, limit=5000)
-    if not grounding:
-        return None   # a tool video without its README/model card is guesswork
+    # The hub's HTML page is a JS shell whose readable text is inlined
+    # tokenizer_config / chat_template JSON — 5000 chars of it, so the old
+    # "repair only if the page came back empty" path could never fire and the
+    # model card was never read. Ask for the raw card instead, and do NOT fall
+    # back to the page: for a gated or README-less model that fallback grounds
+    # the whole video in a Jinja template, which reads as real and is not.
+    readme = _hf_readme_url(url)
+    screen = ""
+    if readme:
+        grounding = screen = fetch_text(readme, limit=5000)
+    else:
+        # Unlike the hub (spec v3-C.1 #2), GitHub KEEPS its page fallback: the hub's
+        # fallback was a Jinja chat_template that reads as real, while GitHub's is only
+        # chrome-padded — the text shipping today. A repo whose readme is .rst, lowercase
+        # or absent must still reach the same place it reaches now.
+        raw = _gh_readme_url(url)
+        grounding = fetch_text(raw, limit=5000) if raw else ""
+        # Grounding and SCREENING are different jobs. The rendered page carries the
+        # repo's topic tags — the strongest intent signal GitHub exposes and the one
+        # thing the raw README does not have: measured 2026-08-24, facefusion is
+        # declared only by its topics ("deep-fake deepfake face-swap faceswap"), so
+        # grounding on the README alone would have let it through. Write the script
+        # from the clean README; let gates.tool_unsuitable read both.
+        page = fetch_text(url, limit=5000)
+        if len(grounding) < TOOL_GROUNDING_MIN:
+            grounding = page
+        screen = f"{grounding} {page}"
+    # spec v3-C: a tool page that is all navigation chrome is not grounding.
+    # Product Hunt's server HTML is ~640 chars of "Overview Reviews Team More",
+    # which cleared fetch_text's 400-char floor AND gates.fact_check's 200-char
+    # one — so claims were verified against nav text and came back unsupported.
+    if len(grounding) < TOOL_GROUNDING_MIN:
+        print(f"     ↻ grounding too thin ({len(grounding)} chars) — not a tool video.")
+        return None   # build_script moves to the next candidate
+    # The README is where intent actually shows: a repo titled innocuously can
+    # still be a provenance stripper. A tool video TEACHES the tool, so this
+    # rejects where sensitive_topic_risk only penalises.
+    unsuitable, term = gates.tool_unsuitable(title, screen or grounding)
+    if unsuitable:
+        print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
+        return None
+    # spec v3-E #1/#4: hand the writer REAL numbers and REAL complaints. Both are
+    # fail-soft — an API miss costs the block, never the video.
+    facts = _verified_facts(url)
+    issues = _top_issues(url)
+    facts_block = ""
+    if facts:
+        facts_block = ("VERIFIED FACTS (fetched " + _dt.date.today().isoformat()
+                       + " from the official API — use these numbers verbatim; they are the"
+                       " ONLY numbers you may state about the tool itself):\n"
+                       + "\n".join((f"- {k}: {v:,}" if isinstance(v, int) else f"- {k}: {v}")
+                                    for k, v in facts.items()) + "\n\n")
+    lim_rule = ('- ONE honest limitation scene (who should NOT bother; what it can not do '
+                'yet) — mark it "filter": true.')
+    if issues:
+        # spec v3-E #4: real complaints from the tool's own tracker, not invented humility
+        lim_rule = ('- ONE honest limitation scene — mark it "filter": true. Base it ONLY on '
+                    "these real open issues from the tool's own tracker, or on limits stated "
+                    "in the SOURCE EXCERPT: " + "; ".join(issues))
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
 Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
 DO something concrete in the next ten minutes — that is the entire point of the video.
@@ -391,7 +632,7 @@ DO something concrete in the next ten minutes — that is the entire point of th
 TOOL: {title}
 SOURCE: {source}  ({url})
 
-SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
+{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
 {grounding}
 
 STRUCTURE (a transaction, not a broadcast):
@@ -401,7 +642,7 @@ STRUCTURE (a transaction, not a broadcast):
 - GETTING IT RUNNING: the exact real steps/commands from the source. If the source shows an
   install command, quote it EXACTLY — commands are the one place verbatim is required, not banned.
 - What to actually make with it: 3-5 concrete uses, most impressive first.
-- ONE honest limitation scene (who should NOT bother; what it can not do yet) — mark it "filter": true.
+{lim_rule}
 - Final scene: the single next action + "the exact command is in the description" + ONE question
   to the audience + subscribe, all in two sentences.
 {_RETENTION_RULES}
@@ -412,18 +653,42 @@ STRUCTURE (a transaction, not a broadcast):
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
 "url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
-    s = llm.generate_json(prompt, max_tokens=8192)
+    s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
     if s and not s.get("deliverable"):
         print("     ↻ tool script had no deliverable — rejected.")
         return None
     if s:
+        # spec v3-E #2: the copy-paste contract is enforced, not requested. A command
+        # the source never shows is replaced by the source's own first fenced block;
+        # a source with neither is not a tool video.
+        dl = s["deliverable"]
+        if not command_grounded(dl.get("text", ""), grounding):
+            fixed = _first_fenced(grounding)
+            if fixed:
+                print(f"     ✂️ deliverable not verbatim in the source — using its own "
+                      f"first code block ({len(fixed)} chars).")
+                dl["text"] = fixed
+            else:
+                print("     ↻ deliverable not found in the source — rejected.")
+                return None
         s["grounding"] = grounding
         s["format"] = "tool"
+        if facts:
+            s["verified_facts"] = facts
     return s
 
 
 # --------------------------------------------------------------- format: evergreen
+# Token-overlap above which two evergreen topics are the same video. The signal
+# engine's headline default (0.5) blocks this lane's own title template — the
+# prompt below literally asks for "how does X actually work" titles, so
+# "How Transformers Actually Work" scored 0.67 against "How Diffusion Models
+# Actually Work" and was refused. 0.7 still catches the true re-word, which
+# scores 1.0 (spec v3-C.2 #1).
+EVERGREEN_DUP_OVERLAP = 0.7
+
+
 def pick_evergreen_topic(signals: list[dict]) -> dict | None:
     """Turn current signal themes into a durable, search-driven question topic."""
     used = _read_json(USED_TOPICS, [])[-60:]
@@ -443,10 +708,16 @@ type","angle":"1-2 sentences on the unique take"}}]}}"""
     d = llm.generate_json(prompt)
     if not d or not d.get("topics"):
         return None
-    used_norm = [t.lower() for t in used]
+    # Exact lowercase equality was the only guard, and the model re-words a topic
+    # every time it is asked. _is_used is the near-duplicate check the signal
+    # engine already applies to headlines — a re-worded topic is the same video,
+    # which is how two near-identical uploads happened once before.
+    used_norm = {signal_engine._norm(t) for t in used}
     for t in d["topics"]:
         idea = str(t.get("title_idea", "")).strip()
-        if idea and idea.lower() not in used_norm and not too_many_failures(idea):
+        if (idea and not too_many_failures(idea)
+                and not signal_engine._is_used(idea, used_norm,
+                                               threshold=EVERGREEN_DUP_OVERLAP)):
             return t
     return None
 
@@ -479,22 +750,39 @@ TIMELESSNESS RULES:
 
 # --------------------------------------------------------------- format: roundup
 def script_roundup(items: list[dict]) -> dict | None:
+    # "the stories that actually mattered this week" is not a countdown of model
+    # cards — but a thin week still beats no week, so top up if stories are scarce.
+    pool = news_candidates(items)
+    if len(pool) < 3:
+        pool = pool + [c for c in items if c.get("kind") == "tool"]
+    # Curation is this format's added value and its policy defence, so take one
+    # story per outlet FIRST and only then top up with repeats. The old rule
+    # ("skip a repeat once 3 distinct sources are banked") could never fire on a
+    # feed where one outlet dominates: against the live signals of 2026-08-23 it
+    # produced a five-story countdown of five TechCrunch stories.
     picked, seen_sources = [], set()
-    for it in items:
-        src = it.get("source", "")
-        if src in seen_sources and len(seen_sources) > 2:
-            continue
-        seen_sources.add(src)
-        picked.append(it)
-        if len(picked) == 5:
-            break
+    for distinct_only in (True, False):
+        for it in pool:
+            if len(picked) == 5:
+                break
+            if it in picked:
+                continue
+            src = it.get("source", "")
+            if distinct_only and src in seen_sources:
+                continue
+            seen_sources.add(src)
+            picked.append(it)
     if len(picked) < 3:
         return None
-    stories = []
+    stories, excerpts = [], []
     for i, it in enumerate(picked, 1):
         g = fetch_text(it.get("url", ""), limit=1200)
+        excerpts.append(g)
         stories.append(f"STORY {i}: {it['title']} (source: {it['source']}, {it.get('url','')})\n"
                        f"EXCERPT: {g[:900] if g else '(none — attribute carefully)'}")
+    if sum(len(g) for g in excerpts) < gates.FACTCHECK_MIN_CHARS:
+        print("     ↻ roundup grounding too thin — not writing a countdown from headlines.")
+        return None
     stories_block = "\n\n".join(stories)
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}. Write this week's AI ROUNDUP —
 a countdown of the {len(picked)} AI stories that actually mattered this week, best for last.
@@ -513,13 +801,133 @@ ROUNDUP RULES:
     s = llm.generate_json(prompt, max_tokens=8192)
     s = _validate_script(s, "This Week in AI", picked[0].get("url", ""))
     if s:
-        s["grounding"] = " ".join(fetch_text(it.get("url", ""), limit=1000) for it in picked[:3])
+        # The gates must read exactly what the prompt read. This used to RE-fetch
+        # picked[:3]: a transient failure on the second pass handed
+        # verbatim_overlap an empty string (overlap 0.0 = free pass) and
+        # fact_check its <200-char skip, and stories 4-5 were never checked at all.
+        s["grounding"] = " ".join(g for g in excerpts if g)
         s["format"] = "roundup"
         s["roundup_items"] = [{"title": it["title"], "url": it.get("url", "")} for it in picked]
     return s
 
 
 # --------------------------------------------------------------- quality passes
+# Top-level script keys that every LLM rewrite pass must carry across, because the
+# rewrite prompt never sees them and _validate_script resets them (deliverable ->
+# None, filter_segment -> False). Missing one here silently changes the video.
+_CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
+          "filter_segment", "hook_pattern", "deliverable", "cheat_sheet",
+          "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
+          "receipts")        # v3-E.2 #6: the measured check must survive them too
+
+
+def _carry_over(src: dict, dst: dict) -> dict:
+    for k in _CARRY:
+        if k in src:
+            dst[k] = src[k]
+    return dst
+
+
+_MAX_DESC = 4000        # spec v3-C #11: YouTube caps at 5000 bytes; our blocks add ~250
+_DL_MARK = "🔧 Try it yourself"
+_PDF_MARK = "📄 Free 1-page cheat sheet: "
+_SRC_MARK = "🔗 Sources:"
+
+
+def source_chip(script: dict) -> tuple[str, str]:
+    """(domain, on-screen attribution chip) for this script.
+
+    A roundup carries 3-5 different outlets, but _validate_script sets source_url
+    to story 1's URL — so the chip and every generated stat card stamped ONE
+    outlet across all five stories, and the "Sources in description" branch could
+    never fire. The roundup points at the description, which now lists them all."""
+    if script.get("format") == "roundup":
+        return "", "Sources in description"
+    url = str(script.get("source_url") or "")
+    dom = ""
+    if url:
+        try:
+            from urllib.parse import urlparse
+            dom = urlparse(url).netloc.replace("www.", "")
+        except Exception:
+            dom = ""
+    return dom, (f"Source: {dom}" if dom else "")
+
+
+def _insert_after_hook(desc: str, block: str) -> str:
+    """Put the block directly under the hook paragraph (spec v3-C #7).
+
+    _validate_script appends "\\n\\nSource: …" / "\\n\\n#AI …" to the LLM text, so the
+    first blank line is often the one IT manufactured — splitting there would drop the
+    block below the whole body. Split inside the LLM text: first blank line if the head
+    has no internal newline, else the first newline."""
+    desc = desc.lstrip("\n")
+    if not desc:
+        return block
+    head, sep, tail = desc.partition("\n\n")
+    if not sep or "\n" in head:
+        head, sep, tail = desc.partition("\n")
+        if not sep:
+            return desc.rstrip() + "\n\n" + block
+    return f"{head.rstrip()}\n\n{block}\n\n{tail.lstrip()}"
+
+
+def _has_cheat_sheet(script: dict) -> bool:
+    """The description may only advertise a PDF that run() will actually write —
+    make_cheat_sheet has exactly this condition."""
+    return bool(script.get("format") == "tool" and script.get("deliverable"))
+
+
+def place_description_blocks(script: dict) -> None:
+    """Deliverable + cheat-sheet link + promo block right after the hook paragraph
+    (spec v3-C decisions 7/8) — links above the fold, where the transaction happens.
+    Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
+    desc = str(script.get("description", ""))
+    promo = str(fv.setting("promo_block", "") or "").strip()
+    dl = script.get("deliverable")
+    if (dl or promo) and _DL_MARK not in desc and (not promo or promo not in desc):
+        desc = desc[:_MAX_DESC]   # only when we are about to add to it
+    if dl:
+        if _has_cheat_sheet(script) and not script.get("cheat_sheet"):
+            script["cheat_sheet"] = deliverable.pdf_name(script.get("title", ""))
+        # v3-F.1 #5: the link is the tool PAGE, not the PDF — it opens on a phone,
+        # carries the copy-button command and offers the PDF as a download. The page
+        # shares the PDF's stem, so this name is still decided before the upload.
+        pdf_line = (f"\n{_PDF_MARK}{site.public_url(site.page_name(script['cheat_sheet']))}"
+                    if script.get("cheat_sheet") else "")
+        block = (f"{_DL_MARK}:\n{dl['text']}"
+                 + (f"\n{dl['url']}" if dl.get("url") else "") + pdf_line)
+        if block not in desc:
+            # An LLM rewrite pass can echo the description back with the block
+            # partially mangled (dropped PDF line, altered URL). Trusting the 🔧
+            # marker alone would ship a link to a file we never wrote — so cut any
+            # stale fragment out and re-insert the block we can stand behind.
+            # Both markers, and every occurrence: a rewrite that puts a blank line
+            # INSIDE the block leaves the 📄 line stranded as its own paragraph,
+            # and cutting only back to the first blank line shipped it twice.
+            for mark in (_DL_MARK, _PDF_MARK):
+                while (i := desc.find(mark)) >= 0:
+                    end = desc.find("\n\n", i)
+                    desc = (desc[:i] + (desc[end + 2:] if end >= 0 else "")).strip()
+            desc = _insert_after_hook(desc, block)
+    if promo and promo not in desc:
+        i = desc.find(_PDF_MARK)
+        if i >= 0:                                  # tool: directly under the cheat-sheet line
+            end = desc.find("\n", i)
+            end = len(desc) if end < 0 else end
+            desc = desc[:end] + "\n\n" + promo + desc[end:]
+        else:                                       # other formats: after the hook paragraph
+            desc = _insert_after_hook(desc, promo)
+    # A roundup burns "Sources in description" on screen for its whole runtime,
+    # while _validate_script credits exactly one URL — story 1's. Keep the promise.
+    if script.get("format") == "roundup" and _SRC_MARK not in desc:
+        lines = [f"{i}. {str(it.get('title', ''))[:90]} — {it['url']}"
+                 for i, it in enumerate(script.get("roundup_items") or [], 1) if it.get("url")]
+        if lines:
+            desc = desc[:_MAX_DESC].rstrip() + "\n\n" + _SRC_MARK + "\n" + "\n".join(lines)
+    script["description"] = desc
+
+
 def critique_pass(script: dict) -> dict:
     """One ruthless retention-editor pass. Falls back to the original on any failure."""
     try:
@@ -549,9 +957,7 @@ Return ONLY the full corrected JSON (same schema)."""
         # against the editor gutting the script entirely
         if (improved and len(improved["scenes"]) >= max(5, len(script["scenes"]) - 6)
                 and new_words >= max(500, old_words * 0.5)):
-            for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                if carry in script:
-                    improved[carry] = script[carry]
+            _carry_over(script, improved)
             print("  ✍️  Critique pass applied.")
             return improved
     except Exception as e:
@@ -578,9 +984,7 @@ Return ONLY the full expanded JSON (same schema)."""
         if bigger:
             new_words = sum(len(sc["narration"].split()) for sc in bigger["scenes"])
             if new_words > words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                    if carry in script:
-                        bigger[carry] = script[carry]
+                _carry_over(script, bigger)
                 print(f"  ✍️  Expanded {words} -> {new_words} words.")
                 return bigger
     except Exception as e:
@@ -612,10 +1016,7 @@ Return ONLY the full tightened JSON (same schema)."""
         if smaller:
             new_words = sum(len(sc["narration"].split()) for sc in smaller["scenes"])
             if 500 <= new_words < words:
-                for carry in ("format", "grounding", "roundup_items", "signal_title",
-                              "synthesis_claim", "filter_segment", "hook_pattern", "deliverable"):
-                    if carry in script:
-                        smaller[carry] = script[carry]
+                _carry_over(script, smaller)
                 print(f"  ✂️  Tightened {words} -> {new_words} words.")
                 return smaller
     except Exception as e:
@@ -655,6 +1056,16 @@ def synthesize_voice(narration: str, script: dict | None = None):
         if out:
             return out, None
 
+    # spec v3-E #11: the flagged paid voice runs first and fails soft into the free
+    # chain — merging this costs nothing until the key, flag and voice id all exist.
+    if tts_eleven.available() and not _dialogue_segments(script or {}, narration):
+        # dialogue scripts (two speakers) fall through to kokoro's synth_multi —
+        # one paid voice interviewing itself is worse than two free voices.
+        out = tts_eleven.synth(narration, str(fv.TEMP / "voice.mp3"))
+        if out:
+            print("  🎙️  ElevenLabs voice (verdict-window flag).")
+            return out
+        print("   ⚠️ ElevenLabs unavailable — falling back to the free chain.")
     if provider in ("kokoro", "clone"):
         if tts_kokoro.available():
             segs = _dialogue_segments(script or {}, narration)
@@ -672,6 +1083,64 @@ def synthesize_voice(narration: str, script: dict | None = None):
     audio = str(fv.TEMP / "voice.mp3")
     words = captions.synth_with_words(narration, fv.VOICE, fv.RATE, audio)
     return (audio, words) if words else (None, None)
+
+
+def _tool_short_name(script: dict) -> str:
+    t = str(script.get("signal_title") or script.get("title") or "").split(":")[0]
+    return t.split("/")[-1].strip() or "It"
+
+
+def tool_chapters(script: dict, starts: list, shift: float) -> str:
+    """spec v3-E #6: LLM-free chapters for the tool lane. The video's anatomy is fixed
+    by its own prompt (hook / what it is / install / uses / honest limit / command), so
+    the chapters are derivable from scene roles and the REAL scene starts. Any missing
+    role returns "" and the LLM path runs unchanged — never guess a timestamp."""
+    scenes = script.get("scenes") or []
+    if script.get("format") != "tool" or not starts or len(starts) != len(scenes)             or len(scenes) < 5:
+        return ""
+    tool = _tool_short_name(script)
+    inst = next((i for i in range(1, len(scenes) - 1)
+                 if any(k in scenes[i].get("narration", "").lower()
+                        for k in screencap.INSTALL_KW)), None)
+    skip = next((i for i in range(1, len(scenes))
+                 if re.search(r"\bskip\b|honest limit|not for you|should not bother",
+                              scenes[i].get("narration", "").lower())), None)
+    if inst is None or skip is None:
+        return ""
+    idxs = [0, inst, inst + 1, skip, len(scenes) - 1]
+    if any(b <= x for x, b in zip(idxs, idxs[1:])):
+        return ""
+
+    def ts(i):
+        t = max(0, int(starts[i] + shift))
+        return f"{t // 60}:{t % 60:02d}"
+
+    secs = [0] + [max(0, int(starts[i] + shift)) for i in idxs[1:]]
+    # YouTube's own rule: a chapter must be at least 10 seconds long, and the list
+    # must ascend. A too-tight anatomy falls back to the LLM path via "".
+    if any(b - x < 10 for x, b in zip(secs, secs[1:])):
+        return ""
+    labels = [f"What {tool} Does", f"Install {tool}", "3 Things to Build",
+              "Who Should Skip It", "The Exact Command"]
+    rows = ["0:00 " + labels[0]] + [f"{ts(i)} {l}" for i, l in zip(idxs[1:], labels[1:])]
+    return "\n".join(rows)
+
+
+def pinned_comment(script: dict, prev_url: str = "") -> str:
+    """spec v3-E #7: the auto-comment is the only API-writable engagement surface.
+    Under a tool video it carries the two things a viewer opens the comments for —
+    the exact command and the cheat sheet — instead of a news question."""
+    if script.get("format") == "tool" and script.get("deliverable"):
+        txt = "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
+        if script.get("cheat_sheet"):
+            # same promise as the description, so the same destination (v3-F.1 #5)
+            txt += ("\n📄 Free cheat sheet: "
+                    + site.public_url(site.page_name(script["cheat_sheet"])))
+        return txt + "\nWhat should I test next?"
+    base = ("Sources are in the description. What's your take — hype or turning point? 👇")
+    if prev_url:
+        base += f"\n\nMissed the last one: {prev_url}"
+    return base
 
 
 def build_chapters(script: dict, starts: list, shift: float) -> str:
@@ -751,11 +1220,21 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
 def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
     if fmt == "roundup":
         print("  🗞️  Weekly roundup from", len(ranked), "candidates")
-        return script_roundup(ranked)
+        s = script_roundup(ranked)
+        if s:
+            return s
+        # Sunday is the only roundup slot there is; the tool lane already uses
+        # this shape. The fallback labels itself, so run() re-binds fmt and the
+        # ledger does not stamp an evergreen as a roundup.
+        print("   ⚠️ No roundup script — falling back to evergreen.")
+        return build_script("evergreen", ranked, viral_hint)
     if fmt == "news":
         pattern = gates.pick_hook_pattern(_recent_hook_patterns())
-        # hottest story first, then ranking order
-        order = list(ranked)
+        # hottest story first, then ranking order — stories only (see news_candidates)
+        order = news_candidates(ranked)
+        if not order:
+            print("   ⚠️ No story signals today — the news lane has nothing to write.")
+            return None
         if viral_hint and viral_hint[0] in order:
             order.remove(viral_hint[0])
             order.insert(0, viral_hint[0])
@@ -771,7 +1250,15 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             print("     ↻ script failed, trying next story...")
         return None
     if fmt == "tool":
-        tools = [c for c in ranked if c.get("kind") == "tool"]
+        tools = []
+        for c in ranked:
+            if c.get("kind") != "tool":
+                continue
+            blocked, term = gates.tool_unsuitable(c["title"])
+            if blocked:
+                print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            tools.append(c)
         for cand in tools[:3]:
             print(f"  🧰 Trying tool: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
             s = script_tool(cand)
@@ -848,13 +1335,18 @@ def _notify_review(script: dict, thumb, yt_url: str, publish_at: str, conf: dict
     token, repo = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
     if token and repo:
         try:
-            requests.post(f"https://api.github.com/repos/{repo}/issues",
-                          headers={"Authorization": f"Bearer {token}",
-                                   "Accept": "application/vnd.github+json"},
-                          json={"title": f"👀 Review before publish — {script.get('title', '')[:60]}",
-                                "body": body}, timeout=30)
-            print("  👀 Review issue opened (veto window active).")
-            return
+            r = requests.post(f"https://api.github.com/repos/{repo}/issues",
+                              headers={"Authorization": f"Bearer {token}",
+                                       "Accept": "application/vnd.github+json"},
+                              json={"title": f"👀 Review before publish — {script.get('title', '')[:60]}",
+                                    "body": body}, timeout=30)
+            # requests does NOT raise on 401/403/404. Announcing a veto window
+            # that no issue backs is worse than none: the operator stops looking.
+            if r.status_code in (200, 201):
+                print("  👀 Review issue opened (veto window active).")
+                return
+            print(f"   ⚠️ review issue refused: HTTP {r.status_code} "
+                  f"{str(getattr(r, 'text', ''))[:120]} — no veto window.")
         except Exception as e:
             print(f"   ⚠️ review notify failed: {e}")
     print("  👀 REVIEW WINDOW:\n" + body)
@@ -881,6 +1373,22 @@ def _save_asset_record(script, fc, syn, rep, conf, l2_rec) -> None:
             (d / "captions.ass").write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
     except Exception as e:
         print(f"   ⚠️ asset store save failed: {e}")
+
+
+def normalize_shorts_meta(meta, n: int, script: dict) -> list[dict]:
+    """step8_meta returns the model's `shorts_meta` unvalidated — it comes back
+    short, with an empty title, or as a list of strings. Each of those used to
+    raise inside the publish block, AFTER the long-form was already on YouTube
+    and BEFORE anything wrote a PUBLISHED row, so the retry cron published a
+    second video for the same day. Give every Short a real title instead."""
+    out = [m if isinstance(m, dict) else {} for m in (meta or [])][:n]
+    out += [{} for _ in range(n - len(out))]
+    for i, m in enumerate(out):
+        if not str(m.get("title", "")).strip():
+            m["title"] = f"{str(script.get('title', ''))[:70]} Part {i + 1} #Shorts"
+        if not str(m.get("description", "")).strip():
+            m["description"] = str(script.get("description", ""))[:400]
+    return out
 
 
 def already_published_today() -> bool:
@@ -937,6 +1445,22 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ❌ No script produced (LLM/signals down). Failing loudly.")
         record_run(status="NO_SCRIPT", format=fmt)
         return None
+    # build_script falls back (tool -> evergreen -> news), so fmt was only the
+    # REQUEST; the script it returned is the truth. Re-bind, or every record_run
+    # row below stamps a fallback video with the format nobody made and the
+    # learning loop reads a tool video that never existed.
+    fmt = script.get("format", fmt)
+    # _validate_script mutates the LLM's dict in place, so a top-level key the
+    # model invents SURVIVES into the script. "receipts" must only ever be set by
+    # receipts.add_beat after a real measured check — a planted value would render
+    # fabricated "we checked this" footage, and a planted non-dict would raise
+    # inside the post-upload record_run call (the double-publish zone).
+    script.pop("receipts", None)
+    # Same trap, same fix: "cheat_sheet" is run()'s to compute (place_description_blocks
+    # derives it from the title). A planted one is published in the description as the
+    # cheat-sheet link and joined onto TOOLS_DIR, where "../../../x.pdf" writes outside
+    # docs/ — measured, not theorised. _CARRY still preserves the real one afterwards.
+    script.pop("cheat_sheet", None)
 
     # critique first (it now cuts repetition), then the floor (sanity only),
     # then the CAP — padding is the enemy, not brevity
@@ -944,13 +1468,8 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
     script = enforce_max_length(script, MAX_WORDS)
 
-    # v3: the deliverable is the whole point of a tool video — print it where
-    # the viewer will actually look (top block of the description)
-    if script.get("deliverable"):
-        dl = script["deliverable"]
-        script["description"] = (script["description"].rstrip()
-                                 + "\n\n🔧 Try it yourself:\n" + dl["text"]
-                                 + (f"\n{dl['url']}" if dl.get("url") else ""))
+    # v3: the deliverable is the whole point of a tool video
+    place_description_blocks(script)
 
     words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
     print(f"  ✅ Script: '{script['title']}' | {len(script['scenes'])} scenes | "
@@ -984,10 +1503,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                          ensure_ascii=False), max_tokens=8192, temperature=0.3)
         fixed = _validate_script(fixed, script["title"], script.get("source_url", ""))
         if fixed:
-            for carry in ("format", "grounding", "roundup_items", "signal_title"):
-                if carry in script:
-                    fixed[carry] = script[carry]
-            script = fixed
+            script = _carry_over(script, fixed)
             narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
         if gates.advice_framing(narration).get("advice"):
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
@@ -1024,17 +1540,47 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print("  ⚠️ Replication test failed — script derivable from sources alone (O3).")
 
     # ---- render: clips -> voice -> word timing -> build (scene-synced) ----
-    scene_clips = eng.step3_download(script)
+    place_description_blocks(script)   # the advice-gate rewrite may have regenerated the description
+    # spec v3-E.2: the channel checks the tool before recommending it. Download-only
+    # (wheels / shallow clone / fetch — candidate code is NEVER executed), placed
+    # after every gate that could still reject the video (3 min of network must not
+    # precede a veto) and before the payoff gate, so the beat's numbers can support
+    # the packaging. install_scene_idx first: an unbeatable script costs zero minutes.
+    if script.get("format") == "tool" and fv.flag("receipts_check", True):
+        if receipts.install_scene_idx(script) is not None:
+            _rc_plan = receipts.check_plan(
+                (script.get("deliverable") or {}).get("text", ""),
+                str(fv.TEMP / "receipts_dl"))
+            if not _rc_plan:
+                print("  ↻ deliverable is not download-checkable — no receipts beat")
+            else:
+                _rc = receipts.run_check(_rc_plan)
+                if _rc and receipts.add_beat(script, _rc):
+                    print(f"  🧾 Receipts: {_rc['kind']} {_rc['mb']} MB in {_rc['seconds']}s")
+                    narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+                else:
+                    print("  ⚠️ receipts check failed — shipping without the beat")
+    # spec v3-E #3: a number promised on the packaging must be spoken in the video.
+    # Deterministic fix, never a raise — fact_check only sees claims that EXIST,
+    # so an absent promised number was invisible to every gate until here.
+    _pk = gates.packaging_payoff(script)
+    if not _pk["ok"]:
+        print(f"  ✂️ Packaging promised numbers the script never says — fixed: {_pk['evidence']}")
+    # v3-B: a tool video is illustrated by the tool itself — a screen recording
+    # of its real page — never stock. capture() fails soft; stock is the fallback.
+    scene_clips, tool_shot = None, ""
+    if script.get("format") == "tool":
+        cap = screencap.capture(script)
+        if cap:
+            scene_clips = cap["scene_clips"]
+            tool_shot = cap.get("screenshot") or ""
+            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        else:
+            print("  ⚠️ Screen capture failed — stock visuals for this run.")
+    if scene_clips is None:
+        scene_clips = eng.step3_download(script)
 
-    # info-dense motion graphics: stat scenes lead with a generated card, not stock
-    src_domain = ""
-    if script.get("source_url"):
-        try:
-            from urllib.parse import urlparse
-            src_domain = urlparse(script["source_url"]).netloc.replace("www.", "")
-        except Exception:
-            src_domain = ""
-    infographics.inject_cards(script, scene_clips, source_domain=src_domain)
+    src_domain, src_chip = source_chip(script)
 
     print("\n[4/10] 🎙️ Voiceover...")
     audio, edge_words = synthesize_voice(narration, script)
@@ -1060,6 +1606,24 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
           f"scene sync: {'ON' if durs else 'uniform fallback'}")
 
+    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
+    # AFTER the timings exist — step5_build splits a scene's time equally between
+    # its clips, so a card rendered to a fixed length either loops (replaying the
+    # count-up mid-scene) or is cut before the number reaches its real value.
+    infographics.inject_cards(script, scene_clips, source_domain=src_domain,
+                              scene_durs=durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+    if script.get("format") == "tool":
+        # the deliverable, on screen as a terminal card, in the scenes that speak it.
+        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
+        # leading the scene, so that a third clip cannot squeeze the command below
+        # readable length. It is a still, so it stays duration-agnostic.
+        screencap.inject_code_card(script, scene_clips)
+        # spec v3-E.2 #11: real terminal footage of the check leads the install
+        # scene, replacing the still card there (the final scene keeps it).
+        # Animated, so it must render to its exact slot share — the C.3 law.
+        receipts.inject_receipt_clip(script, scene_clips,
+                                     durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+
     video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
     if not video:
         print("  ❌ Build step failed.")
@@ -1070,7 +1634,14 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
     # Person-first thumbnail mined from this run's own footage; engine design is the fallback.
     thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
-    thumb = (thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name)
+    thumb = None
+    if tool_shot:
+        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
+        thumb = thumbnail.make_tool_thumb(
+            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
+    thumb = (thumb
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
+                               title=script["title"])
              or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
     # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
     # units freed, one fewer templated upload in the channel-level pattern.
@@ -1084,12 +1655,9 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # on-screen source chips during fact delivery (content timeline; frames carry
     # the overlay through the cold-open re-order untouched)
     cites = []
-    if starts and len(starts) >= 6:
-        chip = f"Source: {src_domain}" if src_domain else (
-            "Sources in description" if script.get("format") == "roundup" else "")
-        if chip:
-            for i in (1, len(starts) // 2, len(starts) - 2):
-                cites.append((starts[i] + 0.4, starts[i] + 6.4, chip))
+    if starts and len(starts) >= 6 and src_chip:
+        for i in (1, len(starts) // 2, len(starts) - 2):
+            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
     video = captions.burn_ass(video, ass, citations=cites)
 
     print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
@@ -1113,12 +1681,17 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
     if starts:
         cold_shift = l2._dur(fv.TEMP / "l2_cold.mp4") if l2_rec.get("cold_open") else 0.0
-        chapters = build_chapters(script, starts, intro_shift + cold_shift)
+        chapters = (tool_chapters(script, starts, intro_shift + cold_shift)
+                    or build_chapters(script, starts, intro_shift + cold_shift))
         if chapters:
             script["description"] = script["description"].rstrip() + "\n\n" + chapters
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
-    meta = eng.step8_meta(script, len(shorts))
+    meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script)
+    # Trip the re-hook tripwire HERE, while nothing is uploaded and aborting is
+    # still free. It used to run after the long-form was already on YouTube.
+    if shorts:
+        scheduling.validate_shorts_batch(shorts, [m["title"] for m in meta])
 
     # ---- confidence router: auto / notify(veto window) / hold ----------------
     stat_share = 0.0
@@ -1172,17 +1745,19 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         # binge architecture: every long-form lands in exactly one topic playlist
         eng.yt_playlist_add(yt_url, PLAYLIST_BY_FORMAT.get(script.get("format", fmt),
                                                            "AI News, Decoded"))
-        eng.yt_comment(yt_url, "Sources are in the description. What's your take — "
-                               "hype or turning point? 👇"
-                               + (f"\n\nMissed the last one: {prev_url}" if prev_url else ""))
+        eng.yt_comment(yt_url, pinned_comment(script, prev_url))
         if prev_url:
             eng.yt_comment(prev_url, f"📢 The next episode is live: {yt_url}")
 
         # funnel Shorts: first lands ~2h after the long-form publish, the rest on
-        # the 4h grid; validated against the immutable distribution rules
-        slots = scheduling.shorts_slots_after_long(len(shorts), long_publish_at) if shorts else []
-        scheduling.validate_shorts_batch(
-            shorts, [m.get("title", "") for m in meta[:len(shorts)]] or ["x"] * len(shorts))
+        # the 4h grid. The re-hook tripwire already ran before the upload — past
+        # this point the long-form is live and raising would hide it from the
+        # ledger, so nothing here may throw.
+        try:
+            slots = scheduling.shorts_slots_after_long(len(shorts), long_publish_at) if shorts else []
+        except Exception as e:
+            print(f"  ⚠️ Shorts scheduling failed ({e}) — publishing them unscheduled.")
+            slots = []
         for i, sp in enumerate(shorts):
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
@@ -1198,16 +1773,41 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
     else:
         print("\n  ⏸️  Render-only (publish skipped).")
 
-    # Success — only NOW is the topic burned.
-    mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
-    for it in script.get("roundup_items", []):
-        mark_used(it["title"], it.get("url", ""))
+    # v3-C: the free cheat sheet — written after upload so it carries the video
+    # link; the description already links its (pre-decided) file name.
+    cheat_sheet = None
+    tool_page = None
+    if script.get("format") == "tool" and script.get("deliverable"):
+        # One extraction, two consumers: the PDF and the tool page render the same
+        # sheet (a second extract_sheet call would pay twice and could disagree).
+        sheet = deliverable.sheet_for(script)
+        cheat_sheet = deliverable.make_cheat_sheet(script, video_url=yt_url or "", sheet=sheet)
+        # v3-F.1: the page the description already links. publish_page swallows
+        # everything — this runs inside the double-publish window.
+        tool_page = site.publish_page(script, sheet, yt_url or "", pdf=cheat_sheet)
 
-    # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
-    _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+    # Everything between a successful upload and the ledger row must be
+    # non-fatal. If the video is on YouTube but runs.jsonl carries no PUBLISHED
+    # row, already_published_today() answers False and the 14:53 retry cron
+    # publishes a SECOND video into the same slot — on a channel whose biggest
+    # risk is the inauthentic-content policy. A missed bookkeeping write is
+    # recoverable; a duplicate publish is not.
+    report = None
+    try:
+        # Success — only NOW is the topic burned.
+        mark_used(script.get("signal_title", script["title"]), script.get("source_url", ""))
+        for it in script.get("roundup_items", []):
+            mark_used(it["title"], it.get("url", ""))
 
-    report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
+        # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
+        _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+
+        report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
+    except Exception as e:
+        print(f"  ⚠️ Post-publish bookkeeping failed ({type(e).__name__}: {e}) — "
+              f"recording the run anyway so today cannot publish twice.")
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
+               packaging=_pk["fixed"],
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts_rendered=len(shorts),
                viral_score=(viral[1] if viral else None),
@@ -1215,13 +1815,19 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
                synthesis_ok=bool(syn.get("present") and syn.get("verified", True)),
                replication_passed=rep.get("passed", True),
                confidence=conf, stat_card_share=round(stat_share, 3),
-               deliverable=bool(script.get("deliverable")),
+               grounding_chars=len(str(script.get("grounding", ""))),
+               receipts=({k: script["receipts"].get(k) for k in ("kind", "seconds", "mb")}
+                         if isinstance(script.get("receipts"), dict) else None),
+               deliverable=bool(script.get("deliverable")), cheat_sheet=bool(cheat_sheet),
+               tool_page=bool(tool_page),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
                quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
     eng.cleanup()
     print(f"\n  ✅ DONE [{status}] → {video}")
-    return report
+    # save_report may have been the thing that failed above; a published video
+    # must still return truthy so __main__ does not exit(1) on a successful day.
+    return report or {"status": status, "video": video, "youtube_url": yt_url}
 
 
 if __name__ == "__main__":

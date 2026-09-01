@@ -1,7 +1,7 @@
 {
-    "youtube_channel_name": "AI Pulse",
-    "channel_name": "AI Pulse",
-    "channel_handle": "aipulse",
+    "youtube_channel_name": "ToolDojo",
+    "channel_name": "ToolDojo",
+    "channel_handle": "tooldojo",
     "channel_tagline": "AI news, decoded",
     "tts_provider": "kokoro",
     "kokoro_voice": "af_heart",
@@ -25,5 +25,18 @@
     "kokoro_voice_b": "am_michael",
     "l2_voice_backend": "kokoro",
     "l2_kokoro_voice": "bm_george",
-    "tool_format": false
+    "deliverable_base_url": "https://dev-shivam-05.github.io/AI-PULSE",
+    "promo_block": "",
+    "tool_format": true,
+    "tagline": "AI YOU CAN USE",
+    "elevenlabs_tts": false,
+    "elevenlabs_voice_id": "",
+    "elevenlabs_model": "eleven_turbo_v2_5",
+    "writer_model": "gemini-2.5-flash",
+    "receipts_check": true,
+    "site_pages": true,
+    "telegram": true,
+    "twitter": true,
+    "instagram": true,
+    "facebook": true
 }

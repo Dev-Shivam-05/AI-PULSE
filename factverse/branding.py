@@ -12,6 +12,7 @@ Everything is free + offline. Re-generate anytime with:  python -m factverse.bra
 from __future__ import annotations
 
 import math
+import re
 import os
 import shutil
 import subprocess
@@ -47,6 +48,26 @@ def _font(size):
         except Exception:
             continue
     return ImageFont.load_default()
+
+
+def fit_font(font_for, lines, start: int, budget_px: float, floor: int = 1, step: int = 6):
+    """Largest size <= `start` at which every line MEASURES inside `budget_px`.
+
+    Every surface that burns text onto a frame needs this, and only
+    thumbnail.make_tool_thumb had it: the older composers picked a size off a
+    character-count ladder and drew it unmeasured, so a long headline ran off
+    the 1280px frame. Returns (size, font). `floor` lets a caller prefer
+    overflow to illegibility (make_tool_thumb's original behaviour).
+    """
+    from PIL import Image as _Image
+    d = ImageDraw.Draw(_Image.new("L", (8, 8)))
+    size = max(int(floor), int(start))
+    font = font_for(size)
+    lines = [l for l in (lines or []) if l]
+    while size > floor and lines and max(d.textlength(l, font=font) for l in lines) > budget_px:
+        size = max(int(floor), size - int(step))
+        font = font_for(size)
+    return size, font
 
 
 def _lerp(a, b, t):
@@ -123,24 +144,44 @@ def _emblem(size):
     return img
 
 
+def _wordmark_parts() -> tuple[str, str]:
+    """The two-tone wordmark from the CONFIGURED name (v3-E #10/#12) — the old code
+    hardcoded "AI" + "PULSE", so the ToolDojo rename left the sting selling the old
+    channel. Space splits first; camelCase splits at the second capital ("ToolDojo"
+    -> TOOL + DOJO); a plain word renders whole in white."""
+    name = str(fv.CHANNEL_NAME).strip() or "AI Pulse"
+    if " " in name:
+        a, b = name.split(" ", 1)
+        return a.upper(), b.upper()
+    m = re.search(r"(?<=[a-z])[A-Z]", name)
+    if m:
+        return name[:m.start()].upper(), name[m.start():].upper()
+    return name.upper(), ""
+
+
 def _logo(target_w, tagline=True):
     iw = 430
     img = Image.new("RGBA", (1760, 540), (0, 0, 0, 0))
     img.alpha_composite(_emblem(iw), (10, 540 // 2 - iw // 2))
-    f = _font(190)
-    ai = _grad_text("AI", f)
-    pulse = _white_text("PULSE", f)
+    part_a, part_b = _wordmark_parts()
+    # measured, never assumed: "TOOL DOJO" is wider than "AI PULSE" and the canvas
+    # is fixed at 1760 — shrink from the original 190 until the mark fits.
+    size, f = fit_font(_font, [part_a + ("  " + part_b if part_b else "")],
+                       190, 1760 - 470 - 24)
+    ai = _grad_text(part_a, f)
     midy = 540 // 2 - 40
     x = 470
     img.alpha_composite(ai, (x, midy - ai.size[1] // 2))
-    x += ai.size[0] + 26
-    img.alpha_composite(pulse, (x, midy - pulse.size[1] // 2))
+    if part_b:
+        pulse = _white_text(part_b, f)
+        x += ai.size[0] + 26
+        img.alpha_composite(pulse, (x, midy - pulse.size[1] // 2))
     if tagline:
         ft = _font(50)
         tg = Image.new("RGBA", (1760, 110), (0, 0, 0, 0))
         td = ImageDraw.Draw(tg)
         tx = 482
-        for ch in "AI NEWS, DECODED":
+        for ch in fv.TAGLINE:
             td.text((tx, 12), ch, font=ft, fill=SUBT + (255,))
             bb = td.textbbox((0, 0), ch, font=ft)
             tx += (bb[2] - bb[0]) + 16
@@ -228,7 +269,7 @@ def make_channel_banner(out=None):
     canvas = img.convert("RGBA")
     canvas.alpha_composite(logo, ((BW - logo.width) // 2, BH // 2 - logo.height + 30))
     ft = _font(54)
-    tag = _white_text("AI NEWS, DECODED  ·  NEW VIDEO EVERY DAY", ft, color=SUBT)
+    tag = _white_text(f"{fv.TAGLINE}  ·  NEW VIDEO EVERY DAY", ft, color=SUBT)
     canvas.alpha_composite(tag, ((BW - tag.width) // 2, BH // 2 + 158))
     canvas.convert("RGB").save(str(out), "PNG")
     print(f"  ✅ Channel banner: {out}")
@@ -303,12 +344,28 @@ def make_outro(out):
     return out
 
 
+def _brand_stamp() -> str:
+    return f"{fv.CHANNEL_NAME}|{fv.TAGLINE}"
+
+
 def ensure_assets(force=False):
+    # spec v3-E #10: a Studio rename or tagline change must apply itself on the next
+    # run — the stamp records which brand the bumpers were rendered for.
     intro, outro = fv.ASSETS / "intro.mp4", fv.ASSETS / "outro.mp4"
+    stamp = fv.ASSETS / ".brand"
+    try:
+        if stamp.read_text(encoding="utf-8") != _brand_stamp():
+            force = True
+    except Exception:
+        force = True
     if force or not bumper_ok(intro):
         make_intro(intro)
     if force or not bumper_ok(outro):
         make_outro(outro)
+    try:
+        stamp.write_text(_brand_stamp(), encoding="utf-8")
+    except Exception:
+        pass
     return intro, outro
 
 

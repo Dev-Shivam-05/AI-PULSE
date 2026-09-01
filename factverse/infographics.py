@@ -23,6 +23,7 @@ from factverse import config as fv
 from factverse import branding as br
 
 FPS = 30
+CARD_DUR = 4.0          # fallback only — a card is normally rendered to its real slot
 NAVY_TOP = (13, 20, 38)
 NAVY_BOT = (24, 46, 92)
 YELLOW = (255, 214, 10)
@@ -53,7 +54,7 @@ def plan_cards(script: dict, max_cards: int = 4) -> list[dict]:
         for c in (d or {}).get("cards", []):
             n, stat, label = int(c.get("n", 0)), str(c.get("stat", "")).strip(), str(c.get("label", "")).strip()
             if 1 <= n <= len(scenes) and stat and label:
-                cards.append({"n": n, "stat": stat[:12], "label": label[:60]})
+                cards.append({"n": n, "stat": _cap_stat(stat), "label": label[:60]})
         if cards:
             return cards[:max_cards]
     except Exception as e:
@@ -64,9 +65,26 @@ def plan_cards(script: dict, max_cards: int = 4) -> list[dict]:
         m = _STAT_RE.search(s["text"])
         if m:
             tail = s["text"][m.end():].strip().split(".")[0]
-            cards.append({"n": s["n"], "stat": m.group(0).strip()[:12],
+            cards.append({"n": s["n"], "stat": _cap_stat(m.group(0)),
                           "label": " ".join(tail.split()[:7]) or "the number that matters"})
     return cards
+
+
+_STAT_MAX = 24          # was an inline 12, which cut "120.5 billion" mid-word
+
+
+def _cap_stat(stat: str) -> str:
+    """Bound a stat's length WITHOUT cutting it mid-word.
+
+    The old inline `stat[:12]` put "120.5 billio" and "2,400 percen" on screen —
+    the card mangling the very number the narration speaks. The cap only exists
+    to stop an LLM answering with a sentence; width is handled by measurement.
+    """
+    s = " ".join(str(stat or "").split())
+    if len(s) <= _STAT_MAX:
+        return s
+    cut = s[:_STAT_MAX]
+    return (cut.rsplit(" ", 1)[0] if " " in cut else cut).strip()
 
 
 def _count_seq(stat: str, t: float) -> str:
@@ -79,6 +97,12 @@ def _count_seq(stat: str, t: float) -> str:
         val = float(raw.replace(",", ""))
     except ValueError:
         return stat
+    if t >= 1.0:
+        # The end of the count-up is the frame held longest on screen, so it must
+        # be the stat the narration speaks — not a re-render of it. The format
+        # spec below is lossy at its own end point ("120.5 billion" -> "120
+        # billion", "154.7%" -> "155%"): synthesise the intermediate frames only.
+        return stat
     ease = 1 - (1 - min(1.0, t)) ** 3
     cur = val * ease
     if "." in raw and val < 100:
@@ -89,7 +113,7 @@ def _count_seq(stat: str, t: float) -> str:
 
 
 def make_card_clip(stat: str, label: str, out: str, source: str = "",
-                   dur: float = 4.0, size=(1280, 720)) -> str | None:
+                   dur: float = CARD_DUR, size=(1280, 720)) -> str | None:
     """Render the animated stat-card as a silent video clip."""
     W, H = size
     vertical = H > W
@@ -102,6 +126,9 @@ def make_card_clip(stat: str, label: str, out: str, source: str = "",
     label_size = int(H * (0.06 if not vertical else 0.035))
     try:
         em = br._alpha(br._emblem(int(H * 0.85)), 0.10)
+        margin = int(W * 0.035)          # the source chip's own left inset
+        _, fstat_fitted = br.fit_font(br._font, [stat], stat_size, W - 2 * margin)
+        _, flab_fitted = br.fit_font(br._font, [label], label_size, W - 2 * margin)
         for i in range(n):
             t = i / (n - 1)
             img = Image.new("RGB", (W, H))
@@ -114,7 +141,10 @@ def make_card_clip(stat: str, label: str, out: str, source: str = "",
             dd = ImageDraw.Draw(canvas, "RGBA")
             # stat count-up (fade+rise in the first 15%)
             a = min(1.0, t / 0.15)
-            fstat = br._font(stat_size)
+            # fit against the WIDEST frame of the count-up (the final stat), so the
+            # size never changes mid-animation: "2,400 percent" measures 1304px at
+            # the proportional size and was clipped at both edges of a 1280px card
+            fstat = fstat_fitted
             txt = _count_seq(stat, min(1.0, t / 0.6))
             bb = dd.textbbox((0, 0), txt, font=fstat)
             sx, sy = (W - (bb[2] - bb[0])) // 2, int(H * (0.30 if not vertical else 0.34) + (1 - a) * 30)
@@ -122,7 +152,7 @@ def make_card_clip(stat: str, label: str, out: str, source: str = "",
             dd.text((sx, sy), txt, font=fstat, fill=YELLOW + (int(255 * a),))
             # label (arrives at 25%)
             la = max(0.0, min(1.0, (t - 0.22) / 0.18))
-            flab = br._font(label_size)
+            flab = flab_fitted
             lb = dd.textbbox((0, 0), label, font=flab)
             lx = (W - (lb[2] - lb[0])) // 2
             ly = sy + bb[3] + int(H * 0.06)   # bb[3] = true glyph bottom incl. descender
@@ -149,7 +179,26 @@ def make_card_clip(stat: str, label: str, out: str, source: str = "",
     return None
 
 
-def inject_cards(script: dict, scene_clips: list, source_domain: str = "") -> int:
+def card_slot_dur(scene_dur, n_existing_clips: int) -> float:
+    """The share step5_build will actually give the card once it leads the scene.
+
+    A scene's time is split equally between its clips, so stacking the card onto
+    a scene that already has N clips gives it scene_dur/(N+1) — not the length it
+    was rendered at. Rendered too short, -stream_loop replays the count-up
+    mid-scene; rendered too long, the clip is cut before the count finishes and
+    the last frame on screen is a number the script never said.
+    """
+    try:
+        s = float(scene_dur)
+    except (TypeError, ValueError):
+        return CARD_DUR
+    if s <= 0:
+        return CARD_DUR
+    return s / (max(0, int(n_existing_clips)) + 1)
+
+
+def inject_cards(script: dict, scene_clips: list, source_domain: str = "",
+                 scene_durs: list | None = None) -> int:
     """Render planned cards and make each one its scene's lead visual."""
     cards = plan_cards(script)
     made = 0
@@ -158,7 +207,9 @@ def inject_cards(script: dict, scene_clips: list, source_domain: str = "") -> in
         if not 0 <= i < len(scene_clips):
             continue
         out = fv.TEMP / f"statcard_{card['n']:02d}.mp4"
-        clip = make_card_clip(card["stat"], card["label"], str(out), source=source_domain)
+        sdur = scene_durs[i] if scene_durs and i < len(scene_durs) else None
+        clip = make_card_clip(card["stat"], card["label"], str(out), source=source_domain,
+                              dur=card_slot_dur(sdur, len(scene_clips[i])))
         if clip:
             scene_clips[i].insert(0, clip)
             made += 1

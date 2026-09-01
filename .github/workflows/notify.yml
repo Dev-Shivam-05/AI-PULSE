@@ -1,0 +1,102 @@
+name: ToolDojo — announce
+
+# v3-F.2/F.3: one Telegram message and one X post per published video.
+#
+# Both surfaces run in the same job off the same ledger row, but they are
+# independent: separate switches, separate secrets, separate notified lists,
+# so one being broken or unconfigured never costs the other its post. X's
+# free tier allows ~500 posts/month; one video a day is ~31, so there is no
+# quota code.
+#
+# This is a SEPARATE workflow from publish.yml on purpose. The pipeline runs at
+# 12:23 UTC but uploads the long-form PRIVATE with publishAt = longform_slot_utc
+# (16:45 UTC), so a link posted from the publish run reads "Video unavailable"
+# for four and a half hours. 16:55 UTC is 10 minutes after that slot and two
+# hours after the 14:53 retry cron, so whatever ran today is public by now.
+#
+# The cron below is a literal — GitHub cannot read config.json. If
+# `longform_slot_utc` moves, move this too; until then the runtime guard
+# (factverse/notify.py skips a row whose publish_at is in the future) turns an
+# out-of-sync cron into a delay, never a dead link.
+on:
+  schedule:
+    - cron: "55 16 * * *"      # 16:55 UTC ≈ 10:25 PM IST — after the 16:45 publish slot
+  workflow_dispatch:
+
+permissions:
+  contents: write               # save state/notified.json back to the repo
+  actions: write                # keepalive: re-enable this cron
+
+concurrency:
+  group: ai-pulse-notify
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # notify -> site -> deliverable -> llm imports nothing heavier than requests.
+      - name: Install minimal deps
+        run: pip install requests
+
+      - name: Post the day's video
+        env:
+          # v3-F.2 #7 / v3-F.3 #3: an unset secret expands to "" and the module
+          # logs "not configured" and exits 0 — each seam costs nothing until
+          # the owner creates it (docs/spec/ai-pulse-v3f2.md, ai-pulse-v3f3.md).
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          # OAuth 1.0a user context: four values, none of which expire, so an
+          # unattended job never has to write a refreshed credential back.
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        run: python -m factverse.notify
+
+      # state/notified.json and state/notified_x.json are TRACKED, so they must
+      # be merged back the same way publish.yml saves its state — otherwise the
+      # next `git checkout -B main origin/main` reverts them and tomorrow
+      # re-posts today's video to whichever surface lost its row.
+      - name: Save state back to repo
+        if: always()
+        run: |
+          git config user.name "ai-pulse-bot"
+          git config user.email "actions@users.noreply.github.com"
+          ok=0
+          for i in 1 2 3; do
+            mkdir -p /tmp/notify_incoming
+            for f in state/notified.json state/notified_x.json; do
+              [ -f "$f" ] && cp "$f" /tmp/notify_incoming/ || true
+            done
+            # a local change to a tracked file makes `checkout -B` refuse, and under
+            # `bash -e` the step would die right here (the publish.yml lesson)
+            git commit -am "wip: notify state [skip ci]" --quiet || true
+            git fetch origin main --quiet
+            git checkout -B main origin/main --quiet
+            python -m factverse.state_merge /tmp/notify_incoming
+            git add state/notified.json state/notified_x.json 2>/dev/null || true
+            if git commit -m "state update [skip ci]" --quiet; then
+              if git push origin main; then ok=1; break; fi
+            else
+              echo "no state change"; ok=1; break
+            fi
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::warning::notify state push failed — today's video may be posted again tomorrow"
+          fi
+
+      # GitHub silently disables cron workflows after ~60 days without repo activity.
+      - name: Keep the schedule alive
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/notify.yml/enable" || true

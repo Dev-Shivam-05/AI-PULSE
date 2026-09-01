@@ -1,60 +1,116 @@
-# AI Pulse — Content & Posting Playbook
+# AI Pulse — Content & Posting Playbook (v3)
 
-All times in **IST**. These are research-based *starting points*; once the channel
-has data, the learning loop will refine them automatically.
+All times in **IST**. The numbers here are the locked spec values
+(`docs/spec/ai-pulse-v3.md`, `docs/spec/ai-pulse-v3c.md`); the learning loop (Phase D) will
+tune them once ~2 weeks of v3 data exist. The one metric that decides whether v3 worked:
+**average view duration ≥ 2:00** (v2 baseline: 0:38).
 
-## What actually posts today (implemented)
+## What posts today (implemented)
 
-The GitHub Actions cron runs **once daily at 6:30 PM IST** and publishes the long video
-first, then its 3 Shorts back-to-back (each Short's description links to the long video).
-The format is chosen **virality-first** each day: an LLM judge scores the top stories, a
-≥7/10 story runs as news with the judge's viral angle, otherwise the day banks an evergreen
-explainer; Sunday is the weekly roundup — see `factverse/ai_pipeline.py:decide_format`.
+The GitHub Actions cron fires at **5:53 PM IST** (retry 8:23 PM; the second firing is a no-op
+once the day is done). One run = one long video scheduled for the 16:45 UTC slot, then Short #1
+about **2 h after the long-form goes live** (≈00:15 IST) and Short #2 on the next
+07 / 12 / 17 / 21 IST grid slot, with the ≥4 h minimum preserved
+(`scheduling.shorts_slots_after_long`). The lane is chosen per day by
+`ai_pipeline.decide_format`:
 
-> Staggered posting (the table below) needs YouTube's `publishAt` scheduling — a good
-> future upgrade; do NOT add more daily cron runs, one run already uses ~6.5k of the
-> 10k YouTube API quota.
+1. **Sunday** → weekly top-5 roundup.
+2. A story scores **≥ 8/10** with the viral judge → news explainer (two voices).
+3. A **tool signal** exists (GitHub trending / Hugging Face trending / Product Hunt) → **tool video**. This is the default lane.
+4. Otherwise → evergreen explainer.
 
-## Aspirational staggered schedule (future `publishAt` upgrade)
+A FACTCHECK / ADVICE / POLICY block on an automatic run re-runs the day as a forced evergreen
+— a blocked story never costs the day.
 
-| Slot | Time (IST) | What | Why |
-|---|---|---|---|
-| 1 | **9:00 AM** | **Long video** (YouTube) | Live early so it accumulates all day + Shorts can link to it. |
-| 2 | **12:30 PM** | **Short #1** (YouTube) | India lunch scroll; links to today's long video. |
-| 3 | **5:30 PM** | **Short #2** (YouTube) | Global prime: India evening + US morning + Europe afternoon. |
-| 4 | **9:00 PM** | **Short #3** (YouTube) | India night prime time. |
+## The tool video (the product)
 
-> Instagram Reels stay manual for now (auto-posting from datacenter IPs = ban risk).
-> IG captions can't hold a clickable link — put the YouTube link in the **IG bio**.
+A tool video is a **transaction**, not a broadcast. The viewer must be able to DO the thing
+within ten minutes of watching.
 
-## The 3 Shorts — concept (cut from the long video)
-Each Short = a different *hook angle* into the same story, ending with "full video → link":
+| Part | Rule |
+|---|---|
+| Length | 4:00–6:00 · 600–900 words (900 is a hard cap; the critique pass cuts repetition, never pads) |
+| Scene 1 (hook) | The specific thing the viewer will be able to do + the most surprising concrete detail (stars, size, speed, price = free). No greetings |
+| What it is | 1–2 scenes, attributed to who built it |
+| Get it running | The exact real commands from the source — the one place verbatim is required |
+| What to make | 3–5 concrete uses, most impressive first |
+| One honest limitation | Who should NOT bother / what it can't do yet (the "filter" scene) |
+| Final scene | The single next action + "the exact command is in the description" + ONE question + subscribe |
+| `deliverable` | Required: `{kind: command|repo|steps, text, url}`. No deliverable → no tool video |
+| Visuals | ≥70% original: a screen recording of the tool's real page (headless Chromium, dark, 1920×1080) cut sequentially across scenes, plus a terminal-style code card of the deliverable in the install scene and the final scene. Stock is only the failure fallback |
+| Thumbnail | The real page screenshot + 2–4 words, Inter Black, white on #DC2626, red baseline |
 
-- **Short #1 — The Shock:** the single most surprising fact/number from the video. Hook: "This AI just did something nobody thought possible." Pure curiosity.
-- **Short #2 — What It Means For You:** the practical "why you should care" angle. Hook: "Here's how this changes your job / your phone / your money."
-- **Short #3 — The Cliffhanger:** a question or tension the full video answers. Hook: "But there's a catch nobody's talking about…"
+## Description template (tool)
 
-Format for all: vertical 9:16, the first 1.5 s is the hook text, big live captions throughout, the CTA + link card in the last 3 s. (The engine already picks 3 distinct high-impact moments and adds hook + CTA overlays.)
+Links live **above the fold** — paragraph 1 is the hook + main keyword, then the transaction:
 
-## SEO — titles, tags, description (organic reach)
-
-**Honest priority order (what actually drives views in 2026):**
-1. **Thumbnail + title (CTR)** — ~80% of the battle. Curiosity gap + the key noun.
-2. **Hook + retention** — first 3 seconds, then no dead air.
-3. **Then** tags/description/SEO — a *minor* ranking signal, but still worth doing well.
-
-**Title formula:** `[Curiosity trigger] + [specific AI noun]`, < 60 chars, keyword near the front.
-- e.g. "GPT-5.6 Just Changed Everything (Here's How)", "The AI Chip That Breaks Nvidia's Grip".
-
-**Description:** first 2 lines = hook + main keyword (YouTube weighs the first ~100 chars heavily), then a 2–3 sentence summary, then timestamps/chapters, then 3–5 hashtags, then "Subscribe to AI Pulse". Include `Source: <url>` for credibility.
-
-**Tag set (15–25, auto-generated per video — example for a GPT-5.6 video):**
 ```
-ai, artificial intelligence, ai news, ai news today, gpt 5.6, gpt 5, openai,
-chatgpt, new ai model 2026, ai update, machine learning, llm, generative ai,
-ai explained, ai breakthrough, future of ai, ai tools, tech news, deep learning,
-openai gpt 5.6, ai 2026, ai technology
-```
-Mix = exact-match (gpt 5.6) + broad (ai news) + branded (ai pulse) + trending (ai 2026).
+<hook paragraph with the main keyword>
 
-**Engagement boosters (per upload):** pinned comment asking a question, end screen → next video, a Community poll a few times a week. These lift session time, which the algorithm rewards.
+🔧 Try it yourself:
+<exact command or first step>
+<source url>
+📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/<date>-<slug>.pdf
+
+<promo_block, only if set in config.json>
+
+<rest of the description>
+
+Source: <url>
+
+#AI #ArtificialIntelligence #TechNews
+
+Chapters:
+0:00 ...
+
+▶ Watch next: <previous episode>
+```
+
+The cheat sheet is an A4 one-pager (what it is · get it running · make these 3 things · skip it
+if · source + video links), written after upload to `docs/tools/` and committed with the run's
+state, so the link is live once the state push lands (GitHub Pages, `main` `/docs`).
+`promo_block` is the affiliate-ready slot: empty today; fill it when there is something to sell.
+
+## News / evergreen / roundup (unchanged lanes)
+
+News runs only when the judge scores ≥ 8/10 (was 7): hot topics + emotional charge, two-voice
+Host + Analyst, source-grounded, stat-cards on numbers, on-screen source chips. Evergreen is
+the search-traffic floor. Sunday is curation (added value = policy safety). These lanes still
+use relevance-ranked Pexels clips.
+
+## Shorts (2/day, cut from the long video)
+
+`find_best_moments` picks the high-impact moments and labels each one with a hook angle
+(`scripts/factverse_engine.py`); every Short ends with "full video → link", which is also
+posted as a comment because Shorts hide description links:
+
+- **cliffhanger** — a question or tension the clip does not answer ("Why the price drop backfires").
+- **single_fact** — one sourced, surprising number ("54% already had an incident").
+
+Format: vertical 9:16, hook text over the **first 3.5 s**, big live captions, CTA in the
+**last 6 s**, no outro so the loop lands back on the hook. Spacing is hard-validated by
+`scheduling.validate_distribution` (≥4 h between drops, ≤4 per day).
+
+## SEO — titles, tags, description
+
+**Honest priority order:** 1. thumbnail + title (CTR) · 2. hook + retention · 3. tags/description.
+
+**Title formula:** `[what you can do] + [specific tool noun]`, < 60 chars, keyword near the front.
+Tool: "Convert Any File to Markdown in One Command (Free, by Microsoft)".
+News: "The AI Chip That Breaks Nvidia's Grip".
+
+**Tag set (15–25, auto-generated):** exact-match tool/model names + broad (`ai tools`, `ai news`)
++ branded (`ai pulse`) + trending (`ai 2026`). The brand tags are appended automatically.
+
+**Engagement boosters (automated):** an automatic question comment (posted, not pinned — the
+Data API cannot pin), the watch-next chain link in
+the description and comments, one topic playlist per lane ("Free AI Tools, Tested" for tool
+videos).
+
+> **Instagram and Facebook Reels are automated through the official Graph API** (v3-F.4,
+> `factverse/reels.py`): the day's first Short is re-uploaded to both. That line used to read
+> "Instagram stays manual" — it was about the `instagrapi` path, which logs in as a human from
+> a datacenter IP and is ban-bait. A first-party, authenticated, rate-limited API is not the
+> same act, and `docs/ENGINEERING_AUDIT.md` #6 asked for exactly this.
+> The caption carries no YouTube link (it would be dead until 16:45 UTC, and an IG caption
+> cannot hold a clickable link anyway) — put the channel link in the IG bio.

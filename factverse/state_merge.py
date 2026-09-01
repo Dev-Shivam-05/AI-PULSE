@@ -10,8 +10,11 @@ lost — which later causes duplicate published videos.
 This module knows the merge semantics of every state file:
   * used_topics.json / used_urls.json  -> ordered union of two lists
   * state/failed_topics.json           -> per-key max of two count dicts
+  * state/l2_usage.json                -> per-kind ordered union of used names
+  * state/stock_ledger.json            -> ordered line/entry union
   * output/production_log.json         -> union of entries by (timestamp, title)
   * state/runs.jsonl / analytics.jsonl -> ordered line union
+  * state/tools_index.json             -> union by page name, later entry wins
 
 Usage (from the repo root, typically in CI after `git checkout -B main origin/main`):
     python -m factverse.state_merge <incoming_dir>
@@ -33,6 +36,30 @@ FILES = (
     "output/production_log.json",
     "state/runs.jsonl",
     "state/analytics.jsonl",
+    # Both are TRACKED and written by the run. A tracked state file that is not
+    # stashed AND merged is reverted by `git checkout -B main origin/main` on
+    # every CI run: l2_usage would let the same human clip be injected into every
+    # video, and stock_ledger would forget the 30-day stock repeat guard.
+    "state/l2_usage.json",
+    "state/stock_ledger.json",
+    # v3-F.1: the site catalog. Every docs/*.html file is DERIVED from this, so
+    # losing it to `checkout -B main origin/main` would silently empty the site
+    # index on the next rebuild. Basenames must stay unique — main() reads the
+    # incoming copy by basename, not by path.
+    "state/tools_index.json",
+    # v3-F.2/F.3: the video URLs already announced, one list per surface. Lists of
+    # strings, so the generic ordered union below is already the right semantics.
+    # Losing either to `checkout -B main origin/main` would re-post the same video
+    # every day; sharing ONE list between the surfaces would mark a video done for
+    # X because Telegram took it, and then X would never post it at all.
+    "state/notified.json",
+    "state/notified_x.json",
+    # v3-F.4: the same treatment again for IG and FB Reels. The count of files
+    # this trap applies to grows with every surface, and the reason two surfaces
+    # never share one list is the F.3 one: whichever posted first would retire
+    # the video for the other, which would then never post it at all.
+    "state/notified_ig.json",
+    "state/notified_fb.json",
 )
 
 
@@ -44,8 +71,14 @@ def _read_text(p: Path) -> str | None:
 
 
 def _merge_list(a, b) -> list:
+    # A side that is not a list (a corrupt/hand-edited body: a dict, a scalar) used
+    # to raise TypeError here — inside the ONE CI step with no `|| true`, where
+    # `bash -e` then kills the state-save and loses ALL state, not just this file.
+    # _merge_index got this guard in v3-F.1; the generic fallback never had it.
+    a = a if isinstance(a, list) else []
+    b = b if isinstance(b, list) else []
     seen, out = set(), []
-    for item in (a or []) + (b or []):
+    for item in a + b:
         key = json.dumps(item, ensure_ascii=False, sort_keys=True)
         if key not in seen:
             seen.add(key)
@@ -72,6 +105,62 @@ def _merge_log(a, b) -> list:
             out.append(e)
     out.sort(key=lambda e: e.get("timestamp", "") if isinstance(e, dict) else "")
     return out[-400:]
+
+
+def _merge_used(a, b) -> dict:
+    """state/l2_usage.json: kind -> list of clip names. Per-key ordered union.
+
+    A name that appears on either side is consumed: an L2 clip is usable at most
+    once, so the union must never lose one.
+    """
+    out = {k: list(v) for k, v in (a or {}).items() if isinstance(v, list)}
+    for k, v in (b or {}).items():
+        if not isinstance(v, list):
+            continue
+        cur = out.setdefault(k, [])
+        for name in v:
+            if name not in cur:
+                cur.append(name)
+    return out
+
+
+def _merge_seen(a, b) -> dict:
+    """state/stock_ledger.json: clip id -> ISO timestamp. Union, latest wins.
+
+    The ledger answers "did we use this stock clip in the last 30 days", so a
+    later sighting is the one that matters and no id may be dropped.
+    """
+    out = dict(a or {})
+    for k, v in (b or {}).items():
+        if k not in out or str(v) > str(out[k]):
+            out[k] = v
+    return out
+
+
+def _merge_index(a, b) -> list:
+    """state/tools_index.json: union keyed by `page`, later entry wins.
+
+    The generic list union dedups on exact equality, so a retry that re-uploads
+    the same tool with a different video_url would print that tool TWICE on the
+    index. `page` is the identity (one page per tool video); between two rows
+    with that key the later date wins, and on an equal date the side that has a
+    video_url does (a page written before the upload carries none).
+    """
+    out: dict[str, dict] = {}
+    order: list[str] = []
+    # `list(a or [])` raises TypeError on a scalar, and merge_file's caller in CI has
+    # no `|| true` — under `bash -e` that would abort the whole state-save step.
+    for e in ((a if isinstance(a, list) else []) + (b if isinstance(b, list) else [])):
+        if not isinstance(e, dict) or not e.get("page"):
+            continue
+        key = str(e["page"])
+        cur = out.get(key)
+        if key not in out:
+            order.append(key)
+        if cur is None or (str(e.get("date", "")), bool(e.get("video_url"))) >= (
+                str(cur.get("date", "")), bool(cur.get("video_url"))):
+            out[key] = e
+    return [out[k] for k in order]
 
 
 def _merge_jsonl(a: str | None, b: str | None) -> str:
@@ -107,6 +196,12 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         merged = _merge_counts(theirs, ours)
     elif rel == "output/production_log.json":
         merged = _merge_log(theirs, ours)
+    elif rel == "state/l2_usage.json":
+        merged = _merge_used(theirs, ours)
+    elif rel == "state/stock_ledger.json":
+        merged = _merge_seen(theirs, ours)
+    elif rel == "state/tools_index.json":
+        merged = _merge_index(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))
