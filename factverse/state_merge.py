@@ -47,10 +47,13 @@ FILES = (
     # index on the next rebuild. Basenames must stay unique — main() reads the
     # incoming copy by basename, not by path.
     "state/tools_index.json",
-    # v3-F.2: the video URLs already announced on Telegram. A list of strings, so
-    # the generic ordered union below is already the right semantics. Losing it to
-    # `checkout -B main origin/main` would re-post the same video every day.
+    # v3-F.2/F.3: the video URLs already announced, one list per surface. Lists of
+    # strings, so the generic ordered union below is already the right semantics.
+    # Losing either to `checkout -B main origin/main` would re-post the same video
+    # every day; sharing ONE list between the surfaces would mark a video done for
+    # X because Telegram took it, and then X would never post it at all.
     "state/notified.json",
+    "state/notified_x.json",
 )
 
 

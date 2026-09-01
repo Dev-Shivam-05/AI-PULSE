@@ -1,8 +1,10 @@
-"""v3-F.2: one Telegram message per published video.
+"""v3-F.2/F.3: one Telegram message and one X post per published video.
 
 The channel's only distribution surface is YouTube's own feed. A Telegram
 channel is the cheapest owned one there is — free, no review, no algorithm —
-and the v3-F.1 tool page already emits the OG card Telegram renders.
+and the v3-F.1 tool page already emits the OG card Telegram renders. X's free
+tier adds a second surface for the same ledger row at the same price (~500
+posts/month against our ~31).
 
 **Why this is a separate entry point and not part of run():** `eng.yt_upload`
 uploads the long-form PRIVATE with `publishAt` = `longform_slot_utc` (16:45
@@ -13,18 +15,26 @@ reads the ledger for a row whose `publish_at` is already in the past.
 
 Every function fails soft (returns False/None, never raises) and `main()`
 always exits 0: this is an unattended job whose failure must never turn the
-repo red or block the state-save.
+repo red or block the state-save. The two surfaces are independent — each has
+its own switch, its own secrets and its own `notified` list, so one being
+broken or unconfigured never costs the other its post.
 
-Spec: docs/spec/ai-pulse-v3f2.md
+Specs: docs/spec/ai-pulse-v3f2.md (Telegram), docs/spec/ai-pulse-v3f3.md (X)
 """
 from __future__ import annotations
 
+import base64
 import datetime as _dt
+import hashlib
+import hmac
 import html
 import json
 import os
+import re
 import sys
+import time
 from pathlib import Path
+from urllib.parse import parse_qsl, quote, urlsplit
 
 import requests
 
@@ -32,13 +42,17 @@ from factverse import config as fv
 from factverse import site
 
 API = "https://api.telegram.org"
+X_API = "https://api.x.com/2/tweets"
 RUNS_LOG = fv.STATE / "runs.jsonl"
 NOTIFIED = fv.STATE / "notified.json"
+NOTIFIED_X = fv.STATE / "notified_x.json"
 
-MAX_NOTIFIED = 500       # spec #10 — newest N video URLs are remembered
-MAX_AGE_HOURS = 36       # spec #3 — never post a video older than this
-TIMEOUT = 20             # spec #9
+MAX_NOTIFIED = 500       # F.2 #10 — newest N video URLs are remembered
+MAX_AGE_HOURS = 36       # F.2 #3 — never post a video older than this
+TIMEOUT = 20             # F.2 #9
 MAX_TEXT = 4096          # Bot API hard limit: one char over is a 400, i.e. no post
+MAX_POST = 280           # X: WEIGHTED chars, not characters — see weighted_len
+URL_WEIGHT = 23          # F.3 #8: every URL costs 23 regardless of length (t.co)
 
 
 # --------------------------------------------------------------- config/secrets
@@ -48,8 +62,14 @@ def enabled() -> bool:
     return fv.flag("telegram", True)
 
 
+def x_enabled() -> bool:
+    # "twitter", not "x": fv.setting overrides from the env var of the same
+    # UPPER name, and `$X` is far too generic a name to bet an unattended job on.
+    return fv.flag("twitter", True)
+
+
 def _token() -> str:
-    """Env only (spec #7). A bot token in config.json would be a committed secret."""
+    """Env only (F.2 #7). A bot token in config.json would be a committed secret."""
     return str(os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
 
 
@@ -57,14 +77,31 @@ def _chat() -> str:
     return str(os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 
 
-def _redact(text, token: str | None = None) -> str:
-    """The request URL carries the token, and requests' own exception messages quote
-    that URL verbatim ("Max retries exceeded with url: /bot123:AA.../sendMessage").
-    Actions masks secret values in its logs; a local run and a fork do not."""
+def _x_secrets() -> tuple[str, str, str, str]:
+    """(consumer key, consumer secret, access token, access secret) — env only.
+
+    OAuth 1.0a user context (F.3 #3): nothing here expires, so an unattended job
+    never has to write a refreshed credential back into a repository secret."""
+    return tuple(str(os.environ.get(n) or "").strip() for n in (   # type: ignore[return-value]
+        "X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"))
+
+
+def _redact(text, token: str | None = None, extra=()) -> str:
+    """The Telegram request URL carries the token, and requests' own exception
+    messages quote that URL verbatim ("Max retries exceeded with url:
+    /bot123:AA.../sendMessage"). X's credentials ride in an Authorization header
+    rather than the URL, but a proxy error can echo a header back, so the four
+    values go through the same door. Actions masks secret values in its logs; a
+    local run and a fork do not."""
     s = str(text or "")
     tok = token if token is not None else _token()
     if tok:
         s = s.replace("bot" + tok, "bot***").replace(tok, "***")
+    # longest first: a short secret that is a substring of a long one would
+    # otherwise cut the long one in half and leak the remainder.
+    for value in sorted({str(v) for v in (extra or []) if str(v or "").strip()},
+                        key=len, reverse=True):
+        s = s.replace(value, "***")
     return s
 
 
@@ -132,11 +169,14 @@ def _when(row: dict) -> _dt.datetime | None:
 
 def pick_row(rows: list[dict], notified: list[str] | None = None,
              now: _dt.datetime | None = None) -> dict | None:
-    """The newest ledger row that may be posted (spec #3), or None.
+    """The newest ledger row that may be posted (F.2 #3), or None.
 
     PUBLISHED + a YouTube URL + already public + younger than 36 h + not already
     sent. The age bound is what stops the first-ever run announcing a video from
-    months ago off the existing ledger."""
+    months ago off the existing ledger.
+
+    `notified` is the caller's own list, so the two surfaces retry independently:
+    a video Telegram has taken and X has not is still eligible for X."""
     now = now or _dt.datetime.utcnow()
     seen = set(notified or [])
     eligible: list[tuple[_dt.datetime, dict]] = []
@@ -181,7 +221,7 @@ def _esc(v) -> str:
 
 
 def format_message(row: dict, entry: dict | None = None) -> str:
-    """The message body (spec #5). Pure: same row in, same bytes out.
+    """The Telegram message body (F.2 #5). Pure: same row in, same bytes out.
 
     A section with no truthful value is omitted rather than left empty — a tool row
     whose PDF/page seam failed still posts its command and its video."""
@@ -223,17 +263,117 @@ def format_message(row: dict, entry: dict | None = None) -> str:
     return _join(blocks)                                # title + link always fit
 
 
+# --------------------------------------------------------------- X text (pure)
+# F.3 #8: X's limit is 280 WEIGHTED characters (twitter-text config v3). A code
+# point inside one of these ranges costs 1; everything else — every emoji, every
+# CJK character — costs 2. `len()` therefore ships posts the API refuses with
+# "Text is too long", and the two lane emoji alone are 2 apiece.
+_WEIGHT_1_RANGES = ((0, 4351), (8192, 8205), (8208, 8210), (8214, 8238),
+                    (8240, 8286), (8304, 8348), (8352, 8383))
+# We write every URL in these posts ourselves, so a whitespace-delimited scheme
+# match is the whole grammar we need.
+_URL_RE = re.compile(r"https?://\S+")
+
+
+def weighted_len(text) -> int:
+    """X's own character count: a URL is 23 whatever its length (t.co rewrites it),
+    a code point in `_WEIGHT_1_RANGES` is 1, anything else is 2."""
+    s = str(text or "")
+    urls = len(_URL_RE.findall(s))
+    body = _URL_RE.sub("", s)
+    total = urls * URL_WEIGHT
+    for ch in body:
+        cp = ord(ch)
+        total += 1 if any(lo <= cp <= hi for lo, hi in _WEIGHT_1_RANGES) else 2
+    return total
+
+
+def _fit_title(title: str, budget: int) -> str:
+    """The title cut to `budget` weighted chars, on a word boundary, with '…'.
+
+    LAST resort only (F.3 #9) — the blocks are shed first. Slicing is safe here
+    and was not safe in the Telegram body: an X post is plain text, so there is no
+    tag or entity to cut in half. '…' is U+2026, inside the 8214–8238 weight-1
+    range, so it costs exactly 1."""
+    title = str(title or "").strip()
+    if budget <= 0:
+        return ""
+    if weighted_len(title) <= budget:
+        return title
+    out, used = [], 0
+    for ch in title:
+        w = weighted_len(ch)
+        if used + w > budget - 1:            # -1 reserves the ellipsis
+            break
+        out.append(ch)
+        used += w
+    cut = "".join(out)
+    if " " in cut.strip():
+        cut = cut[:cut.rstrip().rfind(" ")]
+    cut = cut.rstrip()
+    return (cut + "…") if cut else ""
+
+
+def format_post(row: dict, entry: dict | None = None) -> str:
+    """The X post body (F.3 #6/#7). Pure: same row in, same bytes out.
+
+    Plain text — no markup, no hashtags, no escaping. The only thing that differs
+    from `format_message` is the budget: 280 weighted chars instead of 4096."""
+    row = row if isinstance(row, dict) else {}
+    title = str(row.get("title") or "").strip()
+    video = site.safe_link(row.get("youtube_url"))      # never post a scheme we did not check
+    if not title or not video:
+        return ""
+    entry = entry if isinstance(entry, dict) else None
+    tail = f"▶ {video}"
+    lead = "📰" if entry is None else "🔧"
+
+    blocks: list[tuple[str, list[str]]] = []
+    if entry is not None:
+        command = str(entry.get("command") or "").strip()
+        if command:
+            blocks.append(("command", ["", command]))
+        name = site.entry_name(entry)
+        if name:
+            page = site.safe_link(site.public_url(name))
+            if page:
+                blocks.append(("page", ["", f"📄 {page}"]))
+
+    def _join(t: str, bs) -> str:
+        head = [f"{lead} {t}"]
+        body = [ln for _, b in bs for ln in b]
+        # A story post has no blocks, so it needs its own blank line before the
+        # video; a tool post's 📄 line sits directly above it (F.3 #6/#7).
+        return "\n".join(head + (body if body else [""]) + [tail])
+
+    # Shed whole blocks by VALUE — the page link before the command, because the
+    # command is the product. Never a partial block.
+    for drop in ("page", "command"):
+        text = _join(title, blocks)
+        if weighted_len(text) <= MAX_POST:
+            return text
+        blocks = [(k, b) for k, b in blocks if k != drop]
+
+    text = _join(title, blocks)
+    if weighted_len(text) <= MAX_POST:
+        return text
+    # Everything optional is gone and it still does not fit: the title itself is
+    # the overflow. Cut it, keeping the lane emoji and the video link intact.
+    return _join(_fit_title(title, MAX_POST - weighted_len(_join("", blocks))), blocks)
+
+
 # --------------------------------------------------------------- send (I/O)
 def send(text: str, link: str = "", token: str | None = None, chat: str | None = None) -> bool:
-    """POST one message. True only on HTTP 200 with `ok: true` — requests does NOT
-    raise on 400/401/403, and announcing a post the API refused is worse than none."""
+    """POST one Telegram message. True only on HTTP 200 with `ok: true` — requests
+    does NOT raise on 400/401/403, and announcing a post the API refused is worse
+    than announcing none."""
     token = _token() if token is None else token
     chat = _chat() if chat is None else chat
     if not (token and chat and text):
         return False
     payload: dict = {"chat_id": chat, "text": text, "parse_mode": "HTML"}
     if link:
-        # spec #6: without this Telegram previews the FIRST link (the page); the
+        # F.2 #6: without this Telegram previews the FIRST link (the page); the
         # video is what needs the click.
         payload["link_preview_options"] = {"url": link, "prefer_large_media": True}
     for attempt in (1, 2):
@@ -262,32 +402,160 @@ def send(text: str, link: str = "", token: str | None = None, chat: str | None =
     return False
 
 
-def main(argv: list[str] | None = None) -> int:
-    """Always returns 0 — a failed announcement must never fail the workflow."""
-    if not enabled():
-        print("  ↷ Telegram: disabled by config (telegram=false).")
-        return 0
-    if not (_token() and _chat()):
-        print("  ↷ Telegram not configured — skipping.")
-        return 0
+# --------------------------------------------------------------- OAuth 1.0a (pure)
+def _pct(s) -> str:
+    """RFC 3986 percent-encoding: unreserved is ALPHA / DIGIT / '-' / '.' / '_' /
+    '~'. Python's always-safe set is exactly those, so `safe=""` is the whole
+    rule — this is the single place OAuth 1.0a implementations go wrong."""
+    return quote(str(s), safe="")
+
+
+def oauth_base_string(method: str, url: str, params) -> str:
+    """RFC 5849 §3.4.1: METHOD & pct(base URL) & pct(normalized params).
+
+    `params` is a sequence of (key, value) PAIRS, not a dict — a parameter name
+    may legally repeat, and the sort is over the encoded pairs."""
+    parts = urlsplit(str(url))
+    base_url = f"{parts.scheme.lower()}://{parts.netloc.lower()}{parts.path}"
+    pairs = [(_pct(k), _pct(v)) for k, v in list(params)]
+    pairs += [(_pct(k), _pct(v)) for k, v in parse_qsl(parts.query, keep_blank_values=True)]
+    norm = "&".join(f"{k}={v}" for k, v in sorted(pairs))
+    return f"{method.upper()}&{_pct(base_url)}&{_pct(norm)}"
+
+
+def oauth_signature(base: str, consumer_secret: str, token_secret: str) -> str:
+    """HMAC-SHA1 over the base string, keyed by pct(consumer)&pct(token), base64."""
+    key = f"{_pct(consumer_secret)}&{_pct(token_secret)}".encode("utf-8")
+    mac = hmac.new(key, str(base).encode("utf-8"), hashlib.sha1).digest()
+    return base64.b64encode(mac).decode("ascii")
+
+
+def oauth_header(method: str, url: str, secrets, nonce: str = "", timestamp: str = "") -> str:
+    """The `Authorization: OAuth …` header for one request.
+
+    The JSON body is deliberately NOT signed: OAuth 1.0a only folds a body into
+    the base string when it is `application/x-www-form-urlencoded`, and X's v2
+    endpoints take JSON."""
+    ck, cs, at, ats = secrets
+    oauth = [
+        ("oauth_consumer_key", ck),
+        ("oauth_nonce", nonce or base64.urlsafe_b64encode(os.urandom(24)).decode().strip("=")),
+        ("oauth_signature_method", "HMAC-SHA1"),
+        ("oauth_timestamp", timestamp or str(int(time.time()))),
+        ("oauth_token", at),
+        ("oauth_version", "1.0"),
+    ]
+    sig = oauth_signature(oauth_base_string(method, url, oauth), cs, ats)
+    fields = sorted(oauth + [("oauth_signature", sig)])
+    return "OAuth " + ", ".join(f'{_pct(k)}="{_pct(v)}"' for k, v in fields)
+
+
+def send_x(text: str, secrets=None) -> bool:
+    """POST one tweet. True only on HTTP 200/201 carrying a `data.id`.
+
+    No retry (F.3 #5): X answers a repeated post with 403 `duplicate content`, so
+    retrying a call that may have half-succeeded is how one video becomes two."""
+    ck, cs, at, ats = _x_secrets() if secrets is None else tuple(secrets)
+    if not (text and ck and cs and at and ats):
+        return False
+    hide = (cs, ats, at, ck)
     try:
-        notified = load_notified()
+        r = requests.post(X_API, json={"text": text},
+                          headers={"Authorization": oauth_header("POST", X_API, (ck, cs, at, ats)),
+                                   "Content-Type": "application/json"},
+                          timeout=TIMEOUT)
+    except Exception as e:
+        print(f"   ⚠️ x failed — {type(e).__name__}: {_redact(e, '', hide)}")
+        return False
+    code = getattr(r, "status_code", 0)
+    if code in (200, 201):
+        try:
+            data = (r.json() or {}).get("data")
+        except Exception:
+            data = None
+        if isinstance(data, dict) and str(data.get("id") or "").strip():
+            return True
+    print(f"   ⚠️ x failed — HTTP {code} {_redact(str(getattr(r, 'text', ''))[:120], '', hide)}")
+    return False
+
+
+# --------------------------------------------------------------- entry points
+def _post_telegram() -> None:
+    """One Telegram message, or a logged no-op. Never raises.
+
+    The config read and the secret read are INSIDE the try: `main()` has no
+    handler of its own, so anything that escapes here fails the workflow for a
+    message nobody missed."""
+    token = ""
+    try:
+        if not enabled():
+            print("  ↷ Telegram: disabled by config (telegram=false).")
+            return
+        token, chat = _token(), _chat()
+        if not (token and chat):
+            print("  ↷ Telegram not configured — skipping.")
+            return
+        notified = load_notified(NOTIFIED)
         row = pick_row(load_rows(), notified)
         if not row:
             print("  ↷ Telegram: nothing new to post.")
-            return 0
+            return
         url = str(row.get("youtube_url") or "").strip()
         entry = catalog_entry(url) if row.get("format") == "tool" else None
         text = format_message(row, entry)
         if not text:
             print("  ↷ Telegram: nothing new to post.")
-            return 0
+            return
         if send(text, site.safe_link(url)):
             print(f"  📣 Telegram: posted — {row.get('title', '')}")
             # only on success: a failure retries tomorrow, or ages out of the window
-            save_notified(notified + [url])
+            save_notified(notified + [url], NOTIFIED)
     except Exception as e:
-        print(f"   ⚠️ telegram failed — {type(e).__name__}: {_redact(e)}")
+        # the local token, not _token(): the read that raised must not be re-run
+        # in the handler that is supposed to survive it
+        print(f"   ⚠️ telegram failed — {type(e).__name__}: {_redact(e, token)}")
+
+
+def _post_x() -> None:
+    """One X post, or a logged no-op. Never raises.
+
+    Its own `notified_x` list, so a video Telegram already took is still eligible
+    here — the two surfaces fail and retry independently. The config and secret
+    reads are inside the try for the same reason as `_post_telegram`."""
+    secrets: tuple = ()
+    try:
+        if not x_enabled():
+            print("  ↷ X: disabled by config (twitter=false).")
+            return
+        secrets = _x_secrets()
+        if not all(secrets):
+            print("  ↷ X not configured — skipping.")
+            return
+        notified = load_notified(NOTIFIED_X)
+        row = pick_row(load_rows(), notified)
+        if not row:
+            print("  ↷ X: nothing new to post.")
+            return
+        url = str(row.get("youtube_url") or "").strip()
+        entry = catalog_entry(url) if row.get("format") == "tool" else None
+        text = format_post(row, entry)
+        if not text:
+            print("  ↷ X: nothing new to post.")
+            return
+        if send_x(text, secrets):
+            print(f"  🐦 X: posted — {row.get('title', '')}")
+            save_notified(notified + [url], NOTIFIED_X)
+    except Exception as e:
+        print(f"   ⚠️ x failed — {type(e).__name__}: {_redact(e, '', secrets)}")
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Always returns 0 — a failed announcement must never fail the workflow.
+
+    Both surfaces always run: a broken or unconfigured Telegram must not cost X
+    its post, and vice versa."""
+    _post_telegram()
+    _post_x()
     return 0
 
 

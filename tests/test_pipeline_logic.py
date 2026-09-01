@@ -2900,6 +2900,7 @@ def test_main_is_a_no_op_when_it_is_switched_off_or_unconfigured(monkeypatch, ca
     monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
     monkeypatch.delenv("TELEGRAM_CHAT_ID", raising=False)
     monkeypatch.delenv("TELEGRAM", raising=False)
+    _no_x(monkeypatch)
     assert notify.main() == 0 and calls == []
     assert "not configured" in capsys.readouterr().out
 
@@ -2927,6 +2928,7 @@ def test_main_records_a_url_only_after_a_successful_post(monkeypatch, tmp_path, 
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
     monkeypatch.delenv("TELEGRAM", raising=False)
+    _no_x(monkeypatch)
 
     sent = []
 
@@ -2958,6 +2960,7 @@ def test_main_never_raises_and_never_fails_the_workflow(monkeypatch):
     monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
     monkeypatch.delenv("TELEGRAM", raising=False)
+    _no_x(monkeypatch)
     for name in ("load_notified", "load_rows", "pick_row", "catalog_entry",
                  "format_message", "send", "save_notified"):
         with pytest.MonkeyPatch.context() as mp:
@@ -3021,3 +3024,424 @@ def test_message_can_never_exceed_the_bot_api_limit(monkeypatch):
     # nothing is ever cut mid-tag or mid-entity: the tags still balance
     for m in (msg, big):
         assert m.count("<b>") == m.count("</b>") and m.count("<code>") == m.count("</code>")
+
+
+# ===================================================================== v3-F.3: X
+# The four env vars are read straight off os.environ, and factverse.config loads
+# a local .env into it at import — so a machine with real X credentials would
+# otherwise make LIVE posts from the test suite.
+_X_ENV = ("X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET")
+
+
+def _no_x(monkeypatch):
+    for name in _X_ENV + ("TWITTER",):
+        monkeypatch.delenv(name, raising=False)
+
+
+def _with_x(monkeypatch, **over):
+    vals = dict(zip(_X_ENV, ("CK", "CS", "AT", "ATS")))
+    vals.update(over)
+    for k, v in vals.items():
+        monkeypatch.setenv(k, v)
+    monkeypatch.delenv("TWITTER", raising=False)
+    return tuple(vals[k] for k in _X_ENV)
+
+
+class _XResp:
+    """A requests.Response stand-in for the X endpoint: creation returns 201 with
+    a `data.id`, and requests does NOT raise on 401/403."""
+    def __init__(self, status=201, body=None, text=""):
+        self.status_code = status
+        self._body = {"data": {"id": "1234567890"}} if body is None else body
+        self.text = text
+
+    def json(self):
+        return self._body
+
+
+def test_oauth_matches_the_published_known_answer_vectors():
+    """F.3 #4: hand-rolled OAuth 1.0a is only defensible if it is pinned to vectors
+    somebody else published. Percent-encoding is where these go wrong, so the RFC
+    vector is the one with a repeated key, a blank value, an '@' and an already-
+    percent-encoded value in it."""
+    # RFC 5849 section 3.4.1.1 base string. Uses errata 2550's corrected `a2=r b`
+    # (the printed RFC shows `a%20b` in the result but `r b` in the request).
+    rfc_params = [("a2", "r b"), ("a3", "2 q"), ("a3", "a"), ("b5", "=%3D"),
+                  ("c@", ""), ("c2", ""),
+                  ("oauth_consumer_key", "9djdj82h48djs9d2"),
+                  ("oauth_nonce", "7d8f3e4a"),
+                  ("oauth_signature_method", "HMAC-SHA1"),
+                  ("oauth_timestamp", "137131201"),
+                  ("oauth_token", "kkk9d7dh3k39sjv7")]
+    assert notify.oauth_base_string("POST", "http://example.com/request", rfc_params) == (
+        "POST&http%3A%2F%2Fexample.com%2Frequest&a2%3Dr%2520b%26a3%3D2%2520q%26a3%3Da"
+        "%26b5%3D%253D%25253D%26c%2540%3D%26c2%3D%26oauth_consumer_key%3D9djdj82h48djs9d2"
+        "%26oauth_nonce%3D7d8f3e4a%26oauth_signature_method%3DHMAC-SHA1"
+        "%26oauth_timestamp%3D137131201%26oauth_token%3Dkkk9d7dh3k39sjv7")
+
+    # Twitter's own "Creating a signature" worked example — the only published pair
+    # that checks the HMAC too (RFC 5849's own oauth_signature is a placeholder).
+    tw_params = [("status", "Hello Ladies + Gentlemen, a signed OAuth request!"),
+                 ("include_entities", "true"),
+                 ("oauth_consumer_key", "xvz1evFS4wEEPTGEFPHBog"),
+                 ("oauth_nonce", "kYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg"),
+                 ("oauth_signature_method", "HMAC-SHA1"),
+                 ("oauth_timestamp", "1318622958"),
+                 ("oauth_token", "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb"),
+                 ("oauth_version", "1.0")]
+    base = notify.oauth_base_string(
+        "POST", "https://api.twitter.com/1.1/statuses/update.json", tw_params)
+    assert base == (
+        "POST&https%3A%2F%2Fapi.twitter.com%2F1.1%2Fstatuses%2Fupdate.json&include_entities"
+        "%3Dtrue%26oauth_consumer_key%3Dxvz1evFS4wEEPTGEFPHBog%26oauth_nonce"
+        "%3DkYjzVBB8Y0ZFabxSWbWovY3uYSQ2pTgmZeNu2VS4cg%26oauth_signature_method%3DHMAC-SHA1"
+        "%26oauth_timestamp%3D1318622958%26oauth_token%3D370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9E"
+        "yMZeS9weJAEb%26oauth_version%3D1.0%26status%3DHello%2520Ladies%2520%252B%2520Gentlemen"
+        "%252C%2520a%2520signed%2520OAuth%2520request%2521")
+    assert notify.oauth_signature(base, "kAcSOqF21Fu85e7zjz7ZN2U4ZRhfV3WpwPAoE3Z7kBw",
+                                  "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE") == \
+        "hCtSmYh+iHYCEqBWrE7C7hYmtUk="
+    # The signing key is pct(consumer)&pct(token): an empty token secret still keeps
+    # the separator (the request-token case), and an already-encoded secret is
+    # encoded AGAIN rather than passed through — the two are NOT the same key.
+    import hmac as _h, hashlib as _hl, base64 as _b64
+    for cs, ats in (("c s", ""), ("c%20s", "t/s")):
+        key = f"{notify._pct(cs)}&{notify._pct(ats)}".encode()
+        assert notify.oauth_signature("POST&a&b", cs, ats) == _b64.b64encode(
+            _h.new(key, b"POST&a&b", _hl.sha1).digest()).decode()
+    assert notify.oauth_signature("POST&a&b", "c s", "") != \
+        notify.oauth_signature("POST&a&b", "c%20s", "")
+    assert notify._pct("a b~c-d_e.f/g") == "a%20b~c-d_e.f%2Fg"
+
+
+def test_oauth_header_is_signed_and_never_repeats_a_nonce():
+    """The header carries every oauth_* field plus the signature, each value
+    percent-encoded inside quotes. A fixed nonce+timestamp makes it deterministic;
+    without them two calls must differ, or X rejects the second as a replay."""
+    h = notify.oauth_header("POST", notify.X_API, ("CK", "CS", "AT", "ATS"),
+                            nonce="NONCE1", timestamp="1700000000")
+    assert h.startswith("OAuth ")
+    for field in ("oauth_consumer_key=\"CK\"", "oauth_token=\"AT\"",
+                  "oauth_nonce=\"NONCE1\"", "oauth_timestamp=\"1700000000\"",
+                  "oauth_signature_method=\"HMAC-SHA1\"", "oauth_version=\"1.0\""):
+        assert field in h, field
+    assert "oauth_signature=\"" in h and "%3D" in h.split('oauth_signature="')[1]
+    assert h == notify.oauth_header("POST", notify.X_API, ("CK", "CS", "AT", "ATS"),
+                                    nonce="NONCE1", timestamp="1700000000")
+    # the body is NOT signed (X v2 is JSON, and OAuth 1.0a only folds a
+    # form-encoded body in), so the signature depends on method + URL + oauth only
+    a = notify.oauth_header("POST", notify.X_API, ("CK", "CS", "AT", "ATS"))
+    b = notify.oauth_header("POST", notify.X_API, ("CK", "CS", "AT", "ATS"))
+    assert a != b
+
+
+def test_weighted_len_counts_the_way_x_counts():
+    """F.3 #8: X's limit is 280 WEIGHTED chars. len() would ship posts the API
+    refuses with 'Text is too long' — every emoji is 2, and so is every CJK char."""
+    assert notify.weighted_len("abc") == 3
+    assert notify.weighted_len("") == 0 and notify.weighted_len(None) == 0
+    # a URL is 23 whatever its length: t.co rewrites it
+    assert notify.weighted_len("https://x.test/" + "a" * 200) == 23
+    assert notify.weighted_len("https://a.b") == 23
+    assert notify.weighted_len("a https://x.test/" + "q" * 99 + " b") == 1 + 23 + 1 + 2
+    assert notify.weighted_len("\U0001F527") == 2 and notify.weighted_len("\U0001F4F0") == 2
+    assert notify.weighted_len("日本") == 4          # CJK
+    assert notify.weighted_len("…") == 1                # the ellipsis we append
+    assert notify.weighted_len("café") == 4             # Latin-1 is inside 0-4351
+
+
+def test_tool_post_is_the_locked_template(monkeypatch):
+    """F.3 #6: 6 lines, the command bare (X has no markup and no tap-to-copy), the
+    PAGE above the video, and no hashtags."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    post = notify.format_post(_row(), _entry())
+    assert post.split("\n") == [
+        "\U0001F527 A Tool",
+        "",
+        "pip install x",
+        "",
+        "\U0001F4C4 https://x.test/tools/2026-08-31-a.html",
+        "▶ https://youtube.com/watch?v=ABCDEFGHIJK",
+    ]
+    assert "#" not in post and "<" not in post
+    assert notify.weighted_len(post) <= notify.MAX_POST
+
+
+def test_story_post_is_the_locked_template():
+    """F.3 #7: the ledger carries no description, so a story row has nothing else
+    truthful to say — and an apostrophe stays an apostrophe, because there is
+    nothing to escape for."""
+    post = notify.format_post(_row(format="news", title="OpenAI's agent SDK"), None)
+    assert post.split("\n") == ["\U0001F4F0 OpenAI's agent SDK", "",
+                                "▶ https://youtube.com/watch?v=ABCDEFGHIJK"]
+    assert notify.format_post(_row(title=""), None) == ""
+    assert notify.format_post({}, None) == "" and notify.format_post(None, None) == ""
+
+
+def test_post_omits_a_section_it_has_no_truthful_value_for(monkeypatch):
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    post = notify.format_post(_row(), _entry(command="", page=""))
+    assert post.split("\n") == ["\U0001F527 A Tool", "",
+                                "▶ https://youtube.com/watch?v=ABCDEFGHIJK"]
+
+
+def test_post_never_carries_a_scheme_it_did_not_check(monkeypatch):
+    """The catalog is merged state read back off origin/main, and `page` is derived
+    from model output. site.safe_link is the same guard the site and screencap use."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings())
+    assert notify.format_post(_row(youtube_url="javascript:alert(1)"), _entry()) == ""
+    post = notify.format_post(_row(), _entry(page="javascript:alert(1)"))
+    assert "javascript" not in post and "\U0001F4C4" not in post
+    assert post.endswith("▶ https://youtube.com/watch?v=ABCDEFGHIJK")
+
+
+def test_post_sheds_by_value_and_only_then_cuts_the_title(monkeypatch):
+    """F.3 #9: the page link goes first, the command second, the title last — and
+    the title cut is a real slice, which is safe here (plain text) and was not safe
+    in the Telegram body, where a cut mid-tag is a 400 of its own."""
+    monkeypatch.setattr(notify.site.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    video = "▶ https://youtube.com/watch?v=ABCDEFGHIJK"
+
+    # 0. under the limit nothing is shed at all
+    whole = notify.format_post(_row(), _entry(command="c" * 200))
+    assert notify.weighted_len(whole) <= notify.MAX_POST and "📄" in whole
+
+    # 1. one char over, and the page link is the first thing to go
+    p1 = notify.format_post(_row(), _entry(command="c" * 240))
+    assert notify.weighted_len(p1) <= notify.MAX_POST
+    assert "c" * 200 in p1 and "\U0001F4C4" not in p1 and p1.endswith(video)
+
+    # 2. then the command
+    p2 = notify.format_post(_row(title="T" * 200), _entry(command="c" * 200))
+    assert notify.weighted_len(p2) <= notify.MAX_POST
+    assert "ccc" not in p2 and "\U0001F4C4" not in p2 and p2.endswith(video)
+    assert p2.startswith("\U0001F527 " + "T" * 200)          # the title is untouched
+
+    # 3. only when nothing optional is left is the title itself cut, on a word
+    #    boundary, with a single ellipsis — and the video link always survives
+    p3 = notify.format_post(_row(title="word " * 120), _entry(command="c" * 200))
+    assert notify.weighted_len(p3) <= notify.MAX_POST
+    assert p3.startswith("\U0001F527 word word") and p3.endswith(video)
+    assert p3.count("…") == 1 and p3.split("\n")[0].endswith("word…")
+
+    # 4. a title with no spaces at all still fits, and so does a CJK one (2 apiece)
+    for title in ("A" * 600, "日" * 400, "\U0001F600" * 300):
+        post = notify.format_post(_row(title=title), _entry())
+        assert notify.weighted_len(post) <= notify.MAX_POST, title[:4]
+        assert post.endswith(video)
+
+
+def test_send_x_posts_the_locked_payload(monkeypatch):
+    """F.3 #5: POST /2/tweets with a JSON body and an OAuth 1.0a header."""
+    seen = {}
+
+    def fake_post(url, json=None, headers=None, timeout=None):
+        seen.update(url=url, payload=json, headers=headers or {}, timeout=timeout)
+        return _XResp()
+
+    monkeypatch.setattr(notify.requests, "post", fake_post)
+    assert notify.send_x("hello", ("CK", "CS", "AT", "ATS")) is True
+    assert seen["url"] == "https://api.x.com/2/tweets" and seen["timeout"] == 20
+    assert seen["payload"] == {"text": "hello"}
+    assert seen["headers"]["Authorization"].startswith("OAuth ")
+    assert seen["headers"]["Content-Type"] == "application/json"
+
+    # nothing to say, or no credential to say it with -> no HTTP call at all
+    calls = []
+    monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
+    assert notify.send_x("", ("CK", "CS", "AT", "ATS")) is False
+    for i in range(4):
+        creds = ["CK", "CS", "AT", "ATS"]
+        creds[i] = ""
+        assert notify.send_x("hi", tuple(creds)) is False, i
+    assert calls == []
+
+
+def test_send_x_never_calls_a_refusal_a_success_and_never_retries(monkeypatch, capsys):
+    """X answers a repeated post with 403 duplicate-content, so a retry on a call
+    that may have half-succeeded is how one video becomes two posts."""
+    for resp in (_XResp(403, {"detail": "duplicate content"}, "Forbidden"),
+                 _XResp(401, {"title": "Unauthorized"}, "Unauthorized"),
+                 _XResp(200, {"data": {}}),               # 200 with no id
+                 _XResp(201, {"errors": [{"message": "nope"}]}),
+                 _XResp(201, {"data": "not-a-dict"})):
+        hits = []
+
+        def one(url, json=None, headers=None, timeout=None, _r=resp):
+            hits.append(1)
+            return _r
+
+        monkeypatch.setattr(notify.requests, "post", one)
+        assert notify.send_x("hi", ("CK", "CS", "AT", "ATS")) is False
+        assert hits == [1]                                # exactly one call, ever
+    out = capsys.readouterr().out
+    assert out.count("x failed") == 5 and "HTTP 403" in out and "HTTP 401" in out
+
+    class _Junk(_XResp):
+        def json(self):
+            raise ValueError("not json")
+
+    monkeypatch.setattr(notify.requests, "post",
+                        lambda url, json=None, headers=None, timeout=None: _Junk(201))
+    assert notify.send_x("hi", ("CK", "CS", "AT", "ATS")) is False
+
+
+def test_the_x_credentials_never_reach_the_log(monkeypatch, capsys):
+    """Actions masks its own secrets; a local run and a fork do not. The four
+    values go through _redact for the same reason the bot token does."""
+    import requests as _rq
+    creds = ("CONSUMERKEY123", "CONSUMERSECRET456", "ACCESSTOKEN789", "ACCESSSECRET000")
+
+    def boom(url, json=None, headers=None, timeout=None):
+        raise _rq.exceptions.ConnectionError(
+            "proxy rejected header OAuth oauth_consumer_key=\"CONSUMERKEY123\", "
+            "oauth_token=\"ACCESSTOKEN789\" signed with CONSUMERSECRET456/ACCESSSECRET000")
+
+    monkeypatch.setattr(notify.requests, "post", boom)
+    assert notify.send_x("hi", creds) is False
+    out = capsys.readouterr().out
+    for value in creds:
+        assert value not in out, value
+    assert "***" in out and "x failed" in out
+    # a short secret that is a substring of a longer one must not cut the long one
+    # in half and leak the remainder
+    assert notify._redact("AB and ABCD", "", ("AB", "ABCD")) == "*** and ***"
+
+
+def test_x_is_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys):
+    """F.3 #3/#11: the seam costs nothing until the owner creates the app, and the
+    kill switch must be flippable from Actions (fv.flag, not fv.setting)."""
+    calls = []
+    monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
+    _no_x(monkeypatch)
+    notify._post_x()
+    assert calls == [] and "X not configured" in capsys.readouterr().out
+
+    # three of four is still unconfigured — a partial credential set is not a post
+    for i in range(4):
+        _with_x(monkeypatch)
+        monkeypatch.setenv(_X_ENV[i], "")
+        notify._post_x()
+        assert calls == [], _X_ENV[i]
+    assert "X not configured" in capsys.readouterr().out
+
+    _with_x(monkeypatch)
+    monkeypatch.setenv("TWITTER", "false")               # a string env var, not a bool
+    assert notify.x_enabled() is False
+    notify._post_x()
+    assert calls == [] and "disabled by config" in capsys.readouterr().out
+    monkeypatch.delenv("TWITTER")
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(notify.fv, "setting", _settings(twitter="false"))
+        assert notify.x_enabled() is False                # a string in config.json too
+
+
+def test_x_records_a_url_only_after_a_successful_post(monkeypatch, tmp_path, capsys):
+    """The idempotence contract, per surface: post once, remember it, never post it
+    twice — and on a failure remember NOTHING, so the next firing may still try."""
+    runs = tmp_path / "runs.jsonl"
+    now = _dt.datetime.utcnow().isoformat(timespec="seconds")
+    runs.write_text(json.dumps(_row(publish_at=now, timestamp=now)) + "\n", encoding="utf-8")
+    monkeypatch.setattr(notify, "RUNS_LOG", runs)
+    monkeypatch.setattr(notify, "NOTIFIED_X", tmp_path / "notified_x.json")
+    monkeypatch.setattr(notify.site, "CATALOG", tmp_path / "cat.json")
+    monkeypatch.setattr(notify.fv, "setting", _settings(twitter=True))
+    _with_x(monkeypatch)
+
+    sent = []
+    monkeypatch.setattr(notify, "send_x", lambda text, secrets=None: sent.append(text) or False)
+    notify._post_x()
+    assert len(sent) == 1 and not (tmp_path / "notified_x.json").exists()
+
+    monkeypatch.setattr(notify, "send_x", lambda text, secrets=None: sent.append(text) or True)
+    notify._post_x()
+    assert notify.load_notified(tmp_path / "notified_x.json") == \
+        ["https://youtube.com/watch?v=ABCDEFGHIJK"]
+    assert "X: posted" in capsys.readouterr().out
+
+    notify._post_x()                                     # second firing: already sent
+    assert len(sent) == 2 and "X: nothing new to post" in capsys.readouterr().out
+
+
+def test_the_two_surfaces_never_take_each_other_down(monkeypatch, tmp_path, capsys):
+    """One broken or unconfigured surface must not cost the other its post — and
+    they must not share a notified list, or Telegram taking a video would mark it
+    done for X, which would then never post it at all."""
+    runs = tmp_path / "runs.jsonl"
+    now = _dt.datetime.utcnow().isoformat(timespec="seconds")
+    runs.write_text(json.dumps(_row(publish_at=now, timestamp=now)) + "\n", encoding="utf-8")
+    monkeypatch.setattr(notify, "RUNS_LOG", runs)
+    monkeypatch.setattr(notify, "NOTIFIED", tmp_path / "tg.json")
+    monkeypatch.setattr(notify, "NOTIFIED_X", tmp_path / "x.json")
+    monkeypatch.setattr(notify.site, "CATALOG", tmp_path / "cat.json")
+    monkeypatch.setattr(notify.fv, "setting", _settings(telegram=True, twitter=True))
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "T")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "@c")
+    monkeypatch.delenv("TELEGRAM", raising=False)
+    _with_x(monkeypatch)
+
+    # Telegram explodes at every seam; X still posts, and vice versa
+    x_sent, tg_sent = [], []
+    monkeypatch.setattr(notify, "send_x", lambda t, secrets=None: x_sent.append(t) or True)
+    for name in ("enabled", "_token", "format_message", "send"):
+        before = len(x_sent)
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(notify, name, _raiser(name))
+            assert notify.main() == 0, name
+            assert len(x_sent) == before + 1, name
+            (tmp_path / "x.json").unlink()               # let X be eligible again
+
+    monkeypatch.setattr(notify, "send", lambda text, link="": tg_sent.append(text) or True)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(notify, "send_x", _raiser("send_x"))
+        assert notify.main() == 0
+        assert len(tg_sent) == 1
+    out = capsys.readouterr().out
+    assert "telegram failed" in out and "x failed" in out
+
+    # the two lists are independent: the URL Telegram just took is still eligible
+    # for X, because X reads its own file
+    assert notify.load_notified(tmp_path / "tg.json") == \
+        ["https://youtube.com/watch?v=ABCDEFGHIJK"]
+    assert notify.load_notified(tmp_path / "x.json") == []
+    before = len(x_sent)
+    assert notify.main() == 0 and len(x_sent) == before + 1   # X posts; Telegram no-ops
+    assert "Telegram: nothing new to post" in capsys.readouterr().out
+
+
+def test_x_main_never_raises_and_never_fails_the_workflow(monkeypatch):
+    """An unattended announcement job that exits non-zero turns the repo red for a
+    post nobody missed. Every seam is stubbed to raise; main() still returns 0."""
+    monkeypatch.delenv("TELEGRAM_BOT_TOKEN", raising=False)
+    monkeypatch.delenv("TELEGRAM_CHAT_ID", raising=False)
+    _with_x(monkeypatch)
+    for name in ("load_notified", "load_rows", "pick_row", "catalog_entry",
+                 "format_post", "send_x", "save_notified", "_x_secrets", "x_enabled"):
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(notify.fv, "setting", _settings(twitter=True))
+            mp.setattr(notify, name, _raiser(name))
+            assert notify.main() == 0, name
+
+
+def test_x_state_gets_the_both_halves_treatment():
+    """The standing trap, now twice: a tracked file the run writes must be in BOTH
+    state_merge.FILES and every workflow's stash list, or `checkout -B main
+    origin/main` reverts it silently and every day re-posts the same video."""
+    assert "state/notified_x.json" in sm.FILES
+    root = Path(__file__).resolve().parents[1]
+    pub = (root / ".github/workflows/publish.yml").read_text(encoding="utf-8")
+    nyml = (root / ".github/workflows/notify.yml").read_text(encoding="utf-8")
+    assert "state/notified_x.json" in pub and "state/notified_x.json" in nyml
+    # the post must happen BEFORE the state-save, or the URL is never remembered
+    assert nyml.index("python -m factverse.notify") < nyml.index("python -m factverse.state_merge")
+    # all four secrets reach the job, or the seam silently never posts
+    for secret in ("X_API_KEY", "X_API_SECRET", "X_ACCESS_TOKEN", "X_ACCESS_SECRET"):
+        assert f"secrets.{secret}" in nyml, secret
+    merged = json.loads(sm.merge_file("state/notified_x.json",
+                                      json.dumps(["a", "b"]), json.dumps(["b", "c"])))
+    assert sorted(merged) == ["a", "b", "c"]
+    for junk in ("42", "null", '"str"', "{}"):
+        assert sm.merge_file("state/notified_x.json", junk, json.dumps(["a"])) is not None
+    # and the kill switch exists in both config files under the name notify reads
+    for name in ("config.json", "config.example.json"):
+        assert '"twitter"' in (root / name).read_text(encoding="utf-8"), name

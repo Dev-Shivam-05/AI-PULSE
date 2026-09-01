@@ -35,5 +35,6 @@
     "writer_model": "gemini-2.5-flash",
     "receipts_check": true,
     "site_pages": true,
-    "telegram": true
+    "telegram": true,
+    "twitter": true
 }
