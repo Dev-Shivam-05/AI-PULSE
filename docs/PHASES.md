@@ -36,11 +36,17 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. Merge the branch stack IN ORDER — each is stacked on the one before it:
-   PR #23 (`v3-phase-b`) → `v3-phase-c`
-   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-c) → `v3-phase-f`
-   (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-f). test.yml runs the
-   161-test suite on each PR automatically.
+1. **Merge `v3-phase-f` into main — ONE PR, not three.** Verified 2026-09-01, not assumed:
+   the stack is strictly contained (`git rev-list --count origin/v3-phase-b..origin/v3-phase-c`
+   and `..origin/v3-phase-f` are both 0), so `v3-phase-f` already carries every commit of
+   `v3-phase-b` and `v3-phase-c`. It is 69 commits / 98 files ahead of main.
+   `main` has 19 commits the branch lacks — all daily `state update [skip ci]` CI writes — and
+   the two sides changed **no file in common**, so the merge is clean:
+   `git merge-tree --write-tree origin/main origin/v3-phase-f` exits 0 with no conflicts.
+   **Re-run that read-only check before merging**, because each day's cron adds another state
+   commit to main. PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-f
+   (merging PR #23 for `v3-phase-b` and then `v3-phase-c` first still works and gives smaller
+   reviews — it is a convenience, not a requirement.) test.yml runs the suite on each PR.
 1.4. **Create the X app and add its 4 Actions secrets** (v3-F.3). Free tier, ~500
    posts/month against our ~31. The order matters: set **App permissions = Read and
    write** BEFORE generating the access token, or the token stays read-only and posting

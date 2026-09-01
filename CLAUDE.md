@@ -16,6 +16,9 @@ name that is not written there. If a decision is missing, add a row and get one 
   (`format` input: news | evergreen | roundup | tool), never a local command.
 - Emoji in test/script output crashes the Windows console (`cp1252`). Prefix with
   `PYTHONIOENCODING=utf-8`, or write output to a file and read it.
+- **The suite takes ~2 minutes and will blow a 120 s tool timeout** — even a `-k` subset,
+  because collection imports the whole package. Run it in the background and read the output
+  file; do not shorten the run to fit a timeout.
 - Git Bash heredocs choke on nested quotes/emoji — write Python and Markdown files with the
   Write tool, not `cat > file << 'EOF'`.
 
