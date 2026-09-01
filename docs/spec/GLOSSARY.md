@@ -52,3 +52,19 @@
 - **notified state** - `state/notified.json` (Telegram) and `state/notified_x.json` (X): the
   YouTube URLs each surface has already announced. Separate files on purpose - one shared
   list would retire a video for the surface that had not posted it yet.
+- **Reel** - `factverse/reels.py`: the day's FIRST rendered Short, re-uploaded as one
+  Instagram Reel and one Facebook Page Reel. Not an announcement — it carries no YouTube link
+  — which is why it may run at 12:30 UTC while the long-form is still private.
+- **resumable upload** - Meta's two-host pattern, and the reason Reels need no public file
+  host: the JSON call to `graph.facebook.com` creates a container (IG) or a video id (FB), and
+  the bytes then go to `rupload.facebook.com` with `Authorization: OAuth`, `offset` and
+  `file_size` headers. `reels._upload_url` accepts the server's own upload URL only on that
+  host.
+- **container status** - the IG-only wait: `GET /{container}?fields=status_code` until
+  `FINISHED`, bounded by 24 polls AND a 120-second monotonic deadline. Publishing a container
+  that is not FINISHED is an API error. Facebook has no equivalent — its `upload_phase=finish`
+  answer is the answer.
+- **surface** - one place a video is distributed to, each with its own kill switch, its own
+  secrets, its own `notified` list and its own `try` block: Telegram (F.2), X (F.3),
+  Instagram and Facebook (F.4). Four now, and every new one repeats the same three files:
+  a config flag, an entry in `state_merge.FILES`, and an entry in its workflow's stash list.

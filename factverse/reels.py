@@ -27,6 +27,7 @@ Spec: docs/spec/ai-pulse-v3f4.md
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -72,17 +73,14 @@ def _token() -> str:
     """The long-lived Page access token — env only (spec #5). Meta: a Page token
     minted from a long-lived User token "does not have an expiration date", which
     is the whole requirement for a job nobody watches."""
-    import os
     return str(os.environ.get("META_PAGE_TOKEN") or "").strip()
 
 
 def _page_id() -> str:
-    import os
     return str(os.environ.get("META_PAGE_ID") or "").strip()
 
 
 def _ig_user_id() -> str:
-    import os
     return str(os.environ.get("META_IG_USER_ID") or "").strip()
 
 
@@ -257,11 +255,16 @@ def graph_post(path: str, data: dict, token: str) -> dict | None:
 
 
 def graph_get(path: str, fields: str, token: str) -> dict | None:
-    """GET one object's fields. Same redaction rules; token in `params`, which
-    requests puts in the query string — so the URL is never printed here."""
+    """GET one object's fields. The token goes in an `Authorization: Bearer`
+    header, NOT in `params` (spec #14): requests would put a param in the query
+    string, and requests' own exception text quotes the whole request URL —
+    which is exactly how a token reaches a public Actions log. Verified against
+    the live API: a bad token in this header answers OAuthException **190**
+    ("could not be decrypted"), while no token at all answers 2500, so the header
+    is genuinely read."""
     try:
-        r = requests.get(f"{GRAPH_API}/{path}",
-                         params={"fields": fields, "access_token": token}, timeout=TIMEOUT)
+        r = requests.get(f"{GRAPH_API}/{path}", params={"fields": fields},
+                         headers={"Authorization": f"Bearer {token}"}, timeout=TIMEOUT)
     except Exception as e:
         print(f"   ⚠️ graph GET {path} — {type(e).__name__}: "
               f"{notify._redact(e, '', _hide(token))}")
@@ -271,6 +274,18 @@ def graph_get(path: str, fields: str, token: str) -> dict | None:
     print(f"   ⚠️ graph GET {path} — HTTP {getattr(r, 'status_code', 0)} "
           f"{notify._redact(str(getattr(r, 'text', ''))[:200], '', _hide(token))}")
     return None
+
+
+def _upload_url(answer: dict | None, fallback: str) -> str:
+    """The upload URL Meta handed back, else our own constant.
+
+    Meta returns it (FB's start call names it `upload_url`) precisely so clients
+    do not hard-code a host, and a hard-coded one is a single API move from being
+    wrong. But that URL is where the Page token is about to be sent, so it is
+    honoured ONLY on Meta's own upload host — `site.safe_link` refuses a scheme it
+    did not check for the same reason, one layer down."""
+    url = str((answer or {}).get("upload_url") or (answer or {}).get("uri") or "").strip()
+    return url if url.startswith("https://rupload.facebook.com/") else fallback
 
 
 def upload_bytes(url: str, video: Path, token: str) -> bool:
@@ -335,7 +350,7 @@ def publish_ig(video: Path, text: str, ig_user_id: str, token: str) -> bool:
     container = str((created or {}).get("id") or "").strip()
     if not container:
         return False
-    if not upload_bytes(f"{RUPLOAD_IG}/{container}", video, token):
+    if not upload_bytes(_upload_url(created, f"{RUPLOAD_IG}/{container}"), video, token):
         return False
     if not wait_for_container(container, token):
         return False
@@ -353,7 +368,7 @@ def publish_fb(video: Path, text: str, page_id: str, token: str) -> bool:
     video_id = str((started or {}).get("video_id") or "").strip()
     if not video_id:
         return False
-    if not upload_bytes(f"{RUPLOAD_FB}/{video_id}", video, token):
+    if not upload_bytes(_upload_url(started, f"{RUPLOAD_FB}/{video_id}"), video, token):
         return False
     done = graph_post(f"{page_id}/video_reels",
                       {"upload_phase": "finish", "video_id": video_id,

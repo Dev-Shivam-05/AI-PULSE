@@ -159,6 +159,28 @@ name that is not written there. If a decision is missing, add a row and get one 
   be re-run inside the handler meant to survive it. The test that finds this stubs EVERY
   seam name to raise — a happy-path test never will.
 
+- **A surface that re-uploads a FILE cannot live on the notify workflow.** `output/shorts/`
+  is gitignored and dies with the runner, so the Short exists only inside publish.yml's job:
+  `reels.py` runs as a step there, above the state-save. And the 16:45 publish-slot rule is
+  about LINKS, not about content — a Reel carries no YouTube URL, so it may ship at 12:30 UTC
+  while the long-form is still private. Before moving any future surface, ask which of the two
+  it is.
+- **A token in a query string is a token in a public log.** `requests` quotes the whole
+  request URL inside its own exception text. Graph API POSTs send `access_token` as a form
+  field and the GET sends `Authorization: Bearer` — verified live: a bad token in that header
+  answers OAuthException **190** ("could not be decrypted"), no token at all answers **2500**,
+  so the header is genuinely read and the URL stays clean.
+- **A URL the SERVER hands back is still a URL you have to check.** Meta returns `upload_url`
+  so clients need not hard-code a host, but that URL is where the Page token is about to be
+  sent. `reels._upload_url` honours it only on `https://rupload.facebook.com/` (note
+  `https://rupload.facebook.com.evil.test/` passes a naive `in` test and fails this one) and
+  falls back to our constant otherwise — `site.safe_link` one layer down.
+- **Every new surface repeats the same three files, and the count keeps growing.** A config
+  kill switch, an entry in `state_merge.FILES`, and an entry in the writing workflow's stash
+  list — now four times over (`notified.json`, `notified_x.json`, `notified_ig.json`,
+  `notified_fb.json`). Never share one list between two surfaces: whichever posts first
+  retires the video for the other, which then never posts it at all.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.

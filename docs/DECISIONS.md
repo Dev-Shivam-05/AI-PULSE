@@ -353,3 +353,26 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   config and secrets OUTSIDE its `try`, and `main()` has no handler — a raise there would
   have failed the workflow the module exists to keep green. Found by the test that stubs
   every seam to raise, which is why that test enumerates names rather than a happy path.
+- **A surface that re-uploads a FILE lives where the file is.** Telegram and X announce a
+  link, so they run from the 16:55 notify workflow off the ledger. IG/FB Reels re-upload the
+  Short itself, and `output/shorts/` is gitignored and dies with the runner — so v3-F.4 runs
+  as a step inside `publish.yml` instead. The alternatives (an artifact handoff between two
+  workflows, or hosting every Short on a public GitHub Release) both add a permanent seam to
+  move one file that was already sitting in the working directory.
+- **The publish-slot rule is about links, not about content.** Nothing may ANNOUNCE the
+  long-form before `publishAt` (16:45 UTC), because the link is dead until then. A Reel is a
+  re-upload, not an announcement: its caption carries no YouTube URL at all, so it can ship at
+  12:30 UTC with nothing dead in it.
+- **Instagram automation is only banned when it impersonates a human.** The old
+  `instagrapi` path logs in with a username and password from a datacenter IP; the official
+  Graph API is authenticated, rate-limited and first-party. `docs/CONTENT_PLAYBOOK.md` said
+  "Instagram stays manual" about the former and has been corrected.
+- **A token in a query string is a token in a log.** Graph API POSTs send `access_token` as a
+  form field and the GET sends `Authorization: Bearer` — verified against the live API, where a
+  bad token in that header answers OAuthException 190 ("could not be decrypted") while no token
+  answers 2500. `requests` quotes the whole request URL inside its own exception text, and
+  Actions logs are public.
+- **A URL the server hands back is still a URL you have to check.** Meta returns `upload_url`
+  so clients need not hard-code a host — but that URL is where the Page token is about to be
+  sent, so `reels._upload_url` honours it only on `https://rupload.facebook.com/` and falls
+  back to our own constant otherwise. Same rule as `site.safe_link`, one layer down.

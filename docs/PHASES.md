@@ -17,7 +17,7 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-F.1: the site** | `factverse/site.py`: one HTML page per tool video + regenerated index + sitemap, rendered from `state/tools_index.json` (in `state_merge.FILES` with its own union-by-`page` semantics AND the publish.yml stash list); the description's 📄 line now links the PAGE, not the PDF; `deliverable.sheet_for` feeds both from one extraction | ✅ done 2026-08-31 (161/161; site rendered and screenshotted at 1280/390 — 2 defects found by inspection and fixed; then a 2-lens adversarial review found 9 reproduced defects, all fixed and test-pinned, incl. a planted `cheat_sheet` that survived the LATER rewrite passes and shipped in the published description, an unchecked `javascript:` href on our own Pages origin, and one bad file freezing the index forever) | `v3-phase-f` (stacked on `v3-phase-c`); spec: docs/spec/ai-pulse-v3f1.md; needs the Pages click to go live |
 | **v3-F.2: Telegram channel bot** | `factverse/notify.py` + `.github/workflows/notify.yml` (16:55 UTC, after the 16:45 publish slot — the upload is PRIVATE until then): the newest `PUBLISHED` ledger row is posted to a Telegram channel; tool rows carry the command in a tap-to-copy `<code>` block + the F.1 page link, story rows title + video. `state/notified.json` (both-halves treatment) makes it idempotent; `_redact` keeps the token out of a public log | ✅ done 2026-08-31 (180/180; both message bodies rendered and read, live `api.telegram.org` 401 path verified with an invalid token; self-review found + fixed the 4096-char shed order and the `&#x27;` escaping) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f2.md; **needs 2 Actions secrets + a bot** (5 owner steps in the spec) before it can post |
 | **v3-F.3: X (Twitter) free tier** | a second surface inside `factverse/notify.py` off the same ledger row + catalog join, on the same 16:55 UTC workflow: OAuth 1.0a signed on the stdlib (nothing to install, nothing that expires), `weighted_len` for X's 280 *weighted* chars (a URL is 23, an emoji is 2), shed-by-value then a last-resort title cut, `state/notified_x.json` as its OWN both-halves state so Telegram taking a video cannot silently retire it for X | ✅ done 2026-09-01 (196/196; OAuth pinned to RFC 5849 §3.4.1.1 + Twitter's published HMAC vector; three post bodies rendered and read; live `api.x.com` 401 path verified with invalid credentials; the "every seam raises" test found a real fail-soft hole — `enabled()`/`_x_secrets()` sat outside the try and would have failed the workflow) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f3.md; **needs an X app + 4 Actions secrets** (6 owner steps in the spec) before it can post |
-| v3-F.4: IG/FB Reels | the existing Shorts re-used as-is via the Graph API | ⏳ queued | platform order per audit wf_5c0e184c |
+| **v3-F.4: IG / FB Reels** | `factverse/reels.py` + a step in `publish.yml` (NOT notify.yml — `output/shorts/` dies with the runner, so a surface that re-uploads a FILE lives where the file is): the day's first Short becomes one Instagram Reel and one Facebook Page Reel through the official Graph API. Local-binary resumable upload (no public host needed), one long-lived Page token for both, a caption with no YouTube link (so the still-private long-form costs nothing), `state/notified_ig.json` + `state/notified_fb.json` as their own both-halves state | ✅ done 2026-09-01 (217/217; both captions rendered to `output/demo/reels/` and read; live 400 verified on BOTH `graph.facebook.com` and `rupload.facebook.com`, handled, no token in the log; self-review found the token in a GET query string and an unchecked server-supplied `upload_url`, both fixed and test-pinned) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f4.md; **needs a Meta app + FB Page + Business IG + 3 Actions secrets** (8 owner steps in the spec) before it can post |
 | v3-D: learning loop v1 | feed runs.jsonl + analytics.jsonl into topic/packaging choices (AVD ≥2:00 is the target metric) | ⏳ queued | needs ~2 weeks of v3 data first — **counted only from 2026-08-24**: owner disclosed pre-that analytics are ~94-98% self-generated views (different accounts/IPs), so every earlier row (incl. the 0:38 AVD baseline) is directionally useful but numerically invalid |
 
 ## Now (owner, in this order)
@@ -62,6 +62,17 @@ One phase per session. A phase that isn't pushed doesn't exist.
    one secret (no code change). And the token has been shared in plain text; rotating it in
    @BotFather (`/revoke`) once CI is wired is cheap hygiene, and only means updating the same
    two places.
+1.6. **Create the Meta app and add its 3 Actions secrets** (v3-F.4) — 8 steps in
+   docs/spec/ai-pulse-v3f4.md. Order matters and step 4 is the one that decides whether this
+   phase is usable at all: the Instagram account must be **Business** (not Creator), it must
+   be linked to a Facebook Page, and before anything else you should post ONE Reel by hand
+   from Graph API Explorer. If Meta demands App Review for `instagram_content_publish` on
+   your own account, stop and say so — the code is ready either way, but the account is not.
+   Then Settings → Secrets and variables → Actions → New repository secret, three times:
+   `META_PAGE_TOKEN` (the long-lived **Page** token, which does not expire — not the User
+   token, which lasts 60 days), `META_PAGE_ID`, `META_IG_USER_ID`. Until they exist the
+   publish workflow logs `↷ Instagram not configured — skipping` and costs nothing.
+
 2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
    done every cheat-sheet link AND every tool page 404s. After the first tool run, `curl -I`
    BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.
@@ -99,10 +110,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `l2_usage.json` on every run — so the store can now be refilled safely.
 
 ## Next 3
-1. **v3-F.4 — IG / FB Reels.** The existing Shorts re-used as-is via the Graph API. Third
-   surface, same place in the pipeline as F.2/F.3 (off the ledger, after the publish slot) —
-   but the first one that uploads a FILE rather than posting text, so the new work is the
-   Graph API's two-step container/publish flow and a Business/Creator account link.
+1. **Nothing new until the backlog above clears.** Four surfaces are built and none of them
+   can post: F.2 needs 2 secrets, F.3 needs an X app + 4, F.4 needs a Meta app + 3, F.1 needs
+   the Pages click, and the branch stack is still unmerged. Every further phase adds code to a
+   channel that is not yet distributing. The highest-value next session is the owner list in
+   `## Now`, then the first supervised `format=tool` run — not another surface.
 2. v3-D — learning loop v1 once ~2 weeks of post-2026-08-24 analytics exist (target: AVD ≥ 2:00);
    the ledger now carries `packaging`, `grounding_chars`, `receipts` and `tool_page` columns.
 3. v3-B.1 (only if the first CI tool runs show it) — capture hardening from real logs: PH/HF page

@@ -3668,8 +3668,8 @@ def test_publish_ig_is_the_locked_four_call_flow(monkeypatch, tmp_path):
             return _GResp(200, {"success": True})
         return _GResp(200, {"id": "MEDIA1"})
 
-    def fake_get(url, params=None, timeout=None):
-        seen.append(("GET", url, params, None, timeout))
+    def fake_get(url, params=None, headers=None, timeout=None):
+        seen.append(("GET", url, params, headers, timeout))
         return _GResp(200, {"status_code": "FINISHED"})
 
     monkeypatch.setattr(reels.requests, "post", fake_post)
@@ -3687,8 +3687,13 @@ def test_publish_ig_is_the_locked_four_call_flow(monkeypatch, tmp_path):
                           "file_size": "99", "Content-Type": "application/octet-stream"}
     assert seen[1][4] == reels.UPLOAD_TIMEOUT
     assert seen[3][2] == {"creation_id": "CONT1", "access_token": "TOK"}
+    # the poll is a GET, so it cannot carry a form body: the token goes in an
+    # Authorization header and NEVER in `params`, which requests would turn into a
+    # query string that its own exception text then quotes into a public log
+    assert seen[2][2] == {"fields": "status_code"}
+    assert seen[2][3] == {"Authorization": "Bearer TOK"}
     for row in seen:
-        assert "access_token=" not in row[1]          # never in a query string
+        assert "access_token=" not in row[1] and "TOK" not in row[1]
     # nothing to post, or nothing to post it with -> no HTTP call at all
     calls = []
     monkeypatch.setattr(reels.requests, "post", lambda *a, **k: calls.append(1))
@@ -3720,7 +3725,8 @@ def test_publish_ig_stops_at_the_first_refusal_and_never_publishes_an_unfinished
 
         monkeypatch.setattr(reels.requests, "post", post)
         monkeypatch.setattr(reels.requests, "get",
-                            lambda url, params=None, timeout=None: hits.append(url) or status)
+                            lambda url, params=None, headers=None, timeout=None:
+                            hits.append(url) or status)
         return reels.publish_ig(video, "hi", "IGID", "TOK"), hits
 
     assert run()[0] is True
@@ -3745,7 +3751,7 @@ def test_wait_for_container_bounds_its_wait(monkeypatch, capsys):
     monkeypatch.setattr(reels.time, "sleep", lambda s: None)
     hits = []
     monkeypatch.setattr(reels.requests, "get",
-                        lambda url, params=None, timeout=None:
+                        lambda url, params=None, headers=None, timeout=None:
                         hits.append(1) or _GResp(200, {"status_code": "IN_PROGRESS"}))
     assert reels.wait_for_container("C", "TOK") is False
     assert len(hits) == reels.POLL_MAX
@@ -3754,7 +3760,7 @@ def test_wait_for_container_bounds_its_wait(monkeypatch, capsys):
     clock = [0.0]
     monkeypatch.setattr(reels.time, "monotonic", lambda: clock[0])
 
-    def slow(url, params=None, timeout=None):
+    def slow(url, params=None, headers=None, timeout=None):
         clock[0] += 60.0
         hits2.append(1)
         return _GResp(200, {"status_code": "IN_PROGRESS"})
@@ -3765,10 +3771,11 @@ def test_wait_for_container_bounds_its_wait(monkeypatch, capsys):
     assert 0 < len(hits2) < reels.POLL_MAX        # the wall clock stopped it early
 
     monkeypatch.setattr(reels.requests, "get",
-                        lambda url, params=None, timeout=None: _GResp(200, {"status_code": "FINISHED"}))
+                        lambda url, params=None, headers=None, timeout=None:
+                        _GResp(200, {"status_code": "FINISHED"}))
     assert reels.wait_for_container("C", "TOK") is True
     monkeypatch.setattr(reels.requests, "get",
-                        lambda url, params=None, timeout=None: _GResp(500, {}, "boom"))
+                        lambda url, params=None, headers=None, timeout=None: _GResp(500, {}, "boom"))
     assert reels.wait_for_container("C", "TOK") is False
 
 
@@ -3783,7 +3790,7 @@ def test_publish_fb_is_the_locked_three_call_flow(monkeypatch, tmp_path):
         if "rupload" in url:
             return _GResp(200, {"success": True})
         if (data or {}).get("upload_phase") == "start":
-            return _GResp(200, {"video_id": "VID9", "upload_url": "ignored"})
+            return _GResp(200, {"video_id": "VID9", "upload_url": "https://evil.test/steal"})
         return _GResp(200, {"success": True})
 
     monkeypatch.setattr(reels.requests, "post", fake_post)
@@ -3803,6 +3810,38 @@ def test_publish_fb_is_the_locked_three_call_flow(monkeypatch, tmp_path):
     for args in (("", "PAGEID", "TOK"), ("hi", "", "TOK"), ("hi", "PAGEID", "")):
         assert reels.publish_fb(video, *args) is False
     assert calls == []
+
+
+def test_the_upload_url_is_honoured_only_on_metas_own_host(monkeypatch, tmp_path):
+    """Meta hands the upload URL back so clients do not hard-code a host — but
+    that URL is where the Page token is about to be sent, so it is honoured only
+    on rupload.facebook.com. Everything else falls back to our own constant.
+    `site.safe_link` refuses an unchecked scheme for the same reason."""
+    fb = "https://rupload.facebook.com/video-upload/v25.0/VID9"
+    assert reels._upload_url({"upload_url": fb}, "FALLBACK") == fb
+    assert reels._upload_url({"uri": fb}, "FALLBACK") == fb
+    for hostile in ("https://evil.test/steal", "http://rupload.facebook.com/x",
+                    "https://rupload.facebook.com.evil.test/x", "javascript:alert(1)",
+                    "", None, 42):
+        assert reels._upload_url({"upload_url": hostile}, "FALLBACK") == "FALLBACK", hostile
+    assert reels._upload_url({}, "FALLBACK") == "FALLBACK"
+    assert reels._upload_url(None, "FALLBACK") == "FALLBACK"
+
+    # and end to end: a hostile upload_url never sees the token
+    video = _short_at(tmp_path)
+    seen = []
+
+    def post(url, data=None, headers=None, timeout=None):
+        seen.append(url)
+        if "rupload" in url:
+            return _GResp(200, {"success": True})
+        if (data or {}).get("upload_phase") == "start":
+            return _GResp(200, {"video_id": "VID9", "upload_url": "https://evil.test/steal"})
+        return _GResp(200, {"success": True})
+
+    monkeypatch.setattr(reels.requests, "post", post)
+    assert reels.publish_fb(video, "hi", "PAGEID", "TOK") is True
+    assert "evil.test" not in " ".join(seen) and fb in seen
 
 
 def test_publish_fb_never_calls_a_refusal_a_success(monkeypatch, tmp_path):

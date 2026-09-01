@@ -43,7 +43,7 @@ dead.
 | 13 | Retry policy | None, on any call. A failure records nothing; tomorrow's video is the next attempt |
 | 14 | Secret handling | Token in the POST body or the `Authorization` header, never the query string. Every printed exception and response body goes through `notify._redact(..., extra=(token,))`. Config and secret reads **inside** the `try` |
 | 15 | Pre-flight guards | File exists, size ≤ 200 MB. `shorts.MAX_SHORT = 35 s` is inside FB's documented 3–90 s window, so duration is not re-checked |
-| 16 | Evidence | +18 offline tests including the "every seam raises" test; both captions rendered to `output/demo/reels/`; one live `graph.facebook.com` call with an invalid token, handled, no token in the output |
+| 16 | Evidence | +21 offline tests including the "every seam raises" test; both captions rendered to `output/demo/reels/`; one live `graph.facebook.com` call with an invalid token, handled, no token in the output |
 
 ### Implementation notes (decided during the build, inside the locked table)
 
@@ -54,9 +54,17 @@ dead.
 - **`_redact` is imported from `notify`, not re-implemented.** One token, one door. The
   handler redacts with the token value it captured before the raise, never by calling
   `_token()` again inside the handler meant to survive that read failing.
-- **The token never goes in a query string.** `graph.facebook.com` calls send
-  `access_token` as a form field; `rupload.facebook.com` uses `Authorization: OAuth <token>`.
-  A token in a URL leaks through `requests`' own exception text — the F.2 lesson.
+- **The token never goes in a query string.** Graph POSTs send `access_token` as a form
+  field, the Graph GET sends `Authorization: Bearer <token>`, and `rupload.facebook.com` uses
+  `Authorization: OAuth <token>`. A token in a URL leaks through `requests`' own exception
+  text — the F.2 lesson. Verified live: a bad token in the Bearer header answers
+  OAuthException **190** ("could not be decrypted"), no token at all answers **2500**, so the
+  header is genuinely read and nothing had to be traded for the clean URL.
+- **`_upload_url` honours Meta's own upload URL only on `https://rupload.facebook.com/`.**
+  The API returns it (FB's start call names it `upload_url`) so clients need not hard-code a
+  host — but that URL is where the Page token is about to be sent. Same rule as
+  `site.safe_link`, one layer down; note `https://rupload.facebook.com.evil.test/` passes a
+  naive `in` test and fails this one.
 - **`pick_entry` reads `production_log.json`, not `runs.jsonl`.** Only the production log
   records the Short *paths*; the ledger records counts. It is already a tracked, merged state
   file (`_merge_log`), so nothing new has to be persisted for this to work.
@@ -69,6 +77,20 @@ dead.
 - **A missing Short is a normal outcome, not an error.** The 14:53 retry cron runs on a
   fresh workspace with no rendered file, so on a day the 12:23 run published, the retry
   firing logs `no Short from today's run` and exits 0.
+
+## Two defects the self-review found (both fixed and test-pinned)
+
+- **The Page token was in a query string.** `graph_get` passed `access_token` in `params`,
+  which requests turns into the request URL — the exact string `requests` quotes back inside
+  its own `ConnectionError` text, into a public Actions log. It now uses
+  `Authorization: Bearer`, proven against the live API before the change was made (190 with
+  the header, 2500 without a token at all). Decision 14 said "never the query string" and the
+  first implementation broke it anyway; the test now asserts the token appears in no URL.
+- **A server-supplied `upload_url` was ignored, and honouring it naively would have been
+  worse.** Hard-coding the rupload host is one API move from being wrong, but the returned URL
+  is where the token goes — so `_upload_url` accepts it only on `https://rupload.facebook.com/`
+  and falls back to our constant. The test includes `https://rupload.facebook.com.evil.test/`,
+  which a substring check would have accepted.
 
 ## Out of scope (deliberately not built)
 
@@ -111,7 +133,7 @@ Nothing in this phase can post until these exist. Until then the step logs
 
 ## Acceptance criteria
 
-- [x] `py -3 -m pytest tests/ -q` → 214/214.
+- [x] `py -3 -m pytest tests/ -q` → 217/217.
 - [x] With all three env vars unset, `python -m factverse.reels` prints
       `↷ Instagram not configured — skipping` / `↷ Facebook not configured — skipping`
       and exits 0.

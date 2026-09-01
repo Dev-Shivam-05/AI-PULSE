@@ -107,5 +107,10 @@ Data API cannot pin), the watch-next chain link in
 the description and comments, one topic playlist per lane ("Free AI Tools, Tested" for tool
 videos).
 
-> Instagram stays manual (auto-posting from datacenter IPs = ban risk). Put the YouTube link
-> in the IG bio; captions can't hold a clickable link.
+> **Instagram and Facebook Reels are automated through the official Graph API** (v3-F.4,
+> `factverse/reels.py`): the day's first Short is re-uploaded to both. That line used to read
+> "Instagram stays manual" — it was about the `instagrapi` path, which logs in as a human from
+> a datacenter IP and is ban-bait. A first-party, authenticated, rate-limited API is not the
+> same act, and `docs/ENGINEERING_AUDIT.md` #6 asked for exactly this.
+> The caption carries no YouTube link (it would be dead until 16:45 UTC, and an IG caption
+> cannot hold a clickable link anyway) — put the channel link in the IG bio.
