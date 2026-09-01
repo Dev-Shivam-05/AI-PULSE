@@ -2665,5 +2665,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-01T17:03:41.203666",
+    "title": "AI Creates Art: Your Job Safe? Faster",
+    "description": "AI vs human creativity: Can machines truly be creative? This video dives deep into the capabilities and limitations of AI in art, writing, and music. We explore whether AI is a collaborator or a replacement for human artists, and what this means for the future of creative industries. Discover the surprising ways AI generates content and the fundamental elements of human artistry that remain unique. We'll unpack the technology behind AI creativity and offer a balanced perspective on its impact.  The core question: where do we draw the line between algorithmic generation and genuine artistic expression?  AI will change everything.  #AI #Creativity #FutureOfWork\n\nSubscribe to ToolDojo.\n\nChapters:\n0:00 Machine Creativity Questioned\n1:11 Lightning Fast Generation\n1:57 Originality's Tricky Line\n3:06 AI As Creative Tool\n3:50 Perfection Vs Imperfection\n\n▶ Watch next: https://youtube.com/watch?v=K7i8RmbjXSE",
+    "tags": [
+      "AI creativity",
+      "human creativity",
+      "AI art",
+      "AI music",
+      "AI writing",
+      "future of art",
+      "AI vs human",
+      "creative industries",
+      "artificial intelligence",
+      "AI art generation",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Creates_Art_Your_Job_Safe_Faster_20260901_165419_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260901_165736.mp4",
+      "output/shorts/short_2_20260901_165849.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260901_165558.jpg",
+    "youtube_url": "https://youtube.com/watch?v=73qABxct4KM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=c9hU4cWdsAk",
+      "https://youtube.com/watch?v=YJDbz1u0tlM"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Art Takes Over? Your Future Job! #Shorts",
+        "description": "Is AI art a threat to human artists? Explore the rapid advancements and what it means for your career.  #AI #Art #FutureOfWork #Innovation",
+        "instagram_caption": "🤯 Is AI stealing artists' jobs? This AI art revolution is RAPIDLY changing creative industries! Find out if YOUR skills are safe. Follow @tooldojo!\n#AIArt #ArtificialIntelligence #DigitalArt #ArtTech #FutureJobs #CreativeIndustry #ArtistLife #TechTrends #Innovation #JobSecurity #AIRevolution #MustWatch #NewTechnology #Artistic"
+      },
+      {
+        "title": "AI Art Speedrun: Job Apocalypse? 🚀 #Shorts",
+        "description": "Witness the lightning-fast evolution of AI-generated art and its shocking implications for the job market. #AIArt #JobMarket #Technology #CreativeAI",
+        "instagram_caption": "⚡️ Prepare for the AI art 'speedrun'!  The pace of change is UNBELIEVABLE, and it's impacting jobs faster than we thought. Follow @tooldojo!\n#AIArtwork #GenerativeArt #TechNews #FutureOfCreativity #JobMarketShock #AIImpact #DigitalCreation #ArtisticInnovation #Workforce #ArtificialIntelligenceArt #TechUpdate #CreativeTech #JobAlert #FutureProof"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
