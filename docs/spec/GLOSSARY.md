@@ -42,3 +42,13 @@
   stash lists, so `checkout -B main origin/main` cannot make the bot repeat itself.
 - **announce window** - the 36 hours after `publish_at` in which `notify.pick_row` will still
   post a video. Older rows age out, so enabling the bot never announces the back catalogue.
+- **weighted length** - `notify.weighted_len()`: X's own character count, which is what its
+  280 limit is measured in. A URL is 23 regardless of length; a code point outside X's
+  weight-1 ranges (every emoji, every CJK character) is 2; everything else is 1.
+- **shed by value** - the rule both announcement surfaces use for a hard size limit: drop
+  whole optional blocks in order of what the message exists to deliver (prose, then the page
+  link, then the command), never take a raw slice. The X post's last-resort title cut is the
+  single exception, and only because a plain-text post has no tag or entity to cut in half.
+- **notified state** - `state/notified.json` (Telegram) and `state/notified_x.json` (X): the
+  YouTube URLs each surface has already announced. Separate files on purpose - one shared
+  list would retire a video for the surface that had not posted it yet.

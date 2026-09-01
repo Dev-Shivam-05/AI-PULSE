@@ -337,3 +337,19 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   `config.py` loads `.env` on import and a real environment variable always wins, so the
   same code path serves both. `.gitignore:3` covers `.env`; after adding any secret,
   `git grep` for it before committing.
+- **A character cap is not always measured in characters.** X's limit is 280 *weighted*
+  chars (twitter-text v3): every URL costs 23 whatever its length, and every emoji or CJK
+  character costs 2. `len()` would have shipped posts the API refuses with "Text is too
+  long". Read the platform's own counting rules before assuming a limit is a length.
+- **Two surfaces announcing the same thing need two idempotence lists.** One shared
+  `notified` file would mark a video done because Telegram took it, and X would then never
+  post it at all. `state/notified.json` and `state/notified_x.json` are separate, each with
+  the both-halves treatment, so the surfaces fail and retry independently.
+- **Hand-roll a protocol only against published known-answer vectors.** OAuth 1.0a is
+  ~35 lines of stdlib and avoids a dependency in an unattended job — but only because
+  RFC 5849's base string and Twitter's own signature example are pinned in tests. Without
+  those, the first proof would have been a 401 from a live API with four ways to be wrong.
+- **A fail-soft seam has to be fail-soft all the way to the top.** `_post_x` read its
+  config and secrets OUTSIDE its `try`, and `main()` has no handler — a raise there would
+  have failed the workflow the module exists to keep green. Found by the test that stubs
+  every seam to raise, which is why that test enumerates names rather than a happy path.

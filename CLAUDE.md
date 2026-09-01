@@ -141,6 +141,23 @@ name that is not written there. If a decision is missing, add a row and get one 
   to decode numeric references, so every "OpenAI's …" title was at risk. And a hard size limit
   (4096 chars) is handled by shedding whole blocks, never by slicing — a cut mid-tag is its own
   API error.
+- **A platform's character cap may not be measured in characters.** X's 280 limit counts
+  WEIGHTED chars (twitter-text v3): every URL is 23 whatever its length, every emoji and
+  CJK char is 2, everything else 1. `notify.weighted_len` is the count; `len()` would ship
+  posts the API refuses with "Text is too long". Read the platform's counting rules before
+  assuming a limit is a length.
+- **Two surfaces announcing the same video need two idempotence lists.** `notified.json`
+  (Telegram) and `notified_x.json` (X) are separate because ONE list would mark a video
+  done for X the moment Telegram took it, and X would never post it. Each still needs the
+  full both-halves treatment (`state_merge.FILES` AND every workflow's stash list) — the
+  count of files that trap applies to now grows with every surface.
+- **A fail-soft seam has to be fail-soft all the way to the top.** `_post_x` read its
+  config flag and its secrets OUTSIDE its `try`, and `main()` has no handler of its own —
+  a raise there fails the workflow the module exists to keep green. `_post_telegram` had
+  the same shape. Both now open the `try` first; note the handler redacts with the token
+  it captured rather than calling `_token()` again, because the read that raised must not
+  be re-run inside the handler meant to survive it. The test that finds this stubs EVERY
+  seam name to raise — a happy-path test never will.
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
