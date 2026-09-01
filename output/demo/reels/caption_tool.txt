@@ -1,0 +1,9 @@
+🔧 Run 232 AI Agents Free With One Command
+
+npx agency-installer --tool claude-code
+
+📄 https://dev-shivam-05.github.io/AI-PULSE/tools/2026-09-01-the-agency.html
+
+Full breakdown on YouTube — @tooldojo
+
+#ai #aitools #opensource #developer #tech

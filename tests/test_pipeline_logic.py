@@ -3453,3 +3453,551 @@ def test_x_state_gets_the_both_halves_treatment():
     # and the kill switch exists in both config files under the name notify reads
     for name in ("config.json", "config.example.json"):
         assert '"twitter"' in (root / name).read_text(encoding="utf-8"), name
+
+
+# =============================================================== v3-F.4: IG / FB Reels
+from factverse import reels
+
+
+_META_ENV = ("META_PAGE_TOKEN", "META_PAGE_ID", "META_IG_USER_ID")
+
+
+def _no_meta(monkeypatch):
+    for name in _META_ENV + ("INSTAGRAM", "FACEBOOK"):
+        monkeypatch.delenv(name, raising=False)
+
+
+def _with_meta(monkeypatch, **over):
+    vals = dict(zip(_META_ENV, ("PAGETOKEN123", "PAGEID", "IGID")))
+    vals.update(over)
+    for k, v in vals.items():
+        monkeypatch.setenv(k, v)
+    for name in ("INSTAGRAM", "FACEBOOK"):
+        monkeypatch.delenv(name, raising=False)
+    return vals
+
+
+def _log_row(**over):
+    r = {"status": "PUBLISHED", "format": "tool", "title": "A Tool",
+         "youtube_url": "https://youtube.com/watch?v=ABCDEFGHIJK",
+         "shorts": ["output/shorts/s1.mp4", "output/shorts/s2.mp4"],
+         "timestamp": "2026-08-31T12:30:00"}
+    r.update(over)
+    return r
+
+
+def _short_at(tmp_path, rel="output/shorts/s1.mp4", size=1024):
+    p = tmp_path / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_bytes(b"\0" * size)
+    return p
+
+
+class _GResp:
+    """A requests.Response stand-in for the Graph / rupload endpoints. Meta answers
+    a refusal with a 4xx and a JSON `error` object; requests does NOT raise."""
+    def __init__(self, status=200, body=None, text=""):
+        self.status_code = status
+        self._body = {} if body is None else body
+        self.text = text
+
+    def json(self):
+        return self._body
+
+
+def _reels_settings(monkeypatch):
+    monkeypatch.setattr(reels.fv, "setting",
+                        _settings(channel_handle="tooldojo",
+                                  deliverable_base_url="https://x.test"))
+
+
+def test_reels_tool_caption_is_the_locked_template(monkeypatch):
+    """v3-F.4 #9: the command, the page, one CTA, five hashtags — and NOT the
+    LLM's `instagram_caption`, which is a v2-era prompt with 20 hashtags and a
+    hard-coded handle."""
+    _reels_settings(monkeypatch)
+    assert reels.caption(_log_row(), _entry()).split("\n") == [
+        "\U0001F527 A Tool",
+        "",
+        "pip install x",
+        "",
+        "\U0001F4C4 https://x.test/tools/2026-08-31-a.html",
+        "",
+        "Full breakdown on YouTube — @tooldojo",
+        "",
+        "#ai #aitools #opensource #developer #tech",
+    ]
+
+
+def test_reels_story_caption_is_the_locked_template(monkeypatch):
+    _reels_settings(monkeypatch)
+    assert reels.caption(_log_row(format="news", title="OpenAI's agent SDK"), None).split("\n") == [
+        "\U0001F4F0 OpenAI's agent SDK",
+        "",
+        "Full breakdown on YouTube — @tooldojo",
+        "",
+        "#ai #aitools #opensource #developer #tech",
+    ]
+    assert reels.caption(_log_row(title=""), None) == ""
+    assert reels.caption({}, None) == "" and reels.caption(None, None) == ""
+
+
+def test_reels_caption_never_links_the_still_private_long_form(monkeypatch):
+    """v3-F.4 #2: this runs at ~12:30 UTC and the long-form is private until
+    16:45. A Reel is a re-upload, not an announcement — so there is no link to be
+    dead, in either lane, however the row is shaped."""
+    _reels_settings(monkeypatch)
+    for row, entry in ((_log_row(), _entry()), (_log_row(format="news"), None)):
+        text = reels.caption(row, entry)
+        assert "youtube.com" not in text and "youtu.be" not in text
+
+
+def test_reels_caption_omits_a_section_it_has_no_truthful_value_for(monkeypatch):
+    _reels_settings(monkeypatch)
+    assert reels.caption(_log_row(), _entry(command="", page="")).split("\n") == [
+        "\U0001F527 A Tool", "", "Full breakdown on YouTube — @tooldojo", "",
+        "#ai #aitools #opensource #developer #tech"]
+    # no handle configured -> the CTA drops the @, it never ships a bare "@"
+    monkeypatch.setattr(reels.fv, "setting", _settings(deliverable_base_url="https://x.test"))
+    story = reels.caption(_log_row(format="news"), None)
+    assert "Full breakdown on YouTube" in story and "@" not in story
+
+
+def test_reels_caption_never_carries_a_scheme_it_did_not_check(monkeypatch):
+    """The catalog is merged state read back off origin/main and `page` derives
+    from model output — site.safe_link is the guard the site and screencap use."""
+    _reels_settings(monkeypatch)
+    text = reels.caption(_log_row(), _entry(page="javascript:alert(1)"))
+    assert "javascript" not in text and "\U0001F4C4" not in text
+
+
+def test_reels_caption_sheds_by_value_and_only_then_cuts_the_title(monkeypatch):
+    """#10: hashtags first, then the page, then the command; the title is cut
+    last, on a word boundary. Characters, not weighted chars — IG and FB count
+    what len() counts."""
+    _reels_settings(monkeypatch)
+    cta = "Full breakdown on YouTube — @tooldojo"
+
+    whole = reels.caption(_log_row(), _entry(command="c" * 1000))
+    assert len(whole) <= reels.MAX_CAPTION and "#ai" in whole and "\U0001F4C4" in whole
+
+    p1 = reels.caption(_log_row(), _entry(command="c" * 2100))
+    assert len(p1) <= reels.MAX_CAPTION and "#ai" not in p1 and "c" * 2100 in p1
+
+    p2 = reels.caption(_log_row(title="T" * 100), _entry(command="c" * 2150))
+    assert len(p2) <= reels.MAX_CAPTION and "\U0001F4C4" not in p2 and "#ai" not in p2
+
+    p3 = reels.caption(_log_row(title="T" * 300), _entry(command="c" * 2150))
+    assert len(p3) <= reels.MAX_CAPTION and "ccc" not in p3
+    assert p3.startswith("\U0001F527 " + "T" * 300)          # the title is untouched
+
+    p4 = reels.caption(_log_row(title="word " * 700), _entry(command="c" * 2150))
+    assert len(p4) <= reels.MAX_CAPTION and p4.endswith(cta)
+    assert p4.count("…") == 1 and p4.split("\n")[0].endswith("word…")
+
+    # the CTA is the one block that is never shed and never cut. An emoji is ONE
+    # character to IG (it is two to X — the surfaces do not count alike), so a
+    # 2000-emoji title still fits and sheds nothing at all.
+    for title in ("A" * 5000, "日" * 3000, "\U0001F600" * 2000):
+        text = reels.caption(_log_row(title=title), _entry())
+        assert len(text) <= reels.MAX_CAPTION, title[:2]
+        assert cta in text
+
+
+def test_resolve_short_splits_on_both_separators_and_bounds_the_size(tmp_path):
+    """`_rel` writes posix separators but its own fallback returns the raw string,
+    so a Windows-authored log carries backslashes that mean nothing on the ubuntu
+    runner. This repo has shipped that bug from the basename side twice."""
+    _short_at(tmp_path)
+    for rel in ("output/shorts/s1.mp4", "output\\shorts\\s1.mp4"):
+        assert reels.resolve_short(rel, tmp_path).name == "s1.mp4", rel
+    assert reels.resolve_short(str(tmp_path / "output/shorts/s1.mp4"), tmp_path) is not None
+    assert reels.resolve_short("output/shorts/missing.mp4", tmp_path) is None
+    assert reels.resolve_short("", tmp_path) is None and reels.resolve_short(None, tmp_path) is None
+    big = _short_at(tmp_path, "output/shorts/big.mp4", size=16)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(reels, "MAX_BYTES", 8)
+        assert reels.resolve_short("output/shorts/big.mp4", tmp_path) is None
+    assert big.exists()
+    _short_at(tmp_path, "output/shorts/empty.mp4", size=0)
+    assert reels.resolve_short("output/shorts/empty.mp4", tmp_path) is None
+
+
+def test_pick_entry_only_ever_considers_the_last_run(tmp_path):
+    """#3: an older row is another day's video whose file left with its runner.
+    Posting one on a retry firing is how a week-old Short lands as today's Reel."""
+    _short_at(tmp_path)
+    url = "https://youtube.com/watch?v=ABCDEFGHIJK"
+    assert reels.pick_entry([_log_row()], [], tmp_path)[0]["title"] == "A Tool"
+    assert reels.pick_entry([], [], tmp_path) is None
+    assert reels.pick_entry(None, [], tmp_path) is None
+    # the newest row is the only candidate, even when an older one would qualify
+    assert reels.pick_entry([_log_row(), _log_row(status="UPLOAD_FAILED")], [], tmp_path) is None
+    for bad in (_log_row(status="RENDER_ONLY"), _log_row(status="SKIPPED_DUPLICATE_DAY"),
+                _log_row(youtube_url=""), _log_row(shorts=[]), _log_row(shorts="s.mp4"),
+                _log_row(shorts=["output/shorts/gone.mp4"])):
+        assert reels.pick_entry([bad], [], tmp_path) is None, bad.get("status")
+    assert reels.pick_entry([_log_row()], [url], tmp_path) is None      # already posted
+    # the FIRST short, never the second
+    _short_at(tmp_path, "output/shorts/s2.mp4")
+    assert reels.pick_entry([_log_row()], [], tmp_path)[1].name == "s1.mp4"
+
+
+def test_load_log_survives_a_corrupt_file(tmp_path):
+    p = tmp_path / "production_log.json"
+    p.write_text(json.dumps([_log_row(), "junk", 42]), encoding="utf-8")
+    assert [e["title"] for e in reels.load_log(p)] == ["A Tool"]
+    p.write_text("{not json", encoding="utf-8")
+    assert reels.load_log(p) == []
+    p.write_text('{"a": 1}', encoding="utf-8")
+    assert reels.load_log(p) == []
+    assert reels.load_log(tmp_path / "missing.json") == []
+
+
+def test_publish_ig_is_the_locked_four_call_flow(monkeypatch, tmp_path):
+    """#7: container (resumable, no video_url) -> bytes -> poll -> media_publish.
+    The token rides in the form body and the upload headers, never a query string."""
+    video = _short_at(tmp_path, size=99)
+    seen = []
+
+    def fake_post(url, data=None, headers=None, timeout=None):
+        seen.append(("POST", url, data, headers, timeout))
+        if url.endswith("/IGID/media"):
+            return _GResp(200, {"id": "CONT1"})
+        if "rupload" in url:
+            return _GResp(200, {"success": True})
+        return _GResp(200, {"id": "MEDIA1"})
+
+    def fake_get(url, params=None, timeout=None):
+        seen.append(("GET", url, params, None, timeout))
+        return _GResp(200, {"status_code": "FINISHED"})
+
+    monkeypatch.setattr(reels.requests, "post", fake_post)
+    monkeypatch.setattr(reels.requests, "get", fake_get)
+    assert reels.publish_ig(video, "hello", "IGID", "TOK") is True
+
+    assert [s[1] for s in seen] == [
+        "https://graph.facebook.com/v25.0/IGID/media",
+        "https://rupload.facebook.com/ig-api-upload/v25.0/CONT1",
+        "https://graph.facebook.com/v25.0/CONT1",
+        "https://graph.facebook.com/v25.0/IGID/media_publish"]
+    assert seen[0][2] == {"media_type": "REELS", "upload_type": "resumable",
+                          "caption": "hello", "access_token": "TOK"}
+    assert seen[1][3] == {"Authorization": "OAuth TOK", "offset": "0",
+                          "file_size": "99", "Content-Type": "application/octet-stream"}
+    assert seen[1][4] == reels.UPLOAD_TIMEOUT
+    assert seen[3][2] == {"creation_id": "CONT1", "access_token": "TOK"}
+    for row in seen:
+        assert "access_token=" not in row[1]          # never in a query string
+    # nothing to post, or nothing to post it with -> no HTTP call at all
+    calls = []
+    monkeypatch.setattr(reels.requests, "post", lambda *a, **k: calls.append(1))
+    for args in (("", "IGID", "TOK"), ("hi", "", "TOK"), ("hi", "IGID", "")):
+        assert reels.publish_ig(video, *args) is False
+    assert calls == []
+
+
+def test_publish_ig_stops_at_the_first_refusal_and_never_publishes_an_unfinished_container(
+        monkeypatch, tmp_path, capsys):
+    """Every seam is a stop, not a warning — publishing a container that is not
+    FINISHED is an API error, and a retry of a half-succeeded call is how one
+    Short becomes two Reels (#13)."""
+    video = _short_at(tmp_path)
+    monkeypatch.setattr(reels.time, "sleep", lambda s: None)
+
+    def run(container=None, upload=None, status=None, published=None):
+        container = container or _GResp(200, {"id": "CONT1"})
+        upload = upload or _GResp(200, {"success": True})
+        status = status or _GResp(200, {"status_code": "FINISHED"})
+        published = published or _GResp(200, {"id": "MEDIA1"})
+        hits = []
+
+        def post(url, data=None, headers=None, timeout=None):
+            hits.append(url)
+            if url.endswith("/IGID/media"):
+                return container
+            return upload if "rupload" in url else published
+
+        monkeypatch.setattr(reels.requests, "post", post)
+        monkeypatch.setattr(reels.requests, "get",
+                            lambda url, params=None, timeout=None: hits.append(url) or status)
+        return reels.publish_ig(video, "hi", "IGID", "TOK"), hits
+
+    assert run()[0] is True
+    for kwargs, n in (
+            (dict(container=_GResp(400, {"error": {"message": "bad"}}, "Bad Request")), 1),
+            (dict(container=_GResp(200, {})), 1),
+            (dict(container=_GResp(200, {"id": ""})), 1),
+            (dict(upload=_GResp(400, {"error": {"message": "no"}}, "nope")), 2),
+            (dict(upload=_GResp(200, {"success": False})), 2),
+            (dict(status=_GResp(200, {"status_code": "ERROR"})), 3),
+            (dict(status=_GResp(200, {"status_code": "EXPIRED"})), 3),
+            (dict(published=_GResp(200, {})), 4),
+            (dict(published=_GResp(403, {"error": {"message": "no"}}, "Forbidden")), 4)):
+        ok, hits = run(**kwargs)
+        assert ok is False and len(hits) == n, kwargs
+    assert "HTTP 400" in capsys.readouterr().out
+
+
+def test_wait_for_container_bounds_its_wait(monkeypatch, capsys):
+    """A `timeout=` is the gap between socket reads, never a deadline — the poll
+    loop is bounded by BOTH a count and a monotonic wall clock."""
+    monkeypatch.setattr(reels.time, "sleep", lambda s: None)
+    hits = []
+    monkeypatch.setattr(reels.requests, "get",
+                        lambda url, params=None, timeout=None:
+                        hits.append(1) or _GResp(200, {"status_code": "IN_PROGRESS"}))
+    assert reels.wait_for_container("C", "TOK") is False
+    assert len(hits) == reels.POLL_MAX
+    assert "never finished" in capsys.readouterr().out
+
+    clock = [0.0]
+    monkeypatch.setattr(reels.time, "monotonic", lambda: clock[0])
+
+    def slow(url, params=None, timeout=None):
+        clock[0] += 60.0
+        hits2.append(1)
+        return _GResp(200, {"status_code": "IN_PROGRESS"})
+
+    hits2 = []
+    monkeypatch.setattr(reels.requests, "get", slow)
+    assert reels.wait_for_container("C", "TOK") is False
+    assert 0 < len(hits2) < reels.POLL_MAX        # the wall clock stopped it early
+
+    monkeypatch.setattr(reels.requests, "get",
+                        lambda url, params=None, timeout=None: _GResp(200, {"status_code": "FINISHED"}))
+    assert reels.wait_for_container("C", "TOK") is True
+    monkeypatch.setattr(reels.requests, "get",
+                        lambda url, params=None, timeout=None: _GResp(500, {}, "boom"))
+    assert reels.wait_for_container("C", "TOK") is False
+
+
+def test_publish_fb_is_the_locked_three_call_flow(monkeypatch, tmp_path):
+    """#7/#8: start -> bytes -> finish. The processing phase is asynchronous and
+    deliberately not polled — Meta's answer to the finish call is the answer."""
+    video = _short_at(tmp_path, size=7)
+    seen = []
+
+    def fake_post(url, data=None, headers=None, timeout=None):
+        seen.append((url, data, headers))
+        if "rupload" in url:
+            return _GResp(200, {"success": True})
+        if (data or {}).get("upload_phase") == "start":
+            return _GResp(200, {"video_id": "VID9", "upload_url": "ignored"})
+        return _GResp(200, {"success": True})
+
+    monkeypatch.setattr(reels.requests, "post", fake_post)
+    assert reels.publish_fb(video, "hello", "PAGEID", "TOK") is True
+    assert [s[0] for s in seen] == [
+        "https://graph.facebook.com/v25.0/PAGEID/video_reels",
+        "https://rupload.facebook.com/video-upload/v25.0/VID9",
+        "https://graph.facebook.com/v25.0/PAGEID/video_reels"]
+    assert seen[0][1] == {"upload_phase": "start", "access_token": "TOK"}
+    assert seen[1][2]["file_size"] == "7" and seen[1][2]["Authorization"] == "OAuth TOK"
+    assert seen[2][1] == {"upload_phase": "finish", "video_id": "VID9",
+                          "video_state": "PUBLISHED", "description": "hello",
+                          "access_token": "TOK"}
+
+    calls = []
+    monkeypatch.setattr(reels.requests, "post", lambda *a, **k: calls.append(1))
+    for args in (("", "PAGEID", "TOK"), ("hi", "", "TOK"), ("hi", "PAGEID", "")):
+        assert reels.publish_fb(video, *args) is False
+    assert calls == []
+
+
+def test_publish_fb_never_calls_a_refusal_a_success(monkeypatch, tmp_path):
+    video = _short_at(tmp_path)
+
+    def run(start, upload, finish):
+        hits = []
+
+        def post(url, data=None, headers=None, timeout=None):
+            hits.append(url)
+            if "rupload" in url:
+                return upload
+            return start if (data or {}).get("upload_phase") == "start" else finish
+
+        monkeypatch.setattr(reels.requests, "post", post)
+        return reels.publish_fb(video, "hi", "PAGEID", "TOK"), hits
+
+    ok = (_GResp(200, {"video_id": "V"}), _GResp(200, {"success": True}),
+          _GResp(200, {"success": True}))
+    assert run(*ok)[0] is True
+    for i, bad in ((0, _GResp(400, {"error": {"message": "x"}}, "bad")),
+                   (0, _GResp(200, {})),
+                   (1, _GResp(500, {}, "gateway")),
+                   (2, _GResp(200, {"success": False})),
+                   (2, _GResp(200, {}))):
+        args = list(ok)
+        args[i] = bad
+        assert run(*args)[0] is False, i
+
+
+def test_the_page_token_never_reaches_the_log(monkeypatch, tmp_path, capsys):
+    """Actions masks its own secrets; a local run and a fork do not. requests
+    quotes the whole request URL in its own exception text, which is why the
+    token is a form field here and never a query parameter."""
+    import requests as _rq
+    video = _short_at(tmp_path)
+    token = "PAGETOKEN123SECRET"
+
+    def boom(*a, **k):
+        raise _rq.exceptions.ConnectionError(
+            "Max retries exceeded with url: /v25.0/IGID/media?access_token=" + token)
+
+    monkeypatch.setattr(reels.requests, "post", boom)
+    monkeypatch.setattr(reels.requests, "get", boom)
+    assert reels.publish_ig(video, "hi", "IGID", token) is False
+    assert reels.publish_fb(video, "hi", "PAGEID", token) is False
+    assert reels.wait_for_container("C", token) is False
+    assert reels.upload_bytes("https://rupload.test/x", video, token) is False
+
+    # and the same again when the SERVER echoes it back in a body we print
+    monkeypatch.setattr(reels.requests, "post",
+                        lambda *a, **k: _GResp(400, {"error": {}}, "bad token " + token))
+    assert reels.publish_ig(video, "hi", "IGID", token) is False
+    out = capsys.readouterr().out
+    assert token not in out and "***" in out
+
+
+def test_reels_are_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys):
+    """#5/#12: the seam costs nothing until the owner creates the Meta app, and
+    each kill switch must be flippable from Actions (fv.flag, not fv.setting)."""
+    calls = []
+    monkeypatch.setattr(reels.requests, "post", lambda *a, **k: calls.append(1))
+    monkeypatch.setattr(reels.requests, "get", lambda *a, **k: calls.append(1))
+    _no_meta(monkeypatch)
+    assert reels.main() == 0
+    out = capsys.readouterr().out
+    assert calls == []
+    assert "Instagram not configured" in out and "Facebook not configured" in out
+
+    # a partial credential set is not a post
+    for missing in _META_ENV:
+        _with_meta(monkeypatch)
+        monkeypatch.setenv(missing, "")
+        assert reels.main() == 0 and calls == [], missing
+    capsys.readouterr()
+
+    _with_meta(monkeypatch)
+    monkeypatch.setenv("INSTAGRAM", "false")             # a string env var, not a bool
+    assert reels.ig_enabled() is False and reels.fb_enabled() is True
+    monkeypatch.delenv("INSTAGRAM")
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(reels.fv, "setting", _settings(instagram="false", facebook=False))
+        assert reels.ig_enabled() is False and reels.fb_enabled() is False
+        reels._post_ig()
+        reels._post_fb()
+    assert calls == []
+    out = capsys.readouterr().out
+    assert "instagram=false" in out and "facebook=false" in out
+
+
+def test_reels_record_a_url_only_after_a_successful_post(monkeypatch, tmp_path, capsys):
+    """The idempotence contract, per surface: post once, remember it, never post
+    it twice — and on a failure remember NOTHING, so tomorrow may still try."""
+    _short_at(tmp_path)
+    log = tmp_path / "production_log.json"
+    log.write_text(json.dumps([_log_row()]), encoding="utf-8")
+    monkeypatch.setattr(reels, "PROD_LOG", log)
+    monkeypatch.setattr(reels, "NOTIFIED_IG", tmp_path / "ig.json")
+    monkeypatch.setattr(reels, "NOTIFIED_FB", tmp_path / "fb.json")
+    monkeypatch.setattr(reels.fv, "BASE", tmp_path)
+    monkeypatch.setattr(reels.site, "CATALOG", tmp_path / "cat.json")
+    _reels_settings(monkeypatch)
+    _with_meta(monkeypatch)
+
+    sent = []
+    monkeypatch.setattr(reels, "publish_ig",
+                        lambda v, t, i, k: sent.append(("ig", t)) or False)
+    monkeypatch.setattr(reels, "publish_fb",
+                        lambda v, t, p, k: sent.append(("fb", t)) or True)
+    assert reels.main() == 0
+    assert [s[0] for s in sent] == ["ig", "fb"]
+    assert not (tmp_path / "ig.json").exists()               # the failure remembered nothing
+    assert notify.load_notified(tmp_path / "fb.json") == \
+        ["https://youtube.com/watch?v=ABCDEFGHIJK"]
+    assert "Facebook: posted" in capsys.readouterr().out
+
+    # the two lists are independent: the URL Facebook just took is still eligible
+    # for Instagram, because Instagram reads its own file
+    monkeypatch.setattr(reels, "publish_ig",
+                        lambda v, t, i, k: sent.append(("ig", t)) or True)
+    assert reels.main() == 0
+    assert [s[0] for s in sent] == ["ig", "fb", "ig"]        # FB no-ops, IG posts
+    assert notify.load_notified(tmp_path / "ig.json") == \
+        ["https://youtube.com/watch?v=ABCDEFGHIJK"]
+    out = capsys.readouterr().out
+    assert "Instagram: posted" in out and "Facebook: no Short from today's run" in out
+
+    assert reels.main() == 0 and len(sent) == 3              # both already done
+    assert "pip install" not in sent[0][1]     # empty catalog -> no command, no invention
+
+
+def test_one_broken_surface_never_takes_the_other_down(monkeypatch, tmp_path, capsys):
+    _short_at(tmp_path)
+    log = tmp_path / "production_log.json"
+    log.write_text(json.dumps([_log_row(format="news")]), encoding="utf-8")
+    monkeypatch.setattr(reels, "PROD_LOG", log)
+    monkeypatch.setattr(reels, "NOTIFIED_IG", tmp_path / "ig.json")
+    monkeypatch.setattr(reels, "NOTIFIED_FB", tmp_path / "fb.json")
+    monkeypatch.setattr(reels.fv, "BASE", tmp_path)
+    _reels_settings(monkeypatch)
+    _with_meta(monkeypatch)
+
+    fb_sent = []
+    monkeypatch.setattr(reels, "publish_fb", lambda v, t, p, k: fb_sent.append(t) or True)
+    for name in ("ig_enabled", "_ig_user_id", "publish_ig"):
+        before = len(fb_sent)
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(reels, name, _raiser(name))
+            assert reels.main() == 0, name
+            assert len(fb_sent) == before + 1, name
+            (tmp_path / "fb.json").unlink()
+    ig_sent = []
+    monkeypatch.setattr(reels, "publish_ig", lambda v, t, i, k: ig_sent.append(t) or True)
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(reels, "publish_fb", _raiser("publish_fb"))
+        assert reels.main() == 0 and len(ig_sent) == 1
+    out = capsys.readouterr().out
+    assert "instagram failed" in out and "facebook failed" in out
+
+
+def test_reels_main_never_raises_and_never_fails_the_workflow(monkeypatch):
+    """This step runs inside publish.yml, above the state-save the whole day
+    depends on. Every seam is stubbed to raise; main() still returns 0."""
+    _with_meta(monkeypatch)
+    for name in ("ig_enabled", "fb_enabled", "_token", "_page_id", "_ig_user_id",
+                 "load_log", "pick_entry", "caption", "publish_ig", "publish_fb",
+                 "resolve_short"):
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(reels, name, _raiser(name))
+            assert reels.main() == 0, name
+    for name in ("load_notified", "save_notified", "catalog_entry"):
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(reels.notify, name, _raiser(name))
+            assert reels.main() == 0, name
+
+
+def test_reels_state_gets_the_both_halves_treatment():
+    """The standing trap, now four times over: a tracked file the run writes must
+    be in BOTH state_merge.FILES and the writing workflow's stash list."""
+    root = Path(__file__).resolve().parents[1]
+    pub = (root / ".github/workflows/publish.yml").read_text(encoding="utf-8")
+    for rel in ("state/notified_ig.json", "state/notified_fb.json"):
+        assert rel in sm.FILES, rel
+        assert rel in pub, rel
+        assert (root / rel).exists(), rel
+        merged = json.loads(sm.merge_file(rel, json.dumps(["a", "b"]), json.dumps(["b", "c"])))
+        assert sorted(merged) == ["a", "b", "c"]
+        for junk in ("42", "null", '"str"', "{}"):
+            assert sm.merge_file(rel, junk, json.dumps(["a"])) is not None
+    # the Reel must be posted BEFORE the state-save, or the URL is never remembered
+    assert pub.index("python -m factverse.reels") < pub.index("python -m factverse.state_merge")
+    # and AFTER the pipeline, or there is no Short to post
+    assert pub.index("factverse.ai_pipeline publish") < pub.index("python -m factverse.reels")
+    for secret in _META_ENV:
+        assert "secrets." + secret in pub, secret
+    for name in ("config.json", "config.example.json"):
+        text = (root / name).read_text(encoding="utf-8")
+        assert '"instagram"' in text and '"facebook"' in text, name

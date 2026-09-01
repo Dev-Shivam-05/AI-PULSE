@@ -36,5 +36,7 @@
     "receipts_check": true,
     "site_pages": true,
     "telegram": true,
-    "twitter": true
+    "twitter": true,
+    "instagram": true,
+    "facebook": true
 }

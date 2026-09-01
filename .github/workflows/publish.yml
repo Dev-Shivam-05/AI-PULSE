@@ -96,6 +96,25 @@ jobs:
         # the forced lane is empty on scheduled runs (the shell drops the empty arg)
         run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
 
+      # v3-F.4: the day's first Short, re-uploaded as an IG Reel and an FB Reel.
+      # It runs HERE, not on notify.yml with Telegram/X, because output/shorts/ is
+      # gitignored and dies with this runner — announcing a link can happen
+      # anywhere, re-uploading a file can only happen where the file is. The
+      # caption carries no YouTube URL, so the long-form still being private until
+      # 16:45 UTC costs nothing. Own process, always exits 0, and it must stay
+      # ABOVE the state-save or state/notified_{ig,fb}.json are never persisted.
+      - name: Post the Short as IG / FB Reels
+        if: always()
+        continue-on-error: true
+        env:
+          # v3-F.4 #5: an unset secret expands to "" and the module logs
+          # "not configured" and exits 0 — the seam costs nothing until the owner
+          # creates the Meta app (docs/spec/ai-pulse-v3f4.md).
+          META_PAGE_TOKEN: ${{ secrets.META_PAGE_TOKEN }}
+          META_PAGE_ID: ${{ secrets.META_PAGE_ID }}
+          META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
+        run: python -m factverse.reels
+
       # Learning-loop data: daily channel/video performance snapshot (never fatal)
       - name: Collect channel analytics
         if: always()
@@ -116,7 +135,8 @@ jobs:
             for f in used_topics.json used_urls.json output/production_log.json \
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
                      state/l2_usage.json state/stock_ledger.json state/tools_index.json \
-                     state/notified.json state/notified_x.json; do
+                     state/notified.json state/notified_x.json \
+                     state/notified_ig.json state/notified_fb.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is

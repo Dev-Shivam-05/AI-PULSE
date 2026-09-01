@@ -54,6 +54,12 @@ FILES = (
     # X because Telegram took it, and then X would never post it at all.
     "state/notified.json",
     "state/notified_x.json",
+    # v3-F.4: the same treatment again for IG and FB Reels. The count of files
+    # this trap applies to grows with every surface, and the reason two surfaces
+    # never share one list is the F.3 one: whichever posted first would retire
+    # the video for the other, which would then never post it at all.
+    "state/notified_ig.json",
+    "state/notified_fb.json",
 )
 
 
