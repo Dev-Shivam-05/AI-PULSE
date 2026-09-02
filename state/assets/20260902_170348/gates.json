@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The core implication of these lawsuits is not just about a specific incident, but a fundamental challenge to the established legal firewall for tech platforms, potentially holding AI developers directly liable for user actions facilitated by their tools, especially when internal safety warnings are "
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a conversational and dramatic tone ('The most important release this week got almost no coverage. Imagine an AI being | ...') and poses rhetorical questions ('So, a safety team sugges"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
