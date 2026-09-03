@@ -1,0 +1,194 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.30,Live,,0,0,0,{\k40}Imagine {\k20}the {\k32}internet {\k28}just
+Dialogue: 0,0:00:01.80,0:00:03.82,Live,,0,0,0,{\k40}stopped {\k30}For {\k42}everyone {\k46}{\k44}That's
+Dialogue: 0,0:00:03.82,0:00:04.60,Live,,0,0,0,{\k10}what {\k32}happened {\k16}to {\k20}chat
+Dialogue: 0,0:00:04.60,0:00:06.66,Live,,0,0,0,{\k74}GPT {\k40}{\k30}GROC {\k12}{\k2}and {\k48}Claude
+Dialogue: 0,0:00:06.66,0:00:08.00,Live,,0,0,0,{\k22}all {\k14}at {\k32}once {\k46}{\k20}And
+Dialogue: 0,0:00:08.00,0:00:09.60,Live,,0,0,0,{\k10}the {\k52}strangest {\k30}part {\k46}{\k22}It
+Dialogue: 0,0:00:09.60,0:00:10.38,Live,,0,0,0,{\k28}wasn't {\k18}just {\k24}one {\k8}of
+Dialogue: 0,0:00:10.38,0:00:11.32,Live,,0,0,0,{\k16}them {\k40}{\k8}it {\k12}was {\k18}all
+Dialogue: 0,0:00:11.32,0:00:12.62,Live,,0,0,0,{\k34}three {\k54}hitting {\k16}the {\k26}digital
+Dialogue: 0,0:00:12.62,0:00:13.46,Live,,0,0,0,{\k28}wall {\k22}at {\k10}the {\k24}same
+Dialogue: 0,0:00:13.46,0:00:14.96,Live,,0,0,0,{\k34}time {\k62}{\k22}We're {\k16}going {\k16}to
+Dialogue: 0,0:00:14.96,0:00:16.58,Live,,0,0,0,{\k30}unpack {\k32}what {\k22}this {\k78}simultaneous
+Dialogue: 0,0:00:16.58,0:00:18.60,Live,,0,0,0,{\k46}AI {\k68}meltdown {\k38}really {\k40}means
+Dialogue: 0,0:00:18.86,0:00:20.54,Live,,0,0,0,{\k32}On {\k40}September {\k42}3rd {\k26}{\k28}a
+Dialogue: 0,0:00:20.54,0:00:22.20,Live,,0,0,0,{\k54}significant {\k58}disruption {\k34}hit {\k20}the
+Dialogue: 0,0:00:22.20,0:00:23.44,Live,,0,0,0,{\k42}AI {\k72}landscape
+Dialogue: 0,0:00:24.14,0:00:25.36,Live,,0,0,0,{\k24}Users {\k42}across {\k26}the {\k30}globe
+Dialogue: 0,0:00:25.36,0:00:26.70,Live,,0,0,0,{\k40}found {\k26}their {\k40}access {\k28}to
+Dialogue: 0,0:00:26.70,0:00:28.96,Live,,0,0,0,{\k40}major {\k52}AI {\k80}chatbots {\k54}blocked
+Dialogue: 0,0:00:28.96,0:00:30.48,Live,,0,0,0,{\k68}This {\k44}wasn't {\k8}a {\k32}minor
+Dialogue: 0,0:00:30.48,0:00:31.72,Live,,0,0,0,{\k54}hiccup {\k38}{\k10}it {\k10}was {\k12}a
+Dialogue: 0,0:00:31.72,0:00:33.96,Live,,0,0,0,{\k44}widespread {\k70}service {\k62}interruption {\k48}affecting
+Dialogue: 0,0:00:33.96,0:00:34.50,Live,,0,0,0,{\k44}millions
+Dialogue: 0,0:00:35.16,0:00:36.98,Live,,0,0,0,{\k36}So {\k44}{\k18}what {\k36}exactly {\k48}went
+Dialogue: 0,0:00:36.98,0:00:38.52,Live,,0,0,0,{\k38}down {\k50}{\k28}According {\k24}to {\k14}The
+Dialogue: 0,0:00:38.52,0:00:40.70,Live,,0,0,0,{\k50}Verge {\k42}{\k30}open {\k72}AI's {\k24}chat
+Dialogue: 0,0:00:40.70,0:00:42.70,Live,,0,0,0,{\k80}GPT {\k44}started {\k42}throwing {\k34}error
+Dialogue: 0,0:00:42.70,0:00:44.70,Live,,0,0,0,{\k48}messages {\k46}around {\k62}11 {\k44}AM
+Dialogue: 0,0:00:44.70,0:00:46.88,Live,,0,0,0,{\k52}Eastern {\k42}Time {\k60}{\k32}Its {\k32}status
+Dialogue: 0,0:00:46.88,0:00:49.00,Live,,0,0,0,{\k44}page {\k58}reported {\k62}elevated {\k48}errors
+Dialogue: 0,0:00:49.00,0:00:50.88,Live,,0,0,0,{\k50}affecting {\k34}not {\k20}just {\k74}conversations
+Dialogue: 0,0:00:51.34,0:00:53.40,Live,,0,0,0,{\k22}but {\k42}also {\k62}logins {\k46}{\k34}file
+Dialogue: 0,0:00:53.40,0:00:55.76,Live,,0,0,0,{\k38}uploads {\k56}{\k22}voice {\k34}modes {\k56}{\k20}search
+Dialogue: 0,0:00:56.04,0:00:57.60,Live,,0,0,0,{\k4}and {\k32}even {\k36}image {\k74}generation
+Dialogue: 0,0:00:58.04,0:00:59.08,Live,,0,0,0,{\k40}And {\k8}it {\k34}wasn't {\k22}just
+Dialogue: 0,0:00:59.08,0:01:01.18,Live,,0,0,0,{\k34}chat {\k96}GPT {\k62}Around {\k18}the
+Dialogue: 0,0:01:01.18,0:01:02.92,Live,,0,0,0,{\k26}same {\k50}time {\k38}{\k8}and {\k52}Thropics
+Dialogue: 0,0:01:02.92,0:01:04.28,Live,,0,0,0,{\k44}Clawed {\k50}chatbots {\k24}and {\k18}its
+Dialogue: 0,0:01:04.28,0:01:06.96,Live,,0,0,0,{\k48}API {\k66}began {\k72}experiencing {\k72}issues
+Dialogue: 0,0:01:07.42,0:01:09.50,Live,,0,0,0,{\k64}Initially {\k44}{\k34}several {\k44}versions {\k22}of
+Dialogue: 0,0:01:09.50,0:01:11.34,Live,,0,0,0,{\k44}Claude {\k12}were {\k66}impacted {\k38}{\k24}though
+Dialogue: 0,0:01:11.34,0:01:12.74,Live,,0,0,0,{\k10}the {\k32}company {\k34}later {\k64}specified
+Dialogue: 0,0:01:12.74,0:01:13.90,Live,,0,0,0,{\k34}that {\k14}the {\k44}problems {\k24}were
+Dialogue: 0,0:01:13.90,0:01:15.90,Live,,0,0,0,{\k56}primarily {\k62}affecting {\k50}Opus {\k32}4
+Dialogue: 0,0:01:15.90,0:01:17.44,Live,,0,0,0,{\k66}8 {\k22}and {\k40}Opus {\k26}5
+Dialogue: 0,0:01:17.44,0:01:18.06,Live,,0,0,0,{\k52}models
+Dialogue: 0,0:01:18.70,0:01:21.10,Live,,0,0,0,{\k48}Then {\k44}{\k22}there {\k16}was {\k110}xAI's
+Dialogue: 0,0:01:21.10,0:01:22.98,Live,,0,0,0,{\k48}Grok {\k32}{\k10}This {\k52}chatbot {\k46}also
+Dialogue: 0,0:01:22.98,0:01:24.98,Live,,0,0,0,{\k50}started {\k76}experiencing {\k26}an {\k48}outage
+Dialogue: 0,0:01:24.98,0:01:26.08,Live,,0,0,0,{\k28}across {\k36}its {\k24}app {\k22}and
+Dialogue: 0,0:01:26.08,0:01:27.98,Live,,0,0,0,{\k24}web {\k52}interface {\k76}beginning {\k38}as
+Dialogue: 0,0:01:27.98,0:01:29.84,Live,,0,0,0,{\k40}early {\k24}as {\k28}9 {\k50}{\k44}30
+Dialogue: 0,0:01:29.84,0:01:31.00,Live,,0,0,0,{\k54}AM {\k52}Eastern
+Dialogue: 0,0:01:31.64,0:01:32.80,Live,,0,0,0,{\k30}Users {\k42}trying {\k14}to {\k30}prompt
+Dialogue: 0,0:01:32.80,0:01:34.10,Live,,0,0,0,{\k54}Grok {\k28}were {\k24}met {\k24}with
+Dialogue: 0,0:01:34.10,0:01:35.96,Live,,0,0,0,{\k52}messages {\k60}indicating {\k36}the {\k38}model
+Dialogue: 0,0:01:35.96,0:01:37.70,Live,,0,0,0,{\k24}was {\k88}overloaded {\k16}{\k28}This {\k18}is
+Dialogue: 0,0:01:37.70,0:01:39.38,Live,,0,0,0,{\k16}the {\k30}critical {\k50}question {\k54}{\k18}why
+Dialogue: 0,0:01:39.38,0:01:40.54,Live,,0,0,0,{\k14}all {\k10}at {\k24}once {\k58}{\k10}Was
+Dialogue: 0,0:01:40.54,0:01:41.96,Live,,0,0,0,{\k14}it {\k10}a {\k58}coordinated {\k50}attack
+Dialogue: 0,0:01:42.26,0:01:43.84,Live,,0,0,0,{\k10}a {\k28}shared {\k60}vulnerability {\k40}{\k20}or
+Dialogue: 0,0:01:43.84,0:01:45.18,Live,,0,0,0,{\k36}something {\k28}else {\k60}entirely
+Dialogue: 0,0:01:45.88,0:01:46.86,Live,,0,0,0,{\k18}The {\k36}Verge {\k18}notes {\k26}that
+Dialogue: 0,0:01:46.86,0:01:47.76,Live,,0,0,0,{\k18}it's {\k34}unclear {\k26}if {\k12}the
+Dialogue: 0,0:01:47.76,0:01:49.28,Live,,0,0,0,{\k24}issues {\k26}are {\k44}related {\k38}{\k20}and
+Dialogue: 0,0:01:49.28,0:01:50.54,Live,,0,0,0,{\k34}major {\k26}tech {\k40}outlets {\k26}are
+Dialogue: 0,0:01:50.54,0:01:51.98,Live,,0,0,0,{\k24}still {\k38}seeking {\k38}official {\k44}comments
+Dialogue: 0,0:01:51.98,0:01:53.12,Live,,0,0,0,{\k30}from {\k74}OpenAI
+Dialogue: 0,0:01:53.72,0:01:56.84,Live,,0,0,0,{\k56}xAI {\k58}{\k8}and {\k62}Anthropic {\k128}Anthropic's
+Dialogue: 0,0:01:56.84,0:01:58.38,Live,,0,0,0,{\k30}technical {\k58}staff {\k42}pointed {\k24}to
+Dialogue: 0,0:01:58.38,0:02:00.20,Live,,0,0,0,{\k14}an {\k56}infrastructure {\k70}issue {\k42}as
+Dialogue: 0,0:02:00.20,0:02:01.16,Live,,0,0,0,{\k14}the {\k36}cause {\k28}for {\k18}their
+Dialogue: 0,0:02:01.16,0:02:03.58,Live,,0,0,0,{\k44}partial {\k66}outage {\k46}{\k24}They {\k62}confirmed
+Dialogue: 0,0:02:03.58,0:02:04.42,Live,,0,0,0,{\k16}they {\k10}were {\k34}working {\k24}on
+Dialogue: 0,0:02:04.42,0:02:05.52,Live,,0,0,0,{\k18}it {\k14}{\k8}but {\k38}couldn't {\k32}provide
+Dialogue: 0,0:02:05.52,0:02:07.20,Live,,0,0,0,{\k28}an {\k58}estimated {\k56}time {\k26}for
+Dialogue: 0,0:02:07.20,0:02:11.06,Live,,0,0,0,{\k62}resolution {\k70}{\k68}Similarly {\k60}{\k52}xAI {\k74}stated
+Dialogue: 0,0:02:11.06,0:02:11.90,Live,,0,0,0,{\k18}they {\k10}were {\k32}working {\k24}on
+Dialogue: 0,0:02:11.90,0:02:13.56,Live,,0,0,0,{\k54}restoring {\k56}service {\k28}as {\k28}quickly
+Dialogue: 0,0:02:13.56,0:02:15.44,Live,,0,0,0,{\k38}as {\k58}possible {\k34}{\k24}This {\k34}isn't
+Dialogue: 0,0:02:15.44,0:02:16.14,Live,,0,0,0,{\k12}just {\k30}about {\k12}a {\k16}few
+Dialogue: 0,0:02:16.14,0:02:18.46,Live,,0,0,0,{\k60}chatbots {\k22}being {\k70}unavailable {\k64}{\k16}Think
+Dialogue: 0,0:02:18.46,0:02:19.80,Live,,0,0,0,{\k18}about {\k18}how {\k34}deeply {\k64}integrated
+Dialogue: 0,0:02:19.80,0:02:21.14,Live,,0,0,0,{\k28}these {\k36}AI {\k46}tools {\k24}are
+Dialogue: 0,0:02:21.14,0:02:23.22,Live,,0,0,0,{\k42}becoming {\k80}From {\k42}customer {\k44}service
+Dialogue: 0,0:02:23.22,0:02:24.88,Live,,0,0,0,{\k36}and {\k38}content {\k54}creation {\k38}to
+Dialogue: 0,0:02:24.88,0:02:26.68,Live,,0,0,0,{\k36}research {\k28}and {\k38}coding {\k56}{\k22}millions
+Dialogue: 0,0:02:26.68,0:02:28.38,Live,,0,0,0,{\k26}of {\k38}workflows {\k66}suddenly {\k40}ground
+Dialogue: 0,0:02:28.38,0:02:29.84,Live,,0,0,0,{\k32}to {\k14}a {\k28}halt {\k58}{\k14}It
+Dialogue: 0,0:02:29.84,0:02:31.70,Live,,0,0,0,{\k36}reveals {\k28}a {\k60}surprisingly {\k62}fragile
+Dialogue: 0,0:02:31.70,0:02:33.52,Live,,0,0,0,{\k48}digital {\k52}world {\k30}{\k28}This {\k24}event
+Dialogue: 0,0:02:33.52,0:02:35.40,Live,,0,0,0,{\k52}highlights {\k28}a {\k36}potential {\k72}systemic
+Dialogue: 0,0:02:35.40,0:02:37.20,Live,,0,0,0,{\k52}risk {\k42}{\k26}If {\k22}these {\k38}core
+Dialogue: 0,0:02:37.20,0:02:39.58,Live,,0,0,0,{\k40}AI {\k88}providers {\k36}share {\k64}dependencies
+Dialogue: 0,0:02:40.14,0:02:41.12,Live,,0,0,0,{\k10}a {\k36}single {\k36}point {\k16}of
+Dialogue: 0,0:02:41.12,0:02:42.70,Live,,0,0,0,{\k40}failure {\k30}could {\k50}indeed {\k38}bring
+Dialogue: 0,0:02:42.70,0:02:45.18,Live,,0,0,0,{\k30}down {\k44}multiple {\k76}services {\k64}{\k34}This
+Dialogue: 0,0:02:45.18,0:02:48.12,Live,,0,0,0,{\k114}interconnectedness {\k42}while {\k62}enabling {\k66}innovation
+Dialogue: 0,0:02:48.48,0:02:50.74,Live,,0,0,0,{\k40}also {\k48}creates {\k48}shared {\k80}vulnerabilities
+Dialogue: 0,0:02:51.20,0:02:52.84,Live,,0,0,0,{\k44}Consider {\k24}the {\k62}implications {\k34}for
+Dialogue: 0,0:02:52.84,0:02:54.94,Live,,0,0,0,{\k50}businesses {\k68}{\k28}Many {\k36}rely {\k28}on
+Dialogue: 0,0:02:54.94,0:02:56.28,Live,,0,0,0,{\k26}these {\k28}AI {\k52}models {\k28}for
+Dialogue: 0,0:02:56.28,0:02:57.30,Live,,0,0,0,{\k22}daily {\k70}operations
+Dialogue: 0,0:02:57.92,0:02:58.92,Live,,0,0,0,{\k20}An {\k36}outage {\k16}like {\k28}this
+Dialogue: 0,0:02:58.92,0:03:00.70,Live,,0,0,0,{\k34}isn't {\k22}just {\k24}an {\k88}inconvenience
+Dialogue: 0,0:03:01.06,0:03:03.12,Live,,0,0,0,{\k18}it's {\k16}lost {\k82}productivity {\k42}{\k48}potential
+Dialogue: 0,0:03:03.12,0:03:04.46,Live,,0,0,0,{\k38}revenue {\k36}loss {\k28}{\k24}and {\k8}a
+Dialogue: 0,0:03:04.46,0:03:06.38,Live,,0,0,0,{\k24}blow {\k32}to {\k54}operational {\k72}continuity
+Dialogue: 0,0:03:06.80,0:03:07.70,Live,,0,0,0,{\k38}How {\k28}much {\k12}are {\k12}we
+Dialogue: 0,0:03:07.70,0:03:08.96,Live,,0,0,0,{\k30}truly {\k58}investing {\k28}in {\k10}the
+Dialogue: 0,0:03:08.96,0:03:10.38,Live,,0,0,0,{\k46}resilience {\k26}of {\k14}these {\k46}systems
+Dialogue: 0,0:03:10.68,0:03:12.20,Live,,0,0,0,{\k48}filter {\k34}{\k16}true {\k22}It's {\k32}tempting
+Dialogue: 0,0:03:12.20,0:03:13.68,Live,,0,0,0,{\k24}to {\k46}speculate {\k38}about {\k40}grand
+Dialogue: 0,0:03:13.68,0:03:15.94,Live,,0,0,0,{\k78}conspiracies {\k30}or {\k70}complex {\k48}cyber
+Dialogue: 0,0:03:15.94,0:03:17.68,Live,,0,0,0,{\k32}attacks {\k58}{\k26}But {\k14}the {\k44}reality
+Dialogue: 0,0:03:17.68,0:03:19.34,Live,,0,0,0,{\k34}is {\k38}often {\k28}more {\k56}mundane
+Dialogue: 0,0:03:19.88,0:03:21.78,Live,,0,0,0,{\k78}Infrastructure {\k50}issues {\k26}can {\k36}range
+Dialogue: 0,0:03:21.78,0:03:23.38,Live,,0,0,0,{\k30}from {\k48}power {\k58}outages {\k24}at
+Dialogue: 0,0:03:23.38,0:03:25.22,Live,,0,0,0,{\k30}data {\k56}centers {\k52}to {\k46}software
+Dialogue: 0,0:03:25.22,0:03:26.72,Live,,0,0,0,{\k42}bugs {\k24}or {\k40}network {\k44}routing
+Dialogue: 0,0:03:26.72,0:03:28.72,Live,,0,0,0,{\k66}problems {\k42}{\k50}These {\k24}are {\k18}the
+Dialogue: 0,0:03:28.72,0:03:31.32,Live,,0,0,0,{\k80}unglamorous {\k44}{\k24}yet {\k50}critical {\k62}components
+Dialogue: 0,0:03:31.32,0:03:32.50,Live,,0,0,0,{\k30}that {\k26}keep {\k22}our {\k40}digital
+Dialogue: 0,0:03:32.50,0:03:34.26,Live,,0,0,0,{\k36}world {\k44}running {\k36}{\k14}This {\k46}outage
+Dialogue: 0,0:03:34.26,0:03:35.42,Live,,0,0,0,{\k26}comes {\k28}at {\k8}a {\k54}fascinating
+Dialogue: 0,0:03:35.42,0:03:37.60,Live,,0,0,0,{\k68}time {\k46}{\k16}with {\k46}open {\k42}AI
+Dialogue: 0,0:03:37.60,0:03:39.18,Live,,0,0,0,{\k70}teasing {\k30}its {\k20}new {\k38}AI
+Dialogue: 0,0:03:39.18,0:03:42.10,Live,,0,0,0,{\k64}model {\k36}{\k38}Astra {\k68}{\k18}It {\k68}underscores
+Dialogue: 0,0:03:42.10,0:03:43.36,Live,,0,0,0,{\k24}the {\k36}rapid {\k32}pace {\k34}of
+Dialogue: 0,0:03:43.36,0:03:45.52,Live,,0,0,0,{\k36}AI {\k72}development {\k50}{\k20}but {\k38}also
+Dialogue: 0,0:03:45.52,0:03:46.72,Live,,0,0,0,{\k18}the {\k48}potential {\k24}for {\k30}these
+Dialogue: 0,0:03:46.72,0:03:48.78,Live,,0,0,0,{\k36}cutting {\k32}edge {\k76}technologies {\k62}to
+Dialogue: 0,0:03:48.78,0:03:50.30,Live,,0,0,0,{\k46}outpace {\k30}the {\k50}stability {\k26}of
+Dialogue: 0,0:03:50.30,0:03:52.66,Live,,0,0,0,{\k16}their {\k66}underlying {\k96}infrastructure {\k28}{\k30}The
+Dialogue: 0,0:03:52.66,0:03:53.66,Live,,0,0,0,{\k26}fact {\k24}that {\k34}three {\k16}of
+Dialogue: 0,0:03:53.66,0:03:54.88,Live,,0,0,0,{\k12}the {\k26}most {\k44}prominent {\k40}AI
+Dialogue: 0,0:03:54.88,0:03:57.14,Live,,0,0,0,{\k84}chatbots {\k30}{\k22}from {\k26}different {\k54}companies
+Dialogue: 0,0:03:57.54,0:04:00.52,Live,,0,0,0,{\k78}experienced {\k52}downtime {\k90}simultaneously {\k52}{\k26}is
+Dialogue: 0,0:04:00.52,0:04:01.40,Live,,0,0,0,{\k10}a {\k24}wake {\k20}up {\k24}call
+Dialogue: 0,0:04:02.04,0:04:02.90,Live,,0,0,0,{\k14}It {\k34}forces {\k20}us {\k18}to
+Dialogue: 0,0:04:02.90,0:04:04.08,Live,,0,0,0,{\k32}confront {\k20}the {\k38}question {\k28}of
+Dialogue: 0,0:04:04.08,0:04:05.36,Live,,0,0,0,{\k20}how {\k46}robust {\k32}our {\k30}AI
+Dialogue: 0,0:04:05.36,0:04:07.36,Live,,0,0,0,{\k50}future {\k52}truly {\k44}is {\k54}and
+Dialogue: 0,0:04:07.36,0:04:08.26,Live,,0,0,0,{\k18}what {\k32}measures {\k24}are {\k16}being
+Dialogue: 0,0:04:08.26,0:04:09.52,Live,,0,0,0,{\k36}taken {\k22}to {\k40}ensure {\k28}its
+Dialogue: 0,0:04:09.52,0:04:11.88,Live,,0,0,0,{\k50}reliability {\k64}{\k22}The {\k36}widespread {\k64}nature
+Dialogue: 0,0:04:11.88,0:04:13.26,Live,,0,0,0,{\k24}of {\k18}this {\k28}event {\k68}suggests
+Dialogue: 0,0:04:13.26,0:04:15.50,Live,,0,0,0,{\k34}a {\k42}shared {\k74}dependency {\k74}or
+Dialogue: 0,0:04:15.50,0:04:17.30,Live,,0,0,0,{\k16}a {\k38}common {\k62}vulnerability {\k64}within
+Dialogue: 0,0:04:17.30,0:04:19.60,Live,,0,0,0,{\k16}the {\k38}digital {\k80}infrastructure {\k46}{\k50}powering
+Dialogue: 0,0:04:19.60,0:04:21.62,Live,,0,0,0,{\k20}these {\k72}advanced {\k36}AI {\k64}models
+Dialogue: 0,0:04:22.22,0:04:24.80,Live,,0,0,0,{\k82}Understanding {\k36}these {\k94}interdependencies {\k46}is
+Dialogue: 0,0:04:24.80,0:04:25.84,Live,,0,0,0,{\k32}key {\k22}to {\k26}building {\k24}a
+Dialogue: 0,0:04:25.84,0:04:28.28,Live,,0,0,0,{\k24}more {\k66}resilient {\k58}AI {\k86}ecosystem
+Dialogue: 0,0:04:28.78,0:04:30.30,Live,,0,0,0,{\k28}As {\k28}AI {\k70}continues {\k26}to
+Dialogue: 0,0:04:30.30,0:04:31.84,Live,,0,0,0,{\k46}integrate {\k24}into {\k38}every {\k46}facet
+Dialogue: 0,0:04:31.84,0:04:33.06,Live,,0,0,0,{\k10}of {\k10}our {\k48}lives {\k30}{\k24}from
+Dialogue: 0,0:04:33.06,0:04:34.76,Live,,0,0,0,{\k50}personal {\k46}assistants {\k42}to {\k32}critical
+Dialogue: 0,0:04:34.76,0:04:37.28,Live,,0,0,0,{\k62}industrial {\k78}applications {\k60}{\k12}the {\k40}reliability
+Dialogue: 0,0:04:37.28,0:04:38.78,Live,,0,0,0,{\k50}of {\k16}these {\k40}tools {\k44}becomes
+Dialogue: 0,0:04:38.78,0:04:40.90,Live,,0,0,0,{\k72}paramount {\k38}{\k34}A {\k34}system {\k34}wide
+Dialogue: 0,0:04:40.90,0:04:43.12,Live,,0,0,0,{\k48}failure {\k38}{\k26}even {\k56}temporary {\k36}{\k18}has
+Dialogue: 0,0:04:43.12,0:04:45.30,Live,,0,0,0,{\k36}far {\k36}reaching {\k74}consequences {\k38}{\k34}This
+Dialogue: 0,0:04:45.30,0:04:47.04,Live,,0,0,0,{\k78}simultaneous {\k68}outage {\k18}is {\k10}a
+Dialogue: 0,0:04:47.04,0:04:48.32,Live,,0,0,0,{\k36}stark {\k56}reminder {\k22}that {\k14}our
+Dialogue: 0,0:04:48.32,0:04:50.24,Live,,0,0,0,{\k38}digital {\k64}world {\k36}{\k30}powered {\k24}by
+Dialogue: 0,0:04:50.24,0:04:53.12,Live,,0,0,0,{\k70}increasingly {\k86}complex {\k32}AI {\k68}{\k32}is
+Dialogue: 0,0:04:53.12,0:04:54.30,Live,,0,0,0,{\k36}only {\k16}as {\k36}strong {\k30}as
+Dialogue: 0,0:04:54.30,0:04:55.32,Live,,0,0,0,{\k18}its {\k36}weakest {\k38}link
+Dialogue: 0,0:04:55.98,0:04:58.18,Live,,0,0,0,{\k12}The {\k36}critical {\k58}takeaway {\k60}{\k54}resilience
+Dialogue: 0,0:04:58.18,0:04:59.22,Live,,0,0,0,{\k34}must {\k26}be {\k16}as {\k28}high
+Dialogue: 0,0:04:59.22,0:05:01.06,Live,,0,0,0,{\k22}a {\k66}priority {\k30}as {\k56}innovation
+Dialogue: 0,0:05:01.46,0:05:02.58,Live,,0,0,0,{\k30}So {\k22}{\k14}when {\k12}the {\k34}AI
+Dialogue: 0,0:05:02.58,0:05:04.22,Live,,0,0,0,{\k50}giants {\k42}stumble {\k42}{\k20}what {\k10}does
+Dialogue: 0,0:05:04.22,0:05:04.90,Live,,0,0,0,{\k18}that {\k20}mean {\k20}for {\k10}the
+Dialogue: 0,0:05:04.90,0:05:06.08,Live,,0,0,0,{\k18}rest {\k12}of {\k22}us {\k48}{\k18}Let
+Dialogue: 0,0:05:06.08,0:05:06.74,Live,,0,0,0,{\k12}us {\k16}know {\k16}your {\k22}thoughts
+Dialogue: 0,0:05:06.74,0:05:07.82,Live,,0,0,0,{\k28}in {\k10}the {\k32}comments {\k38}below
+Dialogue: 0,0:05:07.82,0:05:10.04,Live,,0,0,0,{\k102}Subscribe {\k38}to {\k26}Tool {\k56}Dojo
+Dialogue: 0,0:05:10.04,0:05:11.44,Live,,0,0,0,{\k32}for {\k22}more {\k36}critical {\k50}insights
+Dialogue: 0,0:05:11.44,0:05:12.44,Live,,0,0,0,{\k38}into {\k16}the {\k26}tech {\k20}that
+Dialogue: 0,0:05:12.44,0:05:13.38,Live,,0,0,0,{\k38}shapes {\k16}our {\k30}world

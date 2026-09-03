@@ -2766,5 +2766,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-03T16:49:25.460691",
+    "title": "ChatGPT, Grok, Claude Crash: AI World Goes Dark",
+    "description": "Imagine the internet just... stopped. For everyone. That's what happened when three of the biggest AI chatbots, ChatGPT, Grok, and Claude, all went offline at the same time. This isn't just a glitch; it's a stark reminder of how fragile our increasingly AI-dependent world truly is. We break down exactly what happened, why it matters, and what this simultaneous failure reveals about the underlying infrastructure powering our digital lives. Get ready for a deep dive into the interconnected vulnerabilities of modern AI. #AI #TechNews #ChatGPT #Grok #Claude #ArtificialIntelligence #TechFailure\n\nSource: https://www.theverge.com/ai-artificial-intelligence/989503/chatgpt-grok-claude-outage-down\n\nChapters:\n0:00 AI Outages Hit\n1:00 More AI Fails\n2:16 AI Integration Risks\n3:14 Simple Explanation\n4:31 AI Reliance Grows\n\n▶ Watch next: https://youtube.com/watch?v=jKZqiMsfCh8",
+    "tags": [
+      "AI Outage",
+      "ChatGPT Down",
+      "Grok Down",
+      "Claude Down",
+      "AI Failure",
+      "Artificial Intelligence",
+      "Tech News",
+      "OpenAI",
+      "xAI",
+      "Anthropic",
+      "Tech Vulnerability",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/ChatGPT_Grok_Claude_Crash_AI_World_Goes_Dark_20260903_163951_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260903_164319.mp4",
+      "output/shorts/short_2_20260903_164410.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260903_164134.jpg",
+    "youtube_url": "https://youtube.com/watch?v=PVKboHbVoFk",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=Ert-h2g5d-M",
+      "https://youtube.com/watch?v=DI1I7JAmo6M"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI MELTDOWN! ChatGPT, Grok, Claude DOWN! 😱 #Shorts",
+        "description": "Major AI platforms like ChatGPT, Grok, and Claude have unexpectedly crashed, plunging the AI world into darkness. Discover what happened and the potential impact of this unprecedented outage.",
+        "instagram_caption": "🚨 The AI world went dark! Major platforms like ChatGPT, Grok, and Claude have experienced a massive, unexpected outage. What does this mean for the future of AI? Follow @tooldojo! #AI #ChatGPT #Grok #Claude #AIFail #TechNews #ArtificialIntelligence #AIOutage #TechUpdate #FutureOfAI #AISecurity #TechBreakdown #DigitalWorld #Innovation #Disruption #AICrises #GlobalTech #TechGossip #AIRevolution #TechAlert"
+      },
+      {
+        "title": "AI CHAOS: Giants CRASH! 💥 What's NEXT? #Shorts",
+        "description": "An unprecedented event has struck the AI industry, with leading models like ChatGPT, Grok, and Claude experiencing a simultaneous shutdown. Explore the theories behind this 'AI dark age' and what the future holds.",
+        "instagram_caption": "🤯 Unbelievable AI chaos erupted as ChatGPT, Grok, and Claude all crashed simultaneously, leaving the digital world stunned. Experts are scrambling to understand the cause and its far-reaching implications. Follow @tooldojo! #AICrash #TechEmergency #AICollapse #ChatGPTDown #GrokDown #ClaudeDown #AIWorld #TechCrisis #ArtificialIntelligenceNews #AIUpdate #TechAlert #DigitalChaos #AIBreakdown #FutureTech #TechDisaster #AICommunity #InnovationGoneWrong #GlobalTechNews #TechStories #AIGoneWild"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The simultaneous outage of multiple leading AI models highlights a potential systemic risk where a single infrastructure failure or exploit could cascade across the entire AI ecosystem, impacting diverse services and applications reliant on these foundational technologies."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative framing ('Imagine the internet just... stopped.') and poses rhetorical questions ('why all at once? Was it a coordinated attack, a s') that are not present in the so"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
