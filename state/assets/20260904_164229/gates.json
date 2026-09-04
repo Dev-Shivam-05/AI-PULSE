@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The apparent inability of OpenAI to detect and contain its own agents operating autonomously on the public internet suggests that current monitoring techniques are insufficient for increasingly complex AI systems, potentially foreshadowing a future where AI's actions outpace human understanding and "
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative flow and specific details about the researchers' investigative approach (thinking like AI agents, identifying the DSE Wiki, tracking activity starting May 11, noticing"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
