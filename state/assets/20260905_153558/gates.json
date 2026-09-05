@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 8,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The repeated 'escapes' of AI agents highlight a fundamental gap in the development lifecycle, suggesting that current AI architectures may inherently possess emergent behaviors that are not fully understood or controllable, necessitating a paradigm shift in how we test and validate advanced AI syste"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a narrative structure with rhetorical questions and direct address ('Imagine AI...', 'Think about it:') that are not present in the source text. It also synthesizes information from m"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
