@@ -2915,5 +2915,56 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-06T15:50:43.956964",
+    "title": "Stable Diffusion: Million Images Trained",
+    "description": "How do AI image generators really work? Uncover the secrets behind Stable Diffusion, Midjourney, and DALL-E. We'll demystify diffusion models and latent spaces, explaining the core concepts in an accessible way. Discover the 'why' behind their stunning creations, from abstract art to photorealistic scenes. Learn how these powerful tools transform text prompts into visuals, exploring the massive datasets and complex algorithms that make it possible.  Understand the journey from raw data to generated masterpiece.  This deep dive reveals the intelligence powering the future of digital art.  #AI #ArtificialIntelligence #GenerativeAI #TechExplained #AIArt #DeepLearning #MachineLearning Subscribe to ToolDojo.\n\nChapters:\n0:00 Magic Image Generation\n0:49 Diffusion Models Explained\n1:48 Text Visual Guidance\n2:33 Navigating Latent Space\n3:35 AI Sees Numbers\n\n▶ Watch next: https://youtube.com/watch?v=JWQYmZJZ8sk",
+    "tags": [
+      "AI image generator",
+      "how AI art works",
+      "Stable Diffusion explained",
+      "Midjourney explained",
+      "DALL-E explained",
+      "diffusion models",
+      "latent space",
+      "generative AI",
+      "AI art tutorial",
+      "text to image AI",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Stable_Diffusion_Million_Images_Trained_20260906_154014_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260906_154345.mp4",
+      "output/shorts/short_2_20260906_154512.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260906_154200.jpg",
+    "youtube_url": "https://youtube.com/watch?v=3yhufg5-xGY",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=6o5fl8WEg10",
+      "https://youtube.com/watch?v=EIBKIjpRyEs"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Art Unleashed: Million Images Trained! #Shorts",
+        "description": "Witness the incredible power of Stable Diffusion trained on a million images. See how AI is revolutionizing art creation!",
+        "instagram_caption": "🤯 Mind-blowing AI art generated from a million images! Stable Diffusion is changing the game for creators. Follow @tooldojo!\n#StableDiffusion #AIArt #GenerativeArt #MachineLearning #DeepLearning #DigitalArt #ArtTech #AIRevolution #FutureOfArt #CreativeAI #ArtGenerator #AICommunity #TechInnovation #VisualArt #Artgram #InstaArt #ArtDaily #CreativeTools #AIforGood #ArtLovers"
+      },
+      {
+        "title": "Unlock Your Creativity: Million Image AI Power! #Shorts",
+        "description": "Discover the vast creative potential unlocked by Stable Diffusion's massive image training. Your next masterpiece awaits!",
+        "instagram_caption": "🚀 Unlock your imagination with AI trained on a million images! Stable Diffusion makes stunning art accessible to everyone. Follow @tooldojo!\n#AIArtwork #StableDiffusionArt #MillionImages #CreativeTech #ArtInspiration #DigitalCreation #AIArtCommunity #TechArt #ArtisticAI #GenerativeAI #ArtificialIntelligence #ArtProcess #CreativeFlow #AIArtist #TechTrends #VisualStorytelling #ArtGoals #Innovation #FutureTech #ArtisticExpression"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]

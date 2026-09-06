@@ -1,0 +1,181 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.62,Live,,0,0,0,{\k12}You {\k20}type {\k14}a {\k16}few
+Dialogue: 0,0:00:00.62,0:00:01.84,Live,,0,0,0,{\k38}words {\k26}and {\k10}a {\k38}stunning
+Dialogue: 0,0:00:01.96,0:00:03.08,Live,,0,0,0,{\k28}unique {\k34}image {\k40}appears
+Dialogue: 0,0:00:03.70,0:00:04.54,Live,,0,0,0,{\k24}How {\k16}is {\k12}this {\k32}even
+Dialogue: 0,0:00:04.54,0:00:06.08,Live,,0,0,0,{\k52}possible {\k44}{\k14}It {\k22}feels {\k22}like
+Dialogue: 0,0:00:06.08,0:00:07.60,Live,,0,0,0,{\k46}magic {\k40}{\k8}but {\k22}it's {\k26}science
+Dialogue: 0,0:00:08.20,0:00:08.80,Live,,0,0,0,{\k16}By {\k12}the {\k20}end {\k12}of
+Dialogue: 0,0:00:08.80,0:00:10.08,Live,,0,0,0,{\k14}this {\k32}video {\k32}{\k10}you'll {\k40}understand
+Dialogue: 0,0:00:10.08,0:00:11.54,Live,,0,0,0,{\k22}the {\k20}core {\k50}principles {\k54}driving
+Dialogue: 0,0:00:11.54,0:00:13.34,Live,,0,0,0,{\k46}every {\k38}AI {\k38}image {\k58}generator
+Dialogue: 0,0:00:13.34,0:00:15.08,Live,,0,0,0,{\k54}from {\k44}Stable {\k50}Diffusion {\k26}to
+Dialogue: 0,0:00:15.08,0:00:16.68,Live,,0,0,0,{\k16}mid {\k28}journey {\k34}{\k40}Imagine {\k42}training
+Dialogue: 0,0:00:16.68,0:00:17.72,Live,,0,0,0,{\k20}a {\k30}computer {\k24}to {\k30}draw
+Dialogue: 0,0:00:17.72,0:00:18.80,Live,,0,0,0,{\k26}by {\k34}showing {\k16}it {\k32}millions
+Dialogue: 0,0:00:18.80,0:00:20.30,Live,,0,0,0,{\k40}upon {\k40}millions {\k26}of {\k34}pictures
+Dialogue: 0,0:00:20.84,0:00:22.28,Live,,0,0,0,{\k34}Not {\k26}just {\k36}random {\k38}pictures
+Dialogue: 0,0:00:22.72,0:00:23.86,Live,,0,0,0,{\k10}but {\k38}pictures {\k42}paired {\k24}with
+Dialogue: 0,0:00:23.86,0:00:24.42,Live,,0,0,0,{\k46}descriptions
+Dialogue: 0,0:00:25.06,0:00:25.70,Live,,0,0,0,{\k28}Think {\k10}of {\k8}it {\k18}like
+Dialogue: 0,0:00:25.70,0:00:26.82,Live,,0,0,0,{\k40}teaching {\k18}a {\k32}child {\k22}by
+Dialogue: 0,0:00:26.82,0:00:28.02,Live,,0,0,0,{\k34}saying {\k56}This {\k16}is {\k14}a
+Dialogue: 0,0:00:28.02,0:00:29.44,Live,,0,0,0,{\k24}red {\k38}apple {\k46}while {\k34}showing
+Dialogue: 0,0:00:29.44,0:00:30.94,Live,,0,0,0,{\k22}them {\k46}countless {\k50}images {\k32}of
+Dialogue: 0,0:00:30.94,0:00:33.00,Live,,0,0,0,{\k16}red {\k48}apples {\k68}{\k26}AI {\k48}image
+Dialogue: 0,0:00:33.00,0:00:35.02,Live,,0,0,0,{\k58}generators {\k36}learn {\k40}patterns {\k54}{\k14}They
+Dialogue: 0,0:00:35.02,0:00:35.78,Live,,0,0,0,{\k24}learn {\k18}what {\k12}a {\k22}dog
+Dialogue: 0,0:00:35.78,0:00:37.14,Live,,0,0,0,{\k32}looks {\k28}like {\k32}{\k10}the {\k34}texture
+Dialogue: 0,0:00:37.14,0:00:38.24,Live,,0,0,0,{\k32}of {\k12}fur {\k40}{\k12}the {\k14}way
+Dialogue: 0,0:00:38.24,0:00:39.12,Live,,0,0,0,{\k28}light {\k28}falls {\k22}on {\k10}a
+Dialogue: 0,0:00:39.12,0:00:40.74,Live,,0,0,0,{\k38}surface {\k50}{\k6}and {\k10}the {\k58}composition
+Dialogue: 0,0:00:40.74,0:00:42.34,Live,,0,0,0,{\k28}of {\k8}a {\k42}landscape {\k62}{\k20}This
+Dialogue: 0,0:00:42.34,0:00:43.72,Live,,0,0,0,{\k30}training {\k40}data {\k24}is {\k34}immense
+Dialogue: 0,0:00:44.10,0:00:45.26,Live,,0,0,0,{\k30}often {\k54}involving {\k20}day {\k12}or
+Dialogue: 0,0:00:45.26,0:00:46.46,Live,,0,0,0,{\k22}sets {\k30}with {\k34}billions {\k34}of
+Dialogue: 0,0:00:46.46,0:00:47.52,Live,,0,0,0,{\k28}image {\k38}text {\k30}pairs
+Dialogue: 0,0:00:48.16,0:00:49.98,Live,,0,0,0,{\k28}But {\k42}simply {\k68}memorizing {\k44}images
+Dialogue: 0,0:00:49.98,0:00:52.10,Live,,0,0,0,{\k48}isn't {\k28}enough {\k68}{\k18}These {\k40}models
+Dialogue: 0,0:00:52.28,0:00:54.12,Live,,0,0,0,{\k52}especially {\k40}diffusion {\k46}models {\k26}{\k20}work
+Dialogue: 0,0:00:54.12,0:00:55.52,Live,,0,0,0,{\k38}differently {\k58}They {\k22}learn {\k22}to
+Dialogue: 0,0:00:55.52,0:00:57.24,Live,,0,0,0,{\k54}asterisk {\k10}{\k18}remove {\k68}asterisk {\k22}noise
+Dialogue: 0,0:00:57.24,0:00:58.78,Live,,0,0,0,{\k26}from {\k14}an {\k36}image {\k36}{\k42}It's
+Dialogue: 0,0:00:58.78,0:00:59.52,Live,,0,0,0,{\k8}like {\k36}starting {\k24}with {\k6}a
+Dialogue: 0,0:00:59.52,0:01:01.14,Live,,0,0,0,{\k42}completely {\k58}static {\k24}filled {\k38}screen
+Dialogue: 0,0:01:01.14,0:01:02.96,Live,,0,0,0,{\k60}and {\k46}gradually {\k52}refining {\k24}it
+Dialogue: 0,0:01:02.96,0:01:04.02,Live,,0,0,0,{\k22}into {\k14}a {\k18}clear {\k42}picture
+Dialogue: 0,0:01:04.72,0:01:05.88,Live,,0,0,0,{\k42}Here’s {\k10}the {\k24}core {\k40}idea
+Dialogue: 0,0:01:05.88,0:01:07.58,Live,,0,0,0,{\k26}of {\k42}diffusion {\k52}{\k24}start {\k26}with
+Dialogue: 0,0:01:07.58,0:01:09.00,Live,,0,0,0,{\k26}pure {\k34}noise {\k38}random {\k34}pixels
+Dialogue: 0,0:01:09.62,0:01:11.16,Live,,0,0,0,{\k34}Then {\k40}{\k14}the {\k34}AI {\k32}is
+Dialogue: 0,0:01:11.16,0:01:12.16,Live,,0,0,0,{\k30}trained {\k22}to {\k26}reverse {\k22}a
+Dialogue: 0,0:01:12.16,0:01:13.70,Live,,0,0,0,{\k38}process {\k32}that {\k48}gradually {\k36}adds
+Dialogue: 0,0:01:13.70,0:01:14.72,Live,,0,0,0,{\k28}noise {\k28}to {\k10}an {\k36}image
+Dialogue: 0,0:01:14.72,0:01:17.00,Live,,0,0,0,{\k62}until {\k26}it's {\k90}unrecognizable {\k38}{\k12}It
+Dialogue: 0,0:01:17.00,0:01:18.22,Live,,0,0,0,{\k24}learns {\k26}to {\k42}denoise {\k30}step
+Dialogue: 0,0:01:18.22,0:01:19.78,Live,,0,0,0,{\k26}by {\k30}step {\k52}{\k28}Think {\k20}of
+Dialogue: 0,0:01:19.78,0:01:20.88,Live,,0,0,0,{\k8}a {\k52}sculptor {\k26}working {\k24}with
+Dialogue: 0,0:01:20.88,0:01:21.64,Live,,0,0,0,{\k8}a {\k18}block {\k22}of {\k28}marble
+Dialogue: 0,0:01:21.64,0:01:23.58,Live,,0,0,0,{\k62}They {\k20}chip {\k34}away {\k36}{\k42}gradually
+Dialogue: 0,0:01:23.58,0:01:25.12,Live,,0,0,0,{\k44}revealing {\k26}the {\k34}statue {\k40}within
+Dialogue: 0,0:01:25.52,0:01:26.86,Live,,0,0,0,{\k54}Diffusion {\k36}models {\k30}do {\k14}the
+Dialogue: 0,0:01:26.86,0:01:28.38,Live,,0,0,0,{\k40}opposite {\k44}{\k22}they {\k26}start {\k20}with
+Dialogue: 0,0:01:28.38,0:01:29.10,Live,,0,0,0,{\k6}a {\k18}block {\k20}of {\k28}noise
+Dialogue: 0,0:01:29.10,0:01:30.72,Live,,0,0,0,{\k36}and {\k50}gradually {\k28}add {\k48}structure
+Dialogue: 0,0:01:30.72,0:01:32.16,Live,,0,0,0,{\k56}until {\k16}the {\k36}desired {\k36}image
+Dialogue: 0,0:01:32.16,0:01:34.22,Live,,0,0,0,{\k54}emerges {\k56}{\k6}The {\k32}magic {\k58}ingredient
+Dialogue: 0,0:01:34.22,0:01:35.42,Live,,0,0,0,{\k34}is {\k14}the {\k32}text {\k30}prompt
+Dialogue: 0,0:01:35.86,0:01:36.86,Live,,0,0,0,{\k18}When {\k12}you {\k30}provide {\k40}words
+Dialogue: 0,0:01:36.86,0:01:38.04,Live,,0,0,0,{\k26}like {\k12}a {\k46}majestic {\k34}cat
+Dialogue: 0,0:01:38.04,0:01:39.70,Live,,0,0,0,{\k42}wearing {\k20}a {\k36}crown {\k58}{\k10}the
+Dialogue: 0,0:01:39.70,0:01:41.34,Live,,0,0,0,{\k26}AI {\k48}uses {\k30}this {\k60}information
+Dialogue: 0,0:01:41.34,0:01:42.52,Live,,0,0,0,{\k28}to {\k30}guide {\k20}the {\k40}denoising
+Dialogue: 0,0:01:42.52,0:01:43.08,Live,,0,0,0,{\k46}process
+Dialogue: 0,0:01:43.68,0:01:44.94,Live,,0,0,0,{\k18}It {\k22}knows {\k66}asterisk {\k6}{\k14}what
+Dialogue: 0,0:01:44.94,0:01:46.10,Live,,0,0,0,{\k60}asterisk {\k4}{\k10}to {\k16}build {\k26}from
+Dialogue: 0,0:01:46.10,0:01:46.58,Live,,0,0,0,{\k12}the {\k26}noise
+Dialogue: 0,0:01:47.20,0:01:48.82,Live,,0,0,0,{\k42}This {\k36}guidance {\k48}happens {\k36}through
+Dialogue: 0,0:01:48.82,0:01:51.16,Live,,0,0,0,{\k52}complex {\k52}mathematical {\k86}relationships {\k44}between
+Dialogue: 0,0:01:51.16,0:01:52.78,Live,,0,0,0,{\k50}words {\k24}and {\k32}visual {\k56}features
+Dialogue: 0,0:01:52.78,0:01:54.72,Live,,0,0,0,{\k68}learned {\k36}during {\k46}training {\k32}{\k12}The
+Dialogue: 0,0:01:54.72,0:01:56.20,Live,,0,0,0,{\k36}AI {\k48}doesn't {\k44}understand {\k20}a
+Dialogue: 0,0:01:56.20,0:01:57.18,Live,,0,0,0,{\k20}cat {\k24}like {\k24}we {\k20}do
+Dialogue: 0,0:01:57.54,0:01:58.16,Live,,0,0,0,{\k18}but {\k10}it {\k12}has {\k22}learned
+Dialogue: 0,0:01:58.16,0:02:00.08,Live,,0,0,0,{\k18}the {\k50}statistical {\k84}associations {\k40}that
+Dialogue: 0,0:02:00.08,0:02:01.64,Live,,0,0,0,{\k38}define {\k60}cat-ness {\k18}in {\k30}images
+Dialogue: 0,0:02:02.36,0:02:03.92,Live,,0,0,0,{\k36}Now {\k40}{\k34}let's {\k18}talk {\k28}about
+Dialogue: 0,0:02:03.92,0:02:05.60,Live,,0,0,0,{\k34}latent {\k38}space {\k54}{\k26}This {\k16}is
+Dialogue: 0,0:02:05.60,0:02:07.76,Live,,0,0,0,{\k10}a {\k48}compressed {\k40}{\k44}abstract {\k74}representation
+Dialogue: 0,0:02:07.76,0:02:08.92,Live,,0,0,0,{\k44}of {\k28}all {\k16}the {\k28}visual
+Dialogue: 0,0:02:08.92,0:02:10.52,Live,,0,0,0,{\k60}information {\k32}the {\k34}AI {\k34}has
+Dialogue: 0,0:02:10.52,0:02:12.10,Live,,0,0,0,{\k32}learned {\k54}{\k28}It’s {\k8}a {\k36}multi
+Dialogue: 0,0:02:12.10,0:02:13.84,Live,,0,0,0,{\k54}dimensional {\k38}map {\k44}where {\k38}similar
+Dialogue: 0,0:02:13.84,0:02:15.30,Live,,0,0,0,{\k48}concepts {\k28}are {\k48}located {\k22}near
+Dialogue: 0,0:02:15.30,0:02:16.78,Live,,0,0,0,{\k28}each {\k22}other {\k38}{\k38}Imagine {\k22}a
+Dialogue: 0,0:02:16.78,0:02:18.58,Live,,0,0,0,{\k32}vast {\k56}library {\k74}Instead {\k18}of
+Dialogue: 0,0:02:18.58,0:02:19.84,Live,,0,0,0,{\k30}physical {\k34}books {\k40}{\k4}you {\k18}have
+Dialogue: 0,0:02:19.84,0:02:21.42,Live,,0,0,0,{\k42}concepts {\k38}and {\k34}visual {\k44}styles
+Dialogue: 0,0:02:21.42,0:02:22.82,Live,,0,0,0,{\k58}represented {\k28}as {\k28}points {\k26}in
+Dialogue: 0,0:02:22.82,0:02:24.34,Live,,0,0,0,{\k12}this {\k34}space {\k66}{\k16}A {\k24}prompt
+Dialogue: 0,0:02:24.34,0:02:25.46,Live,,0,0,0,{\k24}like {\k18}Van {\k30}Gogh {\k40}style
+Dialogue: 0,0:02:25.46,0:02:26.96,Live,,0,0,0,{\k54}guides {\k30}the {\k30}AI {\k36}to
+Dialogue: 0,0:02:26.96,0:02:28.06,Live,,0,0,0,{\k12}a {\k38}specific {\k44}region {\k16}of
+Dialogue: 0,0:02:28.06,0:02:30.02,Live,,0,0,0,{\k16}this {\k54}library {\k52}{\k40}influencing {\k34}the
+Dialogue: 0,0:02:30.02,0:02:31.86,Live,,0,0,0,{\k70}brushstrokes {\k24}and {\k28}color {\k52}palettes
+Dialogue: 0,0:02:32.30,0:02:33.92,Live,,0,0,0,{\k26}The {\k36}AI {\k74}navigates {\k26}this
+Dialogue: 0,0:02:33.92,0:02:35.76,Live,,0,0,0,{\k30}latent {\k46}space {\k46}{\k34}translating {\k28}your
+Dialogue: 0,0:02:35.76,0:02:37.38,Live,,0,0,0,{\k26}text {\k48}prompt {\k30}into {\k48}coordinates
+Dialogue: 0,0:02:37.82,0:02:39.06,Live,,0,0,0,{\k26}Then {\k28}{\k10}it {\k30}uses {\k30}these
+Dialogue: 0,0:02:39.06,0:02:40.28,Live,,0,0,0,{\k50}coordinates {\k28}to {\k26}steer {\k18}the
+Dialogue: 0,0:02:40.28,0:02:42.64,Live,,0,0,0,{\k42}denoising {\k56}process {\k54}{\k44}effectively {\k40}pulling
+Dialogue: 0,0:02:42.64,0:02:44.04,Live,,0,0,0,{\k52}visual {\k38}elements {\k30}from {\k20}its
+Dialogue: 0,0:02:44.04,0:02:45.42,Live,,0,0,0,{\k24}learned {\k44}knowledge {\k28}base {\k42}into
+Dialogue: 0,0:02:45.42,0:02:47.42,Live,,0,0,0,{\k54}existence {\k64}{\k36}But {\k38}here's {\k8}the
+Dialogue: 0,0:02:47.42,0:02:48.68,Live,,0,0,0,{\k40}problem {\k52}{\k10}how {\k14}does {\k10}it
+Dialogue: 0,0:02:48.68,0:02:51.00,Live,,0,0,0,{\k28}ensure {\k62}artistic {\k72}coherence {\k42}{\k28}It’s
+Dialogue: 0,0:02:51.00,0:02:52.34,Live,,0,0,0,{\k18}not {\k26}just {\k34}about {\k56}individual
+Dialogue: 0,0:02:52.34,0:02:54.18,Live,,0,0,0,{\k46}elements {\k52}{\k10}The {\k26}AI {\k50}learns
+Dialogue: 0,0:02:54.18,0:02:56.38,Live,,0,0,0,{\k22}about {\k58}composition {\k64}{\k20}lighting {\k34}{\k22}and
+Dialogue: 0,0:02:56.38,0:02:58.04,Live,,0,0,0,{\k26}even {\k54}artistic {\k44}intent {\k42}through
+Dialogue: 0,0:02:58.04,0:02:59.24,Live,,0,0,0,{\k14}the {\k26}sheer {\k54}volume {\k26}and
+Dialogue: 0,0:02:59.24,0:03:00.38,Live,,0,0,0,{\k38}variety {\k34}of {\k12}its {\k30}training
+Dialogue: 0,0:03:00.38,0:03:00.86,Live,,0,0,0,{\k38}data
+Dialogue: 0,0:03:01.50,0:03:02.22,Live,,0,0,0,{\k30}Think {\k12}of {\k10}it {\k20}like
+Dialogue: 0,0:03:02.22,0:03:03.80,Live,,0,0,0,{\k34}learning {\k38}grammar {\k34}and {\k52}vocabulary
+Dialogue: 0,0:03:03.80,0:03:05.00,Live,,0,0,0,{\k44}to {\k18}write {\k18}a {\k30}novel
+Dialogue: 0,0:03:05.56,0:03:06.56,Live,,0,0,0,{\k14}The {\k34}AI {\k36}has {\k16}the
+Dialogue: 0,0:03:06.56,0:03:08.26,Live,,0,0,0,{\k24}words {\k64}concepts {\k70}and {\k12}the
+Dialogue: 0,0:03:08.26,0:03:10.12,Live,,0,0,0,{\k36}rules {\k48}learned {\k40}patterns {\k62}to
+Dialogue: 0,0:03:10.12,0:03:12.40,Live,,0,0,0,{\k48}construct {\k46}coherent {\k52}sentences {\k48}{\k24}images
+Dialogue: 0,0:03:12.80,0:03:14.86,Live,,0,0,0,{\k12}It {\k82}prioritizes {\k52}combinations {\k60}that
+Dialogue: 0,0:03:14.86,0:03:16.40,Live,,0,0,0,{\k10}are {\k60}statistically {\k50}common {\k34}and
+Dialogue: 0,0:03:16.40,0:03:18.06,Live,,0,0,0,{\k34}visually {\k46}pleasing {\k66}based {\k20}on
+Dialogue: 0,0:03:18.06,0:03:19.74,Live,,0,0,0,{\k16}its {\k38}training {\k58}{\k28}The {\k28}difference
+Dialogue: 0,0:03:19.74,0:03:21.32,Live,,0,0,0,{\k42}between {\k40}good {\k34}and {\k42}great
+Dialogue: 0,0:03:21.32,0:03:23.10,Live,,0,0,0,{\k32}AI {\k54}art {\k56}often {\k36}comes
+Dialogue: 0,0:03:23.10,0:03:23.94,Live,,0,0,0,{\k24}down {\k20}to {\k12}the {\k28}subtle
+Dialogue: 0,0:03:23.94,0:03:25.24,Live,,0,0,0,{\k44}interplay {\k34}within {\k22}this {\k30}latent
+Dialogue: 0,0:03:25.24,0:03:26.78,Live,,0,0,0,{\k36}space {\k62}and {\k12}the {\k44}precision
+Dialogue: 0,0:03:26.78,0:03:28.14,Live,,0,0,0,{\k22}of {\k12}the {\k46}denoising {\k46}steps
+Dialogue: 0,0:03:28.58,0:03:29.64,Live,,0,0,0,{\k26}It’s {\k6}a {\k40}delicate {\k34}dance
+Dialogue: 0,0:03:29.64,0:03:31.56,Live,,0,0,0,{\k24}of {\k54}probabilities {\k66}{\k22}guided {\k26}by
+Dialogue: 0,0:03:31.56,0:03:32.64,Live,,0,0,0,{\k18}your {\k28}prompt {\k44}{\k8}And {\k10}the
+Dialogue: 0,0:03:32.64,0:03:34.54,Live,,0,0,0,{\k54}strangest {\k32}part {\k56}{\k10}The {\k38}AI
+Dialogue: 0,0:03:34.54,0:03:36.22,Live,,0,0,0,{\k48}doesn't {\k46}asterisk {\k20}see {\k54}asterisk
+Dialogue: 0,0:03:36.22,0:03:37.02,Live,,0,0,0,{\k12}an {\k26}image {\k32}in {\k10}the
+Dialogue: 0,0:03:37.02,0:03:38.30,Live,,0,0,0,{\k16}way {\k20}we {\k22}do {\k52}{\k18}It
+Dialogue: 0,0:03:38.30,0:03:41.30,Live,,0,0,0,{\k56}manipulates {\k46}numerical {\k102}representations {\k62}{\k34}When
+Dialogue: 0,0:03:41.30,0:03:42.02,Live,,0,0,0,{\k10}you {\k32}ask {\k18}for {\k12}a
+Dialogue: 0,0:03:42.02,0:03:43.84,Live,,0,0,0,{\k28}sad {\k42}robot {\k64}it's {\k48}activating
+Dialogue: 0,0:03:43.84,0:03:45.04,Live,,0,0,0,{\k20}a {\k34}collection {\k28}of {\k38}numerical
+Dialogue: 0,0:03:45.04,0:03:47.30,Live,,0,0,0,{\k58}patterns {\k96}associated {\k36}with {\k36}robot
+Dialogue: 0,0:03:47.30,0:03:48.54,Live,,0,0,0,{\k32}and {\k40}sadness {\k34}in {\k18}its
+Dialogue: 0,0:03:48.54,0:03:50.76,Live,,0,0,0,{\k26}latent {\k36}space {\k66}{\k44}This {\k50}process
+Dialogue: 0,0:03:50.76,0:03:53.54,Live,,0,0,0,{\k32}is {\k60}incredibly {\k114}computationally {\k62}intensive
+Dialogue: 0,0:03:53.92,0:03:56.34,Live,,0,0,0,{\k44}requiring {\k56}specialized {\k66}hardware {\k40}{\k26}However
+Dialogue: 0,0:03:56.56,0:03:57.60,Live,,0,0,0,{\k8}the {\k22}core {\k48}principles {\k26}of
+Dialogue: 0,0:03:57.60,0:03:59.06,Live,,0,0,0,{\k46}diffusion {\k34}and {\k32}latent {\k34}space
+Dialogue: 0,0:03:59.06,0:04:00.78,Live,,0,0,0,{\k80}representation {\k62}are {\k18}what {\k12}make
+Dialogue: 0,0:04:00.78,0:04:02.18,Live,,0,0,0,{\k28}these {\k32}tools {\k32}so {\k48}powerful
+Dialogue: 0,0:04:02.18,0:04:04.72,Live,,0,0,0,{\k34}and {\k58}versatile {\k58}{\k54}transforming {\k50}abstract
+Dialogue: 0,0:04:04.72,0:04:06.78,Live,,0,0,0,{\k50}ideas {\k40}into {\k48}tangible {\k58}visuals
+Dialogue: 0,0:04:07.44,0:04:09.56,Live,,0,0,0,{\k36}So {\k54}{\k22}AI {\k42}image {\k58}generators
+Dialogue: 0,0:04:09.56,0:04:10.72,Live,,0,0,0,{\k32}work {\k28}by {\k32}learning {\k24}to
+Dialogue: 0,0:04:10.72,0:04:11.86,Live,,0,0,0,{\k34}reverse {\k24}a {\k30}noise {\k26}adding
+Dialogue: 0,0:04:11.86,0:04:13.80,Live,,0,0,0,{\k62}process {\k50}{\k26}guided {\k20}by {\k36}text
+Dialogue: 0,0:04:13.80,0:04:15.50,Live,,0,0,0,{\k34}prompts {\k40}{\k20}and {\k46}navigating {\k30}a
+Dialogue: 0,0:04:15.50,0:04:17.66,Live,,0,0,0,{\k44}compressed {\k72}conceptual {\k38}space {\k40}{\k22}They
+Dialogue: 0,0:04:17.66,0:04:19.00,Live,,0,0,0,{\k12}are {\k46}powerful {\k54}tools {\k22}for
+Dialogue: 0,0:04:19.00,0:04:20.72,Live,,0,0,0,{\k36}creative {\k52}expression {\k54}{\k20}What {\k10}will
+Dialogue: 0,0:04:20.72,0:04:21.52,Live,,0,0,0,{\k10}you {\k28}create {\k32}next
