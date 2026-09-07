@@ -1,0 +1,177 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.50,Live,,0,0,0,{\k12}What {\k12}if {\k12}the {\k14}most
+Dialogue: 0,0:00:00.50,0:00:02.12,Live,,0,0,0,{\k58}significant {\k52}entity {\k32}we've {\k20}ever
+Dialogue: 0,0:00:02.12,0:00:03.46,Live,,0,0,0,{\k42}created {\k36}isn't {\k8}a {\k38}product
+Dialogue: 0,0:00:03.84,0:00:04.50,Live,,0,0,0,{\k20}but {\k10}a {\k16}new {\k20}kind
+Dialogue: 0,0:00:04.50,0:00:05.10,Live,,0,0,0,{\k16}of {\k34}mind
+Dialogue: 0,0:00:05.74,0:00:07.54,Live,,0,0,0,{\k32}Open {\k70}AI's {\k22}Chief {\k56}Scientist
+Dialogue: 0,0:00:07.54,0:00:08.96,Live,,0,0,0,{\k60}has {\k20}just {\k40}stated {\k22}that
+Dialogue: 0,0:00:08.96,0:00:10.78,Live,,0,0,0,{\k34}machines {\k40}are {\k42}becoming {\k66}meaningfully
+Dialogue: 0,0:00:10.78,0:00:12.56,Live,,0,0,0,{\k42}smarter {\k28}than {\k36}humans {\k58}{\k14}and
+Dialogue: 0,0:00:12.56,0:00:13.42,Live,,0,0,0,{\k16}we're {\k22}seeing {\k20}the {\k28}shape
+Dialogue: 0,0:00:13.42,0:00:14.52,Live,,0,0,0,{\k14}of {\k18}these {\k42}systems {\k36}right
+Dialogue: 0,0:00:14.52,0:00:15.82,Live,,0,0,0,{\k32}now {\k36}{\k28}This {\k24}isn't {\k10}a
+Dialogue: 0,0:00:15.82,0:00:17.16,Live,,0,0,0,{\k44}prediction {\k28}from {\k32}years {\k30}down
+Dialogue: 0,0:00:17.16,0:00:18.70,Live,,0,0,0,{\k14}the {\k36}line {\k68}{\k16}Back {\k20}in
+Dialogue: 0,0:00:18.70,0:00:21.14,Live,,0,0,0,{\k20}mid {\k140}2023 {\k44}{\k24}within {\k16}a
+Dialogue: 0,0:00:21.14,0:00:23.20,Live,,0,0,0,{\k34}research {\k72}project {\k40}called {\k60}RL
+Dialogue: 0,0:00:23.20,0:00:24.96,Live,,0,0,0,{\k40}Slow {\k64}{\k8}the {\k28}first {\k36}signs
+Dialogue: 0,0:00:24.96,0:00:26.98,Live,,0,0,0,{\k80}emerged {\k74}They {\k28}saw {\k20}that
+Dialogue: 0,0:00:26.98,0:00:28.62,Live,,0,0,0,{\k40}training {\k52}reasoning {\k46}models {\k26}could
+Dialogue: 0,0:00:28.62,0:00:30.60,Live,,0,0,0,{\k16}be {\k56}scaled {\k54}{\k30}unlocking {\k42}the
+Dialogue: 0,0:00:30.60,0:00:32.00,Live,,0,0,0,{\k44}ability {\k26}for {\k32}pre {\k38}trained
+Dialogue: 0,0:00:32.00,0:00:33.28,Live,,0,0,0,{\k42}models {\k26}to {\k38}form {\k22}their
+Dialogue: 0,0:00:33.28,0:00:34.78,Live,,0,0,0,{\k32}own {\k40}chains {\k32}of {\k36}thought
+Dialogue: 0,0:00:34.98,0:00:36.40,Live,,0,0,0,{\k22}The {\k50}researchers {\k38}weren't {\k32}thinking
+Dialogue: 0,0:00:36.40,0:00:38.10,Live,,0,0,0,{\k28}about {\k38}product {\k44}launches {\k60}or
+Dialogue: 0,0:00:38.10,0:00:39.64,Live,,0,0,0,{\k40}benchmark {\k54}scores {\k24}that {\k26}night
+Dialogue: 0,0:00:40.16,0:00:41.20,Live,,0,0,0,{\k24}They {\k10}were {\k40}grappling {\k30}with
+Dialogue: 0,0:00:41.20,0:00:43.20,Live,,0,0,0,{\k12}the {\k48}profound {\k72}realization {\k68}that
+Dialogue: 0,0:00:43.20,0:00:44.58,Live,,0,0,0,{\k20}they {\k18}would {\k30}witness {\k70}machines
+Dialogue: 0,0:00:44.58,0:00:47.14,Live,,0,0,0,{\k82}significantly {\k90}surpassing {\k26}human {\k58}intellect
+Dialogue: 0,0:00:47.14,0:00:49.08,Live,,0,0,0,{\k40}within {\k20}their {\k44}lifetime {\k60}{\k30}Fast
+Dialogue: 0,0:00:49.08,0:00:50.60,Live,,0,0,0,{\k46}forward {\k38}three {\k58}years
+Dialogue: 0,0:00:51.24,0:00:52.78,Live,,0,0,0,{\k40}Reasoning {\k34}language {\k54}models {\k26}are
+Dialogue: 0,0:00:52.78,0:00:53.98,Live,,0,0,0,{\k22}now {\k22}a {\k34}booming {\k42}part
+Dialogue: 0,0:00:53.98,0:00:55.66,Live,,0,0,0,{\k20}of {\k16}the {\k60}economy {\k48}{\k24}pushing
+Dialogue: 0,0:00:55.66,0:00:57.24,Live,,0,0,0,{\k18}the {\k62}frontiers {\k22}of {\k56}scientific
+Dialogue: 0,0:00:57.24,0:00:59.36,Live,,0,0,0,{\k80}discovery {\k52}{\k26}They {\k12}can {\k42}operate
+Dialogue: 0,0:00:59.36,0:01:01.68,Live,,0,0,0,{\k68}computers {\k48}{\k40}interact {\k30}with {\k46}graphical
+Dialogue: 0,0:01:01.68,0:01:04.02,Live,,0,0,0,{\k72}interfaces {\k56}{\k10}and {\k32}even {\k64}collaborate
+Dialogue: 0,0:01:04.02,0:01:06.16,Live,,0,0,0,{\k30}on {\k36}research {\k84}projects {\k30}{\k34}This
+Dialogue: 0,0:01:06.16,0:01:07.88,Live,,0,0,0,{\k54}advancement {\k56}also {\k40}means {\k22}they're
+Dialogue: 0,0:01:07.88,0:01:10.70,Live,,0,0,0,{\k62}transforming {\k56}computer {\k66}security {\k52}{\k46}introducing
+Dialogue: 0,0:01:10.70,0:01:12.44,Live,,0,0,0,{\k82}entirely {\k40}new {\k42}dangers
+Dialogue: 0,0:01:13.10,0:01:14.30,Live,,0,0,0,{\k18}The {\k54}understanding {\k32}of {\k16}these
+Dialogue: 0,0:01:14.30,0:01:16.02,Live,,0,0,0,{\k40}systems {\k30}has {\k50}evolved {\k40}{\k12}and
+Dialogue: 0,0:01:16.02,0:01:16.88,Live,,0,0,0,{\k22}it's {\k16}not {\k28}quite {\k20}what
+Dialogue: 0,0:01:16.88,0:01:17.58,Live,,0,0,0,{\k10}it {\k8}was {\k34}even {\k18}in
+Dialogue: 0,0:01:17.58,0:01:20.20,Live,,0,0,0,{\k108}2023 {\k78}Based {\k30}on {\k46}internal
+Dialogue: 0,0:01:20.20,0:01:21.92,Live,,0,0,0,{\k58}findings {\k56}{\k16}there's {\k8}a {\k34}strong
+Dialogue: 0,0:01:21.92,0:01:23.52,Live,,0,0,0,{\k70}expectation {\k42}that {\k24}this {\k24}pace
+Dialogue: 0,0:01:23.52,0:01:25.28,Live,,0,0,0,{\k24}of {\k44}progress {\k32}can {\k66}continue
+Dialogue: 0,0:01:25.60,0:01:27.48,Live,,0,0,0,{\k56}potentially {\k46}leading {\k22}to {\k64}recursive
+Dialogue: 0,0:01:27.48,0:01:29.66,Live,,0,0,0,{\k34}self {\k60}improvement {\k52}{\k28}The {\k44}systems
+Dialogue: 0,0:01:29.66,0:01:30.56,Live,,0,0,0,{\k34}we'll {\k28}see {\k18}in {\k10}the
+Dialogue: 0,0:01:30.56,0:01:31.92,Live,,0,0,0,{\k22}next {\k32}few {\k50}years {\k32}could
+Dialogue: 0,0:01:31.92,0:01:33.98,Live,,0,0,0,{\k54}represent {\k68}capability {\k38}jumps {\k46}just
+Dialogue: 0,0:01:33.98,0:01:35.52,Live,,0,0,0,{\k20}as {\k46}large {\k38}{\k30}if {\k20}not
+Dialogue: 0,0:01:35.52,0:01:37.52,Live,,0,0,0,{\k60}larger {\k44}{\k22}They {\k14}are {\k60}increasingly
+Dialogue: 0,0:01:37.52,0:01:39.26,Live,,0,0,0,{\k58}driving {\k32}their {\k22}own {\k52}development
+Dialogue: 0,0:01:39.70,0:01:40.58,Live,,0,0,0,{\k30}This {\k16}is {\k10}a {\k32}moment
+Dialogue: 0,0:01:40.58,0:01:42.44,Live,,0,0,0,{\k30}that {\k34}demands {\k72}extreme {\k50}caution
+Dialogue: 0,0:01:42.44,0:01:44.12,Live,,0,0,0,{\k80}The {\k44}concern {\k26}is {\k18}that
+Dialogue: 0,0:01:44.12,0:01:45.20,Live,,0,0,0,{\k28}no {\k24}one {\k22}is {\k34}truly
+Dialogue: 0,0:01:45.20,0:01:46.76,Live,,0,0,0,{\k64}prepared {\k26}for {\k10}the {\k56}consequences
+Dialogue: 0,0:01:46.76,0:01:47.76,Live,,0,0,0,{\k32}of {\k28}such {\k8}a {\k32}rapid
+Dialogue: 0,0:01:47.76,0:01:49.58,Live,,0,0,0,{\k38}rise {\k48}in {\k28}machine {\k58}intelligence
+Dialogue: 0,0:01:49.96,0:01:51.76,Live,,0,0,0,{\k48}Open {\k42}AI {\k54}is {\k36}focused
+Dialogue: 0,0:01:51.76,0:01:53.44,Live,,0,0,0,{\k28}on {\k40}technical {\k68}solutions {\k32}for
+Dialogue: 0,0:01:53.44,0:01:55.62,Live,,0,0,0,{\k52}alignment {\k32}and {\k48}monitoring {\k56}{\k30}building
+Dialogue: 0,0:01:55.62,0:01:57.64,Live,,0,0,0,{\k58}defensive {\k70}systems {\k36}{\k20}and {\k18}can
+Dialogue: 0,0:01:57.64,0:02:00.02,Live,,0,0,0,{\k96}unilaterally {\k40}pause {\k50}further {\k52}scaling
+Dialogue: 0,0:02:00.02,0:02:02.64,Live,,0,0,0,{\k28}if {\k60}necessary {\k64}{\k44}However {\k58}{\k8}the
+Dialogue: 0,0:02:02.64,0:02:03.96,Live,,0,0,0,{\k34}belief {\k28}is {\k20}that {\k50}broader
+Dialogue: 0,0:02:03.96,0:02:06.54,Live,,0,0,0,{\k82}societal {\k66}interventions {\k36}are {\k64}required
+Dialogue: 0,0:02:06.82,0:02:07.84,Live,,0,0,0,{\k20}The {\k24}core {\k34}driver {\k24}of
+Dialogue: 0,0:02:07.84,0:02:09.26,Live,,0,0,0,{\k50}intelligence {\k56}at {\k12}a {\k24}high
+Dialogue: 0,0:02:09.26,0:02:11.54,Live,,0,0,0,{\k32}level {\k56}is {\k80}computational {\k50}power
+Dialogue: 0,0:02:12.06,0:02:13.92,Live,,0,0,0,{\k40}Open {\k34}AI {\k70}recognized {\k42}this
+Dialogue: 0,0:02:13.92,0:02:17.00,Live,,0,0,0,{\k36}around {\k118}2017 {\k54}{\k32}seeing {\k68}consistent
+Dialogue: 0,0:02:17.00,0:02:18.70,Live,,0,0,0,{\k42}returns {\k38}from {\k42}scaling {\k48}across
+Dialogue: 0,0:02:18.70,0:02:21.08,Live,,0,0,0,{\k50}multiple {\k50}research {\k44}efforts {\k60}{\k34}This
+Dialogue: 0,0:02:21.08,0:02:21.82,Live,,0,0,0,{\k18}led {\k22}them {\k12}to {\k22}seek
+Dialogue: 0,0:02:21.82,0:02:23.92,Live,,0,0,0,{\k62}significantly {\k38}more {\k44}compute {\k38}{\k28}They
+Dialogue: 0,0:02:23.92,0:02:25.54,Live,,0,0,0,{\k54}oriented {\k24}their {\k42}research {\k42}around
+Dialogue: 0,0:02:25.54,0:02:26.94,Live,,0,0,0,{\k14}a {\k20}few {\k50}highly {\k56}scalable
+Dialogue: 0,0:02:26.94,0:02:28.96,Live,,0,0,0,{\k58}directions {\k68}{\k26}believing {\k36}it {\k14}was
+Dialogue: 0,0:02:28.96,0:02:29.92,Live,,0,0,0,{\k16}the {\k36}only {\k24}way {\k20}to
+Dialogue: 0,0:02:29.92,0:02:30.82,Live,,0,0,0,{\k32}stay {\k18}at {\k14}the {\k26}cutting
+Dialogue: 0,0:02:30.82,0:02:32.72,Live,,0,0,0,{\k54}edge {\k44}{\k10}and {\k54}influence {\k28}the
+Dialogue: 0,0:02:32.72,0:02:34.82,Live,,0,0,0,{\k40}impacts {\k34}of {\k64}artificial {\k72}general
+Dialogue: 0,0:02:34.82,0:02:35.58,Live,,0,0,0,{\k66}intelligence
+Dialogue: 0,0:02:36.19,0:02:38.28,Live,,0,0,0,{\k35}New {\k66}algorithms {\k38}and {\k70}ingenuity
+Dialogue: 0,0:02:38.28,0:02:39.82,Live,,0,0,0,{\k36}are {\k32}seen {\k24}as {\k62}discoveries
+Dialogue: 0,0:02:39.82,0:02:41.82,Live,,0,0,0,{\k58}along {\k34}this {\k42}scaling {\k56}path
+Dialogue: 0,0:02:41.90,0:02:42.94,Live,,0,0,0,{\k30}The {\k32}science {\k24}of {\k18}deep
+Dialogue: 0,0:02:42.94,0:02:44.18,Live,,0,0,0,{\k36}learning {\k30}is {\k26}still {\k32}quite
+Dialogue: 0,0:02:44.18,0:02:46.90,Live,,0,0,0,{\k44}young {\k70}{\k46}Meaningful {\k72}algorithmic {\k40}progress
+Dialogue: 0,0:02:46.90,0:02:48.78,Live,,0,0,0,{\k68}often {\k66}correlates {\k14}with {\k40}access
+Dialogue: 0,0:02:48.78,0:02:50.00,Live,,0,0,0,{\k28}to {\k34}massive {\k36}amounts {\k24}of
+Dialogue: 0,0:02:50.00,0:02:51.40,Live,,0,0,0,{\k38}compute {\k54}{\k20}When {\k14}you {\k14}zoom
+Dialogue: 0,0:02:51.40,0:02:53.16,Live,,0,0,0,{\k40}out {\k38}{\k20}AI {\k48}is {\k30}becoming
+Dialogue: 0,0:02:53.16,0:02:54.48,Live,,0,0,0,{\k34}more {\k52}intelligent {\k36}as {\k10}it
+Dialogue: 0,0:02:54.48,0:02:56.00,Live,,0,0,0,{\k34}scales {\k24}to {\k30}larger {\k54}computers
+Dialogue: 0,0:02:56.46,0:02:57.54,Live,,0,0,0,{\k30}So {\k28}is {\k18}this {\k32}about
+Dialogue: 0,0:02:57.54,0:02:59.00,Live,,0,0,0,{\k42}building {\k48}robots {\k36}that {\k20}look
+Dialogue: 0,0:02:59.00,0:03:00.88,Live,,0,0,0,{\k22}like {\k34}us {\k64}Not {\k58}directly
+Dialogue: 0,0:03:01.30,0:03:02.64,Live,,0,0,0,{\k22}The {\k46}incredible {\k52}feats {\k14}are
+Dialogue: 0,0:03:02.64,0:03:04.98,Live,,0,0,0,{\k30}about {\k56}abstract {\k70}concept {\k78}manipulation
+Dialogue: 0,0:03:04.98,0:03:07.26,Live,,0,0,0,{\k62}and {\k52}simulating {\k50}human {\k64}behavior
+Dialogue: 0,0:03:07.26,0:03:09.74,Live,,0,0,0,{\k36}through {\k56}immense {\k90}computational {\k56}power
+Dialogue: 0,0:03:10.26,0:03:11.52,Live,,0,0,0,{\k20}The {\k38}focus {\k54}isn't {\k14}on
+Dialogue: 0,0:03:11.52,0:03:13.06,Live,,0,0,0,{\k40}physical {\k62}form {\k24}but {\k28}on
+Dialogue: 0,0:03:13.06,0:03:15.72,Live,,0,0,0,{\k58}emergent {\k52}cognitive {\k74}abilities {\k52}{\k30}AI
+Dialogue: 0,0:03:15.72,0:03:17.12,Live,,0,0,0,{\k56}is {\k22}more {\k38}grown {\k24}than
+Dialogue: 0,0:03:17.12,0:03:19.24,Live,,0,0,0,{\k50}designed {\k62}{\k28}It's {\k52}primarily {\k20}the
+Dialogue: 0,0:03:19.24,0:03:20.22,Live,,0,0,0,{\k32}product {\k26}of {\k8}a {\k32}simple
+Dialogue: 0,0:03:20.22,0:03:22.64,Live,,0,0,0,{\k64}optimization {\k62}step {\k34}{\k36}repeated {\k46}countless
+Dialogue: 0,0:03:22.64,0:03:24.10,Live,,0,0,0,{\k54}times {\k50}on {\k10}an {\k32}almost
+Dialogue: 0,0:03:24.10,0:03:26.02,Live,,0,0,0,{\k92}unfathomable {\k34}amount {\k28}of {\k38}computing
+Dialogue: 0,0:03:26.02,0:03:28.32,Live,,0,0,0,{\k44}power {\k88}This {\k36}creates {\k62}incredibly
+Dialogue: 0,0:03:28.32,0:03:30.24,Live,,0,0,0,{\k56}complex {\k64}systems {\k18}{\k38}We {\k16}can
+Dialogue: 0,0:03:30.24,0:03:31.90,Live,,0,0,0,{\k46}discover {\k54}insights {\k46}into {\k20}its
+Dialogue: 0,0:03:31.90,0:03:34.10,Live,,0,0,0,{\k50}internal {\k64}mechanisms {\k52}{\k24}much {\k30}like
+Dialogue: 0,0:03:34.10,0:03:36.18,Live,,0,0,0,{\k70}neuroscience {\k58}{\k16}but {\k14}its {\k50}overall
+Dialogue: 0,0:03:36.18,0:03:38.24,Live,,0,0,0,{\k66}action {\k58}often {\k54}eludes {\k28}full
+Dialogue: 0,0:03:38.24,0:03:40.32,Live,,0,0,0,{\k64}description {\k68}{\k20}The {\k34}study {\k22}of
+Dialogue: 0,0:03:40.32,0:03:42.12,Live,,0,0,0,{\k22}deep {\k44}learning {\k40}AI {\k74}is
+Dialogue: 0,0:03:42.12,0:03:44.74,Live,,0,0,0,{\k72}fundamentally {\k34}an {\k62}experimental {\k84}science
+Dialogue: 0,0:03:44.98,0:03:46.36,Live,,0,0,0,{\k24}The {\k52}intelligence {\k32}we're {\k30}seeing
+Dialogue: 0,0:03:46.36,0:03:48.00,Live,,0,0,0,{\k28}is {\k22}so {\k54}complex {\k60}that
+Dialogue: 0,0:03:48.00,0:03:49.16,Live,,0,0,0,{\k14}we {\k18}don't {\k30}fully {\k54}understand
+Dialogue: 0,0:03:49.16,0:03:50.62,Live,,0,0,0,{\k30}it {\k74}It's {\k12}like {\k30}looking
+Dialogue: 0,0:03:50.62,0:03:51.98,Live,,0,0,0,{\k18}at {\k10}an {\k36}alien {\k62}mind
+Dialogue: 0,0:03:52.36,0:03:54.06,Live,,0,0,0,{\k24}capable {\k28}of {\k38}processing {\k80}information
+Dialogue: 0,0:03:54.06,0:03:55.90,Live,,0,0,0,{\k50}and {\k32}forming {\k58}conclusions {\k44}in
+Dialogue: 0,0:03:55.90,0:03:57.00,Live,,0,0,0,{\k22}ways {\k26}that {\k20}go {\k42}beyond
+Dialogue: 0,0:03:57.00,0:03:59.02,Live,,0,0,0,{\k18}our {\k30}direct {\k76}comprehension {\k42}{\k36}This
+Dialogue: 0,0:03:59.02,0:04:00.64,Live,,0,0,0,{\k40}rapid {\k56}progress {\k30}is {\k36}happening
+Dialogue: 0,0:04:00.64,0:04:02.58,Live,,0,0,0,{\k42}now {\k70}{\k10}The {\k44}potential {\k28}for
+Dialogue: 0,0:04:02.58,0:04:04.02,Live,,0,0,0,{\k36}AI {\k44}to {\k36}drive {\k28}its
+Dialogue: 0,0:04:04.02,0:04:05.76,Live,,0,0,0,{\k22}own {\k60}development {\k36}{\k34}coupled {\k22}with
+Dialogue: 0,0:04:05.76,0:04:08.14,Live,,0,0,0,{\k20}its {\k60}increasing {\k82}intelligence {\k54}{\k22}means
+Dialogue: 0,0:04:08.14,0:04:09.32,Live,,0,0,0,{\k30}we {\k14}are {\k50}entering {\k24}an
+Dialogue: 0,0:04:09.32,0:04:10.98,Live,,0,0,0,{\k38}era {\k26}where {\k38}human {\k64}oversight
+Dialogue: 0,0:04:10.98,0:04:12.70,Live,,0,0,0,{\k32}might {\k36}become {\k20}a {\k74}bottleneck
+Dialogue: 0,0:04:12.88,0:04:14.46,Live,,0,0,0,{\k24}not {\k14}a {\k48}safeguard {\k72}The
+Dialogue: 0,0:04:14.46,0:04:15.94,Live,,0,0,0,{\k36}systems {\k40}we'll {\k44}encounter {\k28}in
+Dialogue: 0,0:04:15.94,0:04:17.10,Live,,0,0,0,{\k10}the {\k26}coming {\k34}years {\k46}are
+Dialogue: 0,0:04:17.10,0:04:18.90,Live,,0,0,0,{\k40}likely {\k16}to {\k52}represent {\k72}significant
+Dialogue: 0,0:04:18.90,0:04:21.08,Live,,0,0,0,{\k56}capability {\k42}leaps {\k64}{\k24}This {\k32}speed
+Dialogue: 0,0:04:21.08,0:04:22.42,Live,,0,0,0,{\k14}of {\k50}development {\k58}and {\k12}the
+Dialogue: 0,0:04:22.42,0:04:24.58,Live,,0,0,0,{\k54}emergent {\k20}{\k34}not {\k38}fully {\k60}understood
+Dialogue: 0,0:04:25.00,0:04:26.28,Live,,0,0,0,{\k28}nature {\k24}of {\k16}this {\k60}intelligence
+Dialogue: 0,0:04:26.28,0:04:28.06,Live,,0,0,0,{\k76}demands {\k42}that {\k14}we {\k46}consider
+Dialogue: 0,0:04:28.06,0:04:30.56,Live,,0,0,0,{\k24}the {\k64}unprecedented {\k76}implications {\k48}{\k38}This
+Dialogue: 0,0:04:30.56,0:04:32.82,Live,,0,0,0,{\k60}evolution {\k20}of {\k60}intelligence {\k86}challenges
+Dialogue: 0,0:04:32.82,0:04:34.58,Live,,0,0,0,{\k36}our {\k50}assumptions {\k32}about {\k58}control
+Dialogue: 0,0:04:34.58,0:04:36.70,Live,,0,0,0,{\k38}and {\k68}comprehension {\k90}What {\k16}does
+Dialogue: 0,0:04:36.70,0:04:37.90,Live,,0,0,0,{\k16}it {\k22}mean {\k28}for {\k54}humanity
+Dialogue: 0,0:04:37.90,0:04:39.20,Live,,0,0,0,{\k38}when {\k14}our {\k22}own {\k56}creations
+Dialogue: 0,0:04:39.20,0:04:40.64,Live,,0,0,0,{\k44}surpass {\k36}us {\k12}in {\k52}intellect
+Dialogue: 0,0:04:40.64,0:04:41.88,Live,,0,0,0,{\k66}and {\k24}how {\k18}do {\k16}we
+Dialogue: 0,0:04:41.88,0:04:43.18,Live,,0,0,0,{\k32}prepare {\k30}for {\k12}an {\k56}intelligence
+Dialogue: 0,0:04:43.18,0:04:45.06,Live,,0,0,0,{\k60}we {\k20}don't {\k30}fully {\k68}understand
+Dialogue: 0,0:04:45.54,0:04:47.66,Live,,0,0,0,{\k58}Subscribe {\k42}to {\k38}Tool {\k64}Dojo
