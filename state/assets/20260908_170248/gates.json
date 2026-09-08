@@ -1,0 +1,51 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "The answer isn't about the AI's artistic merit, but the speed and cost-effectiveness for marketers.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "If the AI is trained on a vast dataset that includes a lot of low-quality or stylized food images, it might learn to replicate those imperfections.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "For businesses, this means AI-generated visuals might need significant human editing or be best suited for concepts where perfect realism isn't the primary goal.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The recurring 'wrongness' in AI-generated food images is a tangible manifestation of how current generative models prioritize overall structure over the precise, delicate details that define edible textures and forms, highlighting a gap between simulating reality and accurately replicating its intri"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces the concept of a 'bad prompt' as a potential cause for AI food looking wrong, only to dismiss it. The source text does not mention prompts at all. Additionally, 'fine herbs' is "
+  },
+  "confidence": {
+    "score": 0.79,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.3999999999999999,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

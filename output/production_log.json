@@ -3013,5 +3013,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-08T17:02:48.104493",
+    "title": "AI Food Generators: The Worms, Holes, and Cracks",
+    "description": "You've seen AI food pictures: the ones that look delicious but end up... deeply unsettling. But why do they look so bizarrely wrong? This isn't just bad art; it's a window into the technical limitations of current AI image generators. We're breaking down the quirks that lead to donut shrimp, wormlike noodles, and masonry masquerading as ice cream. Discover how diffusion models work, why they falter on thin, continuous structures, and what this means for the future of AI-generated content. Uncover the unappetizing reasons behind the AI food aesthetic. #AI #GenerativeAI #TechExplained #ArtificialIntelligence #ImageGeneration\n\nSource: https://www.theverge.com/ai-artificial-intelligence/989376/ai-generated-food-why-does-it-look-like-that\n\nChapters:\n0:00 Why AI Food Fails\n0:36 Basic Shapes First\n1:16 AI Fails Fine Details\n2:21 Why Use AI Food\n3:14 Human Editing Needed\n\n▶ Watch next: https://youtube.com/watch?v=imv83kO9Bzk",
+    "tags": [
+      "AI Food",
+      "Generative AI",
+      "Image Generators",
+      "Diffusion Models",
+      "AI Art",
+      "Tech Explained",
+      "Artificial Intelligence",
+      "Computer Vision",
+      "AI Limitations",
+      "The Verge",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Food_Generators_The_Worms_Holes_and_Cracks_20260908_165223_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260908_165523.mp4",
+      "output/shorts/short_2_20260908_165627.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260908_165340.jpg",
+    "youtube_url": "https://youtube.com/watch?v=I4hAh5YK1dk",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=QBuGP3ycvzU",
+      "https://youtube.com/watch?v=-SP6mMudnnc"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Food's Disturbing Reality: Worms, Holes, Cracks Revealed! 😱 #Shorts",
+        "description": "Ever wondered what's lurking beneath the surface of AI-generated food images? We're diving deep into the bizarre and often unsettling imperfections, from phantom worms to strange cracks and holes. Discover the surprising reality of AI food generators and why what you see isn't always what you get. #AIFood #TechFlaws #GenerativeAI #AIArt #FoodTech #DigitalArt #FutureFood",
+        "instagram_caption": "🐛 Think AI food is flawless? Think again! We're exposing the unsettling reality of glitches, worms, and bizarre imperfections in AI-generated dishes. Follow @tooldojo!\n\n#AIFood #GenerativeAI #FoodTech #DigitalFood #AIArt #TechFails #FutureFood #AIReality #UncannyValley #FoodGlitches #AIInnovation #TechTrends #FoodDesign #ArtificialIntelligence #AICommunity #DigitalCreation #FoodOfTheFuture #TechDiscoveries #AIInsights #VirtualFood"
+      },
+      {
+        "title": "Beware AI Food! The Glitches, Worms, & Cracks You WON'T See! 🚫 #Shorts",
+        "description": "AI food generators promise culinary marvels, but what happens when they go wrong? Join us as we uncover the strange world of AI-generated food glitches, from inexplicable worms to structural anomalies. It's a fascinating look at the current limitations and the 'cracks' in the AI food dream. #AIChallenges #FoodInnovation #DigitalFood #AIReality #TechExploration #FutureTech #AIEthics",
+        "instagram_caption": "⚠️ Get ready for a reality check on AI food generators! We're revealing the bizarre glitches, 'worms,' and imperfections that AI often creates. Follow @tooldojo!\n\n#AIFoodGlitches #AIProblems #GenerativeFood #TechIssues #DigitalArtFails #AIWarnings #FutureOfFood #AIInsights #TechReality #FoodTechFails #ArtificialFood #AIArtCommunity #DeepLearning #TechCuriosity #FoodInnovation #AIImpact #DigitalCreation #AISecrets #TechTrends2024 #VirtualCuisine"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

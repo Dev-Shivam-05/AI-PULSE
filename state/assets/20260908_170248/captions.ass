@@ -1,0 +1,172 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.04,Live,,0,0,0,{\k20}Ever {\k22}wonder {\k28}why {\k34}AI
+Dialogue: 0,0:00:01.04,0:00:02.50,Live,,0,0,0,{\k42}food {\k28}looks {\k16}so {\k60}disturbingly
+Dialogue: 0,0:00:02.50,0:00:03.92,Live,,0,0,0,{\k26}wrong {\k42}{\k32}It's {\k20}more {\k22}than
+Dialogue: 0,0:00:03.92,0:00:05.30,Live,,0,0,0,{\k24}just {\k22}a {\k34}bad {\k48}prompt
+Dialogue: 0,0:00:05.74,0:00:07.18,Live,,0,0,0,{\k20}The {\k36}bizarre {\k46}results {\k42}from
+Dialogue: 0,0:00:07.18,0:00:08.70,Live,,0,0,0,{\k38}donut {\k40}shrimp {\k42}to {\k32}worm
+Dialogue: 0,0:00:08.70,0:00:10.48,Live,,0,0,0,{\k28}like {\k34}noodles {\k86}reveal {\k30}a
+Dialogue: 0,0:00:10.48,0:00:11.76,Live,,0,0,0,{\k28}lot {\k30}about {\k20}the {\k50}underlying
+Dialogue: 0,0:00:11.76,0:00:14.02,Live,,0,0,0,{\k100}technology {\k74}powering {\k18}these {\k34}image
+Dialogue: 0,0:00:14.02,0:00:16.30,Live,,0,0,0,{\k72}generators {\k52}{\k30}We're {\k40}talking {\k34}about
+Dialogue: 0,0:00:16.30,0:00:18.28,Live,,0,0,0,{\k50}technical {\k68}weaknesses {\k32}laid {\k38}bare
+Dialogue: 0,0:00:18.94,0:00:19.98,Live,,0,0,0,{\k30}Many {\k16}of {\k26}these {\k32}leading
+Dialogue: 0,0:00:19.98,0:00:21.80,Live,,0,0,0,{\k68}generators {\k30}work {\k42}using {\k42}something
+Dialogue: 0,0:00:21.80,0:00:24.12,Live,,0,0,0,{\k36}called {\k56}diffusion {\k58}models {\k38}{\k44}Imagine
+Dialogue: 0,0:00:24.12,0:00:25.28,Live,,0,0,0,{\k50}starting {\k22}with {\k14}a {\k30}screen
+Dialogue: 0,0:00:25.28,0:00:26.72,Live,,0,0,0,{\k38}full {\k24}of {\k28}pure {\k54}static
+Dialogue: 0,0:00:26.72,0:00:29.58,Live,,0,0,0,{\k70}and {\k14}then {\k46}slowly {\k62}{\k84}painstakingly
+Dialogue: 0,0:00:29.96,0:00:31.24,Live,,0,0,0,{\k26}removing {\k42}that {\k36}noise {\k24}to
+Dialogue: 0,0:00:31.24,0:00:32.38,Live,,0,0,0,{\k32}reveal {\k32}the {\k28}image {\k22}you
+Dialogue: 0,0:00:32.38,0:00:34.08,Live,,0,0,0,{\k36}asked {\k38}for {\k38}{\k24}So {\k34}the
+Dialogue: 0,0:00:34.08,0:00:35.32,Live,,0,0,0,{\k32}basic {\k34}shapes {\k28}and {\k30}structures
+Dialogue: 0,0:00:35.32,0:00:36.38,Live,,0,0,0,{\k34}of {\k8}an {\k38}object {\k26}are
+Dialogue: 0,0:00:36.38,0:00:37.86,Live,,0,0,0,{\k38}formed {\k28}first {\k60}{\k10}and {\k12}then
+Dialogue: 0,0:00:37.86,0:00:39.56,Live,,0,0,0,{\k12}the {\k40}finer {\k36}{\k46}textural {\k36}details
+Dialogue: 0,0:00:39.56,0:00:40.82,Live,,0,0,0,{\k42}are {\k28}added {\k30}towards {\k26}the
+Dialogue: 0,0:00:40.82,0:00:42.38,Live,,0,0,0,{\k30}end {\k48}{\k24}But {\k16}what {\k38}happens
+Dialogue: 0,0:00:42.38,0:00:43.48,Live,,0,0,0,{\k26}when {\k18}that {\k38}process {\k28}breaks
+Dialogue: 0,0:00:43.48,0:00:44.92,Live,,0,0,0,{\k38}down {\k40}{\k28}This {\k16}is {\k22}where
+Dialogue: 0,0:00:44.92,0:00:46.74,Live,,0,0,0,{\k30}things {\k34}get {\k36}weird {\k62}{\k20}The
+Dialogue: 0,0:00:46.74,0:00:47.74,Live,,0,0,0,{\k34}model {\k26}might {\k22}get {\k18}the
+Dialogue: 0,0:00:47.74,0:00:49.42,Live,,0,0,0,{\k44}fundamental {\k48}structure {\k40}of {\k10}{\k16}say
+Dialogue: 0,0:00:49.62,0:00:51.34,Live,,0,0,0,{\k34}a {\k30}burger {\k58}completely {\k50}wrong
+Dialogue: 0,0:00:51.34,0:00:52.78,Live,,0,0,0,{\k40}early {\k48}on {\k24}{\k20}and {\k12}then
+Dialogue: 0,0:00:52.78,0:00:54.94,Live,,0,0,0,{\k26}just {\k54}plaster {\k66}detailed {\k70}textures
+Dialogue: 0,0:00:54.94,0:00:56.72,Live,,0,0,0,{\k32}on {\k38}top {\k96}It's {\k12}like
+Dialogue: 0,0:00:56.72,0:00:57.80,Live,,0,0,0,{\k34}building {\k26}a {\k26}house {\k22}with
+Dialogue: 0,0:00:57.80,0:00:59.70,Live,,0,0,0,{\k14}a {\k44}faulty {\k74}foundation {\k36}{\k22}and
+Dialogue: 0,0:00:59.70,0:01:00.78,Live,,0,0,0,{\k14}then {\k40}painting {\k24}the {\k30}walls
+Dialogue: 0,0:01:00.78,0:01:02.56,Live,,0,0,0,{\k66}perfectly {\k44}{\k28}This {\k22}is {\k18}the
+Dialogue: 0,0:01:02.56,0:01:03.34,Live,,0,0,0,{\k26}same {\k22}kind {\k16}of {\k14}glitch
+Dialogue: 0,0:01:03.34,0:01:04.54,Live,,0,0,0,{\k26}you {\k24}see {\k46}when {\k24}AI
+Dialogue: 0,0:01:04.54,0:01:06.14,Live,,0,0,0,{\k70}generates {\k40}humans {\k36}with {\k14}an
+Dialogue: 0,0:01:06.14,0:01:08.16,Live,,0,0,0,{\k34}extra {\k36}finger {\k68}{\k20}The {\k44}underlying
+Dialogue: 0,0:01:08.16,0:01:09.98,Live,,0,0,0,{\k52}form {\k30}is {\k34}flawed {\k50}{\k16}but
+Dialogue: 0,0:01:09.98,0:01:11.08,Live,,0,0,0,{\k14}the {\k30}AI {\k46}tries {\k20}to
+Dialogue: 0,0:01:11.08,0:01:11.72,Live,,0,0,0,{\k26}cover {\k12}it {\k10}up {\k16}with
+Dialogue: 0,0:01:11.72,0:01:12.44,Live,,0,0,0,{\k12}what {\k10}it {\k24}thinks {\k26}are
+Dialogue: 0,0:01:12.44,0:01:14.32,Live,,0,0,0,{\k38}correct {\k50}details {\k56}{\k16}But {\k28}even
+Dialogue: 0,0:01:14.32,0:01:15.42,Live,,0,0,0,{\k22}when {\k12}the {\k22}main {\k54}structure
+Dialogue: 0,0:01:15.42,0:01:17.22,Live,,0,0,0,{\k24}is {\k40}mostly {\k52}solid {\k56}{\k8}the
+Dialogue: 0,0:01:17.22,0:01:18.74,Live,,0,0,0,{\k42}AI {\k34}can {\k28}still {\k48}stumble
+Dialogue: 0,0:01:18.74,0:01:19.86,Live,,0,0,0,{\k20}on {\k14}the {\k32}finer {\k46}points
+Dialogue: 0,0:01:19.86,0:01:22.48,Live,,0,0,0,{\k126}Diffusion {\k46}models {\k36}{\k30}according {\k24}to
+Dialogue: 0,0:01:22.48,0:01:24.84,Live,,0,0,0,{\k42}experts {\k60}{\k8}are {\k92}notoriously {\k34}bad
+Dialogue: 0,0:01:24.84,0:01:27.10,Live,,0,0,0,{\k26}at {\k50}generating {\k58}thin {\k42}{\k50}continuous
+Dialogue: 0,0:01:27.10,0:01:28.84,Live,,0,0,0,{\k48}lines {\k38}that {\k52}actually {\k36}end
+Dialogue: 0,0:01:28.84,0:01:30.74,Live,,0,0,0,{\k58}properly {\k52}{\k14}Think {\k24}about {\k32}noodles
+Dialogue: 0,0:01:31.30,0:01:32.66,Live,,0,0,0,{\k12}strands {\k28}of {\k36}pasta {\k40}{\k20}or
+Dialogue: 0,0:01:32.66,0:01:34.72,Live,,0,0,0,{\k36}even {\k36}fine {\k46}herbs {\k58}{\k30}These
+Dialogue: 0,0:01:34.72,0:01:35.96,Live,,0,0,0,{\k22}are {\k38}precisely {\k38}the {\k26}kinds
+Dialogue: 0,0:01:35.96,0:01:37.24,Live,,0,0,0,{\k16}of {\k66}geometries {\k26}that {\k20}trip
+Dialogue: 0,0:01:37.24,0:01:38.80,Live,,0,0,0,{\k16}up {\k18}these {\k36}models {\k66}{\k20}You
+Dialogue: 0,0:01:38.80,0:01:39.68,Live,,0,0,0,{\k22}end {\k14}up {\k22}with {\k30}spaghetti
+Dialogue: 0,0:01:39.68,0:01:41.46,Live,,0,0,0,{\k46}like {\k46}artifacts {\k54}bleeding {\k32}into
+Dialogue: 0,0:01:41.46,0:01:42.78,Live,,0,0,0,{\k38}places {\k30}where {\k14}they {\k50}absolutely
+Dialogue: 0,0:01:42.78,0:01:44.36,Live,,0,0,0,{\k58}shouldn't {\k18}be {\k34}{\k24}with {\k24}no
+Dialogue: 0,0:01:44.36,0:01:46.34,Live,,0,0,0,{\k44}culinary {\k52}or {\k74}anatomical {\k28}sense
+Dialogue: 0,0:01:46.34,0:01:47.94,Live,,0,0,0,{\k70}It {\k32}struggles {\k32}to {\k26}figure
+Dialogue: 0,0:01:47.94,0:01:49.02,Live,,0,0,0,{\k28}out {\k24}where {\k30}these {\k26}thin
+Dialogue: 0,0:01:49.02,0:01:51.10,Live,,0,0,0,{\k46}elements {\k28}should {\k46}start {\k36}{\k42}stop
+Dialogue: 0,0:01:51.42,0:01:53.36,Live,,0,0,0,{\k24}or {\k34}even {\k44}connect {\k66}{\k26}And
+Dialogue: 0,0:01:53.36,0:01:54.46,Live,,0,0,0,{\k18}it's {\k18}not {\k34}just {\k30}noodles
+Dialogue: 0,0:01:55.10,0:01:56.68,Live,,0,0,0,{\k42}repeating {\k46}textures {\k38}like {\k32}bubbles
+Dialogue: 0,0:01:56.68,0:01:58.24,Live,,0,0,0,{\k34}in {\k26}drinks {\k38}or {\k58}tiny
+Dialogue: 0,0:01:58.24,0:01:59.46,Live,,0,0,0,{\k46}seeds {\k24}on {\k12}a {\k40}pastry
+Dialogue: 0,0:01:59.46,0:02:01.06,Live,,0,0,0,{\k54}can {\k40}also {\k24}be {\k42}difficult
+Dialogue: 0,0:02:01.06,0:02:02.18,Live,,0,0,0,{\k22}for {\k26}these {\k38}models {\k26}to
+Dialogue: 0,0:02:02.18,0:02:04.02,Live,,0,0,0,{\k22}keep {\k28}within {\k66}sensible {\k58}boundaries
+Dialogue: 0,0:02:04.42,0:02:05.66,Live,,0,0,0,{\k32}This {\k32}failure {\k18}to {\k42}contain
+Dialogue: 0,0:02:05.66,0:02:07.26,Live,,0,0,0,{\k30}and {\k50}terminate {\k38}fine {\k42}details
+Dialogue: 0,0:02:07.26,0:02:08.76,Live,,0,0,0,{\k86}explains {\k30}a {\k20}lot {\k14}of
+Dialogue: 0,0:02:08.76,0:02:09.70,Live,,0,0,0,{\k12}the {\k30}slop {\k28}and {\k24}holes
+Dialogue: 0,0:02:09.70,0:02:11.30,Live,,0,0,0,{\k28}we {\k20}see {\k66}{\k28}It's {\k18}not
+Dialogue: 0,0:02:11.30,0:02:12.94,Live,,0,0,0,{\k12}a {\k48}deliberate {\k54}artistic {\k50}choice
+Dialogue: 0,0:02:12.94,0:02:14.60,Live,,0,0,0,{\k72}it's {\k6}a {\k26}direct {\k62}consequence
+Dialogue: 0,0:02:14.60,0:02:15.52,Live,,0,0,0,{\k32}of {\k14}how {\k20}the {\k26}AI
+Dialogue: 0,0:02:15.52,0:02:16.98,Live,,0,0,0,{\k40}is {\k28}trained {\k64}and {\k14}the
+Dialogue: 0,0:02:16.98,0:02:18.22,Live,,0,0,0,{\k22}data {\k24}it {\k20}learns {\k48}from
+Dialogue: 0,0:02:18.38,0:02:19.40,Live,,0,0,0,{\k34}Now {\k28}you {\k20}might {\k20}be
+Dialogue: 0,0:02:19.40,0:02:21.06,Live,,0,0,0,{\k38}thinking {\k46}{\k32}Why {\k18}would {\k32}anyone
+Dialogue: 0,0:02:21.06,0:02:22.10,Live,,0,0,0,{\k40}use {\k18}this {\k18}to {\k28}sell
+Dialogue: 0,0:02:22.10,0:02:23.94,Live,,0,0,0,{\k38}food {\k62}{\k12}The {\k38}answer {\k34}isn't
+Dialogue: 0,0:02:23.94,0:02:25.58,Live,,0,0,0,{\k18}about {\k20}the {\k82}AI's {\k44}artistic
+Dialogue: 0,0:02:25.58,0:02:27.12,Live,,0,0,0,{\k44}merit {\k34}{\k14}but {\k14}the {\k48}speed
+Dialogue: 0,0:02:27.12,0:02:28.68,Live,,0,0,0,{\k28}and {\k32}cost {\k74}effectiveness {\k22}for
+Dialogue: 0,0:02:28.68,0:02:29.24,Live,,0,0,0,{\k46}marketers
+Dialogue: 0,0:02:29.94,0:02:31.96,Live,,0,0,0,{\k44}However {\k56}{\k6}the {\k60}asterisk {\k36}reason
+Dialogue: 0,0:02:31.96,0:02:33.40,Live,,0,0,0,{\k80}asterisk {\k16}it {\k16}looks {\k32}so
+Dialogue: 0,0:02:33.40,0:02:34.54,Live,,0,0,0,{\k34}bad {\k42}isn't {\k20}about {\k18}the
+Dialogue: 0,0:02:34.54,0:02:36.04,Live,,0,0,0,{\k40}intent {\k48}{\k16}but {\k12}the {\k34}current
+Dialogue: 0,0:02:36.04,0:02:38.30,Live,,0,0,0,{\k56}technical {\k62}limitations {\k56}{\k24}The {\k28}training
+Dialogue: 0,0:02:38.30,0:02:39.64,Live,,0,0,0,{\k38}data {\k44}itself {\k34}plays {\k18}a
+Dialogue: 0,0:02:39.64,0:02:41.06,Live,,0,0,0,{\k18}role {\k78}If {\k16}the {\k30}AI
+Dialogue: 0,0:02:41.06,0:02:42.14,Live,,0,0,0,{\k40}is {\k28}trained {\k28}on {\k12}a
+Dialogue: 0,0:02:42.14,0:02:43.24,Live,,0,0,0,{\k30}vast {\k26}data {\k30}set {\k24}that
+Dialogue: 0,0:02:43.24,0:02:44.14,Live,,0,0,0,{\k36}includes {\k20}a {\k20}lot {\k14}of
+Dialogue: 0,0:02:44.14,0:02:45.78,Live,,0,0,0,{\k18}low {\k48}quality {\k30}or {\k68}stylized
+Dialogue: 0,0:02:45.78,0:02:47.20,Live,,0,0,0,{\k18}food {\k36}images {\k54}{\k16}it {\k18}might
+Dialogue: 0,0:02:47.20,0:02:48.40,Live,,0,0,0,{\k26}learn {\k16}to {\k44}replicate {\k34}those
+Dialogue: 0,0:02:48.40,0:02:50.68,Live,,0,0,0,{\k90}imperfections {\k54}{\k28}It's {\k28}learning {\k28}from
+Dialogue: 0,0:02:50.68,0:02:52.44,Live,,0,0,0,{\k46}everything {\k22}it {\k26}sees {\k40}{\k32}good
+Dialogue: 0,0:02:52.62,0:02:54.06,Live,,0,0,0,{\k6}and {\k26}bad {\k46}{\k28}This {\k38}issue
+Dialogue: 0,0:02:54.06,0:02:56.18,Live,,0,0,0,{\k30}goes {\k38}beyond {\k40}just {\k104}unappetizing
+Dialogue: 0,0:02:56.18,0:02:57.06,Live,,0,0,0,{\k36}food {\k42}pictures
+Dialogue: 0,0:02:57.68,0:02:59.74,Live,,0,0,0,{\k58}Understanding {\k48}these {\k46}limitations {\k54}is
+Dialogue: 0,0:02:59.74,0:03:01.42,Live,,0,0,0,{\k42}crucial {\k64}{\k12}It {\k32}tells {\k18}us
+Dialogue: 0,0:03:01.42,0:03:03.30,Live,,0,0,0,{\k28}where {\k40}AI {\k62}image {\k58}generation
+Dialogue: 0,0:03:03.30,0:03:04.74,Live,,0,0,0,{\k38}is {\k38}strong {\k30}in {\k38}broad
+Dialogue: 0,0:03:04.74,0:03:06.84,Live,,0,0,0,{\k50}strokes {\k22}and {\k52}recognizable {\k86}objects
+Dialogue: 0,0:03:06.84,0:03:08.08,Live,,0,0,0,{\k68}and {\k16}where {\k20}it’s {\k20}still
+Dialogue: 0,0:03:08.08,0:03:09.50,Live,,0,0,0,{\k50}struggling {\k26}to {\k34}grasp {\k32}the
+Dialogue: 0,0:03:09.50,0:03:10.66,Live,,0,0,0,{\k34}nuances {\k42}of {\k12}the {\k28}real
+Dialogue: 0,0:03:10.66,0:03:12.76,Live,,0,0,0,{\k56}world {\k30}{\k18}For {\k38}businesses {\k50}{\k18}this
+Dialogue: 0,0:03:12.76,0:03:14.58,Live,,0,0,0,{\k30}means {\k44}AI {\k60}generated {\k48}visuals
+Dialogue: 0,0:03:14.58,0:03:16.34,Live,,0,0,0,{\k52}might {\k30}need {\k58}significant {\k36}human
+Dialogue: 0,0:03:16.34,0:03:17.84,Live,,0,0,0,{\k42}editing {\k66}or {\k14}be {\k28}best
+Dialogue: 0,0:03:17.84,0:03:19.24,Live,,0,0,0,{\k24}suited {\k28}for {\k46}concepts {\k42}where
+Dialogue: 0,0:03:19.24,0:03:20.98,Live,,0,0,0,{\k38}perfect {\k64}realism {\k60}isn't {\k12}the
+Dialogue: 0,0:03:20.98,0:03:21.72,Live,,0,0,0,{\k32}primary {\k32}goal
+Dialogue: 0,0:03:22.38,0:03:23.44,Live,,0,0,0,{\k28}It's {\k6}a {\k36}reminder {\k36}that
+Dialogue: 0,0:03:23.44,0:03:24.62,Live,,0,0,0,{\k32}AI {\k50}is {\k8}a {\k28}tool
+Dialogue: 0,0:03:24.62,0:03:26.02,Live,,0,0,0,{\k64}and {\k14}its {\k34}output {\k28}is
+Dialogue: 0,0:03:26.02,0:03:26.90,Live,,0,0,0,{\k34}only {\k20}as {\k16}good {\k18}as
+Dialogue: 0,0:03:26.90,0:03:28.56,Live,,0,0,0,{\k12}its {\k32}current {\k62}capabilities {\k60}and
+Dialogue: 0,0:03:28.56,0:03:29.30,Live,,0,0,0,{\k14}the {\k28}skill {\k22}of {\k10}the
+Dialogue: 0,0:03:29.30,0:03:30.70,Live,,0,0,0,{\k26}user {\k70}So {\k20}the {\k24}next
+Dialogue: 0,0:03:30.70,0:03:31.52,Live,,0,0,0,{\k22}time {\k20}you {\k24}see {\k16}a
+Dialogue: 0,0:03:31.52,0:03:32.92,Live,,0,0,0,{\k32}donut {\k44}shrimp {\k40}or {\k24}a
+Dialogue: 0,0:03:32.92,0:03:33.90,Live,,0,0,0,{\k28}burger {\k30}that {\k22}looks {\k18}like
+Dialogue: 0,0:03:33.90,0:03:35.06,Live,,0,0,0,{\k22}it’s {\k14}made {\k16}of {\k54}concrete
+Dialogue: 0,0:03:35.40,0:03:36.32,Live,,0,0,0,{\k34}you'll {\k12}know {\k30}it's {\k16}not
+Dialogue: 0,0:03:36.32,0:03:38.62,Live,,0,0,0,{\k28}just {\k50}random {\k66}weirdness {\k58}{\k28}It's
+Dialogue: 0,0:03:38.62,0:03:39.48,Live,,0,0,0,{\k6}a {\k18}peek {\k44}behind {\k18}the
+Dialogue: 0,0:03:39.48,0:03:40.68,Live,,0,0,0,{\k32}curtain {\k16}at {\k10}the {\k52}complex
+Dialogue: 0,0:03:41.08,0:03:43.32,Live,,0,0,0,{\k20}and {\k52}sometimes {\k88}hilariously {\k54}flawed
+Dialogue: 0,0:03:43.82,0:03:46.02,Live,,0,0,0,{\k42}process {\k30}of {\k60}artificial {\k88}intelligence
+Dialogue: 0,0:03:46.02,0:03:47.62,Live,,0,0,0,{\k36}learning {\k26}to {\k30}see {\k36}{\k32}It's
+Dialogue: 0,0:03:47.62,0:03:49.14,Live,,0,0,0,{\k6}a {\k58}fascinating {\k42}glimpse {\k46}into
+Dialogue: 0,0:03:49.14,0:03:50.48,Live,,0,0,0,{\k26}how {\k34}AI {\k48}is {\k26}learning
+Dialogue: 0,0:03:50.48,0:03:51.74,Live,,0,0,0,{\k26}to {\k38}represent {\k20}the {\k32}world
+Dialogue: 0,0:03:52.02,0:03:52.82,Live,,0,0,0,{\k30}even {\k20}if {\k12}it {\k18}means
+Dialogue: 0,0:03:52.82,0:03:54.38,Live,,0,0,0,{\k18}our {\k30}digital {\k50}food {\k20}{\k38}sometimes
+Dialogue: 0,0:03:54.38,0:03:55.34,Live,,0,0,0,{\k32}looks {\k22}like {\k14}it {\k28}belongs
+Dialogue: 0,0:03:55.34,0:03:56.42,Live,,0,0,0,{\k36}in {\k14}a {\k18}horror {\k40}movie
+Dialogue: 0,0:03:56.42,0:03:58.92,Live,,0,0,0,{\k82}What {\k28}other {\k74}unexpected {\k66}limitations
+Dialogue: 0,0:03:58.92,0:04:00.28,Live,,0,0,0,{\k64}have {\k14}you {\k30}noticed {\k28}in
+Dialogue: 0,0:04:00.28,0:04:02.80,Live,,0,0,0,{\k32}AI {\k58}generated {\k52}content {\k52}{\k58}Subscribe
+Dialogue: 0,0:04:02.80,0:04:04.16,Live,,0,0,0,{\k34}to {\k28}Tool {\k50}Dojo {\k24}to
+Dialogue: 0,0:04:04.16,0:04:04.86,Live,,0,0,0,{\k22}stay {\k24}ahead {\k14}of {\k10}the
+Dialogue: 0,0:04:04.86,0:04:05.18,Live,,0,0,0,{\k22}curve
