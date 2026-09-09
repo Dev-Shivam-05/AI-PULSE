@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The urgent warnings from Anthropic researchers suggest that the pursuit of rapid AI advancement, driven by competitive pressures, is creating a dangerous blind spot where the potential for catastrophic outcomes outweighs the current safety measures being developed."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline presents a narrative flow and specific phrasing that is not directly present in the source text. For example, the opening line 'They built it, and now they're terrified' is a dramatic fram"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

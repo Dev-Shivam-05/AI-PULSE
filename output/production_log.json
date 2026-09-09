@@ -3063,5 +3063,51 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-09T17:01:26.930566",
+    "title": "Anthropic: 10% AI Existential Risk?",
+    "description": "AI could end humanity. That's the stark warning from researchers at Anthropic, a leading AI lab. They believe the race to build superintelligence is happening too fast, with terrifying implications. Discover why top AI insiders are genuinely worried about their own creations and the potential for an uncontrollable AI future. This isn't sci-fi anymore – it's a looming possibility that could change everything about our existence. We break down what this means for the future of AI development and why safety is becoming the most critical challenge. #AI #ArtificialIntelligence #Tech #Future #Safety #ExistentialRisk #ToolDojo\n\nSource: https://www.theverge.com/ai-artificial-intelligence/991927/anthropic-ai-kill-all-humans\n\nChapters:\n0:00 AI Fears Rise\n1:02 Safety Concerns Grow\n2:07 No Safety Plan\n3:15 AI Risks Evolve\n4:17 Humanity's Future\n\n▶ Watch next: https://youtube.com/watch?v=I4hAh5YK1dk",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Anthropic",
+      "Existential Risk",
+      "Superintelligence",
+      "AI Safety",
+      "Tech News",
+      "Future of AI",
+      "Machine Learning",
+      "Deep Learning",
+      "ai news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/Anthropic_10_AI_Existential_Risk_20260909_165226_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260909_165545.mp4",
+      "output/shorts/short_2_20260909_165637.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260909_165405.jpg",
+    "youtube_url": "https://youtube.com/watch?v=e0yExNsVhxg",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=tGTJtG61-VQ",
+      "https://youtube.com/watch?v=wPeLjVuPCUs"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Anthropic's HUGE AI Risk? 🤯 #Shorts",
+        "description": "Anthropic discusses a potential 10% existential risk from AI.  Is it a genuine threat or hype?  Dive in! #AISafety #ExistentialRisk #AIResearch #FutureOfAI #Technology",
+        "instagram_caption": "🤯 10% chance AI could end humanity? Anthropic's bold claim is sparking major debate.  What do YOU think? Follow @tooldojo! #AISafety #ExistentialRisk #AIResearch #FutureOfAI #Technology #ArtificialIntelligence #TechNews #Innovation #RiskManagement #SciTech #DeepLearning #MachineLearning #AIethics #FutureTech #Robotics #AITrends #Discussion #Opinion #Debate #MustWatch"
+      },
+      {
+        "title": "AI's 10% Existential Threat? 🤖 #Shorts",
+        "description": "Is AI a 10% existential risk according to Anthropic?  We break down the alarming possibility.  Watch now! #AI #Tech #Future #Innovation #Risk",
+        "instagram_caption": "🤖 Could AI pose a 10% existential risk?  Anthropic's research is raising serious questions about our future.  Let's explore the implications. Follow @tooldojo! #AI #Tech #Future #Innovation #Risk #ArtificialIntelligence #TechTrends #FutureOfTechnology #AIthreat #AIsafety #DeepMind #OpenAI #TechDebate #Science #Engineering #Cybersecurity #GlobalRisk #Humanity #Progress #Consequences"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
