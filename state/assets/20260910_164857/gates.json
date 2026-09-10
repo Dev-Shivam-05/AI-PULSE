@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Subscribe to ToolDojo",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The 'agentic flooding' of public services by AI highlights a fundamental societal shift: AI isn't just automating tasks, it's democratizing access to bureaucratic processes, potentially exposing deep-seated inefficiencies and inequities within existing systems that were previously shielded by their "
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a conversational, narrative tone with rhetorical questions ('Imagine trying to get something done...', 'Think about bug bounty programs.') and direct address ('But here's a crucial di"
+  },
+  "confidence": {
+    "score": 0.854,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

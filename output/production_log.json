@@ -3109,5 +3109,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-10T16:48:57.674874",
+    "title": "AI Agents Overload Public Services: You Pay the Price",
+    "description": "AI agents are now overwhelming public services worldwide, leading to massive spikes in applications and complaints. From the UK's housing ombudsman seeing more than double the complaints to the US Consumer Financial Protection Bureau experiencing a fivefold increase, the impact is undeniable. This phenomenon, termed 'agentic flooding,' is driven by AI's increasing ease of use for tasks like filling forms and filing grievances. While some filings might be adversarial, many are from legitimate individuals empowered by AI to navigate administrative burdens they previously couldn't. This surge presents a critical challenge for public services, forcing a re-evaluation of how they operate in an AI-driven era. We explore the data, the implications, and the urgent need for adaptation.\n\n#AI #PublicServices #Tech #Government #Automation #FutureOfWork\n\nSource: https://techcrunch.com/2026/09/10/ai-agents-are-flooding-public-services-with-new-requests/\n\nChapters:\n0:00 Government Systems Swamped\n1:16 AI Ethics Research\n2:35 Bug Bounty Spam\n3:54 AI Spam Data\n5:01 Public Service Demand\n\n▶ Watch next: https://youtube.com/watch?v=e0yExNsVhxg",
+    "tags": [
+      "AI agents",
+      "public services",
+      "government technology",
+      "automation",
+      "artificial intelligence",
+      "administrative burden",
+      "consumer protection",
+      "TechCrunch",
+      "agentic flooding",
+      "AI ethics",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Agents_Overload_Public_Services_You_Pay_the_Pri_20260910_163904_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260910_164234.mp4",
+      "output/shorts/short_2_20260910_164325.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260910_164056.jpg",
+    "youtube_url": "https://youtube.com/watch?v=FJlngbI8fJY",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=r6th7xqJxmE",
+      "https://youtube.com/watch?v=uqhcPvv70oA"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Agents DESTROY Public Services! 😱 #Shorts",
+        "description": "Discover how unchecked AI agents are straining public services and impacting your wallet.  The hidden costs are staggering!",
+        "instagram_caption": "🚨 AI agents are secretly overloading our public services! Are you ready to pay the price for this digital takeover? Follow @tooldojo! #AI #PublicServices #TechTakeover #CostOfAI #FutureOfWork #AIethics #DigitalOverload #GovernmentTech #Innovation #SocietalImpact #Technology #AIvsHuman #PublicSector #BudgetBuster #TechNews #ArtificialIntelligence #SmartCity #ServiceDelivery #DigitalTransformation #YourMoney"
+      },
+      {
+        "title": "Your Tax Dollars Used by AI! 🤯 #Shorts",
+        "description": "Uncover the shocking truth about how AI agents are gobbling up public resources.  Your taxes are funding the overload!",
+        "instagram_caption": "🤯 Your tax dollars are being devoured by AI agents! Find out how this hidden drain impacts your daily life and finances. Follow @tooldojo! #AIExploitation #TaxpayerMoney #PublicServiceStrain #AIinGovernment #TechBurden #DigitalEconomy #FutureShock #Automation #AIImpact #GovernmentSpending #TechTrends #ServiceCosts #AIRevolution #DigitalDivide #Inconvenience #TechWatch #ArtificialIntelligenceImpact #PublicResources #MoneyMatters #AIConsequences"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
