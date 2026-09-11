@@ -3159,5 +3159,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-11T16:57:22.437885",
+    "title": "AI Image Generators: The 5 Billion Image Secret",
+    "description": "Ever wondered how AI image generators conjure photorealistic art from just a few words? This video dives deep into the fascinating technology behind your digital creations. We'll demystify diffusion models, explain text-to-image synthesis, and explore the profound artistic and ethical implications of this rapidly evolving field. Understand the core mechanics, the massive datasets involved, and what the future holds for AI-powered art. Discover how AI image generators work, transforming text prompts into stunning visuals.\n\n#AIArt #DiffusionModels #TextToImage #AIGenerator #HowAIWorks #MachineLearning #ToolDojo\n\nSubscribe to ToolDojo.\n\nChapters:\n0:00 Text To Art\n0:57 Statistical Learning\n1:56 From Noise To Image\n2:38 Underlying Technology\n3:35 Rapid Progress\n\n▶ Watch next: https://youtube.com/watch?v=FJlngbI8fJY",
+    "tags": [
+      "AI image generator",
+      "diffusion models",
+      "text to image",
+      "how AI works",
+      "AI art",
+      "artificial intelligence",
+      "machine learning",
+      "generative AI",
+      "AI explained",
+      "digital art",
+      "AI ethics",
+      "ToolDojo",
+      "ai",
+      "ai news",
+      "tech news",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/AI_Image_Generators_The_5_Billion_Image_Secret_20260911_164727_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260911_165057.mp4",
+      "output/shorts/short_2_20260911_165205.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260911_164909.jpg",
+    "youtube_url": "https://youtube.com/watch?v=qH5cf_L8Zhc",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=1eyFhqUT9vk",
+      "https://youtube.com/watch?v=CmtGH5xihUs"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Unlock 5 Billion AI Images! 🤯 #Shorts",
+        "description": "Discover the hidden world of AI image generation and the massive scale behind it. You won't believe how many images are being created!",
+        "instagram_caption": "🤯 Did you know AI image generators are creating BILLIONS of images? Get ready to be amazed by the sheer scale of this technology. Follow @tooldojo!\n#AI #AIArt #ImageGeneration #ArtificialIntelligence #Tech #FutureTech #DigitalArt #Innovation #CreativeAI #MachineLearning #DeepLearning #GenerativeAI #AITools #ContentCreation #DigitalCreation #ArtTech #TechTrends #AIRevolution #Visuals #AmazingTech"
+      },
+      {
+        "title": "Mind-Blowing AI Image Secrets! 🚀 #Shorts",
+        "description": "Explore the astonishing capabilities of AI image generators and the 5 billion image secret that's changing art and design forever. Prepare to be impressed!",
+        "instagram_caption": "🚀 Prepare to have your mind blown by the secrets of AI image generators! The scale of their output is truly incredible. Follow @tooldojo!\n#AI #AIArt #ImageGenerator #ArtificialIntelligence #TechSecrets #FutureOfArt #DigitalArtistry #CreativeTech #AIInnovation #MachineLearningArt #DeepLearningAI #GenerativeArt #AIToolKit #ContentCreator #DigitalDesign #ArtAndTechnology #TechNews #AIExplained #VisualInnovation #CreativeTools"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
