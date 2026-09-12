@@ -1,0 +1,127 @@
+{
+  "titles": [
+    "OpenAI's Math Feud: Fields Medalists vs AI Labs",
+    "25 Math Geniuses vs OpenAI: The Escalating Feud",
+    "AI Labs vs Math Elite: OpenAI's Controversial Proofs"
+  ],
+  "title": "OpenAI's Math Feud: Fields Medalists vs AI Labs",
+  "thumb_text": "25 MATH GENIUSES VS OPENAI",
+  "description": "Imagine the smartest minds on Earth, the mathematicians who define logic and truth, locked in a dispute with the companies building our AI future. This isn't science fiction; it's happening now. OpenAI is reportedly in a deepening conflict with leading mathematicians over how AI is solving complex math problems. Twenty-five Fields Medal winners have voiced serious concerns, arguing that AI labs are jeopardizing the integrity of mathematical research. We break down the escalating feud, what it means for attribution and plagiarism in AI-driven discoveries, and why your field might be next.  Why does this matter? Because the way AI learns and shares knowledge today could fundamentally alter how all scientific and creative breakthroughs are made tomorrow, impacting everything from academic credit to the very pace of human innovation. This is a critical moment for intellectual property and the future of discovery itself.\n#AI #OpenAI #Mathematics #TechCrunch #ArtificialIntelligence #FutureOfScience #TechNews\n\nSource: https://techcrunch.com/2026/09/11/openais-feud-with-mathematicians-is-only-escalating/\n\nChapters:\n0:00 Smartest Minds Logic\n0:59 Professor's AI Incident\n2:00 Maths Drive AI\n2:57 Value Of Creation\n3:53 Preview Of Issues\n\n▶ Watch next: https://youtube.com/watch?v=qH5cf_L8Zhc",
+  "tags": [
+    "AI",
+    "OpenAI",
+    "Mathematics",
+    "Fields Medal",
+    "Artificial Intelligence",
+    "TechCrunch",
+    "Tech News",
+    "Research",
+    "Plagiarism",
+    "Attribution",
+    "ai news",
+    "machine learning",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "synthesis_claim": "The core of OpenAI's conflict with mathematicians isn't just about who gets credit for a proof, but a fundamental disagreement over whether AI-generated breakthroughs, if not properly documented and integrated, risk creating an 'unlived' or disconnected branch of knowledge, undermining the cumulative and human-centric nature of scientific progress.",
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Imagine the smartest minds on Earth, the mathematicians who define logic and truth, are locked in a shouting match with the companies building our AI overlords. That's happening right now.  Twenty-five of the world's top mathematicians are publicly clashing with AI labs, and it’s only getting uglier.",
+      "visual_query": "abstract math symbols glowing",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "These aren't just any mathematicians; they're Fields Medalists. This is essentially the Nobel Prize for math, awarded to the brightest minds under 40. They've signed an open letter arguing that AI labs, in their race to solve famous math problems, are threatening their intellectual work.",
+      "visual_query": "Fields Medal close up",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 3,
+      "narration": "The central issue? Attribution and plagiarism. The letter claims that AI solutions are often announced too quickly, without proper write-ups, without isolating new methods, and without citing previous work. This leaves existing research and credit in a chaotic state.",
+      "visual_query": "person looking confused at papers",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "According to news/techcrunch, a specific incident involved NYU professor Tristan Buckmaster. He accused OpenAI of pressuring him *not* to credit a collaborator from Anthropic, another major AI company, for solving a significant math problem. He even questioned if OpenAI used their own AI, Codex, to quickly produce its own proof over a weekend.",
+      "visual_query": "professor at whiteboard",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 5,
+      "narration": "The fallout is real. OpenAI even withdrew its sponsorship of a math event at CalTech this week after facing criticism from researchers there. This suggests the tension is palpable and impacting real-world collaborations.",
+      "visual_query": "protest signs math university",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "While AI solving complex math problems could be a massive benefit to humanity, the mathematicians argue it only helps if those solutions can be understood, communicated, and integrated by the human math community. Otherwise, the discovery remains in AI's black box.",
+      "visual_query": "glowing network connecting computers",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Think about it: without mathematicians willing to develop and integrate these AI-born ideas, they won't become part of the established mathematical canon. The crucial human transmission chain, the mentorship and knowledge sharing that built math for centuries, could be lost.",
+      "visual_query": "students learning from professor",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Now, you might be thinking, 'This is just about elite mathematicians and obscure proofs.' But here's the problem: the dynamic news/techcrunch describes – frontier labs spending millions to beat original researchers to a discovery – incentivizes secrecy. This isn't just about math; it's about the future of innovation in *any* field.",
+      "visual_query": "person scrolling through news feed",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 9,
+      "narration": "This conflict echoes the Leiden Declaration, released earlier this year by another group of mathematicians. That document also addressed how AI-generated proofs are changing their work and offered recommendations, showing this isn't an isolated incident but a growing concern.",
+      "visual_query": "document with pen signing",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "The value in math, and indeed many creative professions, isn't just the final proof or discovery. It's the intellectual super-structure: nurturing students, finding new questions, and integrating these ideas into human civilization. AI's current approach risks bypassing this vital ecosystem.",
+      "visual_query": "ecosystem diagram abstract",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 11,
+      "narration": "Paranoia is setting in. Other mathematicians are wondering if their use of tools like Codex is being fed back into OpenAI's models, creating a cycle where their own work might be used to out-compete them. This threatens the very culture of open research.",
+      "visual_query": "person with question marks over head",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "If leading AI labs can deploy massive resources to achieve a breakthrough using LLMs and beat human researchers to the punch, why would they share their methods? The incentive shifts dramatically towards keeping discoveries secret, not open.",
+      "visual_query": "locked vault digital",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 13,
+      "narration": "And here's the strangest part: the issues mathematicians face now are a preview. The letter states these problems indicate what all of humanity might face as AI reshapes work: how do we ensure that in changing *how* work is done, we don't lose sight of *why* it was done in the first place?",
+      "visual_query": "hourglass with data flowing",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "This isn't just about abstract academic disputes. This is about how knowledge is created, validated, and transmitted in the AI era. It impacts everything from scientific progress to intellectual property rights. The clash between OpenAI and these Fields Medalists is a critical signal for the future of discovery.",
+      "visual_query": "robot arm holding a book",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 15,
+      "narration": "So, what happens when the guardians of logic find themselves at odds with the builders of artificial intelligence? The answer might define how we innovate for generations to come. Subscribe to ToolDojo.",
+      "visual_query": "AI brain circuitry human",
+      "speaker": "a"
+    }
+  ],
+  "deliverable": null,
+  "filter_segment": true,
+  "source_url": "https://techcrunch.com/2026/09/11/openais-feud-with-mathematicians-is-only-escalating/",
+  "format": "news",
+  "signal_title": "OpenAI’s feud with mathematicians is only escalating",
+  "hook_pattern": "filter"
+}

@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "ToolDojo",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The core of OpenAI's conflict with mathematicians isn't just about who gets credit for a proof, but a fundamental disagreement over whether AI-generated breakthroughs, if not properly documented and integrated, risk creating an 'unlived' or disconnected branch of knowledge, undermining the cumulativ"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative framing of 'smartest minds on Earth' and 'Fields Medalists' which, while supported by the source text mentioning Fields Medalists, adds a layer of dramatic emphasis."
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

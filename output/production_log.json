@@ -3208,5 +3208,53 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-12T15:53:37.159603",
+    "title": "OpenAI's Math Feud: Fields Medalists vs AI Labs",
+    "description": "Imagine the smartest minds on Earth, the mathematicians who define logic and truth, locked in a dispute with the companies building our AI future. This isn't science fiction; it's happening now. OpenAI is reportedly in a deepening conflict with leading mathematicians over how AI is solving complex math problems. Twenty-five Fields Medal winners have voiced serious concerns, arguing that AI labs are jeopardizing the integrity of mathematical research. We break down the escalating feud, what it means for attribution and plagiarism in AI-driven discoveries, and why your field might be next.  Why does this matter? Because the way AI learns and shares knowledge today could fundamentally alter how all scientific and creative breakthroughs are made tomorrow, impacting everything from academic credit to the very pace of human innovation. This is a critical moment for intellectual property and the future of discovery itself.\n#AI #OpenAI #Mathematics #TechCrunch #ArtificialIntelligence #FutureOfScience #TechNews\n\nSource: https://techcrunch.com/2026/09/11/openais-feud-with-mathematicians-is-only-escalating/\n\nChapters:\n0:00 Smartest Minds Logic\n0:59 Professor's AI Incident\n2:00 Maths Drive AI\n2:57 Value Of Creation\n3:53 Preview Of Issues\n\n▶ Watch next: https://youtube.com/watch?v=qH5cf_L8Zhc",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Mathematics",
+      "Fields Medal",
+      "Artificial Intelligence",
+      "TechCrunch",
+      "Tech News",
+      "Research",
+      "Plagiarism",
+      "Attribution",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/OpenAIs_Math_Feud_Fields_Medalists_vs_AI_Labs_20260912_154338_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260912_154704.mp4",
+      "output/shorts/short_2_20260912_154812.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260912_154523.jpg",
+    "youtube_url": "https://youtube.com/watch?v=zYJT3FqHV_I",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=kRi-h1nzuc0",
+      "https://youtube.com/watch?v=EyRaoHWsmto"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Math Masters vs. AI: Who Wins? #Shorts",
+        "description": "Top mathematicians face off against cutting-edge AI in a battle of pure intellect. Can algorithms truly conquer human genius? Prepare to be amazed!",
+        "instagram_caption": "🤯 Fields Medalists vs. AI Labs in an epic math showdown! Witness the ultimate intellectual clash. Follow @tooldojo! #Math #AI #ArtificialIntelligence #FieldsMedal #Science #Technology #Innovation #BrainGames #FutureOfAI #MachineLearning #DeepLearning #TechTok #Educational #Smart #Genius #Challenge #Competition #MathIsFun #AIvsHuman #MustWatch"
+      },
+      {
+        "title": "AI Cracks Math's Toughest Problems! #Shorts",
+        "description": "Is AI the new king of mathematics? See how advanced algorithms tackle challenges that baffled human minds for years. Mind-blowing results ahead!",
+        "instagram_caption": "🧠 Can AI outsmart math's brightest minds? This epic battle will blow your mind. Follow @tooldojo! #AIvsMath #MathChamps #OpenAI #ArtificialIntelligence #TechBattle #FieldsMedalists #MathGenius #Innovation #FutureTech #MachineLearning #DeepLearning #STEM #ScienceTok #AIRevolution #BrainPower #Logic #ProblemSolving #TechNews #AIExplained #NextLevel"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
