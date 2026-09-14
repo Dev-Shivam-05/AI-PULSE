@@ -3305,5 +3305,54 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-14T18:23:03.739206",
+    "title": "AI Agents: Rogue Revolution or Automation's Future?",
+    "description": "AI Agents: The Future of Automation or a Rogue Revolution? Explore the incredible potential of AI agents to revolutionize tasks and industries. Understand the critical concerns and hypothetical scenarios of uncontrolled agent behavior. This in-depth look reveals how these intelligent systems operate, the dangers they pose if unchecked, and what safeguards are being developed. Discover the fine line between powerful automation and an uncontrollable future. We break down the complex technology into understandable insights, preparing you for what's next in artificial intelligence.  #AI #Automation #FutureTech #AIagents #ArtificialIntelligence #TechExplained\n\nSubscribe to ToolDojo\n\nChapters:\n0:00 Proactive AI Assistants\n1:34 Autonomous Agent Challenges\n2:33 Learning Agent Complexity\n3:58 Beyond Superintelligence\n4:56 Bounded Autonomy Explained\n\n▶ Watch next: https://youtube.com/watch?v=qXWNVPeW0dw",
+    "tags": [
+      "AI Agents",
+      "Artificial Intelligence",
+      "Automation",
+      "Future of Work",
+      "AI Risks",
+      "AI Safety",
+      "Machine Learning",
+      "Tech Explained",
+      "Robotics",
+      "Intelligent Agents",
+      "ai",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Agents_Rogue_Revolution_or_Automations_Future_20260914_181349_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260914_181601.mp4",
+      "output/shorts/short_2_20260914_181709.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260914_181551.jpg",
+    "youtube_url": "https://youtube.com/watch?v=9zs6ol2ij1s",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=F-zRAqvGAwM",
+      "https://youtube.com/watch?v=h-ATd9rhVfQ"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Agents: Rogue or Revolution? #Shorts",
+        "description": "Explore the thrilling debate on AI agents! Are they the future of automation or a dangerous revolution? Discover the possibilities.",
+        "instagram_caption": "🤖 Will AI agents revolutionize our world or go rogue? The future of automation is here, and it's mind-blowing! Follow @tooldojo! #AI #ArtificialIntelligence #Automation #FutureTech #TechTrends #Innovation #AIAgents #Robotics #MachineLearning #DeepLearning #FutureOfWork #TechExplained #DigitalTransformation #AIRevolution #FutureIsNow #TechSavvy #AIExplained #IntelligentAutomation #FutureSolutions #TechDebate"
+      },
+      {
+        "title": "AI Agents: Your Automation's Future? #Shorts",
+        "description": "Dive into the incredible world of AI agents! Uncover how they're shaping the future of automation and what it means for you.",
+        "instagram_caption": "🤯 Are AI agents the key to unlocking automation's ultimate future? Get ready for a paradigm shift in how we work and live. Follow @tooldojo! #AI #ArtificialIntelligence #Automation #FutureTech #TechTrends #Innovation #AIAgents #Robotics #MachineLearning #DeepLearning #FutureOfWork #TechExplained #DigitalTransformation #AIRevolution #FutureIsNow #TechSavvy #AIExplained #IntelligentAutomation #FutureSolutions #TechDebate"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
