@@ -1,0 +1,145 @@
+{
+  "titles": [
+    "Salesforce Koa: AI Labs' New Nightmare",
+    "Nvidia Koa Model Shakes Up AI Giants",
+    "Enterprise AI Leap: Salesforce/Nvidia Koa"
+  ],
+  "title": "Salesforce Koa: AI Labs' New Nightmare",
+  "thumb_text": "FEWER TOKENS BURNED",
+  "description": "Forget the friendly AI hype. The biggest tech companies are in a secret war, and the stakes are higher than ever.  Salesforce and Nvidia just dropped a bombshell: Koa, a new reasoning model that could fundamentally reshape the AI landscape.  This isn't just another chatbot; it's a direct challenge to the established AI giants, built with enterprise needs at its core. We'll break down what Koa is, why it matters for your job, and how it's forcing AI labs to rethink their strategy.  Learn why open-weight, task-specific AI is the new frontier. #AI #Salesforce #Nvidia #EnterpriseAI #TechNews #FutureOfWork\n\nSubscribe to ToolDojo\n\nSource: https://techcrunch.com/2026/09/15/salesforce-and-nvidias-new-reasoning-model-is-everything-the-ai-labs-should-fear/\n\nChapters:\n0:00 AI Secret War\n1:14 Trained For Work\n2:00 AI Gateway System\n2:57 Before Koa\n3:47 Synthetic Data Brilliance\n\n▶ Watch next: https://youtube.com/watch?v=9zs6ol2ij1s",
+  "tags": [
+    "AI",
+    "Salesforce",
+    "Nvidia",
+    "Koa",
+    "Enterprise AI",
+    "Generative AI",
+    "Machine Learning",
+    "Tech News",
+    "AI Ethics",
+    "AI Strategy",
+    "artificial intelligence",
+    "ai news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "synthesis_claim": "The development of Koa signifies a critical shift from general-purpose AI models designed for hypothetical problems to specialized, cost-effective AI solutions tailored to immediate business needs, potentially democratizing advanced AI capabilities beyond the reach of large AI labs.",
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Forget the friendly AI hype. The biggest tech companies are in a secret war, and the stakes are higher than ever.  A new AI model, Koa, just dropped, and it's a wake-up call for the labs that have dominated the AI conversation.",
+      "visual_query": "abstract competition",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Salesforce and Nvidia are behind this new model, Koa. It's Salesforce's first dedicated reasoning model, built using Nvidia's open-weight Nemotron model as a foundation. They've specifically fine-tuned Koa to be exceptionally good at tasks related to sales, marketing, and customer support.",
+      "visual_query": "AI model diagram",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 3,
+      "narration": "This is crucial because it highlights a growing divide. The enterprise world's requirements for AI are diverging sharply from what the big, frontier AI labs are offering. Those labs often want businesses to upload vast amounts of proprietary data, code, and feedback, costing millions.",
+      "visual_query": "data center servers",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "But Koa presents a different path for Salesforce's enterprise clients. It offers an open-weight alternative, meaning more transparency and control compared to closed, proprietary models. This is a significant move away from the 'black box' approach.",
+      "visual_query": "open source code",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Crucially, Koa is trained for specific work tasks, not abstract, impossible math problems.  This focus means it's built to solve real-world business challenges. Think of it as a highly skilled specialist, not a generalist.",
+      "visual_query": "customer service desk",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "And here's a big one for security: Koa hasn't ingested any actual customer data from Salesforce. This means it inherently cannot leak sensitive customer information to other parties, a major concern for businesses.",
+      "visual_query": "secure data vault",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Beyond security, Koa is designed to be more cost-efficient. It uses fewer 'tokens'—the units of data AI models process—to accomplish the same tasks, which directly translates to reduced AI spending for businesses.",
+      "visual_query": "cost savings graph",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Furthermore, Koa can be automatically routed through an AI 'gateway' system. This means requests can be intelligently directed to the most appropriate AI model, optimizing performance and cost based on the specific need.",
+      "visual_query": "network routing diagram",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 9,
+      "narration": "This model integrates seamlessly, adhering to all of a customer’s data requirements and security protocols embedded within Salesforce. It’s built for the enterprise ecosystem from the ground up.",
+      "visual_query": "salesforce dashboard",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Koa will be an option within Salesforce's Agentforce platform, where customers build AI agents for routine tasks like answering customer queries or scheduling appointments.  This is about augmenting human workforces, not replacing them.",
+      "visual_query": "ai agent interface",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 11,
+      "narration": "Jayesh Govindarajan from Salesforce AI explained that while they've built many smaller, task-specific models, true reasoning capabilities were always outsourced to 'frontier model providers.' Until now.",
+      "visual_query": "engineer at computer",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Before Koa, complex, multi-step reasoning tasks would be sent to models like Claude or ChatGPT through Agentforce's AI gateway.  This meant relying on external, often closed, AI systems for critical functions.",
+      "visual_query": "ai gateway illustration",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 13,
+      "narration": "A key hurdle was the lack of a suitable pre-trained base model. Govindarajan highlighted that Nvidia's Nemotron was a game-changer, being a state-of-the-art, American-origin model with clear data provenance. Unlike some models, its training data origins are known.",
+      "visual_query": "chip manufacturing",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The 'post-training' process for Koa involved not using real customer data. Instead, Salesforce and Nvidia meticulously crafted synthetic data. They simulated customer service environments, complete with personas and even irate customers, and sales scenarios.",
+      "visual_query": "synthetic data generation",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 15,
+      "narration": "This synthetic data approach is brilliant. It allows Koa to gain deep expertise in sales and customer support without ever touching sensitive, real-world customer information, addressing a massive privacy and security blind spot.",
+      "visual_query": "simulated customer interaction",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 16,
+      "narration": "Nvidia’s VP, Kari Ann Briski, emphasized Nemotron's architecture for inference efficiency, leading to that token efficiency. This combination of sovereign AI, speed, and efficient reasoning is what she calls the 'trifecta' for enterprise AI.",
+      "visual_query": "gpu architecture",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 17,
+      "narration": "The implications are huge. This isn't just about better customer service bots; it's about enterprises gaining control over their AI infrastructure, reducing costs, and enhancing security. The established AI labs might need to seriously re-evaluate their strategies.",
+      "visual_query": "global business meeting",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 18,
+      "narration": "Koa is positioned to be better and cheaper than sending tasks to models like Claude or ChatGPT. This efficiency matters. It’s a concrete step towards more accessible, practical AI for businesses worldwide. What does this mean for your industry?",
+      "visual_query": "ai robot hand shaking",
+      "speaker": "a"
+    }
+  ],
+  "deliverable": null,
+  "filter_segment": false,
+  "source_url": "https://techcrunch.com/2026/09/15/salesforce-and-nvidias-new-reasoning-model-is-everything-the-ai-labs-should-fear/",
+  "format": "news",
+  "signal_title": "Salesforce and Nvidia’s new reasoning model is everything the AI labs should fear",
+  "hook_pattern": "number"
+}

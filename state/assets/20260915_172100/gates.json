@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The development of Koa signifies a critical shift from general-purpose AI models designed for hypothetical problems to specialized, cost-effective AI solutions tailored to immediate business needs, potentially democratizing advanced AI capabilities beyond the reach of large AI labs."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The opening sentence 'Forget the friendly AI hype. The biggest tech companies are in a secret war' is an editorialized framing that is not directly present in the source text. While the source implies"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

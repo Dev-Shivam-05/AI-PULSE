@@ -1,0 +1,180 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.28,Live,,0,0,0,{\k28}Forget {\k20}the {\k42}friendly {\k38}AI
+Dialogue: 0,0:00:01.28,0:00:02.90,Live,,0,0,0,{\k54}hype {\k46}{\k10}The {\k26}biggest {\k26}tech
+Dialogue: 0,0:00:02.90,0:00:03.90,Live,,0,0,0,{\k44}companies {\k34}are {\k12}in {\k10}a
+Dialogue: 0,0:00:03.90,0:00:05.18,Live,,0,0,0,{\k34}secret {\k34}war {\k50}and {\k10}the
+Dialogue: 0,0:00:05.18,0:00:06.24,Live,,0,0,0,{\k30}stakes {\k20}are {\k36}higher {\k20}than
+Dialogue: 0,0:00:06.24,0:00:06.66,Live,,0,0,0,{\k32}ever
+Dialogue: 0,0:00:07.26,0:00:08.54,Live,,0,0,0,{\k12}A {\k24}new {\k40}AI {\k42}model
+Dialogue: 0,0:00:08.66,0:00:10.42,Live,,0,0,0,{\k28}Koa {\k24}{\k18}just {\k38}dropped {\k48}{\k20}and
+Dialogue: 0,0:00:10.42,0:00:11.02,Live,,0,0,0,{\k18}it's {\k4}a {\k18}wake {\k20}up
+Dialogue: 0,0:00:11.02,0:00:11.92,Live,,0,0,0,{\k24}call {\k22}for {\k12}the {\k32}labs
+Dialogue: 0,0:00:11.92,0:00:13.14,Live,,0,0,0,{\k28}that {\k12}have {\k50}dominated {\k32}the
+Dialogue: 0,0:00:13.14,0:00:15.46,Live,,0,0,0,{\k38}AI {\k76}conversation {\k48}{\k40}Sales {\k30}force
+Dialogue: 0,0:00:15.46,0:00:16.92,Live,,0,0,0,{\k32}and {\k60}Nvidia {\k20}are {\k34}behind
+Dialogue: 0,0:00:16.92,0:00:18.44,Live,,0,0,0,{\k30}this {\k18}new {\k36}model {\k22}{\k36}Koa
+Dialogue: 0,0:00:18.78,0:00:20.30,Live,,0,0,0,{\k38}It's {\k24}sales {\k58}force's {\k32}first
+Dialogue: 0,0:00:20.30,0:00:22.56,Live,,0,0,0,{\k40}dedicated {\k68}reasoning {\k54}model {\k44}{\k20}built
+Dialogue: 0,0:00:22.56,0:00:24.56,Live,,0,0,0,{\k42}using {\k96}Nvidia's {\k24}open {\k38}weight
+Dialogue: 0,0:00:24.56,0:00:26.04,Live,,0,0,0,{\k54}nematron {\k54}model {\k30}as {\k10}a
+Dialogue: 0,0:00:26.04,0:00:28.64,Live,,0,0,0,{\k66}foundation {\k60}{\k38}They've {\k54}specifically {\k42}fine
+Dialogue: 0,0:00:28.64,0:00:29.84,Live,,0,0,0,{\k46}tuned {\k40}COA {\k18}to {\k16}be
+Dialogue: 0,0:00:29.84,0:00:31.36,Live,,0,0,0,{\k56}exceptionally {\k38}good {\k18}at {\k40}tasks
+Dialogue: 0,0:00:31.36,0:00:33.64,Live,,0,0,0,{\k46}related {\k30}to {\k36}sales {\k68}{\k38}marketing
+Dialogue: 0,0:00:33.92,0:00:35.58,Live,,0,0,0,{\k8}and {\k46}customer {\k52}support {\k24}{\k36}This
+Dialogue: 0,0:00:35.58,0:00:36.68,Live,,0,0,0,{\k14}is {\k40}crucial {\k42}because {\k14}it
+Dialogue: 0,0:00:36.68,0:00:38.04,Live,,0,0,0,{\k36}highlights {\k20}a {\k28}growing {\k42}divide
+Dialogue: 0,0:00:38.66,0:00:40.14,Live,,0,0,0,{\k10}The {\k40}enterprise {\k52}world's {\k46}requirements
+Dialogue: 0,0:00:40.14,0:00:41.78,Live,,0,0,0,{\k32}for {\k28}AI {\k46}are {\k58}diverging
+Dialogue: 0,0:00:41.78,0:00:42.92,Live,,0,0,0,{\k58}sharply {\k34}from {\k10}what {\k12}the
+Dialogue: 0,0:00:42.92,0:00:45.02,Live,,0,0,0,{\k38}big {\k20}{\k58}frontier {\k42}AI {\k52}labs
+Dialogue: 0,0:00:45.02,0:00:46.84,Live,,0,0,0,{\k16}are {\k42}offering {\k66}{\k26}Those {\k32}labs
+Dialogue: 0,0:00:46.84,0:00:48.38,Live,,0,0,0,{\k52}often {\k24}want {\k50}businesses {\k28}to
+Dialogue: 0,0:00:48.38,0:00:49.78,Live,,0,0,0,{\k32}upload {\k44}vast {\k30}amounts {\k34}of
+Dialogue: 0,0:00:49.78,0:00:51.84,Live,,0,0,0,{\k40}proprietary {\k58}data {\k50}{\k22}code {\k28}{\k8}and
+Dialogue: 0,0:00:51.84,0:00:54.28,Live,,0,0,0,{\k36}feedback {\k66}{\k28}costing {\k38}millions {\k40}{\k36}But
+Dialogue: 0,0:00:54.28,0:00:55.46,Live,,0,0,0,{\k36}Koa {\k36}presents {\k18}a {\k28}different
+Dialogue: 0,0:00:55.46,0:00:56.92,Live,,0,0,0,{\k34}path {\k32}for {\k30}sales {\k50}forces
+Dialogue: 0,0:00:56.92,0:00:59.18,Live,,0,0,0,{\k56}enterprise {\k72}clients {\k16}{\k54}It {\k28}offers
+Dialogue: 0,0:00:59.18,0:01:01.12,Live,,0,0,0,{\k28}an {\k42}open {\k36}weight {\k78}alternative
+Dialogue: 0,0:01:01.44,0:01:03.22,Live,,0,0,0,{\k34}meaning {\k30}more {\k72}transparency {\k42}and
+Dialogue: 0,0:01:03.22,0:01:05.06,Live,,0,0,0,{\k46}control {\k46}compared {\k28}to {\k64}closed
+Dialogue: 0,0:01:05.06,0:01:07.76,Live,,0,0,0,{\k82}proprietary {\k74}models {\k68}{\k28}This {\k18}is
+Dialogue: 0,0:01:07.76,0:01:09.28,Live,,0,0,0,{\k16}a {\k56}significant {\k34}move {\k46}away
+Dialogue: 0,0:01:09.28,0:01:10.20,Live,,0,0,0,{\k26}from {\k14}the {\k24}black {\k28}box
+Dialogue: 0,0:01:10.20,0:01:12.52,Live,,0,0,0,{\k76}approach {\k40}{\k40}Crucially {\k34}{\k24}Koa {\k18}is
+Dialogue: 0,0:01:12.52,0:01:13.82,Live,,0,0,0,{\k34}trained {\k24}for {\k44}specific {\k28}work
+Dialogue: 0,0:01:13.82,0:01:16.34,Live,,0,0,0,{\k48}tasks {\k38}{\k24}not {\k54}abstract {\k36}{\k52}impossible
+Dialogue: 0,0:01:16.34,0:01:18.40,Live,,0,0,0,{\k36}math {\k46}problems {\k62}{\k26}This {\k36}focus
+Dialogue: 0,0:01:18.40,0:01:19.46,Live,,0,0,0,{\k34}means {\k34}it's {\k18}built {\k20}to
+Dialogue: 0,0:01:19.46,0:01:20.94,Live,,0,0,0,{\k38}solve {\k40}real {\k28}world {\k42}business
+Dialogue: 0,0:01:20.94,0:01:22.76,Live,,0,0,0,{\k62}challenges {\k94}Think {\k14}of {\k12}it
+Dialogue: 0,0:01:22.76,0:01:23.98,Live,,0,0,0,{\k24}as {\k14}a {\k36}highly {\k48}skilled
+Dialogue: 0,0:01:23.98,0:01:26.14,Live,,0,0,0,{\k62}specialist {\k36}{\k22}not {\k14}a {\k72}generalist
+Dialogue: 0,0:01:26.48,0:01:27.20,Live,,0,0,0,{\k12}And {\k34}here's {\k6}a {\k20}big
+Dialogue: 0,0:01:27.20,0:01:29.24,Live,,0,0,0,{\k24}one {\k20}for {\k64}security {\k68}{\k28}Koa
+Dialogue: 0,0:01:29.24,0:01:30.88,Live,,0,0,0,{\k34}hasn't {\k54}ingested {\k28}any {\k48}actual
+Dialogue: 0,0:01:30.88,0:01:32.38,Live,,0,0,0,{\k54}customer {\k36}data {\k22}from {\k38}sales
+Dialogue: 0,0:01:32.38,0:01:34.20,Live,,0,0,0,{\k38}force {\k62}{\k30}This {\k28}means {\k24}it
+Dialogue: 0,0:01:34.20,0:01:36.22,Live,,0,0,0,{\k68}inherently {\k44}cannot {\k36}leak {\k54}sensitive
+Dialogue: 0,0:01:36.22,0:01:38.02,Live,,0,0,0,{\k64}customer {\k54}information {\k36}to {\k26}other
+Dialogue: 0,0:01:38.02,0:01:40.02,Live,,0,0,0,{\k58}parties {\k38}{\k22}a {\k32}major {\k50}concern
+Dialogue: 0,0:01:40.02,0:01:42.48,Live,,0,0,0,{\k36}for {\k50}businesses {\k58}{\k28}Beyond {\k64}security
+Dialogue: 0,0:01:42.78,0:01:43.92,Live,,0,0,0,{\k32}Koa {\k20}is {\k34}designed {\k28}to
+Dialogue: 0,0:01:43.92,0:01:45.16,Live,,0,0,0,{\k12}be {\k22}more {\k42}cost {\k38}efficient
+Dialogue: 0,0:01:45.66,0:01:47.20,Live,,0,0,0,{\k22}It {\k30}uses {\k44}fewer {\k48}tokens
+Dialogue: 0,0:01:47.74,0:01:48.68,Live,,0,0,0,{\k10}the {\k28}units {\k24}of {\k32}data
+Dialogue: 0,0:01:48.68,0:01:50.76,Live,,0,0,0,{\k38}AI {\k48}models {\k58}process {\k64}to
+Dialogue: 0,0:01:50.76,0:01:52.38,Live,,0,0,0,{\k46}accomplish {\k26}the {\k32}same {\k48}tasks
+Dialogue: 0,0:01:52.62,0:01:54.18,Live,,0,0,0,{\k20}which {\k54}directly {\k54}translates {\k28}to
+Dialogue: 0,0:01:54.18,0:01:55.76,Live,,0,0,0,{\k48}reduced {\k28}AI {\k50}spending {\k32}for
+Dialogue: 0,0:01:55.76,0:01:58.26,Live,,0,0,0,{\k42}businesses {\k54}{\k68}Furthermore {\k50}{\k18}Koa {\k18}can
+Dialogue: 0,0:01:58.26,0:01:59.86,Live,,0,0,0,{\k10}be {\k60}automatically {\k64}routed {\k26}through
+Dialogue: 0,0:01:59.86,0:02:01.64,Live,,0,0,0,{\k20}an {\k40}AI {\k50}gateway {\k58}system
+Dialogue: 0,0:02:02.14,0:02:03.52,Live,,0,0,0,{\k26}This {\k20}means {\k52}requests {\k40}can
+Dialogue: 0,0:02:03.52,0:02:05.20,Live,,0,0,0,{\k18}be {\k82}intelligently {\k46}directed {\k22}to
+Dialogue: 0,0:02:05.20,0:02:06.62,Live,,0,0,0,{\k10}the {\k24}most {\k70}appropriate {\k38}AI
+Dialogue: 0,0:02:06.62,0:02:09.42,Live,,0,0,0,{\k72}model {\k40}{\k66}optimizing {\k72}performance {\k30}and
+Dialogue: 0,0:02:09.42,0:02:10.52,Live,,0,0,0,{\k32}cost {\k44}based {\k22}on {\k12}the
+Dialogue: 0,0:02:10.52,0:02:12.30,Live,,0,0,0,{\k40}specific {\k40}need {\k44}{\k20}This {\k34}model
+Dialogue: 0,0:02:12.30,0:02:14.72,Live,,0,0,0,{\k68}integrates {\k62}seamlessly {\k60}{\k40}adhering {\k12}to
+Dialogue: 0,0:02:14.72,0:02:15.78,Live,,0,0,0,{\k24}all {\k16}of {\k4}a {\k62}customer’s
+Dialogue: 0,0:02:15.78,0:02:17.50,Live,,0,0,0,{\k20}data {\k62}requirements {\k44}and {\k46}security
+Dialogue: 0,0:02:17.50,0:02:19.76,Live,,0,0,0,{\k58}protocols {\k80}embedded {\k38}within {\k40}Salesforce
+Dialogue: 0,0:02:20.14,0:02:21.38,Live,,0,0,0,{\k68}It’s {\k18}built {\k24}for {\k14}the
+Dialogue: 0,0:02:21.38,0:02:23.28,Live,,0,0,0,{\k50}enterprise {\k80}ecosystem {\k48}from {\k12}the
+Dialogue: 0,0:02:23.28,0:02:24.74,Live,,0,0,0,{\k24}ground {\k38}up {\k34}{\k36}Koa {\k14}will
+Dialogue: 0,0:02:24.74,0:02:25.74,Live,,0,0,0,{\k16}be {\k14}an {\k40}option {\k30}within
+Dialogue: 0,0:02:25.74,0:02:28.18,Live,,0,0,0,{\k100}Salesforce's {\k32}agent {\k30}force {\k72}platform
+Dialogue: 0,0:02:28.38,0:02:29.96,Live,,0,0,0,{\k24}where {\k48}customers {\k52}build {\k34}AI
+Dialogue: 0,0:02:29.96,0:02:31.70,Live,,0,0,0,{\k64}agents {\k24}for {\k38}routine {\k48}tasks
+Dialogue: 0,0:02:31.70,0:02:33.96,Live,,0,0,0,{\k54}like {\k70}answering {\k56}customer {\k46}queries
+Dialogue: 0,0:02:33.96,0:02:36.66,Live,,0,0,0,{\k42}or {\k54}scheduling {\k66}appointments {\k70}{\k38}This
+Dialogue: 0,0:02:36.66,0:02:38.12,Live,,0,0,0,{\k18}is {\k24}about {\k74}augmenting {\k30}human
+Dialogue: 0,0:02:38.12,0:02:40.58,Live,,0,0,0,{\k88}workforces {\k32}{\k24}not {\k56}replacing {\k36}them
+Dialogue: 0,0:02:40.86,0:02:41.86,Live,,0,0,0,{\k28}J {\k16}S {\k10}{\k34}Gov {\k12}and
+Dialogue: 0,0:02:41.86,0:02:43.58,Live,,0,0,0,{\k42}Derejian {\k16}from {\k48}Salesforce {\k42}{\k24}AI
+Dialogue: 0,0:02:43.58,0:02:45.44,Live,,0,0,0,{\k84}explained {\k30}that {\k48}while {\k24}they've
+Dialogue: 0,0:02:45.44,0:02:46.92,Live,,0,0,0,{\k18}built {\k28}many {\k62}smaller {\k40}task
+Dialogue: 0,0:02:46.92,0:02:49.02,Live,,0,0,0,{\k56}specific {\k40}models {\k66}{\k12}true {\k36}reasoning
+Dialogue: 0,0:02:49.02,0:02:51.00,Live,,0,0,0,{\k60}capabilities {\k36}were {\k40}always {\k62}outsourced
+Dialogue: 0,0:02:51.00,0:02:52.50,Live,,0,0,0,{\k14}to {\k42}frontier {\k36}model {\k48}providers
+Dialogue: 0,0:02:52.96,0:02:55.04,Live,,0,0,0,{\k42}Until {\k34}now {\k50}{\k22}Before {\k50}Koa
+Dialogue: 0,0:02:55.34,0:02:57.26,Live,,0,0,0,{\k48}complex {\k66}multi {\k36}step {\k42}reasoning
+Dialogue: 0,0:02:57.26,0:02:58.38,Live,,0,0,0,{\k40}tasks {\k40}would {\k14}be {\k18}sent
+Dialogue: 0,0:02:58.38,0:02:59.94,Live,,0,0,0,{\k18}to {\k38}models {\k32}like {\k68}Claude
+Dialogue: 0,0:02:59.94,0:03:01.86,Live,,0,0,0,{\k14}or {\k46}Chat {\k90}GPT {\k42}through
+Dialogue: 0,0:03:01.86,0:03:04.08,Live,,0,0,0,{\k38}agent {\k60}forces {\k46}AI {\k68}gateway
+Dialogue: 0,0:03:04.46,0:03:06.04,Live,,0,0,0,{\k54}This {\k22}meant {\k44}relying {\k38}on
+Dialogue: 0,0:03:06.04,0:03:08.50,Live,,0,0,0,{\k60}external {\k26}{\k32}often {\k66}closed {\k32}{\k30}AI
+Dialogue: 0,0:03:08.50,0:03:10.46,Live,,0,0,0,{\k70}systems {\k30}for {\k34}critical {\k52}functions
+Dialogue: 0,0:03:10.90,0:03:11.92,Live,,0,0,0,{\k18}A {\k18}key {\k36}hurdle {\k30}was
+Dialogue: 0,0:03:11.92,0:03:12.64,Live,,0,0,0,{\k16}the {\k26}lack {\k20}of {\k10}a
+Dialogue: 0,0:03:12.64,0:03:14.10,Live,,0,0,0,{\k38}suitable {\k30}pre {\k52}trained {\k26}base
+Dialogue: 0,0:03:14.10,0:03:14.56,Live,,0,0,0,{\k36}model
+Dialogue: 0,0:03:15.20,0:03:16.40,Live,,0,0,0,{\k24}Gov {\k12}and {\k42}Derejian {\k42}highlighted
+Dialogue: 0,0:03:16.40,0:03:18.28,Live,,0,0,0,{\k46}that {\k62}Nvidia's {\k48}Nemotron {\k32}was
+Dialogue: 0,0:03:18.28,0:03:19.84,Live,,0,0,0,{\k12}a {\k22}game {\k56}changer {\k42}{\k24}being
+Dialogue: 0,0:03:19.84,0:03:20.66,Live,,0,0,0,{\k16}a {\k24}state {\k24}of {\k18}the
+Dialogue: 0,0:03:20.66,0:03:22.30,Live,,0,0,0,{\k22}art {\k66}American {\k40}origin {\k36}model
+Dialogue: 0,0:03:22.30,0:03:23.94,Live,,0,0,0,{\k32}with {\k28}clear {\k32}data {\k62}provenance
+Dialogue: 0,0:03:24.42,0:03:25.86,Live,,0,0,0,{\k28}Unlike {\k26}some {\k34}models {\k48}{\k8}its
+Dialogue: 0,0:03:25.86,0:03:27.32,Live,,0,0,0,{\k38}training {\k40}data {\k44}origins {\k24}are
+Dialogue: 0,0:03:27.32,0:03:28.84,Live,,0,0,0,{\k26}known {\k38}{\k20}The {\k32}post {\k36}training
+Dialogue: 0,0:03:28.84,0:03:30.42,Live,,0,0,0,{\k54}process {\k26}for {\k42}Koa {\k36}involved
+Dialogue: 0,0:03:30.42,0:03:32.30,Live,,0,0,0,{\k52}not {\k42}using {\k36}real {\k58}customer
+Dialogue: 0,0:03:32.30,0:03:35.30,Live,,0,0,0,{\k44}data {\k56}{\k58}Instead {\k60}{\k30}Salesforce {\k52}and
+Dialogue: 0,0:03:35.30,0:03:37.94,Live,,0,0,0,{\k50}Nvidia {\k104}meticulously {\k56}crafted {\k54}synthetic
+Dialogue: 0,0:03:37.94,0:03:40.38,Live,,0,0,0,{\k52}data {\k58}{\k26}They {\k56}simulated {\k52}customer
+Dialogue: 0,0:03:40.38,0:03:42.80,Live,,0,0,0,{\k52}service {\k72}environments {\k86}complete {\k32}with
+Dialogue: 0,0:03:42.80,0:03:44.68,Live,,0,0,0,{\k68}personas {\k34}and {\k32}even {\k54}irate
+Dialogue: 0,0:03:44.68,0:03:47.22,Live,,0,0,0,{\k58}customers {\k70}and {\k46}sales {\k70}scenarios
+Dialogue: 0,0:03:47.72,0:03:49.22,Live,,0,0,0,{\k26}This {\k44}synthetic {\k42}data {\k38}approach
+Dialogue: 0,0:03:49.22,0:03:50.08,Live,,0,0,0,{\k36}is {\k40}brilliant
+Dialogue: 0,0:03:50.70,0:03:51.68,Live,,0,0,0,{\k10}It {\k26}allows {\k52}Koa {\k10}to
+Dialogue: 0,0:03:51.68,0:03:53.14,Live,,0,0,0,{\k26}gain {\k32}deep {\k46}expertise {\k42}in
+Dialogue: 0,0:03:53.14,0:03:54.96,Live,,0,0,0,{\k34}sales {\k48}and {\k44}customer {\k56}support
+Dialogue: 0,0:03:54.96,0:03:57.00,Live,,0,0,0,{\k56}without {\k34}ever {\k38}touching {\k66}sensitive
+Dialogue: 0,0:03:57.36,0:03:59.10,Live,,0,0,0,{\k16}real {\k34}world {\k50}customer {\k64}information
+Dialogue: 0,0:03:59.60,0:04:01.12,Live,,0,0,0,{\k34}addressing {\k20}a {\k38}massive {\k60}privacy
+Dialogue: 0,0:04:01.12,0:04:02.88,Live,,0,0,0,{\k30}and {\k54}security {\k32}blind {\k50}spot
+Dialogue: 0,0:04:03.26,0:04:05.70,Live,,0,0,0,{\k74}Nvidia’s {\k54}VP {\k54}{\k28}Kari {\k34}Ann
+Dialogue: 0,0:04:05.70,0:04:08.68,Live,,0,0,0,{\k44}Briski {\k124}emphasized {\k90}Nemotron's {\k40}architecture
+Dialogue: 0,0:04:08.68,0:04:10.98,Live,,0,0,0,{\k40}for {\k44}inference {\k74}efficiency {\k72}leading
+Dialogue: 0,0:04:10.98,0:04:12.64,Live,,0,0,0,{\k28}to {\k18}that {\k40}token {\k70}efficiency
+Dialogue: 0,0:04:13.00,0:04:15.10,Live,,0,0,0,{\k56}This {\k54}combination {\k46}of {\k54}sovereign
+Dialogue: 0,0:04:15.10,0:04:15.64,Live,,0,0,0,{\k44}AI
+Dialogue: 0,0:04:16.26,0:04:18.02,Live,,0,0,0,{\k24}speed {\k54}and {\k40}efficient {\k58}reasoning
+Dialogue: 0,0:04:18.02,0:04:19.16,Live,,0,0,0,{\k56}is {\k20}what {\k14}she {\k24}calls
+Dialogue: 0,0:04:19.16,0:04:20.88,Live,,0,0,0,{\k20}the {\k66}trifecta {\k18}for {\k68}enterprise
+Dialogue: 0,0:04:20.88,0:04:23.18,Live,,0,0,0,{\k44}AI {\k64}{\k24}The {\k62}implications {\k36}are
+Dialogue: 0,0:04:23.18,0:04:24.80,Live,,0,0,0,{\k40}huge {\k66}{\k14}This {\k28}isn't {\k14}just
+Dialogue: 0,0:04:24.80,0:04:26.42,Live,,0,0,0,{\k30}about {\k36}better {\k54}customer {\k42}service
+Dialogue: 0,0:04:26.42,0:04:28.34,Live,,0,0,0,{\k34}bots {\k62}{\k12}it's {\k16}about {\k68}enterprises
+Dialogue: 0,0:04:28.34,0:04:29.80,Live,,0,0,0,{\k40}gaining {\k50}control {\k40}over {\k16}their
+Dialogue: 0,0:04:29.80,0:04:32.24,Live,,0,0,0,{\k34}AI {\k80}infrastructure {\k52}{\k26}reducing {\k52}costs
+Dialogue: 0,0:04:32.24,0:04:34.72,Live,,0,0,0,{\k52}and {\k46}enhancing {\k64}security {\k66}{\k20}The
+Dialogue: 0,0:04:34.72,0:04:36.52,Live,,0,0,0,{\k52}established {\k38}AI {\k54}labs {\k36}might
+Dialogue: 0,0:04:36.52,0:04:37.80,Live,,0,0,0,{\k22}need {\k16}to {\k44}seriously {\k46}re
+Dialogue: 0,0:04:37.80,0:04:39.88,Live,,0,0,0,{\k48}evaluate {\k18}their {\k62}strategies {\k80}Koa
+Dialogue: 0,0:04:39.88,0:04:40.86,Live,,0,0,0,{\k20}is {\k44}positioned {\k24}to {\k10}be
+Dialogue: 0,0:04:40.86,0:04:42.08,Live,,0,0,0,{\k30}better {\k20}and {\k34}cheaper {\k38}than
+Dialogue: 0,0:04:42.08,0:04:43.38,Live,,0,0,0,{\k36}sending {\k30}tasks {\k34}to {\k30}models
+Dialogue: 0,0:04:43.38,0:04:44.84,Live,,0,0,0,{\k32}like {\k60}Claude {\k22}or {\k32}Chat
+Dialogue: 0,0:04:44.84,0:04:47.48,Live,,0,0,0,{\k68}GPT {\k66}{\k26}This {\k54}efficiency {\k40}matters
+Dialogue: 0,0:04:47.96,0:04:49.08,Live,,0,0,0,{\k28}It’s {\k6}a {\k42}concrete {\k36}step
+Dialogue: 0,0:04:49.08,0:04:51.38,Live,,0,0,0,{\k52}towards {\k34}more {\k64}accessible {\k46}{\k34}practical
+Dialogue: 0,0:04:51.38,0:04:53.40,Live,,0,0,0,{\k48}AI {\k40}for {\k40}businesses {\k64}worldwide
+Dialogue: 0,0:04:53.78,0:04:54.70,Live,,0,0,0,{\k40}What {\k14}does {\k18}this {\k20}mean
+Dialogue: 0,0:04:54.70,0:04:55.64,Live,,0,0,0,{\k24}for {\k14}your {\k46}industry
