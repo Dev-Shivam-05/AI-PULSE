@@ -1,0 +1,219 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.08,Live,,0,0,0,{\k38}Imagine {\k20}a {\k26}world {\k24}where
+Dialogue: 0,0:00:01.08,0:00:02.98,Live,,0,0,0,{\k38}complex {\k62}problems {\k30}solve {\k50}themselves
+Dialogue: 0,0:00:03.50,0:00:04.56,Live,,0,0,0,{\k22}That {\k28}world {\k24}is {\k22}here
+Dialogue: 0,0:00:05.10,0:00:06.70,Live,,0,0,0,{\k44}Artificial {\k58}Intelligence {\k42}isn't {\k16}just
+Dialogue: 0,0:00:06.70,0:00:07.98,Live,,0,0,0,{\k16}a {\k44}buzzword {\k46}{\k18}it's {\k4}a
+Dialogue: 0,0:00:07.98,0:00:10.06,Live,,0,0,0,{\k36}fundamental {\k54}shift {\k72}impacting {\k46}five
+Dialogue: 0,0:00:10.06,0:00:11.74,Live,,0,0,0,{\k48}major {\k54}industries {\k56}and {\k10}the
+Dialogue: 0,0:00:11.74,0:00:13.36,Live,,0,0,0,{\k56}strangest {\k26}part {\k34}comes {\k36}later
+Dialogue: 0,0:00:13.86,0:00:14.46,Live,,0,0,0,{\k18}By {\k12}the {\k18}end {\k12}of
+Dialogue: 0,0:00:14.46,0:00:16.06,Live,,0,0,0,{\k26}this {\k24}{\k14}you'll {\k44}understand {\k52}exactly
+Dialogue: 0,0:00:16.06,0:00:17.50,Live,,0,0,0,{\k40}why {\k30}AI {\k48}is {\k26}such
+Dialogue: 0,0:00:17.50,0:00:18.84,Live,,0,0,0,{\k8}a {\k18}big {\k24}deal {\k60}{\k24}Think
+Dialogue: 0,0:00:18.84,0:00:19.96,Live,,0,0,0,{\k16}of {\k36}AI {\k48}like {\k12}a
+Dialogue: 0,0:00:19.96,0:00:21.70,Live,,0,0,0,{\k32}super {\k36}powered {\k46}assistant {\k50}{\k10}It
+Dialogue: 0,0:00:21.70,0:00:22.92,Live,,0,0,0,{\k14}can {\k36}process {\k42}vast {\k30}amounts
+Dialogue: 0,0:00:22.92,0:00:24.96,Live,,0,0,0,{\k24}of {\k52}information {\k52}{\k24}spot {\k42}patterns
+Dialogue: 0,0:00:25.10,0:00:26.36,Live,,0,0,0,{\k20}humans {\k30}miss {\k52}{\k6}and {\k18}make
+Dialogue: 0,0:00:26.36,0:00:28.20,Live,,0,0,0,{\k44}predictions {\k36}with {\k48}incredible {\k46}speed
+Dialogue: 0,0:00:28.64,0:00:30.40,Live,,0,0,0,{\k40}This {\k32}isn't {\k36}magic {\k54}{\k14}it's
+Dialogue: 0,0:00:30.40,0:00:32.20,Live,,0,0,0,{\k40}advanced {\k74}computation {\k42}applied {\k24}to
+Dialogue: 0,0:00:32.20,0:00:33.42,Live,,0,0,0,{\k22}real {\k32}world {\k58}challenges
+Dialogue: 0,0:00:34.16,0:00:36.62,Live,,0,0,0,{\k34}Consider {\k52}healthcare {\k68}{\k24}AI {\k68}algorithms
+Dialogue: 0,0:00:36.62,0:00:38.50,Live,,0,0,0,{\k54}analyze {\k50}medical {\k44}images {\k40}like
+Dialogue: 0,0:00:38.50,0:00:40.54,Live,,0,0,0,{\k34}X {\k22}rays {\k40}{\k26}or {\k82}MRIs
+Dialogue: 0,0:00:40.54,0:00:41.98,Live,,0,0,0,{\k30}to {\k24}detect {\k58}diseases {\k32}like
+Dialogue: 0,0:00:41.98,0:00:43.42,Live,,0,0,0,{\k44}cancer {\k48}earlier {\k32}and {\k20}more
+Dialogue: 0,0:00:43.42,0:00:45.26,Live,,0,0,0,{\k54}accurately {\k46}{\k12}This {\k22}means {\k50}faster
+Dialogue: 0,0:00:45.26,0:00:47.08,Live,,0,0,0,{\k52}diagnoses {\k64}and {\k28}better {\k38}patient
+Dialogue: 0,0:00:47.08,0:00:47.60,Live,,0,0,0,{\k42}outcomes
+Dialogue: 0,0:00:48.44,0:00:49.84,Live,,0,0,0,{\k22}AI {\k52}models {\k40}trained {\k26}on
+Dialogue: 0,0:00:49.84,0:00:51.62,Live,,0,0,0,{\k42}thousands {\k24}of {\k88}mammograms {\k24}can
+Dialogue: 0,0:00:51.62,0:00:53.36,Live,,0,0,0,{\k56}identify {\k52}subtle {\k40}signs {\k26}of
+Dialogue: 0,0:00:53.36,0:00:54.72,Live,,0,0,0,{\k22}breast {\k52}cancer {\k36}missed {\k26}by
+Dialogue: 0,0:00:54.72,0:00:56.08,Live,,0,0,0,{\k12}the {\k26}human {\k38}eye {\k60}leading
+Dialogue: 0,0:00:56.08,0:00:57.68,Live,,0,0,0,{\k26}to {\k32}earlier {\k62}intervention {\k40}and
+Dialogue: 0,0:00:57.68,0:01:00.02,Live,,0,0,0,{\k42}improved {\k52}survival {\k52}rates {\k52}{\k36}Drug
+Dialogue: 0,0:01:00.02,0:01:02.60,Live,,0,0,0,{\k62}discovery {\k36}is {\k98}revolutionized {\k30}{\k32}Instead
+Dialogue: 0,0:01:02.60,0:01:03.60,Live,,0,0,0,{\k20}of {\k20}years {\k22}of {\k38}trial
+Dialogue: 0,0:01:03.60,0:01:05.42,Live,,0,0,0,{\k22}and {\k30}error {\k60}{\k14}AI {\k56}sifts
+Dialogue: 0,0:01:05.42,0:01:06.86,Live,,0,0,0,{\k28}through {\k38}millions {\k30}of {\k48}molecular
+Dialogue: 0,0:01:06.86,0:01:09.82,Live,,0,0,0,{\k66}compounds {\k48}{\k56}identifying {\k70}promising {\k56}candidates
+Dialogue: 0,0:01:09.82,0:01:11.22,Live,,0,0,0,{\k32}for {\k16}new {\k40}medicines {\k52}in
+Dialogue: 0,0:01:11.22,0:01:11.92,Live,,0,0,0,{\k6}a {\k34}fraction {\k18}of {\k12}the
+Dialogue: 0,0:01:11.92,0:01:12.32,Live,,0,0,0,{\k30}time
+Dialogue: 0,0:01:12.94,0:01:14.38,Live,,0,0,0,{\k42}Companies {\k38}use {\k34}AI {\k30}to
+Dialogue: 0,0:01:14.38,0:01:15.78,Live,,0,0,0,{\k30}predict {\k32}how {\k46}molecules {\k32}will
+Dialogue: 0,0:01:15.78,0:01:17.94,Live,,0,0,0,{\k44}interact {\k32}with {\k44}biological {\k86}targets
+Dialogue: 0,0:01:18.32,0:01:19.76,Live,,0,0,0,{\k44}drastically {\k52}reducing {\k22}the {\k26}time
+Dialogue: 0,0:01:19.76,0:01:21.00,Live,,0,0,0,{\k54}and {\k28}cost {\k18}of {\k24}bringing
+Dialogue: 0,0:01:21.00,0:01:22.16,Live,,0,0,0,{\k26}new {\k28}drugs {\k24}to {\k28}market
+Dialogue: 0,0:01:22.46,0:01:23.90,Live,,0,0,0,{\k10}The {\k34}finance {\k62}industry {\k38}relies
+Dialogue: 0,0:01:23.90,0:01:25.48,Live,,0,0,0,{\k50}heavily {\k30}on {\k44}AI {\k34}for
+Dialogue: 0,0:01:25.48,0:01:26.40,Live,,0,0,0,{\k30}fraud {\k52}detection
+Dialogue: 0,0:01:27.04,0:01:28.62,Live,,0,0,0,{\k12}By {\k40}monitoring {\k66}transactions {\k40}in
+Dialogue: 0,0:01:28.62,0:01:30.78,Live,,0,0,0,{\k22}real {\k40}time {\k52}{\k18}AI {\k84}identifies
+Dialogue: 0,0:01:30.78,0:01:33.46,Live,,0,0,0,{\k54}suspicious {\k72}activity {\k58}{\k22}saving {\k62}individuals
+Dialogue: 0,0:01:33.46,0:01:35.14,Live,,0,0,0,{\k30}and {\k52}institutions {\k56}billions {\k30}of
+Dialogue: 0,0:01:35.14,0:01:36.10,Live,,0,0,0,{\k34}dollars {\k52}annually
+Dialogue: 0,0:01:36.76,0:01:38.40,Live,,0,0,0,{\k18}It's {\k6}a {\k60}constant {\k34}{\k46}silent
+Dialogue: 0,0:01:38.40,0:01:40.16,Live,,0,0,0,{\k46}guardian {\k46}{\k16}Credit {\k24}card {\k44}companies
+Dialogue: 0,0:01:40.16,0:01:41.58,Live,,0,0,0,{\k40}use {\k40}AI {\k30}to {\k32}flag
+Dialogue: 0,0:01:41.58,0:01:44.00,Live,,0,0,0,{\k38}unusual {\k60}spending {\k42}patterns {\k62}{\k40}preventing
+Dialogue: 0,0:01:44.00,0:01:45.92,Live,,0,0,0,{\k72}fraudulent {\k46}charges {\k54}before {\k20}they
+Dialogue: 0,0:01:45.92,0:01:46.96,Live,,0,0,0,{\k34}impact {\k24}your {\k36}account
+Dialogue: 0,0:01:47.58,0:01:50.06,Live,,0,0,0,{\k30}Beyond {\k62}security {\k46}{\k22}AI {\k88}optimizes
+Dialogue: 0,0:01:50.06,0:01:51.30,Live,,0,0,0,{\k60}investment {\k54}strategies
+Dialogue: 0,0:01:51.98,0:01:53.94,Live,,0,0,0,{\k58}Algorithms {\k50}analyze {\k46}market {\k42}trends
+Dialogue: 0,0:01:53.94,0:01:56.52,Live,,0,0,0,{\k62}predict {\k78}fluctuations {\k66}{\k10}and {\k42}execute
+Dialogue: 0,0:01:56.52,0:01:57.86,Live,,0,0,0,{\k44}trades {\k18}at {\k38}speeds {\k34}and
+Dialogue: 0,0:01:57.86,0:01:59.54,Live,,0,0,0,{\k38}scales {\k78}impossible {\k26}for {\k26}human
+Dialogue: 0,0:01:59.54,0:02:01.38,Live,,0,0,0,{\k44}traders {\k50}{\k12}High {\k44}frequency {\k34}trading
+Dialogue: 0,0:02:01.38,0:02:03.02,Live,,0,0,0,{\k42}firms {\k44}use {\k32}AI {\k46}to
+Dialogue: 0,0:02:03.02,0:02:04.18,Live,,0,0,0,{\k16}make {\k42}thousands {\k24}of {\k34}decisions
+Dialogue: 0,0:02:04.18,0:02:06.40,Live,,0,0,0,{\k36}per {\k48}second {\k46}{\k68}capitalizing {\k24}on
+Dialogue: 0,0:02:06.40,0:02:08.30,Live,,0,0,0,{\k22}minute {\k34}market {\k44}shifts {\k70}{\k20}The
+Dialogue: 0,0:02:08.30,0:02:10.24,Live,,0,0,0,{\k52}transportation {\k62}sector {\k26}is {\k54}undergoing
+Dialogue: 0,0:02:10.24,0:02:12.32,Live,,0,0,0,{\k26}a {\k56}seismic {\k38}shift {\k64}{\k24}AI
+Dialogue: 0,0:02:12.32,0:02:14.52,Live,,0,0,0,{\k58}powers {\k62}sophisticated {\k78}systems {\k22}in
+Dialogue: 0,0:02:14.52,0:02:16.54,Live,,0,0,0,{\k28}self {\k30}driving {\k62}vehicles {\k56}{\k26}enabling
+Dialogue: 0,0:02:16.54,0:02:17.54,Live,,0,0,0,{\k28}them {\k16}to {\k32}perceive {\k24}their
+Dialogue: 0,0:02:17.54,0:02:19.84,Live,,0,0,0,{\k60}environment {\k46}{\k6}make {\k50}decisions {\k46}{\k22}and
+Dialogue: 0,0:02:19.84,0:02:21.96,Live,,0,0,0,{\k36}navigate {\k56}complex {\k62}roadways {\k58}This
+Dialogue: 0,0:02:21.96,0:02:23.78,Live,,0,0,0,{\k36}involves {\k60}complex {\k34}sensor {\k42}fusion
+Dialogue: 0,0:02:24.14,0:02:25.94,Live,,0,0,0,{\k28}object {\k58}recognition {\k54}{\k6}and {\k34}predictive
+Dialogue: 0,0:02:25.94,0:02:27.80,Live,,0,0,0,{\k36}path {\k44}planning {\k44}{\k14}all {\k48}processed
+Dialogue: 0,0:02:27.80,0:02:29.32,Live,,0,0,0,{\k30}by {\k30}AI {\k44}in {\k38}milliseconds
+Dialogue: 0,0:02:30.12,0:02:31.58,Live,,0,0,0,{\k24}This {\k44}extends {\k30}to {\k48}logistics
+Dialogue: 0,0:02:31.58,0:02:32.74,Live,,0,0,0,{\k34}and {\k34}supply {\k38}chains
+Dialogue: 0,0:02:33.44,0:02:35.50,Live,,0,0,0,{\k24}AI {\k88}optimizes {\k46}delivery {\k38}routes
+Dialogue: 0,0:02:35.84,0:02:37.58,Live,,0,0,0,{\k38}predicts {\k32}demand {\k40}{\k22}and {\k42}manages
+Dialogue: 0,0:02:37.58,0:02:39.42,Live,,0,0,0,{\k60}inventory {\k60}{\k18}making {\k18}the {\k28}movement
+Dialogue: 0,0:02:39.42,0:02:40.62,Live,,0,0,0,{\k18}of {\k28}goods {\k28}more {\k46}efficient
+Dialogue: 0,0:02:40.62,0:02:42.36,Live,,0,0,0,{\k38}and {\k18}less {\k56}wasteful {\k36}{\k26}AI
+Dialogue: 0,0:02:42.36,0:02:43.82,Live,,0,0,0,{\k40}can {\k42}reroute {\k34}delivery {\k30}trucks
+Dialogue: 0,0:02:43.82,0:02:44.96,Live,,0,0,0,{\k26}in {\k22}real {\k38}time {\k28}to
+Dialogue: 0,0:02:44.96,0:02:46.56,Live,,0,0,0,{\k28}avoid {\k44}traffic {\k44}jams {\k44}or
+Dialogue: 0,0:02:46.56,0:02:48.96,Live,,0,0,0,{\k68}unexpected {\k34}road {\k62}closures {\k48}{\k28}ensuring
+Dialogue: 0,0:02:48.96,0:02:51.10,Live,,0,0,0,{\k70}timely {\k56}deliveries {\k50}and {\k38}reducing
+Dialogue: 0,0:02:51.10,0:02:52.18,Live,,0,0,0,{\k44}fuel {\k54}consumption
+Dialogue: 0,0:02:52.80,0:02:54.22,Live,,0,0,0,{\k48}Let's {\k20}talk {\k24}about {\k40}retail
+Dialogue: 0,0:02:54.84,0:02:56.64,Live,,0,0,0,{\k22}AI {\k100}personalizes {\k18}your {\k40}online
+Dialogue: 0,0:02:56.64,0:02:59.24,Live,,0,0,0,{\k52}shopping {\k72}experience {\k54}{\k32}recommending {\k50}products
+Dialogue: 0,0:02:59.24,0:03:00.36,Live,,0,0,0,{\k24}you're {\k22}likely {\k28}to {\k28}love
+Dialogue: 0,0:03:00.68,0:03:02.24,Live,,0,0,0,{\k10}It {\k34}also {\k54}manages {\k58}inventory
+Dialogue: 0,0:03:02.24,0:03:04.06,Live,,0,0,0,{\k46}and {\k44}predicts {\k40}customer {\k42}demand
+Dialogue: 0,0:03:04.52,0:03:06.42,Live,,0,0,0,{\k30}reducing {\k72}stockouts {\k26}and {\k52}overstock
+Dialogue: 0,0:03:07.10,0:03:09.02,Live,,0,0,0,{\k44}Streaming {\k44}services {\k58}recommending {\k46}shows
+Dialogue: 0,0:03:09.02,0:03:11.12,Live,,0,0,0,{\k52}or {\k40}online {\k48}stores {\k70}suggesting
+Dialogue: 0,0:03:11.12,0:03:12.38,Live,,0,0,0,{\k62}items {\k38}based {\k14}on {\k12}your
+Dialogue: 0,0:03:12.38,0:03:14.22,Live,,0,0,0,{\k46}browsing {\k48}history {\k58}that's {\k32}AI
+Dialogue: 0,0:03:14.22,0:03:14.84,Live,,0,0,0,{\k28}at {\k24}work
+Dialogue: 0,0:03:15.58,0:03:17.28,Live,,0,0,0,{\k72}Manufacturing {\k36}is {\k30}another {\k32}key
+Dialogue: 0,0:03:17.28,0:03:19.18,Live,,0,0,0,{\k36}area {\k60}AI {\k52}powered {\k42}robots
+Dialogue: 0,0:03:19.18,0:03:20.58,Live,,0,0,0,{\k28}on {\k38}assembly {\k36}lines {\k38}are
+Dialogue: 0,0:03:20.58,0:03:22.08,Live,,0,0,0,{\k32}becoming {\k34}more {\k68}dextrous {\k16}and
+Dialogue: 0,0:03:22.08,0:03:24.52,Live,,0,0,0,{\k52}intelligent {\k54}{\k32}improving {\k54}quality {\k42}control
+Dialogue: 0,0:03:24.82,0:03:26.60,Live,,0,0,0,{\k10}and {\k46}increasing {\k40}production {\k72}efficiency
+Dialogue: 0,0:03:27.00,0:03:28.88,Live,,0,0,0,{\k40}This {\k38}augments {\k32}human {\k68}capabilities
+Dialogue: 0,0:03:29.56,0:03:31.22,Live,,0,0,0,{\k26}AI {\k42}vision {\k54}systems {\k44}inspect
+Dialogue: 0,0:03:31.22,0:03:32.74,Live,,0,0,0,{\k52}products {\k24}for {\k36}defects {\k40}with
+Dialogue: 0,0:03:32.74,0:03:34.14,Live,,0,0,0,{\k32}greater {\k44}precision {\k32}and {\k32}speed
+Dialogue: 0,0:03:34.14,0:03:36.52,Live,,0,0,0,{\k40}than {\k30}human {\k68}inspectors {\k56}{\k44}So
+Dialogue: 0,0:03:36.52,0:03:37.66,Live,,0,0,0,{\k60}what {\k18}about {\k22}all {\k14}the
+Dialogue: 0,0:03:37.66,0:03:39.34,Live,,0,0,0,{\k40}futuristic {\k54}visions {\k32}of {\k32}AI
+Dialogue: 0,0:03:39.82,0:03:41.94,Live,,0,0,0,{\k22}Hovering {\k46}robots {\k56}{\k26}sentient {\k52}machines
+Dialogue: 0,0:03:42.28,0:03:43.92,Live,,0,0,0,{\k22}While {\k54}fascinating {\k38}{\k36}that's {\k14}not
+Dialogue: 0,0:03:43.92,0:03:45.74,Live,,0,0,0,{\k16}the {\k36}primary {\k38}impact {\k54}{\k38}The
+Dialogue: 0,0:03:45.74,0:03:47.46,Live,,0,0,0,{\k34}real {\k40}AI {\k58}revolution {\k40}is
+Dialogue: 0,0:03:47.46,0:03:48.70,Live,,0,0,0,{\k32}happening {\k26}in {\k10}the {\k46}background
+Dialogue: 0,0:03:49.16,0:03:50.56,Live,,0,0,0,{\k40}optimizing {\k34}the {\k38}systems {\k28}we
+Dialogue: 0,0:03:50.56,0:03:52.54,Live,,0,0,0,{\k40}already {\k40}use {\k58}{\k18}The {\k42}tangible
+Dialogue: 0,0:03:52.54,0:03:53.90,Live,,0,0,0,{\k60}benefits {\k30}come {\k22}from {\k24}making
+Dialogue: 0,0:03:53.90,0:03:56.02,Live,,0,0,0,{\k44}existing {\k72}processes {\k58}smarter {\k38}and
+Dialogue: 0,0:03:56.02,0:03:57.54,Live,,0,0,0,{\k18}more {\k46}efficient {\k34}{\k28}not {\k26}from
+Dialogue: 0,0:03:57.54,0:03:59.16,Live,,0,0,0,{\k22}sci {\k24}fi {\k72}fantasies {\k32}{\k12}This
+Dialogue: 0,0:03:59.16,0:04:00.78,Live,,0,0,0,{\k56}transformation {\k58}isn't {\k30}limited {\k18}to
+Dialogue: 0,0:04:00.78,0:04:01.70,Live,,0,0,0,{\k20}big {\k62}corporations
+Dialogue: 0,0:04:02.32,0:04:04.12,Live,,0,0,0,{\k30}Small {\k50}businesses {\k46}leverage {\k54}AI
+Dialogue: 0,0:04:04.12,0:04:05.52,Live,,0,0,0,{\k34}for {\k36}customer {\k40}service {\k30}chat
+Dialogue: 0,0:04:05.52,0:04:06.90,Live,,0,0,0,{\k20}bots {\k42}that {\k32}handle {\k44}inquiries
+Dialogue: 0,0:04:06.90,0:04:09.12,Live,,0,0,0,{\k46}24 {\k52}slash {\k48}seven {\k52}{\k24}freeing
+Dialogue: 0,0:04:09.12,0:04:10.14,Live,,0,0,0,{\k10}up {\k30}human {\k36}staff {\k26}for
+Dialogue: 0,0:04:10.14,0:04:12.26,Live,,0,0,0,{\k44}complex {\k32}tasks {\k61}{\k45}These {\k30}chat
+Dialogue: 0,0:04:12.26,0:04:13.78,Live,,0,0,0,{\k22}bots {\k44}answer {\k44}frequently {\k42}asked
+Dialogue: 0,0:04:13.78,0:04:16.20,Live,,0,0,0,{\k66}questions {\k46}{\k24}schedule {\k50}appointments {\k48}{\k8}and
+Dialogue: 0,0:04:16.20,0:04:18.14,Live,,0,0,0,{\k32}process {\k40}simple {\k42}orders {\k50}{\k30}improving
+Dialogue: 0,0:04:18.14,0:04:20.38,Live,,0,0,0,{\k62}customer {\k54}satisfaction {\k56}and {\k52}operational
+Dialogue: 0,0:04:20.38,0:04:23.04,Live,,0,0,0,{\k66}efficiency {\k44}{\k32}Education {\k68}benefits {\k46}too
+Dialogue: 0,0:04:23.60,0:04:25.48,Live,,0,0,0,{\k22}AI {\k56}creates {\k70}personalized {\k40}learning
+Dialogue: 0,0:04:25.48,0:04:27.86,Live,,0,0,0,{\k34}paths {\k58}{\k38}identifying {\k58}student {\k40}struggles
+Dialogue: 0,0:04:28.26,0:04:29.96,Live,,0,0,0,{\k6}and {\k46}providing {\k44}tailored {\k64}resources
+Dialogue: 0,0:04:30.72,0:04:32.46,Live,,0,0,0,{\k52}Adaptive {\k20}learning {\k54}platforms {\k48}use
+Dialogue: 0,0:04:32.46,0:04:34.12,Live,,0,0,0,{\k42}AI {\k40}to {\k26}adjust {\k58}lesson
+Dialogue: 0,0:04:34.12,0:04:35.84,Live,,0,0,0,{\k52}difficulty {\k32}and {\k44}content {\k44}based
+Dialogue: 0,0:04:35.84,0:04:37.64,Live,,0,0,0,{\k12}on {\k28}student {\k48}performance {\k58}{\k34}ensuring
+Dialogue: 0,0:04:37.64,0:04:39.38,Live,,0,0,0,{\k36}they {\k10}are {\k46}challenged {\k72}appropriately
+Dialogue: 0,0:04:39.84,0:04:41.14,Live,,0,0,0,{\k36}The {\k22}pace {\k22}of {\k50}advancement
+Dialogue: 0,0:04:41.14,0:04:43.14,Live,,0,0,0,{\k36}is {\k46}staggering {\k34}{\k22}The {\k62}computational
+Dialogue: 0,0:04:43.14,0:04:44.98,Live,,0,0,0,{\k50}power {\k42}available {\k46}now {\k46}is
+Dialogue: 0,0:04:44.98,0:04:46.44,Live,,0,0,0,{\k30}orders {\k24}of {\k44}magnitude {\k48}greater
+Dialogue: 0,0:04:46.44,0:04:47.46,Live,,0,0,0,{\k32}than {\k24}just {\k18}a {\k28}decade
+Dialogue: 0,0:04:47.46,0:04:47.90,Live,,0,0,0,{\k34}ago
+Dialogue: 0,0:04:48.52,0:04:50.48,Live,,0,0,0,{\k24}This {\k64}exponential {\k50}growth {\k58}fuels
+Dialogue: 0,0:04:50.48,0:04:52.82,Live,,0,0,0,{\k66}AI's {\k28}rapid {\k52}evolution {\k58}{\k30}allowing
+Dialogue: 0,0:04:52.82,0:04:54.16,Live,,0,0,0,{\k26}for {\k18}more {\k44}complex {\k46}models
+Dialogue: 0,0:04:54.16,0:04:56.56,Live,,0,0,0,{\k46}and {\k36}faster {\k54}processing {\k62}{\k42}This
+Dialogue: 0,0:04:56.56,0:04:58.44,Live,,0,0,0,{\k34}rapid {\k58}advancement {\k46}raises {\k50}questions
+Dialogue: 0,0:04:58.44,0:04:59.50,Live,,0,0,0,{\k40}about {\k14}the {\k30}future {\k22}of
+Dialogue: 0,0:04:59.50,0:05:00.84,Live,,0,0,0,{\k28}work {\k36}{\k12}While {\k22}some {\k36}jobs
+Dialogue: 0,0:05:00.84,0:05:02.66,Live,,0,0,0,{\k22}may {\k32}change {\k54}{\k16}AI {\k58}also
+Dialogue: 0,0:05:02.66,0:05:04.08,Live,,0,0,0,{\k46}creates {\k24}new {\k36}roles {\k36}focused
+Dialogue: 0,0:05:04.08,0:05:06.12,Live,,0,0,0,{\k24}on {\k46}developing {\k58}{\k32}managing {\k44}{\k1}and
+Dialogue: 0,0:05:06.12,0:05:07.70,Live,,0,0,0,{\k48}interacting {\k34}with {\k26}these {\k50}intelligent
+Dialogue: 0,0:05:07.70,0:05:09.90,Live,,0,0,0,{\k62}systems {\k42}{\k40}We'll {\k18}see {\k58}increased
+Dialogue: 0,0:05:09.90,0:05:11.46,Live,,0,0,0,{\k32}demand {\k34}for {\k22}AI {\k58}trainers
+Dialogue: 0,0:05:11.88,0:05:13.54,Live,,0,0,0,{\k14}data {\k60}scientists {\k46}{\k10}and {\k36}AI
+Dialogue: 0,0:05:13.54,0:05:15.68,Live,,0,0,0,{\k78}ethicists {\k46}{\k30}The {\k26}true {\k34}impact
+Dialogue: 0,0:05:15.68,0:05:16.90,Live,,0,0,0,{\k30}of {\k24}AI {\k52}is {\k16}its
+Dialogue: 0,0:05:16.90,0:05:19.10,Live,,0,0,0,{\k38}ability {\k30}to {\k86}democratize {\k56}expertise
+Dialogue: 0,0:05:19.50,0:05:20.88,Live,,0,0,0,{\k36}Complex {\k36}tasks {\k42}that {\k24}once
+Dialogue: 0,0:05:20.88,0:05:23.34,Live,,0,0,0,{\k50}required {\k56}specialized {\k48}{\k42}expensive {\k50}knowledge
+Dialogue: 0,0:05:23.34,0:05:24.88,Live,,0,0,0,{\k54}are {\k18}now {\k52}accessible {\k30}to
+Dialogue: 0,0:05:24.88,0:05:26.88,Live,,0,0,0,{\k18}more {\k36}people {\k48}{\k30}driving {\k58}innovation
+Dialogue: 0,0:05:27.54,0:05:28.88,Live,,0,0,0,{\k48}Imagine {\k22}a {\k26}small {\k38}business
+Dialogue: 0,0:05:28.88,0:05:30.40,Live,,0,0,0,{\k34}owner {\k34}using {\k40}AI {\k44}powered
+Dialogue: 0,0:05:30.40,0:05:31.98,Live,,0,0,0,{\k36}tools {\k42}to {\k36}analyze {\k44}market
+Dialogue: 0,0:05:31.98,0:05:33.80,Live,,0,0,0,{\k40}data {\k46}once {\k44}only {\k52}accessible
+Dialogue: 0,0:05:33.80,0:05:35.12,Live,,0,0,0,{\k24}to {\k26}large {\k72}corporations
+Dialogue: 0,0:05:35.80,0:05:37.36,Live,,0,0,0,{\k36}AI {\k56}is {\k26}already {\k38}deeply
+Dialogue: 0,0:05:37.36,0:05:38.66,Live,,0,0,0,{\k36}woven {\k26}into {\k12}our {\k46}lives
+Dialogue: 0,0:05:38.86,0:05:40.48,Live,,0,0,0,{\k24}making {\k50}systems {\k34}more {\k44}efficient
+Dialogue: 0,0:05:40.94,0:05:42.92,Live,,0,0,0,{\k28}safer {\k30}{\k14}and {\k60}personalized {\k48}{\k18}It's
+Dialogue: 0,0:05:42.92,0:05:44.28,Live,,0,0,0,{\k10}the {\k34}engine {\k42}driving {\k50}progress
+Dialogue: 0,0:05:44.28,0:05:45.70,Live,,0,0,0,{\k26}in {\k22}nearly {\k44}every {\k40}sector
+Dialogue: 0,0:05:46.08,0:05:48.28,Live,,0,0,0,{\k28}promising {\k50}further {\k74}transformative {\k58}changes
+Dialogue: 0,0:05:48.86,0:05:50.16,Live,,0,0,0,{\k22}From {\k34}smart {\k42}assistants {\k32}to
+Dialogue: 0,0:05:50.16,0:05:52.54,Live,,0,0,0,{\k50}newsfeed {\k56}algorithms {\k62}{\k20}AI {\k50}is
+Dialogue: 0,0:05:52.54,0:05:54.22,Live,,0,0,0,{\k10}an {\k40}invisible {\k48}force {\k70}shaping
+Dialogue: 0,0:05:54.22,0:05:55.60,Live,,0,0,0,{\k20}our {\k26}daily {\k82}experiences
+Dialogue: 0,0:05:56.22,0:05:57.46,Live,,0,0,0,{\k28}The {\k38}power {\k26}of {\k32}AI
+Dialogue: 0,0:05:57.46,0:05:58.86,Live,,0,0,0,{\k66}lies {\k26}in {\k14}its {\k34}ability
+Dialogue: 0,0:05:58.86,0:06:00.56,Live,,0,0,0,{\k32}to {\k34}augment {\k36}human {\k58}potential
+Dialogue: 0,0:06:00.96,0:06:01.92,Live,,0,0,0,{\k16}making {\k22}us {\k18}more {\k40}capable
+Dialogue: 0,0:06:01.92,0:06:03.48,Live,,0,0,0,{\k48}and {\k36}efficient {\k58}What {\k14}will
+Dialogue: 0,0:06:03.48,0:06:04.38,Live,,0,0,0,{\k12}you {\k32}create {\k20}with {\k26}these
+Dialogue: 0,0:06:04.38,0:06:06.80,Live,,0,0,0,{\k48}amplified {\k58}abilities {\k62}{\k40}Subscribe {\k34}to
+Dialogue: 0,0:06:06.80,0:06:07.64,Live,,0,0,0,{\k24}Tool {\k50}Dojo
