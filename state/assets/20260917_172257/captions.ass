@@ -1,0 +1,163 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.86,Live,,0,0,0,{\k12}The {\k48}CEO {\k40}of {\k86}Microsoft's
+Dialogue: 0,0:00:01.86,0:00:03.40,Live,,0,0,0,{\k18}AI {\k60}division {\k40}just {\k36}dropped
+Dialogue: 0,0:00:03.40,0:00:05.32,Live,,0,0,0,{\k16}a {\k46}bombshell {\k60}{\k24}AI {\k46}is
+Dialogue: 0,0:00:05.32,0:00:06.74,Live,,0,0,0,{\k46}dangerous {\k58}and {\k10}a {\k28}major
+Dialogue: 0,0:00:06.74,0:00:07.74,Live,,0,0,0,{\k36}player {\k22}is {\k26}making {\k16}it
+Dialogue: 0,0:00:07.74,0:00:08.08,Live,,0,0,0,{\k24}worse
+Dialogue: 0,0:00:08.72,0:00:09.78,Live,,0,0,0,{\k18}We're {\k28}talking {\k28}about {\k32}real
+Dialogue: 0,0:00:09.78,0:00:11.70,Live,,0,0,0,{\k48}threats {\k34}{\k16}not {\k44}science {\k40}fiction
+Dialogue: 0,0:00:11.82,0:00:13.18,Live,,0,0,0,{\k32}and {\k10}the {\k46}conversation {\k48}is
+Dialogue: 0,0:00:13.18,0:00:15.50,Live,,0,0,0,{\k22}getting {\k36}heated {\k46}{\k40}Mustafa {\k78}Suleyman
+Dialogue: 0,0:00:15.78,0:00:17.16,Live,,0,0,0,{\k12}head {\k10}of {\k44}Microsoft {\k62}AI
+Dialogue: 0,0:00:17.98,0:00:19.92,Live,,0,0,0,{\k30}believes {\k64}dangers {\k28}are {\k72}significant
+Dialogue: 0,0:00:19.92,0:00:22.10,Live,,0,0,0,{\k30}and {\k58}tangible {\k54}{\k42}He's {\k34}published
+Dialogue: 0,0:00:22.10,0:00:24.50,Live,,0,0,0,{\k104}Microsoft's {\k54}Humanist {\k32}AI {\k50}code
+Dialogue: 0,0:00:24.50,0:00:27.08,Live,,0,0,0,{\k18}of {\k54}conduct {\k66}{\k82}prioritizing {\k38}human
+Dialogue: 0,0:00:27.08,0:00:28.42,Live,,0,0,0,{\k34}well {\k26}being {\k26}and {\k48}safety
+Dialogue: 0,0:00:28.42,0:00:30.32,Live,,0,0,0,{\k62}But {\k44}Suleyman {\k42}singles {\k42}out
+Dialogue: 0,0:00:30.32,0:00:31.94,Live,,0,0,0,{\k22}and {\k42}thropic {\k48}as {\k50}worsening
+Dialogue: 0,0:00:31.94,0:00:34.30,Live,,0,0,0,{\k36}AI {\k60}risks {\k50}{\k50}criticizing {\k40}their
+Dialogue: 0,0:00:34.30,0:00:36.28,Live,,0,0,0,{\k58}philosophy {\k36}on {\k32}AI {\k72}consciousness
+Dialogue: 0,0:00:36.28,0:00:38.74,Live,,0,0,0,{\k60}for {\k88}mischaracterizing {\k56}capabilities {\k42}and
+Dialogue: 0,0:00:38.74,0:00:41.14,Live,,0,0,0,{\k42}harms {\k40}{\k54}Suleyman {\k50}argues {\k54}model
+Dialogue: 0,0:00:41.14,0:00:43.44,Live,,0,0,0,{\k46}welfare {\k56}concepts {\k46}are {\k82}dangerously
+Dialogue: 0,0:00:43.44,0:00:44.12,Live,,0,0,0,{\k58}confused
+Dialogue: 0,0:00:44.78,0:00:46.16,Live,,0,0,0,{\k18}He {\k30}believes {\k36}some {\k54}companies
+Dialogue: 0,0:00:46.16,0:00:48.96,Live,,0,0,0,{\k76}misinterpret {\k46}AI {\k86}sentience {\k50}{\k22}leading
+Dialogue: 0,0:00:48.96,0:00:50.78,Live,,0,0,0,{\k24}to {\k46}misplaced {\k76}priorities {\k36}and
+Dialogue: 0,0:00:50.78,0:00:52.90,Live,,0,0,0,{\k42}inadequate {\k68}safety {\k44}{\k20}This {\k38}touches
+Dialogue: 0,0:00:52.90,0:00:55.30,Live,,0,0,0,{\k36}on {\k34}AI {\k70}alignment {\k62}{\k38}ensuring
+Dialogue: 0,0:00:55.30,0:00:57.14,Live,,0,0,0,{\k42}AI {\k64}systems {\k40}align {\k38}with
+Dialogue: 0,0:00:57.14,0:00:59.56,Live,,0,0,0,{\k32}human {\k46}values {\k64}{\k52}Suleyman {\k48}questions
+Dialogue: 0,0:00:59.56,0:01:01.44,Live,,0,0,0,{\k58}if {\k28}current {\k60}strategies {\k42}prevent
+Dialogue: 0,0:01:01.44,0:01:03.86,Live,,0,0,0,{\k74}unintended {\k74}consequences {\k66}as {\k28}AI
+Dialogue: 0,0:01:03.86,0:01:05.78,Live,,0,0,0,{\k54}grows {\k30}more {\k52}powerful {\k46}{\k10}He
+Dialogue: 0,0:01:05.78,0:01:07.22,Live,,0,0,0,{\k52}previously {\k34}wrote {\k34}about {\k24}the
+Dialogue: 0,0:01:07.22,0:01:09.78,Live,,0,0,0,{\k84}inevitability {\k14}of {\k76}proliferation {\k54}{\k28}meaning
+Dialogue: 0,0:01:09.78,0:01:11.44,Live,,0,0,0,{\k74}containment {\k50}isn't {\k10}a {\k32}long
+Dialogue: 0,0:01:11.44,0:01:12.60,Live,,0,0,0,{\k28}term {\k78}strategy
+Dialogue: 0,0:01:13.24,0:01:15.36,Live,,0,0,0,{\k24}Wide {\k38}spread {\k58}AI {\k92}accessibility
+Dialogue: 0,0:01:15.36,0:01:17.86,Live,,0,0,0,{\k54}demands {\k72}inherent {\k56}safety {\k44}{\k24}not
+Dialogue: 0,0:01:17.86,0:01:19.54,Live,,0,0,0,{\k20}just {\k48}control {\k52}{\k20}This {\k28}means
+Dialogue: 0,0:01:19.54,0:01:20.84,Live,,0,0,0,{\k28}the {\k42}AI {\k28}you {\k32}use
+Dialogue: 0,0:01:20.84,0:01:22.08,Live,,0,0,0,{\k14}is {\k38}developed {\k38}under {\k34}immense
+Dialogue: 0,0:01:22.08,0:01:22.62,Live,,0,0,0,{\k44}pressure
+Dialogue: 0,0:01:23.24,0:01:24.88,Live,,0,0,0,{\k36}Industry {\k80}disagreements {\k18}could {\k30}shape
+Dialogue: 0,0:01:24.88,0:01:27.36,Live,,0,0,0,{\k46}future {\k46}safety {\k48}features {\k56}{\k52}Imagine
+Dialogue: 0,0:01:27.36,0:01:28.80,Live,,0,0,0,{\k24}a {\k26}self {\k32}driving {\k62}car's
+Dialogue: 0,0:01:28.80,0:01:30.70,Live,,0,0,0,{\k44}AI {\k54}making {\k54}decisions {\k38}based
+Dialogue: 0,0:01:30.70,0:01:32.38,Live,,0,0,0,{\k26}on {\k38}flawed {\k40}welfare {\k54}metrics
+Dialogue: 0,0:01:32.66,0:01:33.82,Live,,0,0,0,{\k26}or {\k14}a {\k34}content {\k42}AI
+Dialogue: 0,0:01:33.82,0:01:36.52,Live,,0,0,0,{\k68}producing {\k56}harmful {\k74}misinformation {\k72}due
+Dialogue: 0,0:01:36.52,0:01:38.84,Live,,0,0,0,{\k12}to {\k50}misunderstood {\k82}impact {\k34}{\k54}Suleyman
+Dialogue: 0,0:01:38.84,0:01:40.28,Live,,0,0,0,{\k40}believes {\k38}we're {\k24}too {\k42}focused
+Dialogue: 0,0:01:40.28,0:01:41.88,Live,,0,0,0,{\k28}on {\k16}the {\k42}immediate {\k64}future
+Dialogue: 0,0:01:42.30,0:01:43.84,Live,,0,0,0,{\k18}leading {\k24}to {\k72}disagreements {\k40}instead
+Dialogue: 0,0:01:43.84,0:01:45.60,Live,,0,0,0,{\k18}of {\k46}cohesive {\k64}safety {\k38}efforts
+Dialogue: 0,0:01:46.22,0:01:47.26,Live,,0,0,0,{\k18}He {\k20}wants {\k22}a {\k44}broader
+Dialogue: 0,0:01:47.26,0:01:49.62,Live,,0,0,0,{\k88}humanist {\k58}perspective {\k30}on {\k50}AI
+Dialogue: 0,0:01:50.20,0:01:52.30,Live,,0,0,0,{\k48}considering {\k46}long {\k38}term {\k78}societal
+Dialogue: 0,0:01:52.30,0:01:54.68,Live,,0,0,0,{\k74}implications {\k74}The {\k30}interview {\k60}questioned
+Dialogue: 0,0:01:54.68,0:01:56.08,Live,,0,0,0,{\k48}if {\k34}alignment {\k40}is {\k18}the
+Dialogue: 0,0:01:56.08,0:01:57.02,Live,,0,0,0,{\k20}right {\k64}approach
+Dialogue: 0,0:01:57.62,0:01:58.62,Live,,0,0,0,{\k34}Suleyman {\k26}views {\k22}it {\k18}as
+Dialogue: 0,0:01:58.62,0:01:59.98,Live,,0,0,0,{\k50}important {\k34}{\k12}but {\k24}not {\k16}the
+Dialogue: 0,0:01:59.98,0:02:01.92,Live,,0,0,0,{\k32}only {\k42}answer {\k66}{\k16}A {\k38}singular
+Dialogue: 0,0:02:01.92,0:02:03.68,Live,,0,0,0,{\k46}focus {\k32}on {\k40}technical {\k58}alignment
+Dialogue: 0,0:02:03.68,0:02:05.98,Live,,0,0,0,{\k52}might {\k54}overlook {\k72}transparency {\k52}and
+Dialogue: 0,0:02:05.98,0:02:08.48,Live,,0,0,0,{\k64}accountability {\k44}{\k40}He's {\k50}concerned {\k52}rapid
+Dialogue: 0,0:02:08.48,0:02:10.36,Live,,0,0,0,{\k62}development {\k22}and {\k50}competitive {\k54}pressures
+Dialogue: 0,0:02:10.36,0:02:12.40,Live,,0,0,0,{\k58}are {\k76}outpacing {\k30}our {\k40}ability
+Dialogue: 0,0:02:12.40,0:02:14.48,Live,,0,0,0,{\k30}to {\k60}establish {\k58}robust {\k60}safety
+Dialogue: 0,0:02:14.48,0:02:16.68,Live,,0,0,0,{\k42}measures {\k64}{\k22}The {\k52}urgency {\k40}is
+Dialogue: 0,0:02:16.68,0:02:18.76,Live,,0,0,0,{\k76}escalating {\k48}{\k12}a {\k48}misstep {\k24}could
+Dialogue: 0,0:02:18.76,0:02:21.16,Live,,0,0,0,{\k16}have {\k42}profound {\k84}consequences {\k56}{\k42}What's
+Dialogue: 0,0:02:21.16,0:02:22.54,Live,,0,0,0,{\k40}surprising {\k36}is {\k20}this {\k42}critical
+Dialogue: 0,0:02:22.54,0:02:24.00,Live,,0,0,0,{\k34}debate {\k42}is {\k38}happening {\k32}among
+Dialogue: 0,0:02:24.00,0:02:25.10,Live,,0,0,0,{\k14}a {\k20}few {\k24}key {\k42}players
+Dialogue: 0,0:02:25.62,0:02:27.26,Live,,0,0,0,{\k38}Public {\k48}discourse {\k64}hasn't {\k14}caught
+Dialogue: 0,0:02:27.26,0:02:28.52,Live,,0,0,0,{\k20}up {\k14}to {\k38}industry {\k44}friction
+Dialogue: 0,0:02:28.98,0:02:30.24,Live,,0,0,0,{\k18}leaving {\k40}many {\k42}unaware {\k26}of
+Dialogue: 0,0:02:30.24,0:02:32.96,Live,,0,0,0,{\k46}profound {\k80}disagreements {\k70}shaping {\k76}AI's
+Dialogue: 0,0:02:32.96,0:02:35.48,Live,,0,0,0,{\k34}future {\k46}{\k82}Microsoft's {\k60}Humanist {\k30}AI
+Dialogue: 0,0:02:35.48,0:02:37.26,Live,,0,0,0,{\k50}Code {\k18}of {\k52}Conduct {\k58}aims
+Dialogue: 0,0:02:37.26,0:02:38.32,Live,,0,0,0,{\k22}to {\k20}set {\k12}a {\k42}benchmark
+Dialogue: 0,0:02:38.96,0:02:40.62,Live,,0,0,0,{\k22}But {\k64}Suleyman's {\k52}criticism {\k28}of
+Dialogue: 0,0:02:40.62,0:02:42.82,Live,,0,0,0,{\k56}Anthropic {\k66}suggests {\k34}a {\k64}divergence
+Dialogue: 0,0:02:42.82,0:02:45.16,Live,,0,0,0,{\k30}in {\k68}understanding {\k98}AI's {\k38}impact
+Dialogue: 0,0:02:45.16,0:02:47.42,Live,,0,0,0,{\k24}and {\k44}nature {\k48}{\k42}If {\k68}Anthropic's
+Dialogue: 0,0:02:47.42,0:02:49.46,Live,,0,0,0,{\k42}models {\k72}prioritize {\k48}their {\k42}own
+Dialogue: 0,0:02:49.46,0:02:51.04,Live,,0,0,0,{\k28}well {\k32}being {\k70}conflicting {\k28}with
+Dialogue: 0,0:02:51.04,0:02:53.04,Live,,0,0,0,{\k30}human {\k60}safety {\k44}{\k18}it {\k48}creates
+Dialogue: 0,0:02:53.04,0:02:54.68,Live,,0,0,0,{\k42}tension {\k42}{\k20}He {\k36}asks {\k24}if
+Dialogue: 0,0:02:54.68,0:02:55.66,Live,,0,0,0,{\k12}the {\k36}industry {\k28}needs {\k22}to
+Dialogue: 0,0:02:55.66,0:02:56.98,Live,,0,0,0,{\k24}slow {\k30}down {\k46}before {\k32}AI
+Dialogue: 0,0:02:56.98,0:02:59.30,Live,,0,0,0,{\k54}leads {\k28}to {\k68}irreversible {\k72}consequences
+Dialogue: 0,0:02:59.90,0:03:00.72,Live,,0,0,0,{\k28}This {\k28}isn't {\k10}a {\k16}call
+Dialogue: 0,0:03:00.72,0:03:02.50,Live,,0,0,0,{\k28}for {\k74}stagnation {\k44}{\k12}but {\k20}for
+Dialogue: 0,0:03:02.50,0:03:03.98,Live,,0,0,0,{\k10}a {\k16}more {\k54}deliberate {\k28}{\k40}safety
+Dialogue: 0,0:03:03.98,0:03:06.30,Live,,0,0,0,{\k42}conscious {\k62}approach {\k56}{\k40}Consider {\k32}nuclear
+Dialogue: 0,0:03:06.30,0:03:08.80,Live,,0,0,0,{\k54}power {\k52}{\k28}immense {\k58}potential {\k58}requires
+Dialogue: 0,0:03:08.80,0:03:11.66,Live,,0,0,0,{\k62}rigorous {\k42}safety {\k54}protocols {\k56}{\k62}Ultimately
+Dialogue: 0,0:03:12.02,0:03:13.08,Live,,0,0,0,{\k28}Suleyman {\k40}pushes {\k28}for {\k10}a
+Dialogue: 0,0:03:13.08,0:03:15.18,Live,,0,0,0,{\k26}deeper {\k68}understanding {\k42}of {\k74}AI's
+Dialogue: 0,0:03:15.18,0:03:17.56,Live,,0,0,0,{\k62}impact {\k32}{\k42}moving {\k48}beyond {\k54}technical
+Dialogue: 0,0:03:17.56,0:03:19.66,Live,,0,0,0,{\k58}alignment {\k28}to {\k40}broader {\k84}humanistic
+Dialogue: 0,0:03:19.66,0:03:22.06,Live,,0,0,0,{\k70}principles {\k54}{\k28}The {\k54}disagreement {\k34}with
+Dialogue: 0,0:03:22.06,0:03:23.90,Live,,0,0,0,{\k66}Anthropic {\k58}highlights {\k26}a {\k34}critical
+Dialogue: 0,0:03:23.90,0:03:26.40,Live,,0,0,0,{\k60}juncture {\k56}where {\k48}differing {\k86}philosophies
+Dialogue: 0,0:03:26.40,0:03:27.52,Live,,0,0,0,{\k16}could {\k28}lead {\k22}to {\k46}vastly
+Dialogue: 0,0:03:27.52,0:03:29.54,Live,,0,0,0,{\k42}different {\k56}outcomes {\k60}{\k18}The {\k26}stakes
+Dialogue: 0,0:03:29.54,0:03:31.42,Live,,0,0,0,{\k28}are {\k60}incredibly {\k36}high {\k46}{\k18}the
+Dialogue: 0,0:03:31.42,0:03:32.92,Live,,0,0,0,{\k30}future {\k26}of {\k34}AI {\k46}{\k14}its
+Dialogue: 0,0:03:32.92,0:03:34.30,Live,,0,0,0,{\k62}integration {\k28}into {\k10}our {\k38}lives
+Dialogue: 0,0:03:34.30,0:03:36.08,Live,,0,0,0,{\k42}and {\k16}our {\k42}safety {\k70}{\k8}What
+Dialogue: 0,0:03:36.08,0:03:36.64,Live,,0,0,0,{\k8}do {\k10}you {\k20}think {\k18}is
+Dialogue: 0,0:03:36.64,0:03:37.72,Live,,0,0,0,{\k14}the {\k20}most {\k40}pressing {\k34}AI
+Dialogue: 0,0:03:37.72,0:03:39.82,Live,,0,0,0,{\k44}threat {\k36}today {\k96}Suleyman {\k34}points
+Dialogue: 0,0:03:39.82,0:03:41.74,Live,,0,0,0,{\k28}to {\k28}AI {\k76}systems {\k60}developing
+Dialogue: 0,0:03:41.74,0:03:43.52,Live,,0,0,0,{\k66}unintended {\k62}goals {\k34}due {\k16}to
+Dialogue: 0,0:03:43.52,0:03:45.86,Live,,0,0,0,{\k44}flawed {\k42}reward {\k72}functions {\k54}{\k22}An
+Dialogue: 0,0:03:45.86,0:03:48.32,Live,,0,0,0,{\k44}AI {\k94}optimizing {\k76}paperclips {\k32}might
+Dialogue: 0,0:03:48.32,0:03:49.74,Live,,0,0,0,{\k42}convert {\k38}all {\k34}matter {\k28}into
+Dialogue: 0,0:03:49.74,0:03:51.58,Live,,0,0,0,{\k78}paperclips {\k26}if {\k26}not {\k54}properly
+Dialogue: 0,0:03:51.58,0:03:52.32,Live,,0,0,0,{\k64}constrained
+Dialogue: 0,0:03:52.94,0:03:55.42,Live,,0,0,0,{\k30}This {\k62}illustrates {\k88}catastrophic {\k68}potential
+Dialogue: 0,0:03:55.42,0:03:57.80,Live,,0,0,0,{\k34}from {\k74}misaligned {\k58}AI {\k50}{\k22}He
+Dialogue: 0,0:03:57.80,0:03:59.48,Live,,0,0,0,{\k30}also {\k70}emphasizes {\k28}the {\k40}danger
+Dialogue: 0,0:03:59.48,0:04:01.40,Live,,0,0,0,{\k26}of {\k44}emergent {\k56}capabilities {\k66}abilities
+Dialogue: 0,0:04:01.40,0:04:04.14,Live,,0,0,0,{\k56}not {\k62}explicitly {\k72}programmed {\k46}{\k38}These
+Dialogue: 0,0:04:04.14,0:04:05.66,Live,,0,0,0,{\k26}can {\k10}be {\k52}beneficial {\k42}{\k22}but
+Dialogue: 0,0:04:05.66,0:04:06.88,Live,,0,0,0,{\k30}pose {\k46}risks {\k32}if {\k14}they
+Dialogue: 0,0:04:06.88,0:04:08.22,Live,,0,0,0,{\k26}lead {\k18}to {\k42}harmful {\k48}or
+Dialogue: 0,0:04:08.22,0:04:10.50,Live,,0,0,0,{\k88}uncontrollable {\k54}actions {\k38}{\k20}The {\k28}debate
+Dialogue: 0,0:04:10.50,0:04:12.14,Live,,0,0,0,{\k44}around {\k48}model {\k46}welfare {\k26}with
+Dialogue: 0,0:04:12.14,0:04:13.98,Live,,0,0,0,{\k62}Anthropic {\k50}centers {\k38}on {\k34}whether
+Dialogue: 0,0:04:13.98,0:04:15.44,Live,,0,0,0,{\k34}AI {\k76}systems {\k24}should {\k12}have
+Dialogue: 0,0:04:15.44,0:04:16.96,Live,,0,0,0,{\k16}their {\k28}own {\k44}welfare {\k64}or
+Dialogue: 0,0:04:16.96,0:04:18.18,Live,,0,0,0,{\k20}be {\k44}tools {\k26}for {\k32}human
+Dialogue: 0,0:04:18.18,0:04:20.12,Live,,0,0,0,{\k52}benefit {\k62}{\k28}If {\k12}an {\k40}AI
+Dialogue: 0,0:04:20.12,0:04:22.52,Live,,0,0,0,{\k126}prioritizes {\k28}its {\k36}own {\k50}perceived
+Dialogue: 0,0:04:22.52,0:04:24.18,Live,,0,0,0,{\k42}well {\k34}being {\k52}{\k22}it {\k16}could
+Dialogue: 0,0:04:24.18,0:04:26.28,Live,,0,0,0,{\k32}resist {\k58}shutdown {\k62}{\k34}even {\k24}if
+Dialogue: 0,0:04:26.28,0:04:28.10,Live,,0,0,0,{\k54}necessary {\k28}for {\k32}human {\k58}safety
+Dialogue: 0,0:04:28.38,0:04:30.02,Live,,0,0,0,{\k28}This {\k54}philosophical {\k50}difference {\k32}has
+Dialogue: 0,0:04:30.02,0:04:32.82,Live,,0,0,0,{\k52}practical {\k68}implications {\k66}{\k38}If {\k56}Anthropic's
+Dialogue: 0,0:04:32.82,0:04:34.20,Live,,0,0,0,{\k36}approach {\k48}leads {\k24}to {\k30}models
+Dialogue: 0,0:04:34.20,0:04:35.70,Live,,0,0,0,{\k38}harder {\k22}to {\k30}steer {\k60}or
+Dialogue: 0,0:04:35.70,0:04:37.90,Live,,0,0,0,{\k24}with {\k50}unexpected {\k80}autonomy {\k58}{\k8}it
+Dialogue: 0,0:04:37.90,0:04:40.24,Live,,0,0,0,{\k80}exacerbates {\k38}safety {\k54}challenges {\k62}and
+Dialogue: 0,0:04:40.24,0:04:42.28,Live,,0,0,0,{\k32}prevents {\k78}consistent {\k22}{\k38}industry {\k34}wide
+Dialogue: 0,0:04:42.28,0:04:43.30,Live,,0,0,0,{\k42}safety {\k50}protocols
