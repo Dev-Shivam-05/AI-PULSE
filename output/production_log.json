@@ -3498,5 +3498,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-18T16:48:30.185723",
+    "title": "Open vs Closed AI: Your Guide",
+    "description": "Open AI vs Closed AI: The fundamental differences are shaping our future.  Understand the core concepts behind open-source and proprietary AI models, and why this debate matters for innovation, security, and accessibility. We break down the pros and cons of each approach, moving beyond the hype to give you a clear, unbiased perspective.  Discover how the choices made now will impact the tools you use and the world you live in.  This guide is designed to be timeless, providing the foundational knowledge you need to navigate the evolving AI landscape.  From how AI is built to who controls it, we cover it all.  #AI #OpenSource #ProprietaryAI #MachineLearning #ArtificialIntelligence #TechExplained #ToolDojo Subscribe to ToolDojo\n\nChapters:\n0:00 Powerful Locked Tools\n1:13 Open AI Challenges\n2:44 Internet Pattern Interrupt\n3:48 Blurred Open Closed Lines\n5:20 Hybrid Future Approach\n\n▶ Watch next: https://youtube.com/watch?v=RWtzriapHzc",
+    "tags": [
+      "open source AI",
+      "closed AI",
+      "proprietary AI",
+      "AI models",
+      "artificial intelligence explained",
+      "machine learning",
+      "AI debate",
+      "AI innovation",
+      "AI security",
+      "AI accessibility",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Open_vs_Closed_AI_Your_Guide_20260918_163931_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260918_164237.mp4",
+      "output/shorts/short_2_20260918_164328.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260918_164116.jpg",
+    "youtube_url": "https://youtube.com/watch?v=lN8f1AfARps",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=jjL38xG5OAA",
+      "https://youtube.com/watch?v=B6zcJidWVN0"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Open vs Closed AI: The Ultimate Showdown! #Shorts",
+        "description": "Unpacking the core differences between open-source and proprietary AI models. Discover which approach might dominate the future!",
+        "instagram_caption": "🤯 Open vs. Closed AI: Which reigns supreme? We break down the game-changing differences you NEED to know. Follow @tooldojo! #AIexplained #TechDebate #FutureTech #OpenAI #ClosedAI #ArtificialIntelligence #MachineLearning #AIrevolution #TechTrends #Innovation #DeepLearning #AIcommunity #TechInsights #DigitalFuture #AIadvances #SmartTech #TechTalk #AIwar #Coders #Developers"
+      },
+      {
+        "title": "Mastering AI: Open vs Closed Revealed! #Shorts",
+        "description": "Get a crystal-clear understanding of open and closed AI. Learn the pros, cons, and what it means for innovation and access.",
+        "instagram_caption": "💡 Unlock the secrets of Open vs. Closed AI! We demystify the tech shaping our world and your future. Follow @tooldojo! #AIsecrets #TechExplained #InnovationUnleashed #OpenSourceAI #ProprietaryAI #ArtificialIntelligence #AItechnology #FutureOfAI #TechEducation #LearnAI #AIdevelopment #TechKnowledge #DigitalInnovation #AIbreakdown #TechUpdates #SmartSolutions #AIGuide #CodingLife #TechSavvy #AIinsights"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]

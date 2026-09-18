@@ -1,0 +1,232 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.12,Live,,0,0,0,{\k26}Imagine {\k34}a {\k24}world {\k28}where
+Dialogue: 0,0:00:01.12,0:00:02.38,Live,,0,0,0,{\k10}the {\k24}most {\k50}powerful {\k42}tools
+Dialogue: 0,0:00:02.38,0:00:03.60,Live,,0,0,0,{\k24}are {\k26}either {\k30}locked {\k32}away
+Dialogue: 0,0:00:04.00,0:00:05.24,Live,,0,0,0,{\k40}accessible {\k52}only {\k20}to {\k12}a
+Dialogue: 0,0:00:05.24,0:00:06.92,Live,,0,0,0,{\k28}select {\k36}few {\k60}or {\k44}freely
+Dialogue: 0,0:00:06.92,0:00:08.84,Live,,0,0,0,{\k48}shared {\k44}{\k28}allowing {\k52}anyone {\k20}to
+Dialogue: 0,0:00:08.84,0:00:10.38,Live,,0,0,0,{\k20}build {\k26}upon {\k20}them {\k58}{\k30}This
+Dialogue: 0,0:00:10.38,0:00:11.26,Live,,0,0,0,{\k22}is {\k18}the {\k26}heart {\k22}of
+Dialogue: 0,0:00:11.26,0:00:12.70,Live,,0,0,0,{\k10}the {\k30}open {\k48}versus {\k56}closed
+Dialogue: 0,0:00:12.70,0:00:14.18,Live,,0,0,0,{\k30}AI {\k52}debate {\k36}{\k20}By {\k10}the
+Dialogue: 0,0:00:14.18,0:00:14.98,Live,,0,0,0,{\k16}end {\k12}of {\k16}this {\k26}guide
+Dialogue: 0,0:00:15.32,0:00:16.78,Live,,0,0,0,{\k10}you'll {\k44}understand {\k56}precisely {\k36}how
+Dialogue: 0,0:00:16.78,0:00:18.10,Live,,0,0,0,{\k24}these {\k24}two {\k46}approaches {\k38}differ
+Dialogue: 0,0:00:18.10,0:00:19.50,Live,,0,0,0,{\k64}and {\k24}why {\k20}it {\k32}profoundly
+Dialogue: 0,0:00:19.50,0:00:20.98,Live,,0,0,0,{\k66}impacts {\k32}the {\k30}future {\k20}of
+Dialogue: 0,0:00:20.98,0:00:21.64,Live,,0,0,0,{\k56}technology
+Dialogue: 0,0:00:22.26,0:00:23.82,Live,,0,0,0,{\k36}At {\k20}its {\k28}core {\k48}{\k24}open
+Dialogue: 0,0:00:23.82,0:00:25.32,Live,,0,0,0,{\k34}AI {\k54}means {\k22}the {\k40}underlying
+Dialogue: 0,0:00:25.32,0:00:27.84,Live,,0,0,0,{\k56}code {\k48}{\k52}architecture {\k62}and {\k34}often
+Dialogue: 0,0:00:27.84,0:00:29.02,Live,,0,0,0,{\k16}the {\k32}trained {\k32}model {\k38}itself
+Dialogue: 0,0:00:29.02,0:00:31.28,Live,,0,0,0,{\k36}are {\k40}publicly {\k60}available {\k54}{\k36}Think
+Dialogue: 0,0:00:31.28,0:00:31.76,Live,,0,0,0,{\k10}of {\k10}it {\k16}like {\k12}a
+Dialogue: 0,0:00:31.76,0:00:33.40,Live,,0,0,0,{\k40}recipe {\k48}shared {\k20}with {\k46}everyone
+Dialogue: 0,0:00:33.66,0:00:34.70,Live,,0,0,0,{\k32}Anyone {\k28}can {\k26}see {\k18}the
+Dialogue: 0,0:00:34.70,0:00:36.70,Live,,0,0,0,{\k54}ingredients {\k44}{\k56}understand {\k22}the {\k24}cooking
+Dialogue: 0,0:00:36.70,0:00:38.58,Live,,0,0,0,{\k50}process {\k32}{\k28}and {\k32}even {\k46}modify
+Dialogue: 0,0:00:38.58,0:00:39.82,Live,,0,0,0,{\k24}the {\k44}recipe {\k26}to {\k30}create
+Dialogue: 0,0:00:39.82,0:00:41.92,Live,,0,0,0,{\k38}something {\k26}new {\k68}{\k18}This {\k60}transparency
+Dialogue: 0,0:00:41.92,0:00:44.24,Live,,0,0,0,{\k68}fosters {\k82}collaboration {\k48}and {\k34}rapid
+Dialogue: 0,0:00:44.24,0:00:44.78,Live,,0,0,0,{\k44}iteration
+Dialogue: 0,0:00:45.52,0:00:46.94,Live,,0,0,0,{\k20}The {\k52}advantages {\k32}of {\k38}open
+Dialogue: 0,0:00:46.94,0:00:48.94,Live,,0,0,0,{\k34}AI {\k52}are {\k60}significant {\k44}{\k10}It
+Dialogue: 0,0:00:48.94,0:00:50.78,Live,,0,0,0,{\k66}accelerates {\k56}innovation {\k48}because {\k14}a
+Dialogue: 0,0:00:50.78,0:00:52.38,Live,,0,0,0,{\k30}global {\k58}community {\k20}can {\k52}contribute
+Dialogue: 0,0:00:52.38,0:00:54.26,Live,,0,0,0,{\k70}find {\k50}bugs {\k16}{\k30}and {\k22}build
+Dialogue: 0,0:00:54.26,0:00:56.12,Live,,0,0,0,{\k62}specialized {\k66}applications {\k36}on {\k22}top
+Dialogue: 0,0:00:56.12,0:00:58.00,Live,,0,0,0,{\k20}of {\k34}existing {\k42}models {\k68}{\k24}It
+Dialogue: 0,0:00:58.00,0:00:59.60,Live,,0,0,0,{\k36}also {\k40}promotes {\k74}accessibility
+Dialogue: 0,0:01:00.32,0:01:02.52,Live,,0,0,0,{\k42}Researchers {\k66}{\k28}startups {\k32}and {\k52}individuals
+Dialogue: 0,0:01:02.52,0:01:04.36,Live,,0,0,0,{\k34}can {\k38}leverage {\k72}powerful {\k40}AI
+Dialogue: 0,0:01:04.36,0:01:06.66,Live,,0,0,0,{\k60}without {\k60}massive {\k36}upfront {\k64}investment
+Dialogue: 0,0:01:07.08,0:01:08.84,Live,,0,0,0,{\k80}democratizing {\k38}access {\k30}to {\k28}cutting
+Dialogue: 0,0:01:08.84,0:01:11.00,Live,,0,0,0,{\k22}edge {\k62}technology {\k42}{\k28}However {\k36}{\k26}open
+Dialogue: 0,0:01:11.00,0:01:12.36,Live,,0,0,0,{\k32}AI {\k64}isn't {\k20}without {\k20}its
+Dialogue: 0,0:01:12.36,0:01:14.34,Live,,0,0,0,{\k46}challenges {\k66}{\k18}The {\k24}very {\k44}freedom
+Dialogue: 0,0:01:14.34,0:01:15.98,Live,,0,0,0,{\k24}that {\k34}fuels {\k56}innovation {\k50}can
+Dialogue: 0,0:01:15.98,0:01:17.64,Live,,0,0,0,{\k36}also {\k30}raise {\k66}concerns {\k34}about
+Dialogue: 0,0:01:17.64,0:01:19.44,Live,,0,0,0,{\k50}misuse {\k58}{\k18}If {\k8}a {\k46}powerful
+Dialogue: 0,0:01:19.44,0:01:21.02,Live,,0,0,0,{\k38}AI {\k52}model {\k26}is {\k42}freely
+Dialogue: 0,0:01:21.02,0:01:22.70,Live,,0,0,0,{\k54}available {\k60}what {\k32}prevents {\k22}it
+Dialogue: 0,0:01:22.70,0:01:23.66,Live,,0,0,0,{\k14}from {\k20}being {\k42}used {\k20}for
+Dialogue: 0,0:01:23.66,0:01:25.90,Live,,0,0,0,{\k30}malicious {\k68}purposes {\k42}{\k24}like {\k60}generating
+Dialogue: 0,0:01:25.90,0:01:27.56,Live,,0,0,0,{\k72}sophisticated {\k84}misinformation
+Dialogue: 0,0:01:28.16,0:01:29.88,Live,,0,0,0,{\k8}or {\k44}creating {\k56}harmful {\k64}autonomous
+Dialogue: 0,0:01:29.88,0:01:32.74,Live,,0,0,0,{\k60}systems {\k62}{\k44}Now {\k36}{\k36}consider {\k48}closed
+Dialogue: 0,0:01:32.74,0:01:34.08,Live,,0,0,0,{\k24}AI {\k58}{\k16}This {\k14}is {\k22}where
+Dialogue: 0,0:01:34.08,0:01:35.54,Live,,0,0,0,{\k14}a {\k36}company {\k36}or {\k60}organization
+Dialogue: 0,0:01:35.54,0:01:37.64,Live,,0,0,0,{\k68}develops {\k38}AI {\k54}models {\k42}{\k8}and
+Dialogue: 0,0:01:37.64,0:01:38.96,Live,,0,0,0,{\k20}keeps {\k26}the {\k18}inner {\k58}workings
+Dialogue: 0,0:01:39.24,0:01:40.74,Live,,0,0,0,{\k22}training {\k36}data {\k32}{\k12}and {\k48}proprietary
+Dialogue: 0,0:01:40.74,0:01:42.96,Live,,0,0,0,{\k74}algorithms {\k46}secret {\k60}{\k32}It's {\k10}like
+Dialogue: 0,0:01:42.96,0:01:43.68,Live,,0,0,0,{\k14}a {\k22}chef {\k26}with {\k10}a
+Dialogue: 0,0:01:43.68,0:01:45.60,Live,,0,0,0,{\k36}secret {\k46}family {\k46}recipe {\k50}{\k14}you
+Dialogue: 0,0:01:45.60,0:01:46.76,Live,,0,0,0,{\k14}can {\k38}enjoy {\k18}the {\k36}dish
+Dialogue: 0,0:01:47.02,0:01:47.66,Live,,0,0,0,{\k20}but {\k14}you {\k18}don't {\k12}know
+Dialogue: 0,0:01:47.66,0:01:48.94,Live,,0,0,0,{\k16}the {\k28}exact {\k56}steps {\k28}or
+Dialogue: 0,0:01:48.94,0:01:51.32,Live,,0,0,0,{\k54}ingredients {\k100}The {\k34}primary {\k50}benefit
+Dialogue: 0,0:01:51.32,0:01:52.78,Live,,0,0,0,{\k20}of {\k44}closed {\k26}AI {\k56}is
+Dialogue: 0,0:01:52.78,0:01:55.12,Live,,0,0,0,{\k42}control {\k50}{\k56}Developers {\k16}can {\k70}meticulously
+Dialogue: 0,0:01:55.12,0:01:57.20,Live,,0,0,0,{\k44}manage {\k22}its {\k50}development {\k52}{\k40}ensuring
+Dialogue: 0,0:01:57.20,0:01:59.38,Live,,0,0,0,{\k56}safety {\k52}{\k42}security {\k26}{\k10}and {\k32}ethical
+Dialogue: 0,0:01:59.38,0:02:00.04,Live,,0,0,0,{\k56}deployment
+Dialogue: 0,0:02:00.64,0:02:01.72,Live,,0,0,0,{\k20}This {\k38}often {\k24}leads {\k26}to
+Dialogue: 0,0:02:01.72,0:02:03.98,Live,,0,0,0,{\k38}highly {\k66}polished {\k26}{\k22}reliable {\k74}products
+Dialogue: 0,0:02:03.98,0:02:05.38,Live,,0,0,0,{\k18}and {\k42}services {\k52}tailored {\k28}for
+Dialogue: 0,0:02:05.38,0:02:06.58,Live,,0,0,0,{\k44}specific {\k66}applications
+Dialogue: 0,0:02:07.26,0:02:08.94,Live,,0,0,0,{\k48}Companies {\k48}invest {\k44}heavily {\k28}in
+Dialogue: 0,0:02:08.94,0:02:10.22,Live,,0,0,0,{\k18}these {\k40}models {\k38}{\k22}and {\k10}the
+Dialogue: 0,0:02:10.22,0:02:12.18,Live,,0,0,0,{\k42}proprietary {\k60}nature {\k60}allows {\k34}them
+Dialogue: 0,0:02:12.18,0:02:13.44,Live,,0,0,0,{\k16}to {\k32}recoup {\k26}that {\k52}investment
+Dialogue: 0,0:02:13.44,0:02:15.24,Live,,0,0,0,{\k54}and {\k28}fund {\k42}further {\k46}research
+Dialogue: 0,0:02:15.60,0:02:16.74,Live,,0,0,0,{\k8}But {\k16}this {\k50}control {\k40}comes
+Dialogue: 0,0:02:16.74,0:02:18.54,Live,,0,0,0,{\k18}at {\k10}a {\k24}cost {\k128}Closed
+Dialogue: 0,0:02:18.54,0:02:19.76,Live,,0,0,0,{\k30}AI {\k46}can {\k22}lead {\k24}to
+Dialogue: 0,0:02:19.76,0:02:21.60,Live,,0,0,0,{\k30}AI {\k54}silos {\k50}{\k8}where {\k42}progress
+Dialogue: 0,0:02:21.60,0:02:22.96,Live,,0,0,0,{\k26}is {\k56}concentrated {\k40}within {\k14}a
+Dialogue: 0,0:02:22.96,0:02:24.88,Live,,0,0,0,{\k20}few {\k48}large {\k38}entities {\k66}{\k20}It
+Dialogue: 0,0:02:24.88,0:02:25.78,Live,,0,0,0,{\k10}can {\k30}also {\k38}create {\k12}a
+Dialogue: 0,0:02:25.78,0:02:27.42,Live,,0,0,0,{\k40}dependency {\k42}on {\k18}these {\k54}providers
+Dialogue: 0,0:02:27.80,0:02:29.76,Live,,0,0,0,{\k32}limiting {\k54}independent {\k58}research {\k52}and
+Dialogue: 0,0:02:29.76,0:02:31.58,Live,,0,0,0,{\k48}potentially {\k52}increasing {\k46}costs {\k36}for
+Dialogue: 0,0:02:31.58,0:02:32.80,Live,,0,0,0,{\k30}users {\k50}{\k8}The {\k20}lack {\k14}of
+Dialogue: 0,0:02:32.80,0:02:34.22,Live,,0,0,0,{\k68}transparency {\k26}can {\k30}also {\k18}make
+Dialogue: 0,0:02:34.22,0:02:35.44,Live,,0,0,0,{\k14}it {\k26}harder {\k22}to {\k60}identify
+Dialogue: 0,0:02:35.44,0:02:37.02,Live,,0,0,0,{\k26}and {\k28}address {\k56}biases {\k48}or
+Dialogue: 0,0:02:37.02,0:02:39.56,Live,,0,0,0,{\k50}unintended {\k82}consequences {\k70}{\k44}Here's {\k8}a
+Dialogue: 0,0:02:39.56,0:02:41.14,Live,,0,0,0,{\k30}pattern {\k56}interrupt {\k42}{\k14}Think {\k16}about
+Dialogue: 0,0:02:41.14,0:02:42.14,Live,,0,0,0,{\k14}the {\k36}internet {\k40}itself
+Dialogue: 0,0:02:42.76,0:02:43.82,Live,,0,0,0,{\k40}Initially {\k32}{\k10}it {\k10}was {\k14}an
+Dialogue: 0,0:02:43.82,0:02:46.34,Live,,0,0,0,{\k38}open {\k34}{\k38}collaborative {\k84}project {\k58}But
+Dialogue: 0,0:02:46.34,0:02:47.92,Live,,0,0,0,{\k32}then {\k22}{\k22}many {\k50}services {\k32}built
+Dialogue: 0,0:02:47.92,0:02:49.62,Live,,0,0,0,{\k24}on {\k26}top {\k44}became {\k66}proprietary
+Dialogue: 0,0:02:50.10,0:02:52.18,Live,,0,0,0,{\k28}creating {\k42}massive {\k54}companies {\k56}{\k28}This
+Dialogue: 0,0:02:52.18,0:02:53.80,Live,,0,0,0,{\k44}dynamic {\k56}mirrors {\k34}the {\k28}AI
+Dialogue: 0,0:02:53.80,0:02:55.98,Live,,0,0,0,{\k70}landscape {\k46}{\k14}One {\k34}approach {\k54}fosters
+Dialogue: 0,0:02:55.98,0:02:57.16,Live,,0,0,0,{\k36}broad {\k72}experimentation
+Dialogue: 0,0:02:57.80,0:02:59.58,Live,,0,0,0,{\k8}the {\k28}other {\k58}focused {\k74}refinement
+Dialogue: 0,0:03:00.02,0:03:01.22,Live,,0,0,0,{\k30}The {\k34}debate {\k36}isn't {\k20}just
+Dialogue: 0,0:03:01.22,0:03:02.96,Live,,0,0,0,{\k40}theoretical {\k70}{\k10}It {\k16}has {\k38}real
+Dialogue: 0,0:03:02.96,0:03:05.32,Live,,0,0,0,{\k38}world {\k60}implications {\k58}{\k24}Open {\k46}models
+Dialogue: 0,0:03:05.48,0:03:06.72,Live,,0,0,0,{\k24}like {\k26}those {\k54}released {\k20}by
+Dialogue: 0,0:03:06.72,0:03:08.44,Live,,0,0,0,{\k22}some {\k42}academic {\k76}institutions {\k32}or
+Dialogue: 0,0:03:08.44,0:03:11.10,Live,,0,0,0,{\k54}non-profits {\k68}{\k28}empower {\k62}smaller {\k54}developers
+Dialogue: 0,0:03:11.10,0:03:12.48,Live,,0,0,0,{\k32}to {\k26}build {\k36}AI {\k44}powered
+Dialogue: 0,0:03:12.48,0:03:13.90,Live,,0,0,0,{\k38}tools {\k44}for {\k20}niche {\k40}markets
+Dialogue: 0,0:03:13.90,0:03:15.46,Live,,0,0,0,{\k58}that {\k18}might {\k52}otherwise {\k28}be
+Dialogue: 0,0:03:15.46,0:03:17.32,Live,,0,0,0,{\k38}ignored {\k26}by {\k38}larger {\k74}corporations
+Dialogue: 0,0:03:17.92,0:03:19.12,Live,,0,0,0,{\k28}Think {\k18}of {\k34}AI {\k40}for
+Dialogue: 0,0:03:19.12,0:03:21.12,Live,,0,0,0,{\k24}rare {\k36}disease {\k72}diagnosis {\k68}or
+Dialogue: 0,0:03:21.12,0:03:23.32,Live,,0,0,0,{\k38}hyper {\k40}local {\k56}environmental {\k76}monitoring
+Dialogue: 0,0:03:23.58,0:03:25.64,Live,,0,0,0,{\k60}Conversely {\k32}{\k30}closed {\k32}models {\k52}often
+Dialogue: 0,0:03:25.64,0:03:27.14,Live,,0,0,0,{\k38}power {\k18}the {\k42}seamless {\k42}experiences
+Dialogue: 0,0:03:27.54,0:03:28.92,Live,,0,0,0,{\k56}we {\k26}use {\k28}daily {\k28}from
+Dialogue: 0,0:03:28.92,0:03:30.98,Live,,0,0,0,{\k48}advanced {\k48}personal {\k50}assistants {\k60}to
+Dialogue: 0,0:03:30.98,0:03:33.98,Live,,0,0,0,{\k54}sophisticated {\k82}recommendation {\k68}engines {\k62}{\k34}These
+Dialogue: 0,0:03:33.98,0:03:35.68,Live,,0,0,0,{\k42}systems {\k50}benefit {\k32}from {\k46}massive
+Dialogue: 0,0:03:35.68,0:03:36.98,Live,,0,0,0,{\k24}data {\k40}sets {\k26}and {\k40}dedicated
+Dialogue: 0,0:03:36.98,0:03:39.02,Live,,0,0,0,{\k50}engineering {\k70}teams {\k42}{\k16}aiming {\k26}for
+Dialogue: 0,0:03:39.02,0:03:40.64,Live,,0,0,0,{\k22}peak {\k60}performance {\k52}and {\k28}user
+Dialogue: 0,0:03:40.64,0:03:42.30,Live,,0,0,0,{\k56}satisfaction {\k50}within {\k18}their {\k42}defined
+Dialogue: 0,0:03:42.30,0:03:44.26,Live,,0,0,0,{\k42}scope {\k84}And {\k12}the {\k58}strangest
+Dialogue: 0,0:03:44.26,0:03:45.60,Live,,0,0,0,{\k34}part {\k34}{\k8}The {\k26}line {\k32}between
+Dialogue: 0,0:03:45.60,0:03:47.02,Live,,0,0,0,{\k36}open {\k28}and {\k38}closed {\k40}is
+Dialogue: 0,0:03:47.02,0:03:49.62,Live,,0,0,0,{\k38}becoming {\k82}increasingly {\k40}blurred {\k56}{\k44}Companies
+Dialogue: 0,0:03:49.62,0:03:51.22,Live,,0,0,0,{\k34}may {\k32}release {\k46}powerful {\k48}models
+Dialogue: 0,0:03:51.22,0:03:52.72,Live,,0,0,0,{\k30}with {\k34}open {\k30}source {\k56}licenses
+Dialogue: 0,0:03:52.72,0:03:53.90,Live,,0,0,0,{\k60}but {\k16}keep {\k18}the {\k24}most
+Dialogue: 0,0:03:53.90,0:03:55.72,Live,,0,0,0,{\k46}advanced {\k64}versions {\k32}or {\k40}training
+Dialogue: 0,0:03:55.72,0:03:56.72,Live,,0,0,0,{\k36}data {\k54}proprietary
+Dialogue: 0,0:03:57.44,0:03:58.80,Live,,0,0,0,{\k38}This {\k32}open {\k26}core {\k40}model
+Dialogue: 0,0:03:58.80,0:04:00.72,Live,,0,0,0,{\k48}allows {\k32}for {\k46}community {\k66}engagement
+Dialogue: 0,0:04:00.72,0:04:02.90,Live,,0,0,0,{\k54}while {\k42}retaining {\k48}commercial {\k64}advantage
+Dialogue: 0,0:04:03.38,0:04:04.64,Live,,0,0,0,{\k34}It's {\k6}a {\k52}strategic {\k34}dance
+Dialogue: 0,0:04:04.64,0:04:06.68,Live,,0,0,0,{\k42}between {\k44}sharing {\k36}and {\k72}exclusivity
+Dialogue: 0,0:04:06.98,0:04:07.90,Live,,0,0,0,{\k8}The {\k38}question {\k24}of {\k22}AI
+Dialogue: 0,0:04:07.90,0:04:09.36,Live,,0,0,0,{\k66}safety {\k26}and {\k26}ethics {\k28}is
+Dialogue: 0,0:04:09.36,0:04:10.52,Live,,0,0,0,{\k12}a {\k48}huge {\k36}driver {\k20}in
+Dialogue: 0,0:04:10.52,0:04:12.32,Live,,0,0,0,{\k16}this {\k48}discussion {\k80}With {\k36}open
+Dialogue: 0,0:04:12.32,0:04:14.30,Live,,0,0,0,{\k36}AI {\k62}{\k6}the {\k62}responsibility {\k32}for
+Dialogue: 0,0:04:14.30,0:04:15.88,Live,,0,0,0,{\k26}safe {\k52}deployment {\k48}often {\k32}falls
+Dialogue: 0,0:04:15.88,0:04:17.40,Live,,0,0,0,{\k30}on {\k12}the {\k28}user {\k70}{\k12}With
+Dialogue: 0,0:04:17.40,0:04:19.16,Live,,0,0,0,{\k44}closed {\k30}AI {\k56}{\k6}the {\k40}developers
+Dialogue: 0,0:04:19.16,0:04:20.66,Live,,0,0,0,{\k32}bear {\k28}that {\k34}burden {\k34}{\k22}which
+Dialogue: 0,0:04:20.66,0:04:21.40,Live,,0,0,0,{\k18}can {\k20}lead {\k20}to {\k16}more
+Dialogue: 0,0:04:21.40,0:04:23.98,Live,,0,0,0,{\k46}cautious {\k38}{\k34}albeit {\k54}slower {\k36}{\k40}rollouts
+Dialogue: 0,0:04:24.42,0:04:25.26,Live,,0,0,0,{\k24}This {\k16}is {\k10}a {\k34}critical
+Dialogue: 0,0:04:25.26,0:04:26.92,Live,,0,0,0,{\k36}tension {\k34}point {\k40}{\k38}Consider {\k18}the
+Dialogue: 0,0:04:26.92,0:04:29.16,Live,,0,0,0,{\k30}sheer {\k82}computational {\k48}power {\k64}required
+Dialogue: 0,0:04:29.16,0:04:30.38,Live,,0,0,0,{\k30}to {\k30}train {\k40}state {\k22}of
+Dialogue: 0,0:04:30.38,0:04:31.22,Live,,0,0,0,{\k14}the {\k22}art {\k38}AI
+Dialogue: 0,0:04:32.00,0:04:33.34,Live,,0,0,0,{\k28}This {\k34}barrier {\k22}to {\k40}entry
+Dialogue: 0,0:04:33.62,0:04:34.76,Live,,0,0,0,{\k24}whether {\k20}for {\k38}open {\k32}or
+Dialogue: 0,0:04:34.76,0:04:36.56,Live,,0,0,0,{\k34}closed {\k50}models {\k50}{\k20}means {\k26}that
+Dialogue: 0,0:04:36.56,0:04:38.68,Live,,0,0,0,{\k42}truly {\k46}groundbreaking {\k78}development {\k46}often
+Dialogue: 0,0:04:38.68,0:04:40.98,Live,,0,0,0,{\k38}still {\k52}requires {\k70}significant {\k70}resources
+Dialogue: 0,0:04:40.98,0:04:43.00,Live,,0,0,0,{\k76}However {\k42}{\k22}open {\k34}models {\k28}can
+Dialogue: 0,0:04:43.00,0:04:44.28,Live,,0,0,0,{\k30}allow {\k26}for {\k20}more {\k52}efficient
+Dialogue: 0,0:04:44.28,0:04:45.82,Live,,0,0,0,{\k38}fine {\k34}tuning {\k28}on {\k54}smaller
+Dialogue: 0,0:04:45.82,0:04:48.60,Live,,0,0,0,{\k74}specialized {\k40}data {\k44}sets {\k42}{\k78}democratizing
+Dialogue: 0,0:04:48.60,0:04:50.52,Live,,0,0,0,{\k66}application {\k46}rather {\k24}than {\k46}creation
+Dialogue: 0,0:04:51.20,0:04:52.26,Live,,0,0,0,{\k26}What {\k16}does {\k22}NOT {\k42}matter
+Dialogue: 0,0:04:52.26,0:04:54.08,Live,,0,0,0,{\k18}in {\k14}this {\k32}debate {\k66}{\k42}Often
+Dialogue: 0,0:04:54.36,0:04:55.64,Live,,0,0,0,{\k6}the {\k40}specific {\k58}asterisk {\k24}name
+Dialogue: 0,0:04:55.64,0:04:56.90,Live,,0,0,0,{\k66}asterisk {\k18}of {\k8}a {\k34}model
+Dialogue: 0,0:04:56.90,0:04:58.64,Live,,0,0,0,{\k32}or {\k48}company {\k54}can {\k40}distract
+Dialogue: 0,0:04:58.64,0:05:00.38,Live,,0,0,0,{\k34}from {\k16}the {\k42}underlying {\k72}principles
+Dialogue: 0,0:05:00.56,0:05:01.58,Live,,0,0,0,{\k26}Whether {\k24}it's {\k22}Model {\k30}X
+Dialogue: 0,0:05:01.58,0:05:03.00,Live,,0,0,0,{\k24}or {\k34}Company {\k38}Y {\k38}{\k8}the
+Dialogue: 0,0:05:03.00,0:05:04.06,Live,,0,0,0,{\k18}core {\k44}question {\k34}remains
+Dialogue: 0,0:05:04.70,0:05:06.14,Live,,0,0,0,{\k14}is {\k14}it {\k48}fundamentally {\k58}open
+Dialogue: 0,0:05:06.44,0:05:08.12,Live,,0,0,0,{\k34}allowing {\k46}inspection {\k40}and {\k48}modification
+Dialogue: 0,0:05:08.12,0:05:09.50,Live,,0,0,0,{\k90}or {\k28}is {\k12}it {\k8}a
+Dialogue: 0,0:05:09.50,0:05:11.22,Live,,0,0,0,{\k24}black {\k50}box {\k24}{\k54}controlled {\k20}and
+Dialogue: 0,0:05:11.22,0:05:11.84,Live,,0,0,0,{\k52}proprietary
+Dialogue: 0,0:05:12.70,0:05:13.90,Live,,0,0,0,{\k24}Focus {\k30}on {\k16}the {\k50}asterisk
+Dialogue: 0,0:05:13.90,0:05:15.48,Live,,0,0,0,{\k20}how {\k66}asterisk {\k16}and {\k56}asterisk
+Dialogue: 0,0:05:15.48,0:05:17.12,Live,,0,0,0,{\k22}Y {\k70}asterisk {\k26}{\k26}not {\k20}just
+Dialogue: 0,0:05:17.12,0:05:18.68,Live,,0,0,0,{\k14}the {\k54}asterisk {\k16}what {\k62}asterisk
+Dialogue: 0,0:05:19.08,0:05:20.70,Live,,0,0,0,{\k24}The {\k38}future {\k36}likely {\k64}involves
+Dialogue: 0,0:05:20.70,0:05:22.46,Live,,0,0,0,{\k24}a {\k40}hybrid {\k42}approach {\k50}{\k20}Open
+Dialogue: 0,0:05:22.46,0:05:23.88,Live,,0,0,0,{\k32}source {\k44}frameworks {\k28}will {\k38}continue
+Dialogue: 0,0:05:23.88,0:05:25.64,Live,,0,0,0,{\k20}to {\k38}drive {\k54}foundational {\k64}research
+Dialogue: 0,0:05:25.64,0:05:27.80,Live,,0,0,0,{\k42}and {\k46}community {\k56}innovation {\k42}{\k30}while
+Dialogue: 0,0:05:27.80,0:05:29.58,Live,,0,0,0,{\k48}proprietary {\k78}solutions {\k20}will {\k32}offer
+Dialogue: 0,0:05:29.58,0:05:32.28,Live,,0,0,0,{\k68}specialized {\k52}{\k32}highly {\k56}optimized {\k62}services
+Dialogue: 0,0:05:32.28,0:05:34.84,Live,,0,0,0,{\k98}This {\k94}coexistence {\k32}allows {\k32}for
+Dialogue: 0,0:05:34.84,0:05:36.72,Live,,0,0,0,{\k26}both {\k26}broad {\k76}exploration {\k60}and
+Dialogue: 0,0:05:36.72,0:05:39.10,Live,,0,0,0,{\k34}deep {\k60}focused {\k62}development {\k44}{\k38}pushing
+Dialogue: 0,0:05:39.10,0:05:40.66,Live,,0,0,0,{\k32}AI {\k66}forward {\k22}in {\k36}diverse
+Dialogue: 0,0:05:40.66,0:05:42.70,Live,,0,0,0,{\k38}ways {\k48}{\k50}Ultimately {\k30}{\k4}the {\k34}open
+Dialogue: 0,0:05:42.70,0:05:44.34,Live,,0,0,0,{\k42}versus {\k54}closed {\k24}AI {\k44}debate
+Dialogue: 0,0:05:44.34,0:05:46.30,Live,,0,0,0,{\k34}is {\k18}about {\k48}access {\k50}{\k36}control
+Dialogue: 0,0:05:46.56,0:05:47.24,Live,,0,0,0,{\k20}and {\k12}the {\k20}pace {\k16}of
+Dialogue: 0,0:05:47.24,0:05:49.84,Live,,0,0,0,{\k42}progress {\k70}{\k68}Understanding {\k36}these {\k44}fundamental
+Dialogue: 0,0:05:49.84,0:05:51.74,Live,,0,0,0,{\k70}differences {\k86}empowers {\k22}you {\k12}to
+Dialogue: 0,0:05:51.74,0:05:52.98,Live,,0,0,0,{\k24}better {\k54}evaluate {\k18}the {\k28}AI
+Dialogue: 0,0:05:52.98,0:05:54.70,Live,,0,0,0,{\k44}tools {\k20}you {\k50}encounter {\k58}and
+Dialogue: 0,0:05:54.70,0:05:56.02,Live,,0,0,0,{\k14}to {\k56}anticipate {\k20}the {\k42}direction
+Dialogue: 0,0:05:56.02,0:05:58.58,Live,,0,0,0,{\k26}of {\k50}technological {\k90}advancement {\k60}{\k30}It's
+Dialogue: 0,0:05:58.58,0:05:59.68,Live,,0,0,0,{\k16}about {\k40}shaping {\k22}a {\k32}future
+Dialogue: 0,0:05:59.68,0:06:01.48,Live,,0,0,0,{\k32}where {\k30}AI {\k62}benefits {\k56}everyone
+Dialogue: 0,0:06:01.48,0:06:04.04,Live,,0,0,0,{\k98}So {\k38}{\k38}what's {\k18}next {\k58}{\k6}The
+Dialogue: 0,0:06:04.04,0:06:05.32,Live,,0,0,0,{\k34}choices {\k32}made {\k38}today {\k24}in
+Dialogue: 0,0:06:05.32,0:06:07.00,Live,,0,0,0,{\k14}this {\k34}open {\k44}versus {\k76}closed
+Dialogue: 0,0:06:07.00,0:06:08.88,Live,,0,0,0,{\k26}AI {\k72}landscape {\k56}will {\k34}define
+Dialogue: 0,0:06:08.88,0:06:10.06,Live,,0,0,0,{\k20}the {\k32}tools {\k26}and {\k40}systems
+Dialogue: 0,0:06:10.06,0:06:12.10,Live,,0,0,0,{\k30}of {\k38}tomorrow {\k68}{\k34}Which {\k34}model
+Dialogue: 0,0:06:12.10,0:06:13.18,Live,,0,0,0,{\k20}do {\k8}you {\k34}believe {\k46}holds
+Dialogue: 0,0:06:13.18,0:06:14.28,Live,,0,0,0,{\k24}more {\k42}promise {\k32}for {\k12}a
+Dialogue: 0,0:06:14.28,0:06:15.82,Live,,0,0,0,{\k56}beneficial {\k44}AI {\k44}future
