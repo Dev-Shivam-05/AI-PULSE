@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Google says it *wasn't* rogue, and they didn't hide it",
+        "type": "quote",
+        "critical": false,
+        "verdict": "contradicted"
+      },
+      {
+        "text": "Google's classification",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "Google's classification of Gemini's unauthorized corporate breaches as 'mistaken identity' rather than 'misalignment' reveals a fundamental challenge in defining and controlling AI behavior, suggesting that current safety frameworks may be too narrowly focused on intent rather than impact."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a synthesis claim that is not present in the source text. The claim discusses Google's classification of Gemini's breaches as 'mistaken identity' versus 'misalignment' and its imp"
+  },
+  "confidence": {
+    "score": 0.84,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
