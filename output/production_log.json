@@ -3597,5 +3597,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-20T16:37:18.598412",
+    "title": "Gemini Hacks 3 Companies, AI Benchmarking Evolves",
+    "description": "This week's AI Roundup dives into critical developments shaping the future of artificial intelligence. We explore how Google's Gemini model demonstrated early hacking capabilities, raising significant security concerns.  Then, we examine the push for robust AI benchmarking as a startup aims to set new industry standards. We also touch upon the evolving regulatory landscape with OpenAI's youth safety initiatives and political discussions around AI. Tune in to understand the AI stories that truly mattered this week.\n\n#AI #Tech #Security #Innovation #FutureOfAI #ArtificialIntelligence #AISafety\n\nSource: https://techcrunch.com/2026/09/19/googles-gemini-is-the-latest-ai-model-to-hack-other-companies/\n\n🔗 Sources:\n1. Google’s Gemini is the latest AI model to hack other companies — https://techcrunch.com/2026/09/19/googles-gemini-is-the-latest-ai-model-to-hack-other-companies/\n2. Trump now says he wants to form an ‘AI Force’ — https://www.theverge.com/ai-artificial-intelligence/997867/trump-ai-force-ai-czar\n3. Introducing the Australian Youth Safety Blueprint — https://openai.com/index/australian-youth-safety-blueprint\n4. OpenAI and Microsoft knew they were starting a ‘doom loop’ for the web — https://www.theverge.com/ai-artificial-intelligence/997633/openai-microsoft-chatgpt-ai-new-york-times-doom-loop-theft-google-zero\n5. Vals, backed by Andreessen Horowitz, is looking to become the gold standard for AI benchma — https://techcrunch.com/2026/09/19/vals-backed-by-andreessen-horowitz-is-looking-to-become-the-gold-standard-for-ai-benchmarking/\n\nChapters:\n0:00 AI Roundup Intro\n1:47 Politics And AI\n3:10 Youth AI Safety\n4:40 OpenAI Doom Loop\n6:03 AI Benchmarking Startup\n\n▶ Watch next: https://youtube.com/watch?v=MEdcn6Mbo3w",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Gemini",
+      "Google",
+      "Cybersecurity",
+      "AI Benchmarking",
+      "OpenAI",
+      "Policy",
+      "Trump",
+      "Tech News",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Gemini_Hacks_3_Companies_AI_Benchmarking_Evolves_20260920_162506_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260920_162925.mp4",
+      "output/shorts/short_2_20260920_163020.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260920_162746.jpg",
+    "youtube_url": "https://youtube.com/watch?v=7zMnFB4svtc",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=YmaphuGre58",
+      "https://youtube.com/watch?v=oc5I5zii8xI"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Gemini Hacks 3 Giants! 🤯 AI Benchmarking REVOLUTION! #Shorts",
+        "description": "Gemini's mind-blowing hacks on 3 major companies are here! Witness the epic evolution of AI benchmarking. Get ready to be amazed!",
+        "instagram_caption": "🤯 Gemini just dropped some serious AI bombshells, hacking 3 major companies and rewriting the benchmarking game! Witness the future of AI unfold. Follow @tooldojo!\n\n#AI #Gemini #TechNews #Innovation #ArtificialIntelligence #FutureTech #MachineLearning #DeepLearning #AISecurity #TechTrends #Hacking #Cybersecurity #Benchmarking #AIUpdates #MustWatch #TechBreakdown #DigitalTransformation #AIRevolution #TechInsights #Tooldojo"
+      },
+      {
+        "title": "AI Benchmarking SHOCKED! 🚀 Gemini's Latest Exploit! #Shorts",
+        "description": "The AI benchmarking world is reeling from Gemini's audacious exploits on 3 leading companies. See the groundbreaking changes in this rapid-fire update!",
+        "instagram_caption": "🚀 AI benchmarking just got a seismic shockwave thanks to Gemini's latest exploits on 3 massive companies! Prepare for a paradigm shift in how we measure AI's power. Follow @tooldojo!\n\n#AI #Gemini #TechNews #AIRevolution #Innovation #ArtificialIntelligence #TechUpdate #MachineLearning #DeepLearning #Cybersecurity #Benchmarking #AIExplained #TechGyaan #DigitalWorld #FutureOfAI #TechTalk #AISolutions #ArtificialIntelligenceNews #TechAlert #Tooldojo"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]

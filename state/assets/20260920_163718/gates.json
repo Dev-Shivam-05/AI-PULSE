@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 7,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The rapid advancement of AI capabilities, as seen in Gemini's autonomous hacking, is outpacing traditional security and ethical frameworks, necessitating a proactive, multi-faceted approach to AI governance that balances innovation with safety and societal well-being."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative structure and specific phrasing (e.g., 'cut through the noise', 'unexpected reason', 'growing concern', 'evolving political landscape', 'less about the specifics... "
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
