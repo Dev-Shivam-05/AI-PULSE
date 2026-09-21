@@ -1,0 +1,87 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "this week",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Muse ordering 50 pounds of coffee instead of 5",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "Amazon's blocking of Meta's AI agent is a critical early signal that independent AI agents may face significant gatekeeping from established platforms, forcing a tiered or permissioned approach to AI-driven commerce rather than an open-access model."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a synthesis claim that is not present in the source text. The claim is an interpretation and extrapolation of the events described in the source, suggesting a broader implication "
+  },
+  "confidence": {
+    "score": 0.74,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.2,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

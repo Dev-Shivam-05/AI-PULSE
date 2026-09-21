@@ -1,0 +1,166 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.36,Live,,0,0,0,{\k26}Imagine {\k38}your {\k38}favorite {\k34}online
+Dialogue: 0,0:00:01.36,0:00:03.02,Live,,0,0,0,{\k48}store {\k58}suddenly {\k38}telling {\k22}a
+Dialogue: 0,0:00:03.02,0:00:04.44,Live,,0,0,0,{\k52}powerful {\k42}AI {\k36}from {\k12}a
+Dialogue: 0,0:00:04.44,0:00:05.88,Live,,0,0,0,{\k22}rival {\k44}company {\k54}{\k12}You {\k12}shall
+Dialogue: 0,0:00:05.88,0:00:07.74,Live,,0,0,0,{\k18}not {\k36}pass {\k50}{\k30}That's {\k52}exactly
+Dialogue: 0,0:00:07.74,0:00:08.76,Live,,0,0,0,{\k18}what {\k30}happened {\k24}this {\k20}week
+Dialogue: 0,0:00:09.28,0:00:10.18,Live,,0,0,0,{\k12}If {\k10}you're {\k28}building {\k40}AI
+Dialogue: 0,0:00:10.18,0:00:11.40,Live,,0,0,0,{\k32}that {\k30}shops {\k32}for {\k18}you
+Dialogue: 0,0:00:11.66,0:00:12.92,Live,,0,0,0,{\k16}this {\k14}could {\k40}change {\k46}everything
+Dialogue: 0,0:00:13.44,0:00:15.40,Live,,0,0,0,{\k42}Meta's {\k32}AI {\k66}assistant {\k28}{\k18}Muse
+Dialogue: 0,0:00:16.08,0:00:17.26,Live,,0,0,0,{\k24}users {\k32}saw {\k20}an {\k32}error
+Dialogue: 0,0:00:17.74,0:00:19.08,Live,,0,0,0,{\k42}Continued {\k48}access {\k30}by {\k14}an
+Dialogue: 0,0:00:19.08,0:00:22.00,Live,,0,0,0,{\k90}unauthorized {\k42}AI {\k80}agent {\k80}violates
+Dialogue: 0,0:00:22.00,0:00:24.00,Live,,0,0,0,{\k82}Amazon’s {\k38}Conditions {\k32}of {\k38}Use
+Dialogue: 0,0:00:24.52,0:00:25.76,Live,,0,0,0,{\k28}Muse {\k26}is {\k22}not {\k48}welcome
+Dialogue: 0,0:00:25.76,0:00:26.82,Live,,0,0,0,{\k26}as {\k10}a {\k52}shopper {\k18}on
+Dialogue: 0,0:00:26.82,0:00:29.20,Live,,0,0,0,{\k48}Amazon {\k90}So {\k68}Meta's {\k32}AI
+Dialogue: 0,0:00:29.20,0:00:30.46,Live,,0,0,0,{\k50}agent {\k20}is {\k24}banned {\k32}from
+Dialogue: 0,0:00:30.46,0:00:32.92,Live,,0,0,0,{\k40}Amazon {\k64}{\k20}Calm {\k62}{\k32}Anyone {\k28}trying
+Dialogue: 0,0:00:32.92,0:00:33.76,Live,,0,0,0,{\k14}to {\k18}buy {\k28}through {\k24}Muse
+Dialogue: 0,0:00:33.76,0:00:35.24,Live,,0,0,0,{\k24}on {\k48}Amazon {\k50}must {\k26}find
+Dialogue: 0,0:00:35.24,0:00:36.64,Live,,0,0,0,{\k28}another {\k30}way {\k38}{\k26}This {\k18}looks
+Dialogue: 0,0:00:36.64,0:00:37.64,Live,,0,0,0,{\k22}like {\k10}a {\k20}tech {\k48}giant
+Dialogue: 0,0:00:37.64,0:00:39.88,Live,,0,0,0,{\k58}showdown {\k64}{\k42}Amazon {\k38}has {\k22}its
+Dialogue: 0,0:00:39.88,0:00:41.84,Live,,0,0,0,{\k34}own {\k44}AI {\k42}and {\k66}infrastructure
+Dialogue: 0,0:00:42.24,0:00:43.56,Live,,0,0,0,{\k28}Why {\k16}let {\k10}a {\k78}competitor's
+Dialogue: 0,0:00:43.56,0:00:45.26,Live,,0,0,0,{\k24}AI {\k54}shop {\k34}there {\k44}{\k14}But
+Dialogue: 0,0:00:45.26,0:00:46.76,Live,,0,0,0,{\k10}the {\k28}article {\k48}suggests {\k64}practical
+Dialogue: 0,0:00:46.76,0:00:49.68,Live,,0,0,0,{\k52}reasons {\k48}beyond {\k56}rivalry {\k68}{\k68}concerns
+Dialogue: 0,0:00:49.68,0:00:51.64,Live,,0,0,0,{\k20}about {\k72}agentic {\k32}commerce {\k46}{\k26}AI
+Dialogue: 0,0:00:51.64,0:00:53.96,Live,,0,0,0,{\k68}handling {\k66}transactions {\k78}If {\k20}Muse
+Dialogue: 0,0:00:53.96,0:00:55.32,Live,,0,0,0,{\k54}messes {\k18}up {\k16}an {\k38}order
+Dialogue: 0,0:00:55.66,0:00:57.12,Live,,0,0,0,{\k18}Amazon {\k58}deals {\k28}with {\k42}angry
+Dialogue: 0,0:00:57.12,0:00:59.16,Live,,0,0,0,{\k58}customers {\k28}and {\k56}unhappy {\k52}vendors
+Dialogue: 0,0:00:59.72,0:01:01.46,Live,,0,0,0,{\k36}Picture {\k34}Muse {\k54}ordering {\k50}50
+Dialogue: 0,0:01:01.46,0:01:02.74,Live,,0,0,0,{\k26}pounds {\k22}of {\k42}coffee {\k38}instead
+Dialogue: 0,0:01:02.74,0:01:04.26,Live,,0,0,0,{\k16}of {\k46}5 {\k40}{\k28}or {\k22}the
+Dialogue: 0,0:01:04.26,0:01:07.04,Live,,0,0,0,{\k34}wrong {\k58}blend {\k70}{\k76}Amazon's {\k40}customer
+Dialogue: 0,0:01:07.04,0:01:08.60,Live,,0,0,0,{\k46}service {\k22}would {\k14}be {\k64}swamped
+Dialogue: 0,0:01:08.72,0:01:09.90,Live,,0,0,0,{\k22}and {\k36}vendors {\k28}would {\k32}face
+Dialogue: 0,0:01:09.90,0:01:12.10,Live,,0,0,0,{\k60}inventory {\k78}issues {\k58}all {\k24}from
+Dialogue: 0,0:01:12.10,0:01:14.00,Live,,0,0,0,{\k20}an {\k40}AI {\k58}error {\k32}{\k40}Muse
+Dialogue: 0,0:01:14.00,0:01:14.86,Live,,0,0,0,{\k40}isn't {\k36}perfect
+Dialogue: 0,0:01:15.50,0:01:16.88,Live,,0,0,0,{\k24}AI {\k52}errors {\k22}in {\k40}transactions
+Dialogue: 0,0:01:16.88,0:01:18.28,Live,,0,0,0,{\k54}are {\k12}a {\k36}real {\k38}e
+Dialogue: 0,0:01:18.28,0:01:20.02,Live,,0,0,0,{\k28}commerce {\k50}risk {\k64}An {\k32}AI
+Dialogue: 0,0:01:20.02,0:01:21.78,Live,,0,0,0,{\k50}might {\k64}misinterpret {\k20}a {\k42}description
+Dialogue: 0,0:01:21.78,0:01:23.04,Live,,0,0,0,{\k50}or {\k28}fail {\k20}to {\k28}apply
+Dialogue: 0,0:01:23.04,0:01:24.64,Live,,0,0,0,{\k16}a {\k38}discount {\k66}{\k22}While {\k18}Muse
+Dialogue: 0,0:01:24.64,0:01:26.24,Live,,0,0,0,{\k28}is {\k44}accurate {\k50}{\k14}stakes {\k24}are
+Dialogue: 0,0:01:26.24,0:01:27.46,Live,,0,0,0,{\k38}high {\k24}with {\k24}real {\k36}money
+Dialogue: 0,0:01:27.46,0:01:29.32,Live,,0,0,0,{\k44}and {\k46}customer {\k48}satisfaction {\k48}on
+Dialogue: 0,0:01:29.32,0:01:31.14,Live,,0,0,0,{\k10}the {\k32}line {\k48}{\k52}Amazon {\k40}might
+Dialogue: 0,0:01:31.14,0:01:33.26,Live,,0,0,0,{\k30}see {\k46}AI {\k76}shopping's {\k50}potential
+Dialogue: 0,0:01:33.54,0:01:34.68,Live,,0,0,0,{\k16}but {\k22}wants {\k22}the {\k54}technology
+Dialogue: 0,0:01:34.68,0:01:36.62,Live,,0,0,0,{\k34}to {\k44}mature {\k62}{\k34}They {\k20}might
+Dialogue: 0,0:01:36.62,0:01:37.74,Live,,0,0,0,{\k18}be {\k26}waiting {\k28}for {\k40}AI
+Dialogue: 0,0:01:37.74,0:01:39.10,Live,,0,0,0,{\k58}agents {\k24}to {\k22}reach {\k32}near
+Dialogue: 0,0:01:39.10,0:01:40.52,Live,,0,0,0,{\k52}zero {\k34}error {\k36}rates {\k20}for
+Dialogue: 0,0:01:40.52,0:01:42.84,Live,,0,0,0,{\k38}critical {\k76}transactions {\k54}{\k24}like {\k40}self
+Dialogue: 0,0:01:42.84,0:01:44.56,Live,,0,0,0,{\k42}driving {\k48}cars {\k52}needing {\k30}more
+Dialogue: 0,0:01:44.56,0:01:46.64,Live,,0,0,0,{\k48}safety {\k50}updates {\k70}This {\k40}impacts
+Dialogue: 0,0:01:46.64,0:01:48.96,Live,,0,0,0,{\k62}developers {\k60}building {\k30}AI {\k70}agents
+Dialogue: 0,0:01:49.42,0:01:51.18,Live,,0,0,0,{\k18}If {\k46}platforms {\k44}block {\k68}independent
+Dialogue: 0,0:01:51.18,0:01:52.84,Live,,0,0,0,{\k44}AI {\k50}buyers {\k34}{\k32}it's {\k6}a
+Dialogue: 0,0:01:52.84,0:01:53.28,Live,,0,0,0,{\k34}hurdle
+Dialogue: 0,0:01:53.92,0:01:55.78,Live,,0,0,0,{\k54}Developers {\k40}crafting {\k40}AI {\k52}shopping
+Dialogue: 0,0:01:55.78,0:01:57.90,Live,,0,0,0,{\k66}assistants {\k52}now {\k28}face {\k66}exclusion
+Dialogue: 0,0:01:57.90,0:01:59.40,Live,,0,0,0,{\k24}from {\k70}marketplaces {\k40}they're {\k16}meant
+Dialogue: 0,0:01:59.40,0:02:00.88,Live,,0,0,0,{\k18}to {\k38}serve {\k40}{\k22}This {\k30}isn't
+Dialogue: 0,0:02:00.88,0:02:01.80,Live,,0,0,0,{\k8}a {\k38}small {\k36}glitch
+Dialogue: 0,0:02:02.46,0:02:03.36,Live,,0,0,0,{\k14}it's {\k6}a {\k32}debate {\k38}about
+Dialogue: 0,0:02:03.36,0:02:05.30,Live,,0,0,0,{\k80}AI's {\k34}access {\k30}to {\k40}commerce
+Dialogue: 0,0:02:06.32,0:02:07.90,Live,,0,0,0,{\k40}Platforms {\k16}like {\k60}Amazon {\k42}are
+Dialogue: 0,0:02:07.90,0:02:09.58,Live,,0,0,0,{\k46}asserting {\k60}control {\k38}over {\k24}which
+Dialogue: 0,0:02:09.58,0:02:11.00,Live,,0,0,0,{\k44}agents {\k56}operate {\k26}in {\k16}their
+Dialogue: 0,0:02:11.00,0:02:13.60,Live,,0,0,0,{\k76}ecosystem {\k82}raising {\k68}questions {\k34}about
+Dialogue: 0,0:02:13.60,0:02:16.02,Live,,0,0,0,{\k52}open {\k44}versus {\k52}managed {\k84}access
+Dialogue: 0,0:02:16.14,0:02:17.18,Live,,0,0,0,{\k28}The {\k22}core {\k30}issue {\k24}is
+Dialogue: 0,0:02:17.18,0:02:19.34,Live,,0,0,0,{\k26}trust {\k38}and {\k64}accountability {\k60}{\k28}Who's
+Dialogue: 0,0:02:19.34,0:02:20.56,Live,,0,0,0,{\k52}responsible {\k30}for {\k20}an {\k20}AI
+Dialogue: 0,0:02:20.56,0:02:21.76,Live,,0,0,0,{\k60}transaction {\k50}mistake
+Dialogue: 0,0:02:22.44,0:02:24.08,Live,,0,0,0,{\k26}Amazon {\k46}wants {\k58}accountability {\k34}on
+Dialogue: 0,0:02:24.08,0:02:25.20,Live,,0,0,0,{\k8}a {\k34}human {\k28}or {\k42}system
+Dialogue: 0,0:02:25.20,0:02:26.50,Live,,0,0,0,{\k18}they {\k44}control {\k34}{\k20}not {\k14}a
+Dialogue: 0,0:02:26.50,0:02:27.64,Live,,0,0,0,{\k28}third {\k38}party {\k38}AI
+Dialogue: 0,0:02:28.34,0:02:29.26,Live,,0,0,0,{\k18}If {\k16}Muse {\k40}orders {\k18}a
+Dialogue: 0,0:02:29.26,0:02:31.10,Live,,0,0,0,{\k26}dollar {\k62}500 {\k44}drone {\k36}{\k16}is
+Dialogue: 0,0:02:31.10,0:02:32.92,Live,,0,0,0,{\k30}Meta {\k42}or {\k46}Amazon {\k54}liable
+Dialogue: 0,0:02:33.58,0:02:35.20,Live,,0,0,0,{\k44}Amazon {\k58}as {\k16}the {\k44}platform
+Dialogue: 0,0:02:35.20,0:02:37.00,Live,,0,0,0,{\k58}faces {\k24}the {\k44}customer {\k54}so
+Dialogue: 0,0:02:37.00,0:02:38.18,Live,,0,0,0,{\k16}they're {\k46}maintaining {\k28}a {\k28}clear
+Dialogue: 0,0:02:38.18,0:02:39.94,Live,,0,0,0,{\k30}line {\k16}of {\k54}accountability {\k36}{\k40}This
+Dialogue: 0,0:02:39.94,0:02:41.46,Live,,0,0,0,{\k18}could {\k34}mean {\k36}AI {\k64}agents
+Dialogue: 0,0:02:41.46,0:02:43.36,Live,,0,0,0,{\k36}need {\k56}explicit {\k64}partnerships {\k34}or
+Dialogue: 0,0:02:43.36,0:02:45.82,Live,,0,0,0,{\k64}licenses {\k58}{\k24}not {\k32}free {\k58}browsing
+Dialogue: 0,0:02:46.46,0:02:47.78,Live,,0,0,0,{\k54}Developers {\k22}might {\k30}need {\k26}an
+Dialogue: 0,0:02:47.78,0:02:49.52,Live,,0,0,0,{\k40}AI {\k58}Commerce {\k48}License {\k28}from
+Dialogue: 0,0:02:49.52,0:02:52.36,Live,,0,0,0,{\k60}Amazon {\k66}{\k34}detailing {\k92}capabilities {\k32}and
+Dialogue: 0,0:02:52.36,0:02:54.92,Live,,0,0,0,{\k42}safety {\k64}protocols {\k64}{\k54}Only {\k32}those
+Dialogue: 0,0:02:54.92,0:02:56.44,Live,,0,0,0,{\k30}meeting {\k74}criteria {\k32}would {\k16}get
+Dialogue: 0,0:02:56.44,0:02:58.64,Live,,0,0,0,{\k52}access {\k58}{\k50}changing {\k26}the {\k34}open
+Dialogue: 0,0:02:58.64,0:03:00.64,Live,,0,0,0,{\k36}access {\k50}model {\k30}{\k28}For {\k46}consumers
+Dialogue: 0,0:03:00.94,0:03:01.74,Live,,0,0,0,{\k8}this {\k20}might {\k22}mean {\k30}fewer
+Dialogue: 0,0:03:01.74,0:03:03.78,Live,,0,0,0,{\k46}AI {\k48}shopping {\k40}choices {\k70}or
+Dialogue: 0,0:03:03.78,0:03:05.44,Live,,0,0,0,{\k20}a {\k18}more {\k48}curated {\k48}{\k22}safer
+Dialogue: 0,0:03:05.80,0:03:07.28,Live,,0,0,0,{\k10}but {\k18}less {\k42}open {\k68}experience
+Dialogue: 0,0:03:07.72,0:03:09.44,Live,,0,0,0,{\k38}Your {\k32}AI {\k66}assistant {\k36}might
+Dialogue: 0,0:03:09.44,0:03:10.72,Live,,0,0,0,{\k24}not {\k28}grab {\k32}that {\k44}Amazon
+Dialogue: 0,0:03:10.72,0:03:12.78,Live,,0,0,0,{\k36}deal {\k50}{\k46}Instead {\k46}{\k10}you {\k18}might
+Dialogue: 0,0:03:12.78,0:03:13.88,Live,,0,0,0,{\k16}get {\k8}a {\k62}notification {\k24}to
+Dialogue: 0,0:03:13.88,0:03:15.80,Live,,0,0,0,{\k34}manually {\k50}purchase {\k60}{\k28}or {\k20}the
+Dialogue: 0,0:03:15.80,0:03:17.12,Live,,0,0,0,{\k34}AI {\k38}might {\k26}only {\k34}list
+Dialogue: 0,0:03:17.12,0:03:18.96,Live,,0,0,0,{\k24}deals {\k32}without {\k58}completing {\k60}transactions
+Dialogue: 0,0:03:19.40,0:03:20.42,Live,,0,0,0,{\k36}This {\k16}is {\k14}a {\k36}crucial
+Dialogue: 0,0:03:20.42,0:03:22.50,Live,,0,0,0,{\k50}moment {\k56}{\k34}highlighting {\k30}the {\k38}tension
+Dialogue: 0,0:03:22.50,0:03:24.60,Live,,0,0,0,{\k44}between {\k56}AI {\k78}innovation {\k32}and
+Dialogue: 0,0:03:24.60,0:03:26.24,Live,,0,0,0,{\k38}digital {\k66}economy {\k50}risks
+Dialogue: 0,0:03:26.94,0:03:28.82,Live,,0,0,0,{\k62}AI's {\k38}rapid {\k60}advancement {\k28}in
+Dialogue: 0,0:03:28.82,0:03:30.58,Live,,0,0,0,{\k56}autonomous {\k54}decision {\k40}making {\k26}and
+Dialogue: 0,0:03:30.58,0:03:33.42,Live,,0,0,0,{\k70}transactions {\k118}outstrips {\k62}existing {\k34}e
+Dialogue: 0,0:03:33.42,0:03:35.64,Live,,0,0,0,{\k30}commerce {\k64}frameworks {\k60}{\k38}demanding {\k30}new
+Dialogue: 0,0:03:35.64,0:03:37.74,Live,,0,0,0,{\k56}policies {\k86}Amazon {\k54}drew {\k14}a
+Dialogue: 0,0:03:37.74,0:03:39.32,Live,,0,0,0,{\k24}line {\k30}{\k30}Will {\k24}others {\k40}follow
+Dialogue: 0,0:03:39.76,0:03:40.38,Live,,0,0,0,{\k12}What {\k8}does {\k24}this {\k18}mean
+Dialogue: 0,0:03:40.38,0:03:41.70,Live,,0,0,0,{\k20}for {\k14}the {\k52}autonomous {\k46}AI
+Dialogue: 0,0:03:41.70,0:03:43.78,Live,,0,0,0,{\k62}shopper {\k26}dream {\k64}{\k14}One {\k42}dominant
+Dialogue: 0,0:03:43.78,0:03:45.80,Live,,0,0,0,{\k32}player's {\k54}actions {\k60}influence {\k46}others
+Dialogue: 0,0:03:46.54,0:03:48.14,Live,,0,0,0,{\k12}If {\k66}Amazon's {\k38}approach {\k44}mitigates
+Dialogue: 0,0:03:48.14,0:03:50.36,Live,,0,0,0,{\k48}risks {\k52}{\k24}similar {\k60}restrictions {\k38}could
+Dialogue: 0,0:03:50.36,0:03:52.50,Live,,0,0,0,{\k36}emerge {\k66}{\k60}fragmenting {\k12}the {\k40}AI
+Dialogue: 0,0:03:52.50,0:03:54.70,Live,,0,0,0,{\k50}agent {\k56}landscape {\k42}{\k28}This {\k44}incident
+Dialogue: 0,0:03:54.70,0:03:55.84,Live,,0,0,0,{\k28}sets {\k18}a {\k46}precedent {\k22}for
+Dialogue: 0,0:03:55.84,0:03:57.58,Live,,0,0,0,{\k22}how {\k40}AI {\k92}integrates {\k20}into
+Dialogue: 0,0:03:57.58,0:03:59.34,Live,,0,0,0,{\k66}transactions {\k76}and {\k12}who {\k22}sets
+Dialogue: 0,0:03:59.34,0:04:01.58,Live,,0,0,0,{\k28}the {\k40}rules {\k60}{\k58}Subscribe {\k38}for
+Dialogue: 0,0:04:01.58,0:04:04.02,Live,,0,0,0,{\k24}more {\k48}AI {\k78}insights {\k94}Consider
+Dialogue: 0,0:04:04.02,0:04:05.94,Live,,0,0,0,{\k42}AI {\k70}development {\k70}implications
+Dialogue: 0,0:04:06.62,0:04:08.08,Live,,0,0,0,{\k58}Restricted {\k30}access {\k30}to {\k28}data
+Dialogue: 0,0:04:08.08,0:04:10.36,Live,,0,0,0,{\k46}and {\k66}transactional {\k62}platforms {\k54}could
+Dialogue: 0,0:04:10.36,0:04:11.58,Live,,0,0,0,{\k56}stifle {\k56}innovation
+Dialogue: 0,0:04:12.28,0:04:13.76,Live,,0,0,0,{\k52}Developers {\k20}might {\k40}create {\k36}less
+Dialogue: 0,0:04:13.76,0:04:15.50,Live,,0,0,0,{\k52}capable {\k40}AI {\k56}agents {\k26}to
+Dialogue: 0,0:04:15.50,0:04:17.32,Live,,0,0,0,{\k36}comply {\k30}with {\k36}marketplace {\k70}rules
+Dialogue: 0,0:04:17.54,0:04:18.48,Live,,0,0,0,{\k28}leading {\k28}to {\k12}a {\k26}less
+Dialogue: 0,0:04:18.48,0:04:21.12,Live,,0,0,0,{\k60}dynamic {\k50}AI {\k88}ecosystem {\k40}{\k26}This
+Dialogue: 0,0:04:21.12,0:04:22.96,Live,,0,0,0,{\k42}also {\k46}raises {\k34}data {\k62}privacy
+Dialogue: 0,0:04:22.96,0:04:25.94,Live,,0,0,0,{\k42}and {\k52}security {\k70}questions {\k70}{\k64}Amazon's
+Dialogue: 0,0:04:25.94,0:04:27.30,Live,,0,0,0,{\k48}decision {\k32}might {\k30}stem {\k26}from
+Dialogue: 0,0:04:27.30,0:04:29.60,Live,,0,0,0,{\k54}ensuring {\k68}sensitive {\k64}customer {\k44}data
+Dialogue: 0,0:04:29.60,0:04:31.14,Live,,0,0,0,{\k60}is {\k44}handled {\k26}by {\k24}their
+Dialogue: 0,0:04:31.14,0:04:33.90,Live,,0,0,0,{\k46}robust {\k66}security {\k72}protocols {\k36}{\k56}not
+Dialogue: 0,0:04:33.90,0:04:35.72,Live,,0,0,0,{\k62}potentially {\k32}less {\k48}secure {\k40}third
+Dialogue: 0,0:04:35.72,0:04:37.36,Live,,0,0,0,{\k56}party {\k32}AI {\k66}systems

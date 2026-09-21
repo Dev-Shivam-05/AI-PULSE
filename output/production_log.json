@@ -3645,5 +3645,53 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-21T18:29:52.614970",
+    "title": "Amazon Bans Meta AI Shopping Agent",
+    "description": "Amazon has drawn a line in the sand against Meta's AI agent, Muse, blocking it from accessing its e-commerce platform. This move signals a potential battleground for the future of AI-driven commerce. If you're building with AI agents, this could fundamentally change how they interact with major online marketplaces. What does this mean for the future of online shopping and AI development? We break down the implications, the reasons behind Amazon's decision, and what it could mean for consumers and developers alike. #AI #Meta #Amazon #TechNews #ArtificialIntelligence #ECommerce\n\nSource: https://techcrunch.com/2026/09/21/metas-ai-agent-has-been-blocked-from-using-amazon-com/\n\nChapters:\n0:00 Amazon Blocks AI\n0:47 Agentic Commerce Fears\n1:33 AI Needs Maturation\n2:42 Licensing AI Access\n3:38 Future of AI Shopping\n\n▶ Watch next: https://youtube.com/watch?v=7zMnFB4svtc",
+    "tags": [
+      "AI",
+      "Meta",
+      "Amazon",
+      "Muse AI",
+      "AI Agent",
+      "E-commerce",
+      "Tech Giants",
+      "Artificial Intelligence",
+      "Future of Shopping",
+      "Tech News",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Amazon_Bans_Meta_AI_Shopping_Agent_20260921_182028_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260921_182348.mp4",
+      "output/shorts/short_2_20260921_182451.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260921_182207.jpg",
+    "youtube_url": "https://youtube.com/watch?v=kxUn7KkMh1s",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=odnTze7_BRY",
+      "https://youtube.com/watch?v=0a6cY48qSbk"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Amazon SHOCKS! Meta AI Shopping BANNED! 🤯 #Shorts",
+        "description": "Amazon's surprising move to ban Meta's AI shopping agent. What does this mean for the future of e-commerce and AI integration? #Amazon #Meta #AI",
+        "instagram_caption": "🚨 Amazon just dropped a bombshell, banning Meta's AI shopping agent! This move has major implications for how we shop online and the future of AI in retail. Follow @tooldojo! \n\n#AmazonBan #MetaAI #AIShopping #TechNews #Ecommerce #DigitalMarketing #FutureOfRetail #ArtificialIntelligence #BusinessNews #OnlineShopping #TechUpdate #BreakingNews #Innovation #RetailTech #AIRevolution #SocialMediaMarketing #AmazonNews #MetaNews #ShoppingTrends #Tooldojo"
+      },
+      {
+        "title": "Meta AI Shopping Agent DELETED by Amazon! 🚫 #Shorts",
+        "description": "Discover why Amazon has banned Meta's AI shopping agent and the potential fallout for both tech giants. Is this a setback for AI in shopping? #AmazonBan #MetaAI #ShoppingTech",
+        "instagram_caption": "🔥 Amazon made a bold decision: Meta's AI shopping agent is OUT! This unexpected ban raises questions about competition and data privacy in the AI space. Follow @tooldojo! \n\n#AmazonVsMeta #AIShoppingBan #TechDrama #EcomTrends #DigitalStrategy #ArtificialIntelligenceNews #RetailInnovation #OnlineBusiness #ConsumerTech #MarketingTech #TechInsights #BusinessStrategy #FutureOfShopping #AIInBusiness #AmazonUpdates #MetaUpdates #ShoppingRevolution #Tooldojo"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
