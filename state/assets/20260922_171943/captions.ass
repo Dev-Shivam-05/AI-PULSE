@@ -1,0 +1,164 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.84,Live,,0,0,0,{\k12}You {\k20}won't {\k26}believe {\k26}what
+Dialogue: 0,0:00:00.84,0:00:01.74,Live,,0,0,0,{\k32}hackers {\k26}could {\k14}have {\k18}done
+Dialogue: 0,0:00:01.74,0:00:03.52,Live,,0,0,0,{\k28}with {\k54}Meta's {\k26}AI {\k60}agent
+Dialogue: 0,0:00:03.74,0:00:03.96,Live,,0,0,0,{\k12}Muse
+Dialogue: 0,0:00:04.64,0:00:06.08,Live,,0,0,0,{\k10}A {\k34}major {\k64}security {\k36}flaw
+Dialogue: 0,0:00:06.08,0:00:07.58,Live,,0,0,0,{\k46}meant {\k54}attackers {\k36}might {\k14}have
+Dialogue: 0,0:00:07.58,0:00:08.40,Live,,0,0,0,{\k10}been {\k18}able {\k12}to {\k42}completely
+Dialogue: 0,0:00:08.40,0:00:09.66,Live,,0,0,0,{\k40}take {\k26}over {\k16}the {\k34}AI
+Dialogue: 0,0:00:10.26,0:00:11.28,Live,,0,0,0,{\k24}We're {\k28}diving {\k30}into {\k20}how
+Dialogue: 0,0:00:11.28,0:00:12.54,Live,,0,0,0,{\k16}this {\k42}happened {\k52}and {\k16}what
+Dialogue: 0,0:00:12.54,0:00:13.28,Live,,0,0,0,{\k12}it {\k20}means {\k28}for {\k14}the
+Dialogue: 0,0:00:13.28,0:00:14.78,Live,,0,0,0,{\k36}AI {\k40}tools {\k22}you {\k42}use
+Dialogue: 0,0:00:15.02,0:00:17.16,Live,,0,0,0,{\k42}Security {\k76}researcher {\k40}Patrick {\k56}Wardle
+Dialogue: 0,0:00:17.16,0:00:18.84,Live,,0,0,0,{\k70}uncovered {\k26}a {\k34}zero {\k38}day
+Dialogue: 0,0:00:18.84,0:00:20.64,Live,,0,0,0,{\k64}vulnerability {\k46}in {\k30}Muse {\k40}for
+Dialogue: 0,0:00:20.64,0:00:21.54,Live,,0,0,0,{\k22}Mac {\k58}OS
+Dialogue: 0,0:00:22.28,0:00:23.16,Live,,0,0,0,{\k20}This {\k28}means {\k26}it {\k14}was
+Dialogue: 0,0:00:23.16,0:00:25.14,Live,,0,0,0,{\k22}an {\k44}unknown {\k62}flaw {\k70}and
+Dialogue: 0,0:00:25.14,0:00:26.26,Live,,0,0,0,{\k34}Meta {\k34}didn't {\k16}know {\k28}about
+Dialogue: 0,0:00:26.26,0:00:27.12,Live,,0,0,0,{\k20}it {\k38}until {\k16}it {\k12}was
+Dialogue: 0,0:00:27.12,0:00:29.94,Live,,0,0,0,{\k54}discovered {\k70}{\k42}Zero {\k38}day {\k78}exploits
+Dialogue: 0,0:00:29.94,0:00:31.72,Live,,0,0,0,{\k14}are {\k52}dangerous {\k54}because {\k58}there
+Dialogue: 0,0:00:31.72,0:00:33.34,Live,,0,0,0,{\k14}are {\k24}no {\k62}existing {\k62}defenses
+Dialogue: 0,0:00:33.34,0:00:34.50,Live,,0,0,0,{\k28}when {\k14}they {\k10}are {\k54}found
+Dialogue: 0,0:00:34.80,0:00:36.34,Live,,0,0,0,{\k62}Attackers {\k18}could {\k46}redirect {\k28}the
+Dialogue: 0,0:00:36.34,0:00:38.50,Live,,0,0,0,{\k56}AI's {\k52}transcription {\k66}processing {\k42}away
+Dialogue: 0,0:00:38.50,0:00:40.00,Live,,0,0,0,{\k30}from {\k50}Meta's {\k24}secure {\k46}servers
+Dialogue: 0,0:00:40.00,0:00:41.48,Live,,0,0,0,{\k46}to {\k16}their {\k22}own {\k54}systems
+Dialogue: 0,0:00:42.08,0:00:43.10,Live,,0,0,0,{\k24}This {\k18}gave {\k22}them {\k38}access
+Dialogue: 0,0:00:43.10,0:00:44.32,Live,,0,0,0,{\k26}to {\k14}your {\k22}Muse {\k50}account
+Dialogue: 0,0:00:44.74,0:00:46.90,Live,,0,0,0,{\k62}intercepting {\k20}voice {\k38}commands {\k60}{\k36}dictated
+Dialogue: 0,0:00:46.90,0:00:49.02,Live,,0,0,0,{\k26}notes {\k24}{\k34}and {\k44}sensitive {\k74}information
+Dialogue: 0,0:00:49.42,0:00:50.84,Live,,0,0,0,{\k12}The {\k52}exploit {\k56}used {\k22}an
+Dialogue: 0,0:00:50.84,0:00:53.84,Live,,0,0,0,{\k72}undocumented {\k72}setting {\k64}{\k34}Muse's {\k58}dictation
+Dialogue: 0,0:00:53.84,0:00:55.12,Live,,0,0,0,{\k42}happens {\k26}in {\k12}the {\k48}cloud
+Dialogue: 0,0:00:55.12,0:00:57.02,Live,,0,0,0,{\k48}not {\k54}locally {\k20}{\k42}and {\k26}any
+Dialogue: 0,0:00:57.02,0:00:58.42,Live,,0,0,0,{\k34}app {\k16}could {\k44}control {\k46}these
+Dialogue: 0,0:00:58.42,0:01:00.36,Live,,0,0,0,{\k28}hidden {\k52}settings {\k48}{\k32}This {\k34}allowed
+Dialogue: 0,0:01:00.36,0:01:02.54,Live,,0,0,0,{\k52}local {\k72}applications {\k34}to {\k60}manipulate
+Dialogue: 0,0:01:02.54,0:01:04.18,Live,,0,0,0,{\k28}the {\k58}transfer {\k30}of {\k48}sensitive
+Dialogue: 0,0:01:04.18,0:01:06.16,Live,,0,0,0,{\k50}audio {\k40}to {\k34}remote {\k64}servers
+Dialogue: 0,0:01:06.50,0:01:08.26,Live,,0,0,0,{\k20}The {\k48}researcher {\k70}demonstrated {\k38}taking
+Dialogue: 0,0:01:08.26,0:01:10.08,Live,,0,0,0,{\k48}pictures {\k52}and {\k36}writing {\k46}malicious
+Dialogue: 0,0:01:10.08,0:01:11.68,Live,,0,0,0,{\k50}files {\k46}onto {\k18}a {\k46}user's
+Dialogue: 0,0:01:11.68,0:01:12.86,Live,,0,0,0,{\k38}computer {\k30}through {\k22}the {\k28}AI
+Dialogue: 0,0:01:12.86,0:01:14.68,Live,,0,0,0,{\k58}agent {\k44}{\k36}often {\k28}without {\k16}the
+Dialogue: 0,0:01:14.68,0:01:15.36,Live,,0,0,0,{\k24}user {\k34}knowing
+Dialogue: 0,0:01:16.02,0:01:16.90,Live,,0,0,0,{\k10}The {\k40}AI {\k26}could {\k12}be
+Dialogue: 0,0:01:16.90,0:01:18.04,Live,,0,0,0,{\k28}turned {\k28}into {\k16}a {\k32}spy
+Dialogue: 0,0:01:18.48,0:01:20.68,Live,,0,0,0,{\k38}capturing {\k60}surroundings {\k42}{\k20}or {\k60}installing
+Dialogue: 0,0:01:20.68,0:01:22.94,Live,,0,0,0,{\k38}malware {\k86}Wardle {\k44}stated {\k56}{\k2}We
+Dialogue: 0,0:01:22.94,0:01:24.44,Live,,0,0,0,{\k16}can {\k58}manipulate {\k28}the {\k48}agent
+Dialogue: 0,0:01:24.44,0:01:25.94,Live,,0,0,0,{\k32}and {\k36}leverage {\k30}its {\k52}privileges
+Dialogue: 0,0:01:25.94,0:01:27.06,Live,,0,0,0,{\k32}to {\k18}do {\k28}whatever {\k34}we
+Dialogue: 0,0:01:27.06,0:01:29.12,Live,,0,0,0,{\k42}want {\k56}{\k62}Attackers {\k18}could {\k28}use
+Dialogue: 0,0:01:29.12,0:01:30.86,Live,,0,0,0,{\k24}the {\k42}AI {\k62}assistant {\k46}itself
+Dialogue: 0,0:01:30.86,0:01:32.62,Live,,0,0,0,{\k32}as {\k14}a {\k40}tool {\k62}{\k28}shifting
+Dialogue: 0,0:01:32.62,0:01:34.80,Live,,0,0,0,{\k44}hacking {\k96}paradigms {\k28}{\k30}This {\k20}is
+Dialogue: 0,0:01:34.80,0:01:35.52,Live,,0,0,0,{\k62}significant
+Dialogue: 0,0:01:36.14,0:01:38.10,Live,,0,0,0,{\k24}Meta {\k38}heavily {\k80}emphasized {\k54}Muse's
+Dialogue: 0,0:01:38.10,0:01:40.08,Live,,0,0,0,{\k46}privacy {\k34}and {\k52}security {\k48}{\k18}but
+Dialogue: 0,0:01:40.08,0:01:41.52,Live,,0,0,0,{\k22}this {\k52}exploit {\k44}highlights {\k26}a
+Dialogue: 0,0:01:41.52,0:01:42.60,Live,,0,0,0,{\k12}gap {\k38}between {\k20}their {\k38}marketing
+Dialogue: 0,0:01:42.60,0:01:44.16,Live,,0,0,0,{\k54}and {\k10}the {\k56}product's {\k36}actual
+Dialogue: 0,0:01:44.16,0:01:46.58,Live,,0,0,0,{\k64}security {\k48}{\k20}This {\k62}exploit {\k48}required
+Dialogue: 0,0:01:46.58,0:01:48.12,Live,,0,0,0,{\k66}attackers {\k30}to {\k18}have {\k40}local
+Dialogue: 0,0:01:48.12,0:01:49.60,Live,,0,0,0,{\k50}access {\k30}to {\k14}your {\k44}device
+Dialogue: 0,0:01:49.96,0:01:50.98,Live,,0,0,0,{\k34}It {\k34}wasn't {\k8}a {\k26}remote
+Dialogue: 0,0:01:50.98,0:01:52.70,Live,,0,0,0,{\k46}hack {\k52}{\k16}so {\k16}the {\k42}immediate
+Dialogue: 0,0:01:52.70,0:01:54.20,Live,,0,0,0,{\k40}risk {\k20}for {\k38}average {\k52}users
+Dialogue: 0,0:01:54.20,0:01:55.76,Live,,0,0,0,{\k34}was {\k38}lower {\k36}{\k34}but {\k14}the
+Dialogue: 0,0:01:55.76,0:01:57.18,Live,,0,0,0,{\k48}potential {\k26}for {\k12}a {\k56}sophisticated
+Dialogue: 0,0:01:57.18,0:01:59.18,Live,,0,0,0,{\k82}attacker {\k32}who {\k32}gained {\k54}entry
+Dialogue: 0,0:01:59.18,0:02:00.98,Live,,0,0,0,{\k26}is {\k42}clear {\k54}{\k22}Meta {\k36}issued
+Dialogue: 0,0:02:00.98,0:02:02.18,Live,,0,0,0,{\k16}a {\k18}patch {\k32}within {\k44}hours
+Dialogue: 0,0:02:02.58,0:02:03.56,Live,,0,0,0,{\k26}stating {\k20}the {\k30}risk {\k22}was
+Dialogue: 0,0:02:03.56,0:02:04.38,Live,,0,0,0,{\k30}low {\k32}as {\k10}it {\k10}was
+Dialogue: 0,0:02:04.38,0:02:06.08,Live,,0,0,0,{\k10}a {\k26}local {\k56}privilege {\k78}escalation
+Dialogue: 0,0:02:06.08,0:02:07.64,Live,,0,0,0,{\k50}attack {\k32}{\k30}not {\k12}a {\k32}remote
+Dialogue: 0,0:02:07.64,0:02:09.40,Live,,0,0,0,{\k62}exploit {\k50}{\k16}They {\k26}addressed {\k22}the
+Dialogue: 0,0:02:09.40,0:02:11.46,Live,,0,0,0,{\k56}vulnerability {\k66}swiftly {\k48}{\k20}but {\k16}its
+Dialogue: 0,0:02:11.46,0:02:13.44,Live,,0,0,0,{\k40}initial {\k64}existence {\k30}is {\k54}concerning
+Dialogue: 0,0:02:13.86,0:02:15.20,Live,,0,0,0,{\k22}This {\k44}incident {\k38}comes {\k30}at
+Dialogue: 0,0:02:15.20,0:02:16.52,Live,,0,0,0,{\k10}a {\k38}sensitive {\k56}time {\k28}for
+Dialogue: 0,0:02:16.52,0:02:19.24,Live,,0,0,0,{\k60}Meta's {\k50}AI {\k64}ambitions {\k61}{\k37}They're
+Dialogue: 0,0:02:19.24,0:02:20.08,Live,,0,0,0,{\k26}trying {\k12}to {\k24}catch {\k22}up
+Dialogue: 0,0:02:20.08,0:02:21.40,Live,,0,0,0,{\k14}in {\k8}a {\k48}competitive {\k52}market
+Dialogue: 0,0:02:21.72,0:02:23.24,Live,,0,0,0,{\k22}and {\k24}this {\k52}raises {\k54}questions
+Dialogue: 0,0:02:23.24,0:02:24.84,Live,,0,0,0,{\k36}about {\k24}their {\k48}development {\k52}process
+Dialogue: 0,0:02:24.84,0:02:26.32,Live,,0,0,0,{\k34}under {\k40}pressure {\k28}from {\k46}giants
+Dialogue: 0,0:02:26.32,0:02:28.52,Live,,0,0,0,{\k36}like {\k50}Google {\k30}and {\k94}OpenAI
+Dialogue: 0,0:02:28.92,0:02:30.72,Live,,0,0,0,{\k42}Amazon {\k70}recently {\k42}blocked {\k26}Muse
+Dialogue: 0,0:02:30.72,0:02:32.38,Live,,0,0,0,{\k28}from {\k14}its {\k54}platform {\k46}{\k24}claiming
+Dialogue: 0,0:02:32.38,0:02:33.78,Live,,0,0,0,{\k36}Meta {\k38}didn't {\k14}get {\k42}permission
+Dialogue: 0,0:02:34.34,0:02:35.26,Live,,0,0,0,{\k34}This {\k28}adds {\k20}to {\k10}the
+Dialogue: 0,0:02:35.26,0:02:37.02,Live,,0,0,0,{\k34}scrutiny {\k68}Meta's {\k24}AI {\k50}tools
+Dialogue: 0,0:02:37.02,0:02:39.02,Live,,0,0,0,{\k32}face {\k60}and {\k32}suggests {\k76}potential
+Dialogue: 0,0:02:39.02,0:02:41.62,Live,,0,0,0,{\k72}regulatory {\k38}hurdles {\k44}{\k42}Despite {\k54}issues
+Dialogue: 0,0:02:42.00,0:02:43.18,Live,,0,0,0,{\k18}Muse {\k46}saw {\k16}a {\k38}strong
+Dialogue: 0,0:02:43.18,0:02:44.80,Live,,0,0,0,{\k42}launch {\k58}{\k20}In {\k16}its {\k26}first
+Dialogue: 0,0:02:44.80,0:02:46.30,Live,,0,0,0,{\k32}12 {\k40}days {\k40}{\k6}the {\k32}mobile
+Dialogue: 0,0:02:46.30,0:02:48.84,Live,,0,0,0,{\k32}app's {\k18}{\k40}downloads {\k62}reportedly {\k102}surpassed
+Dialogue: 0,0:02:48.84,0:02:50.90,Live,,0,0,0,{\k20}chat {\k106}GPT's {\k38}initial {\k42}debut
+Dialogue: 0,0:02:50.90,0:02:52.08,Live,,0,0,0,{\k32}in {\k10}the {\k44}US {\k32}and
+Dialogue: 0,0:02:52.08,0:02:52.68,Live,,0,0,0,{\k50}Canada
+Dialogue: 0,0:02:53.34,0:02:55.56,Live,,0,0,0,{\k46}Meta's {\k20}stock {\k72}climbed {\k42}{\k42}indicating
+Dialogue: 0,0:02:55.56,0:02:58.00,Live,,0,0,0,{\k82}significant {\k40}user {\k66}interest {\k30}{\k26}As
+Dialogue: 0,0:02:58.00,0:02:59.84,Live,,0,0,0,{\k38}Wardle {\k30}pointed {\k36}out {\k46}{\k34}companies
+Dialogue: 0,0:02:59.84,0:03:01.10,Live,,0,0,0,{\k32}like {\k40}Meta {\k30}should {\k24}think
+Dialogue: 0,0:03:01.10,0:03:02.30,Live,,0,0,0,{\k20}about {\k60}security {\k26}from {\k14}the
+Dialogue: 0,0:03:02.30,0:03:04.42,Live,,0,0,0,{\k58}asterisk {\k36}{\k16}very {\k32}start {\k70}asterisk
+Dialogue: 0,0:03:04.42,0:03:06.28,Live,,0,0,0,{\k14}of {\k48}development {\k60}{\k42}This {\k22}means
+Dialogue: 0,0:03:06.28,0:03:08.72,Live,,0,0,0,{\k58}integrating {\k70}security {\k52}protocols {\k64}and
+Dialogue: 0,0:03:08.72,0:03:10.82,Live,,0,0,0,{\k46}vulnerability {\k70}testing {\k58}into {\k36}every
+Dialogue: 0,0:03:10.82,0:03:12.14,Live,,0,0,0,{\k34}stage {\k28}of {\k14}the {\k56}AI's
+Dialogue: 0,0:03:12.14,0:03:13.44,Live,,0,0,0,{\k18}life {\k38}cycle {\k62}This {\k12}is
+Dialogue: 0,0:03:13.44,0:03:14.70,Live,,0,0,0,{\k14}a {\k40}reminder {\k38}that {\k34}even
+Dialogue: 0,0:03:14.70,0:03:15.88,Live,,0,0,0,{\k24}with {\k52}advanced {\k32}AI
+Dialogue: 0,0:03:16.64,0:03:18.54,Live,,0,0,0,{\k8}the {\k42}underlying {\k76}security {\k64}architecture
+Dialogue: 0,0:03:18.54,0:03:19.48,Live,,0,0,0,{\k36}is {\k48}critical
+Dialogue: 0,0:03:20.10,0:03:21.92,Live,,0,0,0,{\k26}Cloud {\k36}based {\k46}AI {\k74}convenience
+Dialogue: 0,0:03:21.92,0:03:23.20,Live,,0,0,0,{\k34}comes {\k34}with {\k38}risks {\k22}if
+Dialogue: 0,0:03:23.20,0:03:24.60,Live,,0,0,0,{\k20}not {\k52}managed {\k58}properly
+Dialogue: 0,0:03:25.24,0:03:26.08,Live,,0,0,0,{\k22}Users {\k30}need {\k18}to {\k14}be
+Dialogue: 0,0:03:26.08,0:03:27.52,Live,,0,0,0,{\k34}aware {\k26}that {\k34}data {\k50}processed
+Dialogue: 0,0:03:27.52,0:03:29.14,Live,,0,0,0,{\k32}by {\k44}AI {\k58}agents {\k28}is
+Dialogue: 0,0:03:29.14,0:03:31.26,Live,,0,0,0,{\k66}transmitted {\k32}and {\k42}stored {\k50}{\k22}and
+Dialogue: 0,0:03:31.26,0:03:33.54,Live,,0,0,0,{\k36}robust {\k86}security {\k34}is {\k62}paramount
+Dialogue: 0,0:03:33.84,0:03:35.50,Live,,0,0,0,{\k22}As {\k34}AI {\k64}agents {\k46}integrate
+Dialogue: 0,0:03:35.50,0:03:37.32,Live,,0,0,0,{\k28}into {\k14}our {\k42}lives {\k46}{\k52}understanding
+Dialogue: 0,0:03:37.32,0:03:39.34,Live,,0,0,0,{\k32}their {\k60}vulnerabilities {\k54}is {\k46}essential
+Dialogue: 0,0:03:39.88,0:03:40.96,Live,,0,0,0,{\k30}This {\k30}isn't {\k18}just {\k30}about
+Dialogue: 0,0:03:40.96,0:03:42.30,Live,,0,0,0,{\k34}Meta {\k68}it's {\k16}about {\k16}the
+Dialogue: 0,0:03:42.30,0:03:43.82,Live,,0,0,0,{\k30}future {\k24}of {\k38}secure {\k50}AI
+Dialogue: 0,0:03:44.30,0:03:45.80,Live,,0,0,0,{\k24}We {\k18}need {\k62}transparency {\k46}and
+Dialogue: 0,0:03:45.80,0:03:47.56,Live,,0,0,0,{\k56}accountability {\k54}to {\k32}ensure {\k34}these
+Dialogue: 0,0:03:47.56,0:03:48.96,Live,,0,0,0,{\k32}tools {\k24}are {\k26}used {\k58}ethically
+Dialogue: 0,0:03:48.96,0:03:50.60,Live,,0,0,0,{\k38}and {\k44}safely {\k40}{\k22}The {\k20}race
+Dialogue: 0,0:03:50.60,0:03:52.34,Live,,0,0,0,{\k26}for {\k44}AI {\k62}dominance {\k42}pushes
+Dialogue: 0,0:03:52.34,0:03:54.60,Live,,0,0,0,{\k74}innovation {\k50}{\k12}but {\k58}security {\k32}must
+Dialogue: 0,0:03:54.60,0:03:56.64,Live,,0,0,0,{\k32}keep {\k54}pace {\k62}{\k12}Will {\k44}companies
+Dialogue: 0,0:03:56.64,0:03:58.78,Live,,0,0,0,{\k78}prioritize {\k82}defenses {\k30}from {\k24}day
+Dialogue: 0,0:03:58.78,0:04:00.78,Live,,0,0,0,{\k28}one {\k40}{\k24}or {\k42}will {\k66}vulnerabilities
+Dialogue: 0,0:04:00.78,0:04:02.24,Live,,0,0,0,{\k68}continue {\k32}to {\k36}emerge
+Dialogue: 0,0:04:02.98,0:04:04.30,Live,,0,0,0,{\k24}Public {\k36}trust {\k28}in {\k44}AI
+Dialogue: 0,0:04:04.30,0:04:06.08,Live,,0,0,0,{\k70}hinges {\k26}on {\k46}addressing {\k36}these
+Dialogue: 0,0:04:06.08,0:04:08.34,Live,,0,0,0,{\k44}security {\k76}challenges {\k52}{\k18}The {\k36}Muse
+Dialogue: 0,0:04:08.34,0:04:10.00,Live,,0,0,0,{\k42}exploit {\k26}is {\k56}patched {\k22}{\k20}but
+Dialogue: 0,0:04:10.00,0:04:11.12,Live,,0,0,0,{\k12}the {\k36}questions {\k40}about {\k24}AI
+Dialogue: 0,0:04:11.12,0:04:12.96,Live,,0,0,0,{\k70}security {\k32}are {\k26}just {\k46}beginning
+Dialogue: 0,0:04:13.54,0:04:14.96,Live,,0,0,0,{\k44}Subscribe {\k34}for {\k20}more {\k44}insights
+Dialogue: 0,0:04:14.96,0:04:16.56,Live,,0,0,0,{\k44}into {\k18}the {\k32}AI {\k56}revolution

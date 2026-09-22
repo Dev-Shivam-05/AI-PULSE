@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 9,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The Muse exploit highlights a fundamental tension in AI development: the rapid pursuit of functionality and market share often outpaces the integration of robust security protocols from the initial design phase."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a synthesis claim ('The Muse exploit highlights a fundamental tension in AI development: the rapid pursuit of functionality and market share often outpaces the integration of robu"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

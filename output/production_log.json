@@ -3693,5 +3693,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-22T17:19:43.050325",
+    "title": "Meta Muse AI: Exploit Let Hackers Control Agent",
+    "description": "Meta's new AI agent, Muse, had a serious security flaw. Attackers could have gained complete control over the AI. We break down the exploit, how it worked, and why it matters for your AI tools. Discover how a hidden setting allowed hackers to redirect transcription processing, giving them access to your Muse account and the ability to take pictures or write malicious files. This incident raises critical questions about AI security and privacy from the ground up, especially as Meta races to compete in the AI space. Learn what this means for the future of AI agents and the data they handle. #AI #Meta #Security #Tech #AIExploit\n\nSource: https://www.theverge.com/tech/998679/meta-muse-patch-zero-day-exploit-ai-agent\n\nChapters:\n0:00 Meta AI Hack\n0:50 Cloud Dictation Flaw\n1:47 Local Access Needed\n2:31 Amazon Blocks Muse\n3:35 AI Security Risks\n\n▶ Watch next: https://youtube.com/watch?v=kxUn7KkMh1s",
+    "tags": [
+      "AI",
+      "Meta",
+      "Muse",
+      "Cybersecurity",
+      "Exploit",
+      "Tech News",
+      "AI Agent",
+      "Vulnerability",
+      "Data Privacy",
+      "Artificial Intelligence",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Meta_Muse_AI_Exploit_Let_Hackers_Control_Agent_20260922_171039_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260922_171337.mp4",
+      "output/shorts/short_2_20260922_171453.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260922_171210.jpg",
+    "youtube_url": "https://youtube.com/watch?v=FfzDyUk1sCc",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=Txd-wjm7gVw",
+      "https://youtube.com/watch?v=rNhyDF0sn20"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Hacked! Hackers RULE Agent? 😱 #Shorts",
+        "description": "Shocking revelation! Meta Muse AI's exploit gives hackers ultimate control over agents. Witness the terrifying implications and how this could change everything. #AIsecurity #Hacking #MetaMuse #Cybersecurity",
+        "instagram_caption": "🤯 Hackers have gained unprecedented control over Meta Muse AI agents! This exploit is a game-changer, and the security implications are massive. Follow @tooldojo! #AI #ArtificialIntelligence #CyberAttack #TechNews #Hacker #SecurityBreach #AIExploit #FutureOfAI #TechUpdate #DigitalSecurity #AgentControl #MetaAI #Risk #Innovation #Privacy #DataSecurity #Threat #EthicalHacking #LearnTech #ToolDojo"
+      },
+      {
+        "title": "Meta Muse AI EXPOSED: Agent Control Gone Wild! 🚨 #Shorts",
+        "description": "The Meta Muse AI is in danger! Discover the exploit that allows hackers to seize full command of AI agents. Is your data safe? Find out now! #MetaMuseAI #AIExploit #CyberThreat #TechBreakdown",
+        "instagram_caption": "🚨 Meta Muse AI's core vulnerability has been uncovered, letting hackers take over AI agents! This isn't just a glitch; it's a major security crisis. Follow @tooldojo! #AIsecurity #HackingNews #MetaMuse #TechScare #AIvulnerability #CyberCrime #AgentHacked #DataPrivacy #TechIndustry #ArtificialIntelligenceNews #SecurityAlert #AIthreat #DigitalRisk #InnovationFail #TechCrunch #FutureTech #CyberAwareness #HackersExploit #ToolDojo"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
