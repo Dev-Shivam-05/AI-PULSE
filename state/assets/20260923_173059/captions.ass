@@ -1,0 +1,182 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.80,Live,,0,0,0,{\k10}You {\k16}might {\k22}think {\k32}people
+Dialogue: 0,0:00:00.80,0:00:02.04,Live,,0,0,0,{\k20}who {\k26}use {\k22}AI {\k56}every
+Dialogue: 0,0:00:02.04,0:00:03.00,Live,,0,0,0,{\k32}single {\k26}day {\k20}are {\k18}its
+Dialogue: 0,0:00:03.00,0:00:04.24,Live,,0,0,0,{\k26}biggest {\k50}fans {\k28}{\k10}right
+Dialogue: 0,0:00:04.92,0:00:06.38,Live,,0,0,0,{\k16}Wrong {\k62}{\k22}A {\k12}new {\k34}report
+Dialogue: 0,0:00:06.38,0:00:07.42,Live,,0,0,0,{\k32}shows {\k24}that {\k10}a {\k38}striking
+Dialogue: 0,0:00:07.42,0:00:09.48,Live,,0,0,0,{\k64}68% {\k38}{\k16}of {\k42}Americans {\k46}who
+Dialogue: 0,0:00:09.48,0:00:10.88,Live,,0,0,0,{\k30}rely {\k30}on {\k34}AI {\k46}daily
+Dialogue: 0,0:00:10.88,0:00:12.46,Live,,0,0,0,{\k46}are {\k52}actually {\k32}worried {\k28}about
+Dialogue: 0,0:00:12.46,0:00:13.88,Live,,0,0,0,{\k20}it {\k54}{\k28}This {\k22}isn't {\k18}just
+Dialogue: 0,0:00:13.88,0:00:15.62,Live,,0,0,0,{\k16}a {\k32}fringe {\k52}concern {\k50}{\k24}it's
+Dialogue: 0,0:00:15.62,0:00:16.92,Live,,0,0,0,{\k6}a {\k42}significant {\k52}finding {\k30}that
+Dialogue: 0,0:00:16.92,0:00:18.26,Live,,0,0,0,{\k56}challenges {\k38}how {\k20}we {\k20}view
+Dialogue: 0,0:00:18.26,0:00:20.42,Live,,0,0,0,{\k68}AI's {\k30}public {\k48}reception {\k44}{\k26}The
+Dialogue: 0,0:00:20.42,0:00:21.40,Live,,0,0,0,{\k30}data {\k34}comes {\k20}from {\k14}a
+Dialogue: 0,0:00:21.40,0:00:23.16,Live,,0,0,0,{\k38}large {\k38}scale {\k56}survey {\k44}commissioned
+Dialogue: 0,0:00:23.16,0:00:24.96,Live,,0,0,0,{\k34}by {\k62}Microsoft {\k42}and {\k42}conducted
+Dialogue: 0,0:00:24.96,0:00:26.84,Live,,0,0,0,{\k32}by {\k54}Gallup {\k42}{\k28}They {\k32}polled
+Dialogue: 0,0:00:26.84,0:00:28.22,Live,,0,0,0,{\k32}about {\k20}a {\k46}thousand {\k40}people
+Dialogue: 0,0:00:28.22,0:00:30.10,Live,,0,0,0,{\k20}in {\k62}37 {\k70}countries {\k36}between
+Dialogue: 0,0:00:30.10,0:00:32.26,Live,,0,0,0,{\k58}April {\k24}and {\k48}July {\k62}{\k24}The
+Dialogue: 0,0:00:32.26,0:00:33.40,Live,,0,0,0,{\k46}project {\k24}is {\k22}set {\k22}to
+Dialogue: 0,0:00:33.40,0:00:35.80,Live,,0,0,0,{\k46}expand {\k24}to {\k78}140 {\k82}countries
+Dialogue: 0,0:00:36.04,0:00:37.34,Live,,0,0,0,{\k20}but {\k14}the {\k42}initial {\k54}findings
+Dialogue: 0,0:00:37.34,0:00:39.54,Live,,0,0,0,{\k34}are {\k40}already {\k46}telling {\k38}{\k62}especially
+Dialogue: 0,0:00:39.54,0:00:41.02,Live,,0,0,0,{\k30}for {\k10}the {\k32}United {\k66}States
+Dialogue: 0,0:00:41.24,0:00:42.72,Live,,0,0,0,{\k58}Globally {\k18}{\k24}people {\k14}are {\k34}turning
+Dialogue: 0,0:00:42.72,0:00:44.26,Live,,0,0,0,{\k22}to {\k34}AI {\k38}for {\k50}everything
+Dialogue: 0,0:00:44.70,0:00:46.90,Live,,0,0,0,{\k44}finding {\k54}recipes {\k48}{\k16}doing {\k48}homework
+Dialogue: 0,0:00:47.28,0:00:49.36,Live,,0,0,0,{\k26}researching {\k60}projects {\k50}{\k28}even {\k44}creating
+Dialogue: 0,0:00:49.36,0:00:51.78,Live,,0,0,0,{\k76}presentations {\k64}{\k42}It's {\k34}becoming {\k26}an
+Dialogue: 0,0:00:51.78,0:00:53.54,Live,,0,0,0,{\k34}everyday {\k50}tool {\k44}{\k18}But {\k30}using
+Dialogue: 0,0:00:53.54,0:00:55.12,Live,,0,0,0,{\k22}it {\k28}daily {\k54}doesn't {\k54}automatically
+Dialogue: 0,0:00:55.12,0:00:56.50,Live,,0,0,0,{\k64}translate {\k22}to {\k26}feeling {\k26}good
+Dialogue: 0,0:00:56.50,0:00:57.38,Live,,0,0,0,{\k30}about {\k24}where {\k20}it's {\k14}all
+Dialogue: 0,0:00:57.38,0:00:58.90,Live,,0,0,0,{\k30}headed {\k64}In {\k30}fact {\k20}{\k8}the
+Dialogue: 0,0:00:58.90,0:01:00.24,Live,,0,0,0,{\k32}survey {\k52}places {\k24}the {\k26}U
+Dialogue: 0,0:01:00.24,0:01:01.98,Live,,0,0,0,{\k72}S {\k52}at {\k16}the {\k34}anxious
+Dialogue: 0,0:01:01.98,0:01:03.22,Live,,0,0,0,{\k42}end {\k12}of {\k8}the {\k52}spectrum
+Dialogue: 0,0:01:03.52,0:01:05.60,Live,,0,0,0,{\k34}While {\k64}74% {\k48}{\k20}of {\k42}Americans
+Dialogue: 0,0:01:05.60,0:01:07.46,Live,,0,0,0,{\k58}report {\k48}feeling {\k42}worried {\k38}about
+Dialogue: 0,0:01:07.46,0:01:07.92,Live,,0,0,0,{\k36}AI
+Dialogue: 0,0:01:08.62,0:01:10.94,Live,,0,0,0,{\k24}only {\k76}36% {\k60}{\k48}expect {\k24}the
+Dialogue: 0,0:01:10.94,0:01:12.54,Live,,0,0,0,{\k70}technology {\k22}to {\k42}mostly {\k26}help
+Dialogue: 0,0:01:12.54,0:01:14.88,Live,,0,0,0,{\k20}the {\k42}country {\k52}{\k38}This {\k82}contrasts
+Dialogue: 0,0:01:14.88,0:01:15.92,Live,,0,0,0,{\k14}with {\k28}many {\k24}other {\k38}parts
+Dialogue: 0,0:01:15.92,0:01:17.14,Live,,0,0,0,{\k10}of {\k14}the {\k42}world {\k30}{\k26}This
+Dialogue: 0,0:01:17.14,0:01:18.04,Live,,0,0,0,{\k26}comes {\k18}at {\k10}a {\k36}time
+Dialogue: 0,0:01:18.04,0:01:19.28,Live,,0,0,0,{\k22}when {\k26}there's {\k32}intense {\k44}debate
+Dialogue: 0,0:01:19.28,0:01:21.64,Live,,0,0,0,{\k38}about {\k64}AI's {\k38}dangers {\k70}{\k26}rapid
+Dialogue: 0,0:01:21.64,0:01:23.56,Live,,0,0,0,{\k62}advancements {\k26}in {\k32}AI {\k62}safety
+Dialogue: 0,0:01:23.98,0:01:25.06,Live,,0,0,0,{\k6}the {\k40}potential {\k28}for {\k34}AI
+Dialogue: 0,0:01:25.06,0:01:26.46,Live,,0,0,0,{\k34}to {\k16}go {\k38}rogue {\k52}and
+Dialogue: 0,0:01:26.46,0:01:28.44,Live,,0,0,0,{\k50}accusations {\k54}of {\k40}anti {\k54}competitive
+Dialogue: 0,0:01:28.44,0:01:30.60,Live,,0,0,0,{\k58}practices {\k62}{\k36}The {\k38}idea {\k22}that
+Dialogue: 0,0:01:30.60,0:01:32.42,Live,,0,0,0,{\k40}simple {\k54}adoption {\k42}equals {\k46}public
+Dialogue: 0,0:01:32.42,0:01:34.64,Live,,0,0,0,{\k64}enthusiasm {\k60}is {\k42}clearly {\k46}flawed
+Dialogue: 0,0:01:34.84,0:01:37.10,Live,,0,0,0,{\k46}Consider {\k56}Canada {\k58}{\k18}nearly {\k38}30%
+Dialogue: 0,0:01:37.36,0:01:38.62,Live,,0,0,0,{\k16}of {\k20}those {\k68}surveyed {\k22}use
+Dialogue: 0,0:01:38.62,0:01:40.34,Live,,0,0,0,{\k52}AI {\k56}daily {\k36}{\k18}and {\k10}of
+Dialogue: 0,0:01:40.34,0:01:41.58,Live,,0,0,0,{\k14}that {\k32}group {\k50}over {\k28}half
+Dialogue: 0,0:01:41.58,0:01:42.42,Live,,0,0,0,{\k28}have {\k46}concerns
+Dialogue: 0,0:01:43.16,0:01:45.98,Live,,0,0,0,{\k60}Overall {\k46}{\k64}64% {\k46}{\k18}of {\k48}Canadians
+Dialogue: 0,0:01:45.98,0:01:47.76,Live,,0,0,0,{\k50}aware {\k28}of {\k40}AI {\k60}express
+Dialogue: 0,0:01:47.76,0:01:49.74,Live,,0,0,0,{\k44}worry {\k60}{\k28}This {\k44}pattern {\k22}of
+Dialogue: 0,0:01:49.74,0:01:51.08,Live,,0,0,0,{\k38}frequent {\k34}use {\k40}coupled {\k22}with
+Dialogue: 0,0:01:51.08,0:01:52.90,Live,,0,0,0,{\k48}concern {\k54}is {\k44}also {\k36}seen
+Dialogue: 0,0:01:52.90,0:01:54.28,Live,,0,0,0,{\k18}in {\k34}other {\k42}wealthy {\k44}Western
+Dialogue: 0,0:01:54.28,0:01:55.86,Live,,0,0,0,{\k66}nations {\k58}And {\k18}it’s {\k16}not
+Dialogue: 0,0:01:55.86,0:01:57.84,Live,,0,0,0,{\k26}just {\k54}abstract {\k34}worries {\k62}{\k22}We're
+Dialogue: 0,0:01:57.84,0:01:59.08,Live,,0,0,0,{\k22}seeing {\k30}tech {\k42}companies {\k30}lay
+Dialogue: 0,0:01:59.08,0:02:00.56,Live,,0,0,0,{\k30}off {\k46}thousands {\k38}to {\k34}invest
+Dialogue: 0,0:02:00.56,0:02:02.32,Live,,0,0,0,{\k40}in {\k40}AI {\k54}{\k16}a {\k26}shrinking
+Dialogue: 0,0:02:02.32,0:02:03.58,Live,,0,0,0,{\k44}number {\k22}of {\k30}entry {\k30}level
+Dialogue: 0,0:02:03.58,0:02:05.36,Live,,0,0,0,{\k28}job {\k46}openings {\k58}{\k12}and {\k34}dire
+Dialogue: 0,0:02:05.36,0:02:06.84,Live,,0,0,0,{\k38}warnings {\k30}from {\k46}industry {\k34}leaders
+Dialogue: 0,0:02:06.84,0:02:08.94,Live,,0,0,0,{\k38}about {\k56}widespread {\k42}job {\k64}displacement
+Dialogue: 0,0:02:09.56,0:02:11.18,Live,,0,0,0,{\k34}These {\k30}real {\k34}world {\k64}impacts
+Dialogue: 0,0:02:11.18,0:02:13.06,Live,,0,0,0,{\k40}fuel {\k24}the {\k46}anxiety {\k52}{\k26}Now
+Dialogue: 0,0:02:13.06,0:02:14.00,Live,,0,0,0,{\k50}here's {\k16}where {\k14}it {\k14}gets
+Dialogue: 0,0:02:14.00,0:02:16.16,Live,,0,0,0,{\k44}really {\k64}interesting {\k60}{\k12}The {\k36}picture
+Dialogue: 0,0:02:16.16,0:02:18.04,Live,,0,0,0,{\k26}is {\k46}dramatically {\k52}different {\k54}elsewhere
+Dialogue: 0,0:02:18.52,0:02:20.10,Live,,0,0,0,{\k18}In {\k56}Singapore {\k48}{\k26}with {\k10}the
+Dialogue: 0,0:02:20.10,0:02:21.90,Live,,0,0,0,{\k40}highest {\k44}daily {\k54}AI {\k42}user
+Dialogue: 0,0:02:21.90,0:02:24.24,Live,,0,0,0,{\k34}rate {\k16}at {\k130}46% {\k54}over
+Dialogue: 0,0:02:24.24,0:02:26.46,Live,,0,0,0,{\k44}80% {\k42}{\k58}expect {\k32}AI {\k46}to
+Dialogue: 0,0:02:26.46,0:02:28.28,Live,,0,0,0,{\k40}improve {\k28}their {\k56}lives {\k36}{\k22}and
+Dialogue: 0,0:02:28.28,0:02:30.28,Live,,0,0,0,{\k56}77% {\k60}{\k46}believe {\k24}it {\k14}will
+Dialogue: 0,0:02:30.28,0:02:32.40,Live,,0,0,0,{\k42}benefit {\k22}the {\k44}country {\k64}{\k40}China
+Dialogue: 0,0:02:32.40,0:02:34.56,Live,,0,0,0,{\k50}also {\k40}shows {\k42}strong {\k74}optimism
+Dialogue: 0,0:02:34.98,0:02:36.18,Live,,0,0,0,{\k28}So {\k40}people {\k20}are {\k32}using
+Dialogue: 0,0:02:36.18,0:02:37.48,Live,,0,0,0,{\k42}AI {\k38}more {\k12}than {\k28}ever
+Dialogue: 0,0:02:37.68,0:02:38.70,Live,,0,0,0,{\k18}but {\k12}in {\k36}places {\k36}like
+Dialogue: 0,0:02:38.70,0:02:40.36,Live,,0,0,0,{\k20}the {\k24}U {\k44}{\k28}S {\k32}{\k18}and
+Dialogue: 0,0:02:40.36,0:02:41.90,Live,,0,0,0,{\k24}other {\k32}Western {\k42}countries {\k44}{\k12}that
+Dialogue: 0,0:02:41.90,0:02:43.06,Live,,0,0,0,{\k28}usage {\k28}is {\k30}breeding {\k30}more
+Dialogue: 0,0:02:43.06,0:02:45.34,Live,,0,0,0,{\k46}concern {\k32}than {\k50}confidence {\k70}{\k30}What
+Dialogue: 0,0:02:45.34,0:02:46.02,Live,,0,0,0,{\k12}does {\k16}this {\k20}mean {\k20}for
+Dialogue: 0,0:02:46.02,0:02:47.36,Live,,0,0,0,{\k14}your {\k36}job {\k26}{\k8}your {\k40}future
+Dialogue: 0,0:02:47.44,0:02:48.58,Live,,0,0,0,{\k36}and {\k18}how {\k18}you {\k42}interact
+Dialogue: 0,0:02:48.58,0:02:50.12,Live,,0,0,0,{\k22}with {\k60}technology {\k38}every {\k24}day
+Dialogue: 0,0:02:50.46,0:02:52.46,Live,,0,0,0,{\k60}Interestingly {\k40}{\k12}while {\k54}optimism {\k34}might
+Dialogue: 0,0:02:52.46,0:02:53.32,Live,,0,0,0,{\k16}be {\k34}higher {\k16}in {\k20}some
+Dialogue: 0,0:02:53.32,0:02:55.46,Live,,0,0,0,{\k66}regions {\k46}{\k18}trust {\k26}in {\k58}AI's
+Dialogue: 0,0:02:55.46,0:02:56.88,Live,,0,0,0,{\k38}accuracy {\k52}is {\k10}an {\k42}always
+Dialogue: 0,0:02:56.88,0:02:57.52,Live,,0,0,0,{\k54}soaring
+Dialogue: 0,0:02:58.14,0:02:59.12,Live,,0,0,0,{\k18}Daily {\k36}users {\k30}tend {\k14}to
+Dialogue: 0,0:02:59.12,0:03:00.82,Live,,0,0,0,{\k24}trust {\k38}AI {\k48}results {\k50}more
+Dialogue: 0,0:03:01.08,0:03:02.54,Live,,0,0,0,{\k56}especially {\k24}in {\k22}high {\k44}adoption
+Dialogue: 0,0:03:02.54,0:03:04.16,Live,,0,0,0,{\k60}countries {\k68}{\k10}But {\k10}in {\k14}the
+Dialogue: 0,0:03:04.16,0:03:06.42,Live,,0,0,0,{\k20}U {\k24}{\k34}S {\k46}{\k30}only {\k62}45%
+Dialogue: 0,0:03:06.76,0:03:08.04,Live,,0,0,0,{\k16}of {\k24}daily {\k42}users {\k46}express
+Dialogue: 0,0:03:08.04,0:03:09.92,Live,,0,0,0,{\k40}high {\k60}confidence {\k24}in {\k64}AI's
+Dialogue: 0,0:03:09.92,0:03:12.22,Live,,0,0,0,{\k36}output {\k64}{\k52}Globally {\k38}{\k1}a {\k40}median
+Dialogue: 0,0:03:12.22,0:03:14.24,Live,,0,0,0,{\k22}of {\k20}just {\k80}36% {\k48}{\k32}trust
+Dialogue: 0,0:03:14.24,0:03:15.92,Live,,0,0,0,{\k80}AI's {\k32}results {\k22}a {\k24}lot
+Dialogue: 0,0:03:16.10,0:03:17.00,Live,,0,0,0,{\k36}It's {\k24}easy {\k18}to {\k12}get
+Dialogue: 0,0:03:17.00,0:03:17.92,Live,,0,0,0,{\k30}lost {\k26}in {\k14}the {\k22}hype
+Dialogue: 0,0:03:17.92,0:03:20.06,Live,,0,0,0,{\k34}about {\k62}AI's {\k48}potential {\k50}{\k20}but
+Dialogue: 0,0:03:20.06,0:03:21.24,Live,,0,0,0,{\k18}this {\k36}survey {\k34}points {\k30}to
+Dialogue: 0,0:03:21.24,0:03:23.14,Live,,0,0,0,{\k10}a {\k58}significant {\k66}underlying {\k56}current
+Dialogue: 0,0:03:23.14,0:03:24.94,Live,,0,0,0,{\k30}of {\k52}unease {\k58}{\k14}The {\k26}fact
+Dialogue: 0,0:03:24.94,0:03:25.76,Live,,0,0,0,{\k22}that {\k24}those {\k24}who {\k12}are
+Dialogue: 0,0:03:25.76,0:03:27.14,Live,,0,0,0,{\k22}most {\k42}immersed {\k40}in {\k34}AI
+Dialogue: 0,0:03:27.14,0:03:28.60,Live,,0,0,0,{\k56}are {\k40}also {\k20}the {\k30}most
+Dialogue: 0,0:03:28.60,0:03:29.90,Live,,0,0,0,{\k36}worried {\k46}is {\k10}a {\k38}critical
+Dialogue: 0,0:03:29.90,0:03:31.14,Live,,0,0,0,{\k44}signal {\k52}that {\k14}we {\k14}need
+Dialogue: 0,0:03:31.14,0:03:32.38,Live,,0,0,0,{\k16}to {\k16}pay {\k36}attention {\k46}to
+Dialogue: 0,0:03:32.68,0:03:34.38,Live,,0,0,0,{\k24}While {\k56}positive {\k52}emotions {\k38}like
+Dialogue: 0,0:03:34.38,0:03:36.60,Live,,0,0,0,{\k58}curiosity {\k54}and {\k48}excitement {\k62}are
+Dialogue: 0,0:03:36.60,0:03:38.42,Live,,0,0,0,{\k18}more {\k44}common {\k50}globally {\k70}reported
+Dialogue: 0,0:03:38.42,0:03:40.32,Live,,0,0,0,{\k20}by {\k34}about {\k64}32% {\k54}{\k18}of
+Dialogue: 0,0:03:40.32,0:03:41.66,Live,,0,0,0,{\k26}those {\k68}surveyed {\k8}the {\k32}high
+Dialogue: 0,0:03:41.66,0:03:42.84,Live,,0,0,0,{\k38}levels {\k18}of {\k38}worry {\k24}in
+Dialogue: 0,0:03:42.84,0:03:44.08,Live,,0,0,0,{\k24}key {\k44}markets {\k34}like {\k22}the
+Dialogue: 0,0:03:44.08,0:03:46.04,Live,,0,0,0,{\k28}U {\k48}{\k26}S {\k62}{\k22}can't {\k10}be
+Dialogue: 0,0:03:46.04,0:03:46.58,Live,,0,0,0,{\k44}ignored
+Dialogue: 0,0:03:47.22,0:03:48.36,Live,,0,0,0,{\k14}This {\k44}sentiment {\k22}could {\k34}shape
+Dialogue: 0,0:03:48.36,0:03:50.96,Live,,0,0,0,{\k74}regulations {\k88}future {\k66}development {\k26}{\k6}and
+Dialogue: 0,0:03:50.96,0:03:52.80,Live,,0,0,0,{\k34}public {\k70}acceptance {\k38}{\k26}What {\k16}we're
+Dialogue: 0,0:03:52.80,0:03:53.74,Live,,0,0,0,{\k26}seeing {\k26}is {\k8}a {\k34}growing
+Dialogue: 0,0:03:53.74,0:03:55.14,Live,,0,0,0,{\k32}gap {\k50}between {\k14}the {\k44}utility
+Dialogue: 0,0:03:55.14,0:03:56.36,Live,,0,0,0,{\k26}of {\k32}AI {\k54}and {\k10}the
+Dialogue: 0,0:03:56.36,0:03:57.72,Live,,0,0,0,{\k34}comfort {\k36}level {\k46}with {\k20}its
+Dialogue: 0,0:03:57.72,0:03:58.30,Live,,0,0,0,{\k48}trajectory
+Dialogue: 0,0:03:59.14,0:04:00.60,Live,,0,0,0,{\k18}As {\k26}AI {\k78}continues {\k24}its
+Dialogue: 0,0:04:00.60,0:04:02.74,Live,,0,0,0,{\k38}rapid {\k42}advance {\k54}{\k20}this {\k60}anxiety
+Dialogue: 0,0:04:02.74,0:04:03.94,Live,,0,0,0,{\k34}among {\k20}its {\k28}most {\k38}frequent
+Dialogue: 0,0:04:03.94,0:04:05.78,Live,,0,0,0,{\k40}users {\k74}suggests {\k30}a {\k40}fundamental
+Dialogue: 0,0:04:05.78,0:04:07.70,Live,,0,0,0,{\k82}challenge {\k38}in {\k48}managing {\k24}its
+Dialogue: 0,0:04:07.70,0:04:10.08,Live,,0,0,0,{\k48}societal {\k72}integration {\k46}{\k22}The {\k40}takeaway
+Dialogue: 0,0:04:10.78,0:04:12.54,Live,,0,0,0,{\k24}Daily {\k48}AI {\k62}users {\k42}aren't
+Dialogue: 0,0:04:12.54,0:04:14.70,Live,,0,0,0,{\k70}necessarily {\k34}its {\k36}biggest {\k66}advocates
+Dialogue: 0,0:04:15.30,0:04:16.58,Live,,0,0,0,{\k10}In {\k44}fact {\k26}{\k22}their {\k26}deep
+Dialogue: 0,0:04:16.58,0:04:18.42,Live,,0,0,0,{\k66}engagement {\k36}seems {\k26}to {\k56}amplify
+Dialogue: 0,0:04:18.42,0:04:20.72,Live,,0,0,0,{\k30}their {\k70}concerns {\k42}about {\k88}AI's
+Dialogue: 0,0:04:20.72,0:04:22.32,Live,,0,0,0,{\k42}impact {\k62}{\k28}This {\k14}is {\k14}a
+Dialogue: 0,0:04:22.32,0:04:24.02,Live,,0,0,0,{\k40}vital {\k50}insight {\k30}for {\k50}anyone
+Dialogue: 0,0:04:24.02,0:04:25.84,Live,,0,0,0,{\k72}navigating {\k30}the {\k52}evolving {\k28}tech
+Dialogue: 0,0:04:25.84,0:04:28.08,Live,,0,0,0,{\k58}landscape {\k52}{\k30}So {\k56}even {\k28}as
+Dialogue: 0,0:04:28.08,0:04:29.68,Live,,0,0,0,{\k24}AI {\k54}becomes {\k34}more {\k48}integrated
+Dialogue: 0,0:04:29.68,0:04:31.04,Live,,0,0,0,{\k32}into {\k10}our {\k40}lives {\k50}{\k4}the
+Dialogue: 0,0:04:31.04,0:04:31.84,Live,,0,0,0,{\k36}question {\k34}remains
+Dialogue: 0,0:04:32.48,0:04:33.24,Live,,0,0,0,{\k18}are {\k12}we {\k28}building {\k18}a
+Dialogue: 0,0:04:33.24,0:04:34.64,Live,,0,0,0,{\k34}future {\k32}we're {\k34}truly {\k40}comfortable
+Dialogue: 0,0:04:34.64,0:04:36.16,Live,,0,0,0,{\k48}with {\k36}{\k16}What {\k32}worries {\k20}you
+Dialogue: 0,0:04:36.16,0:04:37.60,Live,,0,0,0,{\k22}most {\k26}about {\k58}AI's {\k28}future
+Dialogue: 0,0:04:38.16,0:04:38.82,Live,,0,0,0,{\k20}Let {\k10}us {\k22}know {\k14}in
+Dialogue: 0,0:04:38.82,0:04:39.98,Live,,0,0,0,{\k8}the {\k32}comments {\k36}below {\k40}and
+Dialogue: 0,0:04:39.98,0:04:41.60,Live,,0,0,0,{\k44}subscribe {\k34}to {\k24}Tool {\k50}Dojo

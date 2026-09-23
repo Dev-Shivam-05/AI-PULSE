@@ -3741,5 +3741,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-23T17:30:59.758389",
+    "title": "AI Users Worried: 68% of Americans Fear Tech",
+    "description": "You might think people who use AI every single day are its biggest fans, right? Wrong. A new survey reveals that even Americans deeply integrated with AI are expressing significant concerns about its future implications. This isn't just abstract worry; it's happening as AI reshapes industries and job markets. We break down the surprising numbers and what they mean for you.  #AI #Tech #FutureofWork #ArtificialIntelligence #Gallup #Survey #TechNews #Innovation\n\nSubscribe to ToolDojo\n\nSource: https://techcrunch.com/2026/09/23/even-americans-who-use-ai-every-day-are-worried-about-it/\n\nChapters:\n0:00 AI Users Anxious\n1:00 US Fear AI\n1:58 Layoffs For AI\n2:52 Trust Lags Optimism\n3:53 AI Comfort Gap\n\n▶ Watch next: https://youtube.com/watch?v=FfzDyUk1sCc",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Tech",
+      "Future of Work",
+      "Gallup Survey",
+      "Tech Anxiety",
+      "AI Adoption",
+      "US Tech",
+      "Global AI",
+      "Technology Trends",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Users_Worried_68_of_Americans_Fear_Tech_20260923_172205_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260923_172520.mp4",
+      "output/shorts/short_2_20260923_172623.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260923_172337.jpg",
+    "youtube_url": "https://youtube.com/watch?v=oVe6noeBoxQ",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=AmzH9DwycVI",
+      "https://youtube.com/watch?v=mqkO7T3nRoA"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Fears Rise! 🤯 68% Concerned! #Shorts",
+        "description": "Discover why a staggering 68% of Americans are worried about AI. Explore the growing concerns and what they mean for the future of technology.",
+        "instagram_caption": "🚨 AI's taking over, and Americans are NOT happy! 🤯 68% are feeling the tech fear. What's causing this widespread anxiety about artificial intelligence? Follow @tooldojo!"
+      },
+      {
+        "title": "Tech Anxiety Soars! 😱 What's Next? #Shorts",
+        "description": "Is technology becoming too much? 68% of Americans express significant fear. Dive into the reasons behind this rising tech anxiety and what it signals.",
+        "instagram_caption": "😱 The tech takeover is real, and 68% of Americans are feeling the heat! Are we ready for what's next in the world of AI and advanced technology? Follow @tooldojo!"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

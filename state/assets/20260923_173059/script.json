@@ -1,0 +1,128 @@
+{
+  "titles": [
+    "AI Users Worried: 68% of Americans Fear Tech",
+    "Daily AI Users Fearful: US Leads Global Anxiety",
+    "AI Adoption Doesn't Mean Enthusiasm: US Survey"
+  ],
+  "title": "AI Users Worried: 68% of Americans Fear Tech",
+  "thumb_text": "68% AMERICANS WORRIED",
+  "description": "You might think people who use AI every single day are its biggest fans, right? Wrong. A new survey reveals that even Americans deeply integrated with AI are expressing significant concerns about its future implications. This isn't just abstract worry; it's happening as AI reshapes industries and job markets. We break down the surprising numbers and what they mean for you.  #AI #Tech #FutureofWork #ArtificialIntelligence #Gallup #Survey #TechNews #Innovation\n\nSubscribe to ToolDojo\n\nSource: https://techcrunch.com/2026/09/23/even-americans-who-use-ai-every-day-are-worried-about-it/\n\nChapters:\n0:00 AI Users Anxious\n1:00 US Fear AI\n1:58 Layoffs For AI\n2:52 Trust Lags Optimism\n3:53 AI Comfort Gap\n\n▶ Watch next: https://youtube.com/watch?v=FfzDyUk1sCc",
+  "tags": [
+    "AI",
+    "Artificial Intelligence",
+    "Tech",
+    "Future of Work",
+    "Gallup Survey",
+    "Tech Anxiety",
+    "AI Adoption",
+    "US Tech",
+    "Global AI",
+    "Technology Trends",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "synthesis_claim": "Despite the global push for AI integration, a significant disconnect exists between its widespread adoption and genuine public trust, particularly in Western nations, suggesting that perceived benefits are not outweighing underlying anxieties about its societal impact.",
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "You might think people who use AI every single day are its biggest fans, right? Wrong. A new report shows that a striking 68% of Americans who rely on AI daily are actually worried about it.  This isn't just a fringe concern; it's a significant finding that challenges how we view AI's public reception.",
+      "visual_query": "person using smartphone AI",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "The data comes from a large-scale survey commissioned by Microsoft and conducted by Gallup. They polled about a thousand people in 37 countries between April and July. The project is set to expand to 140 countries, but the initial findings are already telling, especially for the United States.",
+      "visual_query": "Gallup survey graph",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Globally, people are turning to AI for everything: finding recipes, doing homework, researching projects, even creating presentations. It's becoming an everyday tool. But using it daily doesn't automatically translate to feeling good about where it's all headed.",
+      "visual_query": "person typing on laptop",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "In fact, the survey places the U.S. at the anxious end of the spectrum. While 74% of Americans report feeling worried about AI, only 36% expect the technology to mostly help the country. This contrasts with many other parts of the world.",
+      "visual_query": "world map anxiety points",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 5,
+      "narration": "This comes at a time when there's intense debate about AI's dangers, rapid advancements in AI safety, the potential for AI to go rogue, and accusations of anti-competitive practices. The idea that simple adoption equals public enthusiasm is clearly flawed.",
+      "visual_query": "robot uprising silhouette",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Consider Canada: nearly 30% of those surveyed use AI daily, and of that group, over half have concerns. Overall, 64% of Canadians aware of AI express worry. This pattern of frequent use coupled with concern is also seen in other wealthy Western nations.",
+      "visual_query": "Canadian flag worried face",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 7,
+      "narration": "And it’s not just abstract worries. We're seeing tech companies lay off thousands to invest in AI, a shrinking number of entry-level job openings, and dire warnings from industry leaders about widespread job displacement. These real-world impacts fuel the anxiety.",
+      "visual_query": "empty office cubicles",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Now, here's where it gets really interesting. The picture is dramatically different elsewhere. In Singapore, with the highest daily AI user rate at 46%, over 80% expect AI to improve their lives, and 77% believe it will benefit the country. China also shows strong optimism.",
+      "visual_query": "Singapore skyline optimistic",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 9,
+      "narration": "So, people are using AI more than ever, but in places like the U.S. and other Western countries, that usage is breeding more concern than confidence. What does this mean for your job, your future, and how you interact with technology every day?",
+      "visual_query": "person looking at phone worried",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Interestingly, while optimism might be higher in some regions, trust in AI's accuracy isn't always soaring. Daily users tend to trust AI results more, especially in high-adoption countries. But in the U.S., only 45% of daily users express high confidence in AI's output. Globally, a median of just 36% trust AI's results a lot.",
+      "visual_query": "computer screen with question marks",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 11,
+      "narration": "It's easy to get lost in the hype about AI's potential, but this survey points to a significant underlying current of unease. The fact that those who are most immersed in AI are also the most worried is a critical signal that we need to pay attention to.",
+      "visual_query": "person surrounded by glowing data",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "While positive emotions like curiosity and excitement are more common globally – reported by about 32% of those surveyed – the high levels of worry in key markets like the U.S. can't be ignored. This sentiment could shape regulations, future development, and public acceptance.",
+      "visual_query": "emotions scale graph",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 13,
+      "narration": "What we're seeing is a growing gap between the utility of AI and the comfort level with its trajectory. As AI continues its rapid advance, this anxiety among its most frequent users suggests a fundamental challenge in managing its societal integration.",
+      "visual_query": "bridge with gap",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The takeaway? Daily AI users aren't necessarily its biggest advocates. In fact, their deep engagement seems to amplify their concerns about AI's impact. This is a vital insight for anyone navigating the evolving tech landscape.",
+      "visual_query": "person looking out window thoughtful",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 15,
+      "narration": "So, even as AI becomes more integrated into our lives, the question remains: are we building a future we're truly comfortable with? What worries you most about AI's future? Let us know in the comments below and subscribe to ToolDojo.",
+      "visual_query": "question mark in gears",
+      "speaker": "a"
+    }
+  ],
+  "deliverable": null,
+  "filter_segment": false,
+  "source_url": "https://techcrunch.com/2026/09/23/even-americans-who-use-ai-every-day-are-worried-about-it/",
+  "format": "news",
+  "signal_title": "Even Americans who use AI every day are worried about it",
+  "hook_pattern": "number"
+}

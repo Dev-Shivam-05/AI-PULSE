@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "nearly 30% of those surveyed use AI daily",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "over half have concerns",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "Despite the global push for AI integration, a significant disconnect exists between its widespread adoption and genuine public trust, particularly in Western nations, suggesting that perceived benefits are not outweighing underlying anxieties about its societal impact."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific phrasing and a narrative flow that is not directly derivable from the provided source text. For example, the opening hook 'You might think people who use AI every single "
+  },
+  "confidence": {
+    "score": 0.84,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
