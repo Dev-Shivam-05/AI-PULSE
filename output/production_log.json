@@ -3790,5 +3790,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-24T17:35:41.745461",
+    "title": "LLMs: How Billion Parameters Understand You",
+    "description": "How Large Language Models Actually Understand Human Language.\n\nEver wonder how an AI seems to read your mind? It's not magic, it's math. This video demystifies the core mechanics of Large Language Models (LLMs), the engines powering everything from chatbots to creative writing tools. We'll break down complex concepts like tokenization, embeddings, and attention mechanisms into easy-to-grasp analogies. Discover how these models, often with hundreds of billions of parameters, process and 'understand' your text, moving beyond the hype to reveal the intricate processes at play. Prepare to see AI language comprehension in a whole new light.\n\n#AI #LLM #MachineLearning #TechExplained #ArtificialIntelligence #DeepLearning\n\nChapters:\n0:00 Math Meets Language\n1:12 Word Proximity Meaning\n1:57 Contextual Understanding Example\n3:13 Statistical Model Power\n4:06 Sophisticated Pattern Matcher\n\n▶ Watch next: https://youtube.com/watch?v=oVe6noeBoxQ",
+    "tags": [
+      "Large Language Models",
+      "LLM Explained",
+      "AI Understanding",
+      "Natural Language Processing",
+      "Tokenization",
+      "Embeddings",
+      "Attention Mechanism",
+      "How AI Works",
+      "Machine Learning",
+      "Deep Learning",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLMs_How_Billion_Parameters_Understand_You_20260924_172652_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260924_172851.mp4",
+      "output/shorts/short_2_20260924_173012.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260924_172843.jpg",
+    "youtube_url": "https://youtube.com/watch?v=4zlQzPuP8Jw",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=wG-KozRcTuM",
+      "https://youtube.com/watch?v=ZKFpG76RMmk"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Unlock LLM Secrets: 1 Billion Power! #Shorts",
+        "description": "Discover the astonishing intelligence behind Large Language Models and how their billions of parameters allow them to understand you like never before. Dive into the future of AI communication and what it means for you!",
+        "instagram_caption": "🧠 Ever wondered how AI understands *you*? LLMs with billions of parameters are unlocking incredible communication! \n\nFollow @tooldojo! #AI #LLM #ArtificialIntelligence #Tech #Innovation #FutureOfTech #MachineLearning #DeepLearning #BigData #NLP #NaturalLanguageProcessing #TechExplained #AIexplained #BillionParameters #SmartTech #AIrevolution #DigitalTransformation #TechTrends #LearnAI #AIinsights"
+      },
+      {
+        "title": "Mind-Blowing LLMs: Billions of Brains! #Shorts",
+        "description": "Explore the revolutionary world of Large Language Models! See how their massive scale, with billions of parameters, creates an unparalleled understanding of human language. Get ready to be amazed by the power of AI!",
+        "instagram_caption": "🤯 Witness the mind-blowing power of LLMs! Billions of parameters are creating AI that truly understands your words. \n\nFollow @tooldojo! #LLMs #AIexplained #TechTok #FutureIsNow #ArtificialIntelligence #MachineLearning #DeepLearning #NLP #AIpower #Innovation #TechSavvy #DigitalWorld #AIsecrets #SmartAI #TechGeek #AIcommunity #FutureTech #UnderstandAI #DataScience #AITrends"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
