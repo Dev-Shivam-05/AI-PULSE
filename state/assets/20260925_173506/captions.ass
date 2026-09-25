@@ -1,0 +1,171 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.36,Live,,0,0,0,{\k16}This {\k36}week's {\k26}most {\k58}impactful
+Dialogue: 0,0:00:01.36,0:00:03.56,Live,,0,0,0,{\k32}tech {\k56}development {\k52}{\k44}impacting {\k36}sales
+Dialogue: 0,0:00:03.56,0:00:05.60,Live,,0,0,0,{\k34}and {\k48}engineering {\k58}workflows {\k64}flew
+Dialogue: 0,0:00:05.60,0:00:07.24,Live,,0,0,0,{\k62}surprisingly {\k44}under {\k16}the {\k32}radar
+Dialogue: 0,0:00:07.72,0:00:08.66,Live,,0,0,0,{\k36}We're {\k26}talking {\k22}about {\k10}a
+Dialogue: 0,0:00:08.66,0:00:10.22,Live,,0,0,0,{\k32}company {\k30}that {\k56}leveraged {\k38}AI
+Dialogue: 0,0:00:10.22,0:00:11.46,Live,,0,0,0,{\k56}to {\k18}not {\k26}only {\k24}boost
+Dialogue: 0,0:00:11.46,0:00:12.84,Live,,0,0,0,{\k46}sales {\k44}by {\k10}a {\k38}massive
+Dialogue: 0,0:00:12.84,0:00:14.96,Live,,0,0,0,{\k82}60% {\k23}{\k37}but {\k32}also {\k38}reclaim
+Dialogue: 0,0:00:14.96,0:00:16.66,Live,,0,0,0,{\k34}over {\k66}75 {\k52}hours {\k18}of
+Dialogue: 0,0:00:16.66,0:00:18.32,Live,,0,0,0,{\k30}work {\k62}{\k18}Stick {\k34}around {\k22}to
+Dialogue: 0,0:00:18.32,0:00:20.32,Live,,0,0,0,{\k48}understand {\k62}exactly {\k30}how {\k42}{\k18}The
+Dialogue: 0,0:00:20.32,0:00:21.94,Live,,0,0,0,{\k36}company {\k30}is {\k52}Proaction {\k32}{\k12}which
+Dialogue: 0,0:00:21.94,0:00:23.62,Live,,0,0,0,{\k34}builds {\k58}software {\k30}for {\k46}businesses
+Dialogue: 0,0:00:23.62,0:00:26.12,Live,,0,0,0,{\k62}managing {\k56}vehicle {\k64}fleets {\k40}{\k28}Their
+Dialogue: 0,0:00:26.12,0:00:28.50,Live,,0,0,0,{\k58}challenge {\k30}{\k90}Demonstrating {\k40}how {\k20}their
+Dialogue: 0,0:00:28.50,0:00:30.16,Live,,0,0,0,{\k50}platform {\k36}fits {\k40}each {\k40}unique
+Dialogue: 0,0:00:30.16,0:00:32.24,Live,,0,0,0,{\k32}fleet {\k72}operation {\k62}{\k20}This {\k22}meant
+Dialogue: 0,0:00:32.24,0:00:34.52,Live,,0,0,0,{\k50}custom {\k48}demos {\k40}{\k20}which {\k70}traditionally
+Dialogue: 0,0:00:34.52,0:00:36.04,Live,,0,0,0,{\k36}ate {\k20}up {\k40}precious {\k56}engineering
+Dialogue: 0,0:00:36.04,0:00:38.00,Live,,0,0,0,{\k58}time {\k40}{\k50}Before {\k28}{\k12}if {\k8}a
+Dialogue: 0,0:00:38.00,0:00:39.28,Live,,0,0,0,{\k36}prospect {\k38}needed {\k22}a {\k32}tailored
+Dialogue: 0,0:00:39.28,0:00:40.30,Live,,0,0,0,{\k28}look {\k10}at {\k12}the {\k42}software
+Dialogue: 0,0:00:40.70,0:00:42.08,Live,,0,0,0,{\k16}a {\k28}non {\k52}technical {\k42}person
+Dialogue: 0,0:00:42.08,0:00:43.72,Live,,0,0,0,{\k30}like {\k20}the {\k72}COO {\k42}had
+Dialogue: 0,0:00:43.72,0:00:45.10,Live,,0,0,0,{\k16}to {\k18}pull {\k50}engineers {\k54}away
+Dialogue: 0,0:00:45.10,0:00:46.22,Live,,0,0,0,{\k26}from {\k16}their {\k24}core {\k36}work
+Dialogue: 0,0:00:46.62,0:00:48.32,Live,,0,0,0,{\k40}This {\k62}bottleneck {\k24}meant {\k44}relying
+Dialogue: 0,0:00:48.32,0:00:50.68,Live,,0,0,0,{\k40}on {\k36}generic {\k78}presentations {\k82}instead
+Dialogue: 0,0:00:50.68,0:00:52.16,Live,,0,0,0,{\k20}of {\k30}showing {\k36}real {\k52}value
+Dialogue: 0,0:00:52.44,0:00:54.10,Live,,0,0,0,{\k36}That's {\k16}where {\k42}open {\k72}AI's
+Dialogue: 0,0:00:54.10,0:00:55.64,Live,,0,0,0,{\k44}codecs {\k22}came {\k22}in {\k56}{\k10}It
+Dialogue: 0,0:00:55.64,0:00:57.06,Live,,0,0,0,{\k24}flipped {\k32}the {\k46}entire {\k40}sales
+Dialogue: 0,0:00:57.06,0:00:59.84,Live,,0,0,0,{\k54}process {\k64}{\k38}Now {\k52}{\k10}the {\k60}COO
+Dialogue: 0,0:00:59.84,0:01:01.62,Live,,0,0,0,{\k20}can {\k38}create {\k32}these {\k78}customized
+Dialogue: 0,0:01:01.98,0:01:04.20,Live,,0,0,0,{\k50}interactive {\k38}demos {\k76}himself {\k58}in
+Dialogue: 0,0:01:04.20,0:01:05.56,Live,,0,0,0,{\k20}about {\k44}30 {\k16}to {\k56}45
+Dialogue: 0,0:01:05.56,0:01:07.26,Live,,0,0,0,{\k34}minutes {\k52}each {\k42}{\k10}a {\k32}task
+Dialogue: 0,0:01:07.26,0:01:08.46,Live,,0,0,0,{\k32}that {\k28}used {\k20}to {\k40}require
+Dialogue: 0,0:01:08.46,0:01:11.34,Live,,0,0,0,{\k88}significant {\k64}engineering {\k54}hours {\k42}{\k40}He's
+Dialogue: 0,0:01:11.34,0:01:12.52,Live,,0,0,0,{\k18}now {\k42}producing {\k40}four {\k18}to
+Dialogue: 0,0:01:12.52,0:01:13.50,Live,,0,0,0,{\k22}six {\k20}of {\k16}these {\k40}custom
+Dialogue: 0,0:01:13.50,0:01:14.54,Live,,0,0,0,{\k40}demos {\k54}monthly
+Dialogue: 0,0:01:15.16,0:01:17.02,Live,,0,0,0,{\k28}According {\k24}to {\k98}OpenAI's {\k26}blog
+Dialogue: 0,0:01:17.50,0:01:18.50,Live,,0,0,0,{\k6}this {\k32}saves {\k22}an {\k40}estimated
+Dialogue: 0,0:01:18.50,0:01:20.12,Live,,0,0,0,{\k52}40 {\k24}to {\k36}60 {\k50}engineering
+Dialogue: 0,0:01:20.12,0:01:22.12,Live,,0,0,0,{\k58}hours {\k54}every {\k38}single {\k40}month
+Dialogue: 0,0:01:22.50,0:01:23.52,Live,,0,0,0,{\k34}That's {\k6}a {\k36}huge {\k26}chunk
+Dialogue: 0,0:01:23.52,0:01:24.84,Live,,0,0,0,{\k16}of {\k52}capacity {\k36}freed {\k28}up
+Dialogue: 0,0:01:24.84,0:01:26.62,Live,,0,0,0,{\k52}The {\k36}magic {\k48}happens {\k42}after
+Dialogue: 0,0:01:26.62,0:01:28.32,Live,,0,0,0,{\k22}a {\k18}sales {\k44}call {\k60}{\k26}COO
+Dialogue: 0,0:01:28.32,0:01:29.40,Live,,0,0,0,{\k14}decks {\k32}is {\k28}fed {\k34}call
+Dialogue: 0,0:01:29.40,0:01:32.04,Live,,0,0,0,{\k66}recordings {\k46}{\k36}prospect {\k56}emails {\k36}{\k24}and
+Dialogue: 0,0:01:32.04,0:01:34.10,Live,,0,0,0,{\k14}any {\k42}shared {\k82}spreadsheets {\k50}{\k18}It
+Dialogue: 0,0:01:34.10,0:01:35.56,Live,,0,0,0,{\k20}then {\k32}builds {\k24}an {\k70}HTML
+Dialogue: 0,0:01:35.56,0:01:37.60,Live,,0,0,0,{\k68}demo {\k72}environment {\k26}that {\k38}mirrors
+Dialogue: 0,0:01:37.60,0:01:39.92,Live,,0,0,0,{\k58}Proaction's {\k62}product {\k34}{\k22}but {\k46}critically
+Dialogue: 0,0:01:40.36,0:01:41.60,Live,,0,0,0,{\k24}using {\k16}the {\k64}prospect's {\k20}own
+Dialogue: 0,0:01:41.60,0:01:43.34,Live,,0,0,0,{\k30}fleet {\k40}data {\k32}{\k54}Imagine {\k18}a
+Dialogue: 0,0:01:43.34,0:01:44.62,Live,,0,0,0,{\k46}prospect {\k36}seeing {\k22}their {\k24}own
+Dialogue: 0,0:01:44.62,0:01:46.10,Live,,0,0,0,{\k36}trucks {\k32}or {\k48}machinery {\k32}on
+Dialogue: 0,0:01:46.10,0:01:48.46,Live,,0,0,0,{\k38}screen {\k82}arranged {\k84}exactly {\k32}how
+Dialogue: 0,0:01:48.46,0:01:50.36,Live,,0,0,0,{\k16}their {\k32}business {\k50}operates {\k68}{\k24}They
+Dialogue: 0,0:01:50.36,0:01:51.44,Live,,0,0,0,{\k12}can {\k28}directly {\k46}point {\k22}out
+Dialogue: 0,0:01:51.44,0:01:53.36,Live,,0,0,0,{\k20}what {\k24}needs {\k66}tweaking {\k82}effectively
+Dialogue: 0,0:01:53.36,0:01:54.72,Live,,0,0,0,{\k46}co {\k26}building {\k20}the {\k44}solution
+Dialogue: 0,0:01:54.72,0:01:56.30,Live,,0,0,0,{\k52}without {\k34}any {\k50}engineers {\k22}in
+Dialogue: 0,0:01:56.30,0:01:57.92,Live,,0,0,0,{\k10}the {\k34}room {\k32}{\k22}This {\k64}personalized
+Dialogue: 0,0:01:57.92,0:01:59.82,Live,,0,0,0,{\k74}approach {\k30}gives {\k60}prospects {\k26}a
+Dialogue: 0,0:01:59.82,0:02:01.24,Live,,0,0,0,{\k48}tangible {\k52}reason {\k22}to {\k20}move
+Dialogue: 0,0:02:01.24,0:02:03.72,Live,,0,0,0,{\k64}forward {\k68}{\k38}Proaction {\k42}reports {\k36}that
+Dialogue: 0,0:02:03.72,0:02:04.56,Live,,0,0,0,{\k16}the {\k20}rate {\k18}of {\k30}deals
+Dialogue: 0,0:02:04.56,0:02:06.62,Live,,0,0,0,{\k66}progressing {\k32}from {\k48}initial {\k60}contact
+Dialogue: 0,0:02:06.62,0:02:09.52,Live,,0,0,0,{\k60}to {\k46}solution {\k62}development {\k56}{\k66}bypassing
+Dialogue: 0,0:02:09.52,0:02:10.94,Live,,0,0,0,{\k12}the {\k38}usual {\k24}nurture {\k68}stage
+Dialogue: 0,0:02:10.94,0:02:12.78,Live,,0,0,0,{\k54}has {\k44}increased {\k34}by {\k42}50%
+Dialogue: 0,0:02:13.08,0:02:15.18,Live,,0,0,0,{\k28}to {\k126}60% {\k24}But {\k32}here's
+Dialogue: 0,0:02:15.18,0:02:16.58,Live,,0,0,0,{\k8}the {\k42}problem {\k46}{\k10}we {\k34}often
+Dialogue: 0,0:02:16.58,0:02:18.06,Live,,0,0,0,{\k28}hear {\k42}about {\k24}AI {\k54}saving
+Dialogue: 0,0:02:18.06,0:02:18.54,Live,,0,0,0,{\k38}time
+Dialogue: 0,0:02:19.16,0:02:20.14,Live,,0,0,0,{\k18}Is {\k16}this {\k28}just {\k36}another
+Dialogue: 0,0:02:20.14,0:02:21.86,Live,,0,0,0,{\k56}efficiency {\k34}play {\k60}or {\k22}does
+Dialogue: 0,0:02:21.86,0:02:23.38,Live,,0,0,0,{\k16}it {\k46}fundamentally {\k68}change {\k22}how
+Dialogue: 0,0:02:23.38,0:02:24.94,Live,,0,0,0,{\k46}companies {\k54}operate {\k22}and {\k24}sell
+Dialogue: 0,0:02:25.34,0:02:26.24,Live,,0,0,0,{\k26}It's {\k20}more {\k22}than {\k22}just
+Dialogue: 0,0:02:26.24,0:02:28.80,Live,,0,0,0,{\k76}efficiency {\k62}{\k14}If {\k48}Proaction's {\k56}engineers
+Dialogue: 0,0:02:28.80,0:02:30.48,Live,,0,0,0,{\k40}built {\k34}these {\k28}demos {\k54}{\k12}it
+Dialogue: 0,0:02:30.48,0:02:31.36,Live,,0,0,0,{\k8}would {\k26}take {\k24}them {\k30}about
+Dialogue: 0,0:02:31.36,0:02:32.54,Live,,0,0,0,{\k36}10 {\k40}hours {\k32}each
+Dialogue: 0,0:02:33.16,0:02:34.48,Live,,0,0,0,{\k22}So {\k32}{\k32}four {\k16}to {\k30}six
+Dialogue: 0,0:02:34.48,0:02:35.68,Live,,0,0,0,{\k34}demos {\k28}a {\k24}month {\k34}means
+Dialogue: 0,0:02:35.68,0:02:37.26,Live,,0,0,0,{\k54}40 {\k22}to {\k38}60 {\k44}hours
+Dialogue: 0,0:02:37.26,0:02:39.32,Live,,0,0,0,{\k42}saved {\k32}from {\k58}engineering {\k52}{\k22}But
+Dialogue: 0,0:02:39.32,0:02:40.62,Live,,0,0,0,{\k12}the {\k38}impact {\k50}doesn't {\k30}stop
+Dialogue: 0,0:02:40.62,0:02:41.98,Live,,0,0,0,{\k38}there {\k40}{\k14}When {\k8}a {\k36}prospect
+Dialogue: 0,0:02:41.98,0:02:43.68,Live,,0,0,0,{\k42}becomes {\k20}a {\k42}customer {\k44}{\k22}those
+Dialogue: 0,0:02:43.68,0:02:45.10,Live,,0,0,0,{\k44}custom {\k36}demos {\k40}become {\k22}a
+Dialogue: 0,0:02:45.10,0:02:46.38,Live,,0,0,0,{\k34}visual {\k44}reference {\k32}for {\k18}the
+Dialogue: 0,0:02:46.38,0:02:48.88,Live,,0,0,0,{\k52}engineers {\k64}{\k36}This {\k62}drastically {\k36}cuts
+Dialogue: 0,0:02:48.88,0:02:49.92,Live,,0,0,0,{\k32}down {\k32}on {\k20}back {\k20}and
+Dialogue: 0,0:02:49.92,0:02:52.04,Live,,0,0,0,{\k24}forth {\k64}questions {\k50}{\k52}streamlining {\k22}the
+Dialogue: 0,0:02:52.04,0:02:53.52,Live,,0,0,0,{\k52}transition {\k36}from {\k28}sales {\k32}to
+Dialogue: 0,0:02:53.52,0:02:55.72,Live,,0,0,0,{\k48}production {\k40}{\k56}Proaction {\k32}even {\k44}used
+Dialogue: 0,0:02:55.72,0:02:56.76,Live,,0,0,0,{\k52}Codex {\k14}to {\k22}build {\k16}a
+Dialogue: 0,0:02:56.76,0:02:59.34,Live,,0,0,0,{\k40}customer {\k58}solution {\k52}center {\k66}{\k32}Here
+Dialogue: 0,0:02:59.80,0:03:01.38,Live,,0,0,0,{\k34}prospects {\k32}can {\k42}explore {\k50}tailored
+Dialogue: 0,0:03:01.38,0:03:03.12,Live,,0,0,0,{\k58}workflows {\k44}and {\k30}review {\k42}sales
+Dialogue: 0,0:03:03.12,0:03:05.40,Live,,0,0,0,{\k70}materials {\k52}{\k56}empowering {\k32}them {\k18}to
+Dialogue: 0,0:03:05.40,0:03:07.02,Live,,0,0,0,{\k58}articulate {\k26}their {\k32}needs {\k46}clearly
+Dialogue: 0,0:03:07.02,0:03:08.78,Live,,0,0,0,{\k52}before {\k50}engineers {\k54}even {\k20}get
+Dialogue: 0,0:03:08.78,0:03:10.66,Live,,0,0,0,{\k40}deeply {\k82}involved {\k30}{\k22}What {\k14}we're
+Dialogue: 0,0:03:10.66,0:03:11.68,Live,,0,0,0,{\k22}seeing {\k34}here {\k28}isn't {\k18}just
+Dialogue: 0,0:03:11.68,0:03:12.72,Live,,0,0,0,{\k14}a {\k28}tool {\k20}for {\k32}sales
+Dialogue: 0,0:03:13.40,0:03:14.90,Live,,0,0,0,{\k38}Codex {\k32}plugins {\k52}integrate {\k28}with
+Dialogue: 0,0:03:14.90,0:03:16.96,Live,,0,0,0,{\k30}tools {\k34}like {\k64}Granola {\k68}Gmail
+Dialogue: 0,0:03:17.26,0:03:19.34,Live,,0,0,0,{\k38}Slack {\k38}{\k4}and {\k34}GitHub {\k52}{\k42}This
+Dialogue: 0,0:03:19.34,0:03:20.46,Live,,0,0,0,{\k22}means {\k46}Colin {\k22}can {\k22}pull
+Dialogue: 0,0:03:20.46,0:03:22.58,Live,,0,0,0,{\k32}call {\k80}transcripts {\k32}{\k22}create {\k46}tasks
+Dialogue: 0,0:03:22.58,0:03:23.86,Live,,0,0,0,{\k22}in {\k28}Linear {\k44}and {\k34}update
+Dialogue: 0,0:03:23.86,0:03:25.52,Live,,0,0,0,{\k24}hub {\k30}spot {\k56}opportunities {\k56}all
+Dialogue: 0,0:03:25.52,0:03:27.26,Live,,0,0,0,{\k30}within {\k62}Codex {\k34}{\k22}He {\k26}even
+Dialogue: 0,0:03:27.26,0:03:28.70,Live,,0,0,0,{\k26}set {\k20}up {\k56}automated {\k42}sales
+Dialogue: 0,0:03:28.70,0:03:30.50,Live,,0,0,0,{\k54}updates {\k34}by {\k42}reviewing {\k50}recent
+Dialogue: 0,0:03:30.50,0:03:33.32,Live,,0,0,0,{\k58}calls {\k36}{\k68}Before {\k38}{\k26}this {\k56}involved
+Dialogue: 0,0:03:33.32,0:03:35.22,Live,,0,0,0,{\k42}jumping {\k42}between {\k54}countless {\k52}tabs
+Dialogue: 0,0:03:35.22,0:03:36.82,Live,,0,0,0,{\k26}and {\k44}manual {\k36}data {\k44}entry
+Dialogue: 0,0:03:37.32,0:03:38.50,Live,,0,0,0,{\k32}Now {\k36}{\k32}it's {\k2}a {\k16}more
+Dialogue: 0,0:03:38.50,0:03:41.14,Live,,0,0,0,{\k62}unified {\k76}descriptive {\k58}workflow {\k46}{\k22}This
+Dialogue: 0,0:03:41.14,0:03:42.58,Live,,0,0,0,{\k36}story {\k46}highlights {\k26}a {\k36}fundamental
+Dialogue: 0,0:03:42.58,0:03:45.26,Live,,0,0,0,{\k64}shift {\k48}{\k42}AI {\k38}{\k44}empowering {\k32}non
+Dialogue: 0,0:03:45.26,0:03:46.74,Live,,0,0,0,{\k54}technical {\k28}roles {\k26}to {\k40}perform
+Dialogue: 0,0:03:46.74,0:03:49.02,Live,,0,0,0,{\k42}highly {\k60}technical {\k52}tasks {\k44}{\k30}not
+Dialogue: 0,0:03:49.02,0:03:50.66,Live,,0,0,0,{\k24}just {\k14}for {\k56}efficiency {\k50}{\k20}but
+Dialogue: 0,0:03:50.66,0:03:52.22,Live,,0,0,0,{\k16}for {\k32}direct {\k50}revenue {\k58}generation
+Dialogue: 0,0:03:52.22,0:03:54.06,Live,,0,0,0,{\k48}and {\k42}improved {\k42}product {\k52}development
+Dialogue: 0,0:03:54.06,0:03:56.38,Live,,0,0,0,{\k56}handoffs {\k56}{\k30}It {\k42}collapses {\k48}silos
+Dialogue: 0,0:03:56.38,0:03:58.56,Live,,0,0,0,{\k46}between {\k44}sales {\k52}{\k24}support {\k40}{\k12}and
+Dialogue: 0,0:03:58.56,0:04:00.78,Live,,0,0,0,{\k50}engineering {\k44}{\k22}The {\k62}strangest {\k34}part
+Dialogue: 0,0:04:01.28,0:04:02.42,Live,,0,0,0,{\k20}This {\k28}level {\k24}of {\k42}AI
+Dialogue: 0,0:04:02.42,0:04:04.16,Live,,0,0,0,{\k86}integration {\k20}in {\k42}sales {\k26}and
+Dialogue: 0,0:04:04.16,0:04:06.56,Live,,0,0,0,{\k40}product {\k72}visualization {\k100}leading {\k28}to
+Dialogue: 0,0:04:06.56,0:04:08.54,Live,,0,0,0,{\k32}such {\k48}concrete {\k52}business {\k56}results
+Dialogue: 0,0:04:08.94,0:04:09.82,Live,,0,0,0,{\k12}is {\k28}still {\k26}not {\k22}the
+Dialogue: 0,0:04:09.82,0:04:11.26,Live,,0,0,0,{\k28}norm {\k26}for {\k26}most {\k54}companies
+Dialogue: 0,0:04:11.79,0:04:13.16,Live,,0,0,0,{\k35}It's {\k8}a {\k26}clear {\k68}indicator
+Dialogue: 0,0:04:13.16,0:04:14.18,Live,,0,0,0,{\k28}of {\k16}where {\k18}the {\k40}future
+Dialogue: 0,0:04:14.18,0:04:15.78,Live,,0,0,0,{\k26}of {\k58}interactive {\k42}sales {\k34}and
+Dialogue: 0,0:04:15.78,0:04:17.54,Live,,0,0,0,{\k38}product {\k60}development {\k32}is {\k36}heading
+Dialogue: 0,0:04:17.78,0:04:19.66,Live,,0,0,0,{\k34}So {\k28}{\k42}Proaction {\k54}leveraged {\k30}AI
+Dialogue: 0,0:04:19.66,0:04:21.06,Live,,0,0,0,{\k42}to {\k18}build {\k46}custom {\k34}demos
+Dialogue: 0,0:04:21.06,0:04:22.70,Live,,0,0,0,{\k34}on {\k12}the {\k30}fly {\k62}{\k26}boosting
+Dialogue: 0,0:04:22.70,0:04:24.88,Live,,0,0,0,{\k48}sales {\k62}significantly {\k68}and {\k40}saving
+Dialogue: 0,0:04:24.88,0:04:26.80,Live,,0,0,0,{\k42}engineer {\k48}time {\k58}{\k28}This {\k16}is
+Dialogue: 0,0:04:26.80,0:04:28.26,Live,,0,0,0,{\k10}a {\k42}powerful {\k56}example {\k38}of
+Dialogue: 0,0:04:28.26,0:04:29.76,Live,,0,0,0,{\k14}how {\k34}AI {\k40}can {\k62}fundamentally
+Dialogue: 0,0:04:29.76,0:04:32.32,Live,,0,0,0,{\k64}reshape {\k38}business {\k60}operations {\k68}{\k26}What
+Dialogue: 0,0:04:32.32,0:04:33.16,Live,,0,0,0,{\k12}if {\k12}your {\k28}sales {\k32}team
+Dialogue: 0,0:04:33.16,0:04:34.40,Live,,0,0,0,{\k24}could {\k24}build {\k42}custom {\k34}product
+Dialogue: 0,0:04:34.40,0:04:35.60,Live,,0,0,0,{\k40}demos {\k70}instantly

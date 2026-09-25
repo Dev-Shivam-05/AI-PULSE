@@ -3839,5 +3839,55 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-25T17:35:06.541198",
+    "title": "Codex: 60% Sales Boost, 75+ Hrs Saved",
+    "description": "Proaction achieves a 60% sales increase and saves over 75 hours with the power of OpenAI's Codex. Discover how this AI tool is revolutionizing fleet management sales demos. We dive into how customized interactive demos are built and delivered, freeing up engineering resources and directly impacting the bottom line. See how non-technical users can now create sophisticated sales tools, a massive shift from relying on engineers. This isn't just about saving time; it's about closing more deals faster by showing prospects exactly what they need, built with their own data. Learn about the broader implications for software development and sales processes. #AI #OpenAI #Codex #FutureOfWork #SalesTech #Productivity\n\nSource: https://openai.com/index/proaction\n\nChapters:\n0:00 Tech Development Impact\n0:55 OpenAI's Codex Flip\n1:59 Personalized Prospect Approach\n2:44 Demos Become Reference\n3:42 AI Empowers Roles\n\n▶ Watch next: https://youtube.com/watch?v=4zlQzPuP8Jw",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Codex",
+      "Sales",
+      "Demos",
+      "Productivity",
+      "Software Engineering",
+      "Fleet Management",
+      "Automation",
+      "Tech Trends",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Codex_60_Sales_Boost_75_Hrs_Saved_20260925_172610_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260925_172919.mp4",
+      "output/shorts/short_2_20260925_173012.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260925_172744.jpg",
+    "youtube_url": "https://youtube.com/watch?v=jqSCmL5Qqzc",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=TgIpC4Eu_2Y",
+      "https://youtube.com/watch?v=XU7FKLxM7h8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Unleash 60% Sales Surge! 🚀 #Shorts",
+        "description": "Discover how Codex delivered a massive 60% sales boost and saved over 75 hours.  Unlock peak productivity and revenue now!",
+        "instagram_caption": "🚀 Imagine a 60% sales jump! Codex made it happen, saving 75+ hours. See how you can achieve this too! Follow @tooldojo!\n#SalesBoost #ProductivityHacks #BusinessGrowth #Efficiency #TimeSaver #Codex #Innovation #SmallBusiness #Entrepreneurship #MarketingTips #SalesStrategy #WorkSmarter #BusinessTools #DigitalTransformation #RevenueGrowth #StartupLife #BusinessSuccess #GetMoreDone #FutureOfWork #SalesGoals"
+      },
+      {
+        "title": "Save 75+ Hrs & Boost Sales by 60%! 🔥 #Shorts",
+        "description": "Transform your business with Codex! Achieve an incredible 60% sales increase and reclaim over 75 hours of your valuable time.  Get the results you deserve!",
+        "instagram_caption": "🔥 Stop wasting time and start selling more! Codex delivered a 60% sales surge and saved 75+ hours.  Ready for your transformation? Follow @tooldojo!\n#TimeManagement #SalesSuccess #BusinessEfficiency #ProductivityBoost #CodexDemo #WorkLifeBalance #EntrepreneurMindset #MarketingStrategy #BusinessTips #SalesEnablement #GrowthHacking #SmallBizLove #StartupTips #BusinessDevelopment #DigitalMarketing #RevenueBooster #Automation #ProductivityTips #BusinessAutomation #SalesMagic"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

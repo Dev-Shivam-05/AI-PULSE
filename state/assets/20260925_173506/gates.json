@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The ability for non-technical sales teams to autonomously generate hyper-personalized, interactive product demonstrations using AI fundamentally shifts the sales paradigm from product explanation to collaborative solution co-creation, directly accelerating deal cycles and resource allocation."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline describes a video that would likely feature a speaker presenting the information. The source text is a written article. While the article contains the information, it does not specify the "
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
