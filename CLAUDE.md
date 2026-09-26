@@ -126,6 +126,15 @@ name that is not written there. If a decision is missing, add a row and get one 
   its last good state on every future run while `publish_page` still returned a URL and the
   ledger still said `tool_page=True`. Per-item `try/except: continue`; a whole-loop `try` is
   a silent freeze waiting to happen.
+- **`tests/test_pipeline_logic.py` is ONE 4,000-line module, so a helper name is global to
+  every test in it.** v3-D appended its own `_row()` below notify's `_row(**over)`; the later
+  `def` silently replaced the earlier one and 16 Telegram/X tests failed with a TypeError in
+  code nobody touched. Grep `^def <name>` before adding a helper; prefix it with the phase's
+  subject (`_ledger_row`).
+- **A learning metric needs the numbers per VIDEO, not the top-N.** The collector's top-25
+  report is crowded out by Shorts; 11 of the first 33 v3 long-forms never appeared in any
+  snapshot. `analytics.ledger_query_args` asks for the ledger's own ids. And `json.loads`
+  accepts `Infinity`: coerce with `math.isfinite` (`learn._num`) before any `int()`.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 
