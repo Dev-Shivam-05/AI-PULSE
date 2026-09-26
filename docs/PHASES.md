@@ -19,7 +19,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-F.3: X (Twitter) free tier** | a second surface inside `factverse/notify.py` off the same ledger row + catalog join, on the same 16:55 UTC workflow: OAuth 1.0a signed on the stdlib (nothing to install, nothing that expires), `weighted_len` for X's 280 *weighted* chars (a URL is 23, an emoji is 2), shed-by-value then a last-resort title cut, `state/notified_x.json` as its OWN both-halves state so Telegram taking a video cannot silently retire it for X | ✅ done 2026-09-01 (196/196; OAuth pinned to RFC 5849 §3.4.1.1 + Twitter's published HMAC vector; three post bodies rendered and read; live `api.x.com` 401 path verified with invalid credentials; the "every seam raises" test found a real fail-soft hole — `enabled()`/`_x_secrets()` sat outside the try and would have failed the workflow) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f3.md; **needs an X app + 4 Actions secrets** (6 owner steps in the spec) before it can post |
 | **v3-F.4: IG / FB Reels** | `factverse/reels.py` + a step in `publish.yml` (NOT notify.yml — `output/shorts/` dies with the runner, so a surface that re-uploads a FILE lives where the file is): the day's first Short becomes one Instagram Reel and one Facebook Page Reel through the official Graph API. Local-binary resumable upload (no public host needed), one long-lived Page token for both, a caption with no YouTube link (so the still-private long-form costs nothing), `state/notified_ig.json` + `state/notified_fb.json` as their own both-halves state | ✅ done 2026-09-01 (217/217; both captions rendered to `output/demo/reels/` and read; live 400 verified on BOTH `graph.facebook.com` and `rupload.facebook.com`, handled, no token in the log; self-review found the token in a GET query string and an unchecked server-supplied `upload_url`, both fixed and test-pinned) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f4.md; **needs a Meta app + FB Page + Business IG + 3 Actions secrets** (8 owner steps in the spec) before it can post |
 | **v3-D: learning loop v1** | measure first, then one guarded lever: a third analytics query for EVERY ledger video (the top-25 report was crowded out by Shorts — 11 of the first 33 v3 long-forms were never measured), `factverse/learn.py` scoreboard per format / hook pattern (views-weighted AVD from the API's per-video seconds, mature at 7 d, trusted at ≥5 videos AND ≥100 views), and a drop rule on the news hook rotation (< 0.5× the best trusted pattern, never below 3 active) with `pick_hook_pattern` re-windowed to `len(active) − 1` | ✅ done 2026-09-26 (228/228; scoreboard read over the real state files AND over an approximation of the real numbers — drops nothing, as designed: long-forms get a median ~4 views) | `v3-phase-d`; spec: docs/spec/ai-pulse-v3d.md; data **counted only from 2026-08-24** (self-view cutoff). The new query is only verified live by the first CI analytics line `… N ledger videos)` |
-| **v3-B.1: tool-lane diagnosis** | the pivot has never run unattended: **0 of 33** videos published 2026-08-24 → 2026-09-25 were `format=tool`, although `"tool_format": true` (21 news, 11 evergreen, 1 roundup). Read the CI logs for `🧰` / `⛔ Skipping tool candidate` / `↻` / `No tool script — falling back` and find which gate or feed stops it; then capture hardening from real logs once a tool video ships | ⏳ next | needs the owner to open the Actions logs (no `gh` here) — or a supervised `format=tool` dispatch |
+| **v3-B.1: tool-lane unblock** | diagnosed 2026-09-26 from the ledger (the CI job logs answer 403 without admin rights): the viral judge returns the MAX of 8 scores and it cleared `VIRAL_THRESHOLD` 8 on every weekday (22/22 first attempts since 09-01 were news), and all three blocked-day fallbacks were hard-coded to evergreen — so 0 of 64 published videos were tool. Fix: threshold **8 → 10**, fallbacks try **tool first**, then evergreen, one level only; owner-forced runs keep no fallback | 🔒 spec locked 2026-09-26 — **build next** | branch `v3-phase-b1` (stacked on `v3-phase-d`); spec: docs/spec/ai-pulse-v3b1.md; **merges only after one supervised `format=tool` dispatch has published** (Now #4) |
+| **v3-G.1: storyboard Shorts** | one of the 2 daily Shorts gets a picture drawn from its own narration: a Gemini storyboard (3-8 beats, 7 templates), a grounding gate (every on-screen number spoken, every element shares a narration word), word-timed reveals, native 1080×1920 rendered by headless Chromium; the other Short stays on today's 405×720 crop as the control; ledger `shorts: [{url, engine}]` + scoreboard A/B pairs | 🔒 spec locked 2026-09-26 — build after B.1 | branch `v3-phase-g` (stacked on B.1); spec: docs/spec/ai-pulse-v3g1.md; verdict after 10 daily pairs: storyboard wins ≥ 8 → G.2 |
+| v3-G.2: storyboard long-form | the same engine for long-form scenes (stock only as fallback) + zoomed/highlighted tool-UI callouts | ⏳ conditional | only if G.1's A/B says build |
+| v3-G.3: packaging | titles and hooks that sell the ToolDojo promise instead of the viral judge's "fear / outrage" rubric; impressions + CTR data (not in the Analytics API we use) | ⏳ queued | needs its own spec |
+| v3-G.4: production basics | 1080p long-form (today 1280×720 x264 ultrafast), a license-clean music bed (`assets/music` is empty and untracked, so CI mixes none), transitions | ⏳ queued | needs its own spec |
 
 ## Now (owner, in this order)
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
@@ -28,7 +32,9 @@ One phase per session. A phase that isn't pushed doesn't exist.
    (AVD) every v3 decision is keyed on. No purge needed — just stop; from today the analytics
    start meaning something. Real organic baseline ≈ 2-6% of 2,220/28d ≈ 45-130 views — that is
    a NORMAL day-30 channel, not a failure.
-0.5. **Rename the channel to "ToolDojo" BEFORE the first format=tool dispatch** (approved
+   *2026-09-26: the −47% watch time in Studio is consistent with this having happened.*
+0.5. ✅ *Studio shows the channel as "ToolDojo" (screenshot, 2026-09-26); whether the @tooldojo
+   handle is claimed was not visible.* **Rename the channel to "ToolDojo" BEFORE the first format=tool dispatch** (approved
    2026-08-24; owner delegated the pick). Verified 2026-08-24: @tooldojo free on YouTube,
    GitHub and X; Google SERP for "ToolDojo" has NO product, channel or company (only the
    retired word-order-reversed "Dojo Toolkit" JS library); no live site on
@@ -85,7 +91,9 @@ One phase per session. A phase that isn't pushed doesn't exist.
    refused. That is the existing policy without its spelling hole, not a new policy — say the
    word and it is one tuple edit. `captcha solver` / `anti-detect browser` were measured as
    passing and deliberately NOT added (C.1 fenced widening as out of scope).
-4. Supervised first tool run — Actions tab → "AI Pulse — Auto Publish" → Run workflow →
+4. **Supervised first tool run — this now gates v3-B.1's merge.** Never done: the last 100
+   Actions runs are all `schedule`, none `workflow_dispatch` (checked 2026-09-26). On a
+   **weekday** (a Sunday dispatch would cost that week's roundup): Actions tab → "AI Pulse — Auto Publish" → Run workflow →
    format = `tool`, BEFORE 12:23 UTC (5:53 PM IST) so the day's cron no-ops afterwards. Watch the
    log for "Screen-recorded visuals", "Tool thumbnail", "Cheat sheet:"; then check the YouTube
    description (🔧 and 📄 blocks under paragraph 1) and `curl -I` the PDF link.
@@ -108,17 +116,18 @@ One phase per session. A phase that isn't pushed doesn't exist.
    that — a failed splice used to burn a clip and fake the originality record, and CI reverted
    `l2_usage.json` on every run — so the store can now be refilled safely.
 
+7. **Optional, helps v3-G.3:** one screenshot of Studio → Analytics → Content → Reach
+   (impressions + impressions click-through rate, last 28 days). The Analytics API we use does not
+   return these, so today we have no CTR baseline at all.
+
 ## Next 3
-1. **v3-B.1 — why the tool lane never publishes** (0 of 33 since 2026-08-24, with
-   `"tool_format": true`). The whole v3 pivot is the tool lane and it has never run
-   unattended. Input needed from the owner: the "Auto Publish" run logs of a few evergreen days
-   (search `🧰`, `⛔ Skipping tool candidate`, `↻`, `No tool script — falling back`), or a
-   supervised `format=tool` dispatch (`## Now` #4). Once a tool video ships, the same row covers
-   capture hardening from real logs (PH/HF page quirks, CI chromium sandbox, recording length)
-   and reading the receipts 🧾 and site 🌐 lines.
-2. **Merge `v3-phase-d`, then read the first real scoreboard** in the CI analytics step
-   (`## Now` #1). It replaces the approximation in `output/demo/learn/scoreboard_approx.txt`.
-3. v3-D v2 (format choice / packaging) — only once arms are trusted (≥5 mature videos AND ≥100
-   views); at today's ~4 views per long-form that is weeks away. Meanwhile X (1.4) and Meta
-   (1.6) are still owner clicks: `notified_x.json`, `notified_ig.json`, `notified_fb.json` are
-   all empty on 2026-09-26.
+1. **Build v3-B.1** (spec locked: docs/spec/ai-pulse-v3b1.md) on `v3-phase-b1` — small: the
+   threshold, a pure `_fallback_format` helper at the three gate sites, tests. Its PR waits for
+   Now #4 (the supervised tool dispatch).
+2. **Build v3-G.1** (spec locked: docs/spec/ai-pulse-v3g1.md) on `v3-phase-g`, in its own
+   session — the storyboard Shorts engine and its A/B. Read the whole spec first: every layout
+   number is already traced to a constant in the repo; anything else is a new spec row.
+3. **Read the A/B after 10 daily pairs** (the scoreboard prints `A/B pairs: N · storyboard wins:
+   W`): ≥ 8 → spec v3-G.2 (long-form); ≤ 5 → stop and rethink; 6-7 → 10 more. Meanwhile merge
+   `v3-phase-d` and read the first real v3-D scoreboard (Now #1); X (1.4) and Meta (1.6) are still
+   owner clicks.

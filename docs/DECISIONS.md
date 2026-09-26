@@ -399,3 +399,37 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   pattern and pin the fallback forever.
 - **Format choice stays out of the loop**, and v3-B.1 (why the tool lane published 0 of 33
   videos with `tool_format: true`) outranks any loop v2: a loop can only tune lanes that run.
+
+## 2026-09-26 — channel audit; browser automation declined; v3-B.1 and v3-G.1 locked
+
+- **The audit (Studio screenshot + `state/`).** 3,920 views in 28 days, about 9 in 10 of them
+  Shorts. Long-forms get ~4 views each (the 11 in the newest 7-day snapshot got 44 between them),
+  10 subscribers (+3), 36 likes. Against the milestones in `docs/STRATEGY.md`: ~120x short on
+  Tier-1 watch hours, ~270x on the Shorts-views path, ~12 years to 500 subscribers at this pace.
+  The -47% watch time is consistent with the self-views having stopped.
+- **The browser-agent approach (`docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`, from Shivam Brain) is
+  NOT adopted here.**
+  - It saves nothing: the LLM already costs ₹0 on the Gemini free tier (`factverse/llm.py`).
+  - It cannot run in an unattended CI job: it needs a human-signed-in visible browser on the
+    owner's PC.
+  - OpenAI's Terms forbid programmatic extraction of Output, and the account at risk is the
+    owner's main Pro account, which Shivam Brain also uses.
+  - It breaks on every site redesign.
+  - The guide's own P11 says not to extend it to more consumer sites.
+  - This repo rejected the same pattern once already (instagrapi → official Graph API).
+  - What carries over is the tool, not the target: Playwright + Chromium renders our own frames
+    in v3-G.1.
+  - Two habits are worth a later hardening row: log which Gemini model answered each call, and
+    keep the raw reply when validation fails.
+- **v3-B.1 locked: `VIRAL_THRESHOLD` 8 → 10, and blocked-day fallback tool-first (one level).**
+  The judge returns the maximum of 8 scores and it cleared 8 on every weekday since 09-01 (22/22
+  first attempts were news). The fallbacks were hard-coded to evergreen, so the pivot never ran:
+  0 of 64 published videos were tool. The merge waits for one supervised `format=tool` dispatch.
+  Spec: `docs/spec/ai-pulse-v3b1.md`.
+- **v3-G.1 locked: storyboard Shorts, A/B against today's crop Shorts.** The picture is drawn from
+  the Short's own narration (7 templates, a grounding gate, word-timed reveals), rendered natively
+  at 1080×1920 by headless Chromium. Shorts come first because they carry the reach, and % viewed
+  gives a verdict in ~10 days. Every layout number is traced to an existing constant. Spec:
+  `docs/spec/ai-pulse-v3g1.md`.
+- **Order: B.1 then G.1, each in its own session** (one phase per session). B.1 is small, and
+  every day without it publishes another hype-news video under the ToolDojo name.
