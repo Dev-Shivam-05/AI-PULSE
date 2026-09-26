@@ -210,16 +210,20 @@ def _sig(kind="news"):
             "score": 50.0, "published": "", "kind": kind, "niche": True, "fit_score": 50.0}
 
 
-def test_decide_format_news_needs_8(monkeypatch):
+def test_decide_format_news_needs_10(monkeypatch):
+    """v3-B.1: the judge's MAX of 8 scores cleared 8 on every weekday, so the
+    utility lane never ran. Only the judge's top mark buys a news day now."""
     import datetime as dt
     monday = dt.date(2026, 8, 17)
+    assert ap.VIRAL_THRESHOLD == 10.0
     monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
-    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 7.5, "angle", "hook"))
-    fmt, _ = ap.decide_format(None, [_sig("tool")], today=monday)
-    assert fmt == "tool"                                 # 7.5 no longer clears the bar
-    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 8.2, "angle", "hook"))
+    for score in (7.5, 8.2, 9.0, 9.9):
+        monkeypatch.setattr(ap, "viral_pick", lambda r, s=score: (r[0], s, "angle", "hook"))
+        fmt, _ = ap.decide_format(None, [_sig("tool")], today=monday)
+        assert fmt == "tool", score                      # no longer clears the bar
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 10.0, "angle", "hook"))
     fmt, hint = ap.decide_format(None, [_sig("tool")], today=monday)
-    assert fmt == "news" and hint[1] == 8.2
+    assert fmt == "news" and hint[1] == 10.0
 
 
 def test_decide_format_tool_lane_gated_by_flag(monkeypatch):
@@ -4239,3 +4243,48 @@ def test_scoreboard_renders_arms_and_rotation(tmp_path):
     assert "dropped: none" in text
     line = next(ln for ln in text.splitlines() if ln.startswith("hook:number"))
     assert line.split()[-2:] == ["100%", "yes"]
+
+
+# --------------------------------------------------------------- v3-B.1 blocked-day fallback
+def test_fallback_format_truth_table():
+    """v3-B.1 decision 2: automatic runs try the tool lane first, a fallback may
+    drop to evergreen once, an owner-forced run never falls back."""
+    ff = ap._fallback_format
+    # owner-forced (dispatch / CLI): the supervised-run contract, no fallback
+    assert ff("tool", "tool", False, True) is None
+    assert ff("news", "news", False, True) is None
+    # automatic first run, a story format blocked
+    assert ff("news", None, False, True) == "tool"
+    assert ff("roundup", None, False, True) == "tool"
+    assert ff("news", None, False, False) == "evergreen"      # flag off: as before
+    # automatic first run where the utility lane itself chose tool
+    assert ff("tool", None, False, True) == "evergreen"
+    # evergreen never re-runs as evergreen
+    assert ff("evergreen", None, False, True) is None
+    assert ff("evergreen", "evergreen", True, True) is None
+    # a fallback run blocked again: evergreen, one level only
+    assert ff("tool", "tool", True, True) == "evergreen"
+    assert ff("news", "tool", True, True) == "evergreen"
+
+
+def test_blocked_runs_recurse_tool_then_evergreen(monkeypatch):
+    calls = []
+    monkeypatch.setattr(ap, "run", lambda **k: calls.append(k) or {"ok": True})
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    assert ap._fall_back(True, "news", None, False) == {"ok": True}
+    assert calls[-1] == {"publish": True, "force_format": "tool", "fallback": True}
+    ap._fall_back(True, "tool", "tool", True)
+    assert calls[-1] == {"publish": True, "force_format": "evergreen", "fallback": True}
+    n = len(calls)
+    # an owner-forced tool run that is blocked publishes nothing and recurses nowhere
+    assert ap._fall_back(True, "tool", "tool", False) is None
+    assert ap._fall_back(True, "evergreen", "evergreen", True) is None
+    assert len(calls) == n
+
+
+def test_every_gate_uses_the_fallback_helper():
+    """The three gate sites used to hard-code evergreen; a fourth copy of that
+    inline condition would silently bypass the tool-first rule."""
+    src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback)") == 3
+    assert 'force_format="evergreen")' not in src

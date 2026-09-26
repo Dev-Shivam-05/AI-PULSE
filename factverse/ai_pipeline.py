@@ -6,7 +6,7 @@ and monetization safety, then renders/publishes through the proven engine steps.
 
 Format choice is VIRALITY-FIRST (the channel's primary goal): every day the
 viral judge scores the top-ranked stories on shock, stakes, and broad appeal.
-  * news       — runs only for a genuinely hot story (>= VIRAL_THRESHOLD, v3: 8/10)
+  * news       — runs only for a genuinely hot story (>= VIRAL_THRESHOLD, v3-B.1: 10/10)
   * tool       — v3 utility lane (config flag "tool_format"): a hands-on video about
                  a free AI tool/repo/model the viewer can use TODAY, with a concrete
                  deliverable in the description. The default lane once visuals land.
@@ -451,7 +451,11 @@ def news_candidates(ranked: list[dict]) -> list[dict]:
 
 
 # --------------------------------------------------------------- virality judge
-VIRAL_THRESHOLD = 8.0   # v3: news must be genuinely hot; the utility lane is the default
+# v3-B.1: 8.0 never gated anything. viral_pick returns the MAX of up to 8 LLM
+# scores, and that maximum cleared 8 on every weekday from 09-01 to 09-25 (22/22
+# first attempts were news), so the utility lane below it never ran. At 10 the
+# judge must give its top mark; the utility lane is the default, as intended.
+VIRAL_THRESHOLD = 10.0
 
 
 def viral_pick(ranked: list[dict], top_n: int = 8):
@@ -1430,7 +1434,36 @@ def already_published_today() -> bool:
     return False
 
 
-def run(publish: bool = False, force_format: str | None = None) -> dict | None:
+def _fallback_format(fmt: str, force_format: str | None, fallback: bool,
+                     tool_on: bool) -> str | None:
+    """What a gate-blocked run re-runs as (v3-B.1 decision 2), or None to stop.
+
+    An owner-forced run (a dispatch or CLI format) never falls back — that is
+    the supervised-run contract. An automatic run tries the tool lane first; the
+    fallback itself may drop to evergreen once. `fmt` is the script's own format
+    (re-bound after build_script), so a tool request that already became an
+    evergreen script is not tried as evergreen a second time.
+    """
+    if force_format and not fallback:
+        return None
+    if fmt == "evergreen":
+        return None
+    if fallback or fmt == "tool" or not tool_on:
+        return "evergreen"
+    return "tool"
+
+
+def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool):
+    nxt = _fallback_format(fmt, force_format, fallback, fv.flag("tool_format", False))
+    if not nxt:
+        return None
+    what = "a tool video" if nxt == "tool" else "an evergreen explainer"
+    print(f"  ↪️  Falling back to {what} — a blocked story must not cost the day.")
+    return run(publish=publish, force_format=nxt, fallback=True)
+
+
+def run(publish: bool = False, force_format: str | None = None,
+        fallback: bool = False) -> dict | None:
     print("=" * 70)
     print(f"  {fv.CHANNEL_NAME} — content pipeline v2 (viral-first)")
     print("=" * 70)
@@ -1485,10 +1518,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         print(f"  🛑 POLICY GATE: {overlap:.0%} of the narration is verbatim from the source. Blocking.")
         record_run(status="POLICY_BLOCKED", format=fmt, title=script["title"], overlap=round(overlap, 3))
         mark_failed(script.get("signal_title", script["title"]))
-        if force_format is None and fmt != "evergreen":
-            print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
-            return run(publish=publish, force_format="evergreen")
-        return None
+        return _fall_back(publish, fmt, force_format, fallback)
 
     # Bucket-3 gate: reporting is allowed; ADVISING viewers on finance/health/legal/
     # politics is a hard fail. One rewrite attempt, then abort loudly.
@@ -1510,10 +1540,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
             record_run(status="ADVICE_BLOCKED", format=fmt, title=script["title"])
             mark_failed(script.get("signal_title", script["title"]))
-            if force_format is None and fmt != "evergreen":
-                print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
-                return run(publish=publish, force_format="evergreen")
-            return None
+            return _fall_back(publish, fmt, force_format, fallback)
 
     # Accuracy gate: claim-level fact check against the bound sources. A hook/
     # thumbnail claim that cannot be traced to a source is a hard fail.
@@ -1525,10 +1552,7 @@ def run(publish: bool = False, force_format: str | None = None) -> dict | None:
         record_run(status="FACTCHECK_BLOCKED", format=fmt, title=script["title"],
                    factcheck=fc)
         mark_failed(script.get("signal_title", script["title"]))
-        if force_format is None and fmt != "evergreen":
-            print("  ↪️  Falling back to an evergreen explainer — a blocked story must not cost the day.")
-            return run(publish=publish, force_format="evergreen")
-        return None
+        return _fall_back(publish, fmt, force_format, fallback)
     if fc.get("soft_failures"):
         print(f"  ⚠️ {len(fc['soft_failures'])} soft claim(s) unsupported — confidence reduced.")
 

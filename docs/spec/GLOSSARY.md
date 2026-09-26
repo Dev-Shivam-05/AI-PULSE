@@ -33,13 +33,13 @@
 - **MAX_WORDS** — 900. The anti-padding cap enforced by `enforce_max_length` (cut, never pad).
 - **word floor** — 600–620 sanity floor (`MIN_WORDS`), NOT a target. The old 850–1000 floors are
   banned; they were the root cause of the 0:38 average view duration.
-- **utility lane** — decide_format's default when no story scores ≥ 8/10: tool if a tool signal
-  exists (and flag on), else evergreen.
-  *v3-B.1 (locked 2026-09-26, not yet merged) raises the news bar to 10/10 — edit this line when it merges.*
+- **utility lane** — decide_format's default when no story scores 10/10 (`VIRAL_THRESHOLD`,
+  v3-B.1; it was 8, which the judge's max-of-8 score cleared every weekday): tool if a tool
+  signal exists (and flag on), else evergreen.
 - **blocked-day fallback** — a FACTCHECK/ADVICE/POLICY block on an automatic run re-runs the day
-  as forced evergreen. Forced runs (`force_format` set) still fail honestly with no fallback.
-  *v3-B.1 (locked 2026-09-26, not yet merged) makes the first fallback `tool` when `tool_format` is on,
-  then evergreen one level only — edit this line when it merges.*
+  as `tool` when `tool_format` is on (else evergreen); a blocked fallback drops to evergreen,
+  one level only (`ai_pipeline._fallback_format`, v3-B.1). Owner-forced runs (`force_format`
+  from a dispatch or the CLI) still fail honestly with no fallback.
 - **notified state** - `state/notified.json`, the list of YouTube URLs already announced on
   Telegram. Written only after a successful send; in `state_merge.FILES` and both workflows'
   stash lists, so `checkout -B main origin/main` cannot make the bot repeat itself.
