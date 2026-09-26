@@ -1,0 +1,16 @@
+v3-D scoreboard - 2026-09-26  (data from 2026-08-24; a video matures 7 days after publish; trusted = >=5 mature and >=100 views)
+per-video numbers for 22 ledger video(s)
+
+group                  videos   mature   views   wAVD  >=2:00  trusted
+format:evergreen           11       10      23   0:52     20%  no
+format:news                21       17     124   0:24      6%  yes
+format:roundup              1        0       0      -      0%  no
+hook:consequence            4        3      13   0:00      0%  no
+hook:correction             4        4      24   0:35      0%  no
+hook:filter                 4        3      64   0:16      0%  no
+hook:number                 4        3      14   1:09     33%  no
+hook:quiet                  5        4       9   0:13      0%  no
+
+active hook patterns: correction, consequence, filter, number, quiet  (dropped: none)
+
+active: ('correction', 'consequence', 'filter', 'number', 'quiet')

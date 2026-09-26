@@ -18,7 +18,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-F.2: Telegram channel bot** | `factverse/notify.py` + `.github/workflows/notify.yml` (16:55 UTC, after the 16:45 publish slot — the upload is PRIVATE until then): the newest `PUBLISHED` ledger row is posted to a Telegram channel; tool rows carry the command in a tap-to-copy `<code>` block + the F.1 page link, story rows title + video. `state/notified.json` (both-halves treatment) makes it idempotent; `_redact` keeps the token out of a public log | ✅ done 2026-08-31 (180/180; both message bodies rendered and read, live `api.telegram.org` 401 path verified with an invalid token; self-review found + fixed the 4096-char shed order and the `&#x27;` escaping) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f2.md; **needs 2 Actions secrets + a bot** (5 owner steps in the spec) before it can post |
 | **v3-F.3: X (Twitter) free tier** | a second surface inside `factverse/notify.py` off the same ledger row + catalog join, on the same 16:55 UTC workflow: OAuth 1.0a signed on the stdlib (nothing to install, nothing that expires), `weighted_len` for X's 280 *weighted* chars (a URL is 23, an emoji is 2), shed-by-value then a last-resort title cut, `state/notified_x.json` as its OWN both-halves state so Telegram taking a video cannot silently retire it for X | ✅ done 2026-09-01 (196/196; OAuth pinned to RFC 5849 §3.4.1.1 + Twitter's published HMAC vector; three post bodies rendered and read; live `api.x.com` 401 path verified with invalid credentials; the "every seam raises" test found a real fail-soft hole — `enabled()`/`_x_secrets()` sat outside the try and would have failed the workflow) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f3.md; **needs an X app + 4 Actions secrets** (6 owner steps in the spec) before it can post |
 | **v3-F.4: IG / FB Reels** | `factverse/reels.py` + a step in `publish.yml` (NOT notify.yml — `output/shorts/` dies with the runner, so a surface that re-uploads a FILE lives where the file is): the day's first Short becomes one Instagram Reel and one Facebook Page Reel through the official Graph API. Local-binary resumable upload (no public host needed), one long-lived Page token for both, a caption with no YouTube link (so the still-private long-form costs nothing), `state/notified_ig.json` + `state/notified_fb.json` as their own both-halves state | ✅ done 2026-09-01 (217/217; both captions rendered to `output/demo/reels/` and read; live 400 verified on BOTH `graph.facebook.com` and `rupload.facebook.com`, handled, no token in the log; self-review found the token in a GET query string and an unchecked server-supplied `upload_url`, both fixed and test-pinned) | `v3-phase-f`; spec: docs/spec/ai-pulse-v3f4.md; **needs a Meta app + FB Page + Business IG + 3 Actions secrets** (8 owner steps in the spec) before it can post |
-| v3-D: learning loop v1 | feed runs.jsonl + analytics.jsonl into topic/packaging choices (AVD ≥2:00 is the target metric) | ⏳ queued | needs ~2 weeks of v3 data first — **counted only from 2026-08-24**: owner disclosed pre-that analytics are ~94-98% self-generated views (different accounts/IPs), so every earlier row (incl. the 0:38 AVD baseline) is directionally useful but numerically invalid |
+| **v3-D: learning loop v1** | measure first, then one guarded lever: a third analytics query for EVERY ledger video (the top-25 report was crowded out by Shorts — 11 of the first 33 v3 long-forms were never measured), `factverse/learn.py` scoreboard per format / hook pattern (views-weighted AVD from the API's per-video seconds, mature at 7 d, trusted at ≥5 videos AND ≥100 views), and a drop rule on the news hook rotation (< 0.5× the best trusted pattern, never below 3 active) with `pick_hook_pattern` re-windowed to `len(active) − 1` | ✅ done 2026-09-26 (228/228; scoreboard read over the real state files AND over an approximation of the real numbers — drops nothing, as designed: long-forms get a median ~4 views) | `v3-phase-d`; spec: docs/spec/ai-pulse-v3d.md; data **counted only from 2026-08-24** (self-view cutoff). The new query is only verified live by the first CI analytics line `… N ledger videos)` |
+| **v3-B.1: tool-lane diagnosis** | the pivot has never run unattended: **0 of 33** videos published 2026-08-24 → 2026-09-25 were `format=tool`, although `"tool_format": true` (21 news, 11 evergreen, 1 roundup). Read the CI logs for `🧰` / `⛔ Skipping tool candidate` / `↻` / `No tool script — falling back` and find which gate or feed stops it; then capture hardening from real logs once a tool video ships | ⏳ next | needs the owner to open the Actions logs (no `gh` here) — or a supervised `format=tool` dispatch |
 
 ## Now (owner, in this order)
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
@@ -36,17 +37,15 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. **Merge `v3-phase-f` into main — ONE PR, not three.** Verified 2026-09-01, not assumed:
-   the stack is strictly contained (`git rev-list --count origin/v3-phase-b..origin/v3-phase-c`
-   and `..origin/v3-phase-f` are both 0), so `v3-phase-f` already carries every commit of
-   `v3-phase-b` and `v3-phase-c`. It is 69 commits / 98 files ahead of main.
-   `main` has 19 commits the branch lacks — all daily `state update [skip ci]` CI writes — and
-   the two sides changed **no file in common**, so the merge is clean:
-   `git merge-tree --write-tree origin/main origin/v3-phase-f` exits 0 with no conflicts.
-   **Re-run that read-only check before merging**, because each day's cron adds another state
-   commit to main. PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-f
-   (merging PR #23 for `v3-phase-b` and then `v3-phase-c` first still works and gives smaller
-   reviews — it is a convenience, not a requirement.) test.yml runs the suite on each PR.
+1. **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
+   verified 2026-09-26: `origin/v3-phase-f` is an ancestor of `origin/main`. For v3-phase-d,
+   `git merge-tree --write-tree origin/main origin/v3-phase-d` exits 0 and main had 0 commits
+   the branch lacks on 2026-09-26 — re-run that read-only check before merging, because each
+   day's cron adds a state commit. PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-d
+   test.yml runs the suite on the PR. After the next cron, read the analytics step: it should
+   say `📈 Analytics snapshot saved (… N ledger videos)` with N ≈ 33+ and print the scoreboard.
+   `⚠️ ledger query skipped: …` means the `video==` filter shape is wrong — costs nothing, but
+   paste that line into the next session.
 1.4. **Create the X app and add its 4 Actions secrets** (v3-F.3). Free tier, ~500
    posts/month against our ~31. The order matters: set **App permissions = Read and
    write** BEFORE generating the access token, or the token stays read-only and posting
@@ -55,15 +54,9 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `X_ACCESS_TOKEN`, `X_ACCESS_SECRET` (full walkthrough in
    docs/spec/ai-pulse-v3f3.md). Until then the 16:55 workflow logs
    `↷ X not configured — skipping` and costs nothing.
-1.5. **Add the 2 Telegram Actions secrets** (v3-F.2). The bot exists (`@ToolDojoBot`), its
-   token is in the git-ignored local `.env`, and a real message has already been delivered to
-   the ToolDojo chat from the production code path. What is left is CI: repo Settings →
-   Secrets and variables → Actions → New repository secret, twice — `TELEGRAM_BOT_TOKEN` and
-   `TELEGRAM_CHAT_ID` (same two values as in `.env`). `gh` is not installed here, so this is a
-   click. Until both exist the 16:55 UTC workflow logs `↷ Telegram not configured — skipping`
-   and costs nothing. Then: Actions tab → "ToolDojo — Telegram" → Run workflow → expect
-   `📣 Telegram: posted`.
-   Two notes: the chat id is a **private supergroup**, not a broadcast channel — for
+1.5. ✅ **Telegram is posting from CI** — observed 2026-09-26: `state/notified.json` holds 25
+   posted videos, so both secrets are set and the 16:55 UTC workflow works.
+   Two notes still open: the chat id is a **private supergroup**, not a broadcast channel — for
    distribution create the public channel `@tooldojo`, make the bot an admin, and change that
    one secret (no code change). And the token has been shared in plain text; rotating it in
    @BotFather (`/revoke`) once CI is wired is cheap hygiene, and only means updating the same
@@ -79,8 +72,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
    token, which lasts 60 days), `META_PAGE_ID`, `META_IG_USER_ID`. Until they exist the
    publish workflow logs `↷ Instagram not configured — skipping` and costs nothing.
 
-2. Enable GitHub Pages: Settings → Pages → Deploy from branch → `main` / `docs`. Until this is
-   done every cheat-sheet link AND every tool page 404s. After the first tool run, `curl -I`
+2. ✅ GitHub Pages is on — observed 2026-09-26: https://dev-shivam-05.github.io/AI-PULSE/
+   answers 200. No tool page exists yet because no tool video has shipped. After the first tool run, `curl -I`
    BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.
    If the page is stale after a run, `GITHUB_TOKEN` pushes did not trigger the Pages build and
    it needs the Actions-based deploy instead of branch-deploy (a small F.1b row).
@@ -116,15 +109,16 @@ One phase per session. A phase that isn't pushed doesn't exist.
    `l2_usage.json` on every run — so the store can now be refilled safely.
 
 ## Next 3
-1. **Nothing new until the backlog above clears.** Four surfaces are built and none of them
-   can post: F.2 needs 2 secrets, F.3 needs an X app + 4, F.4 needs a Meta app + 3, F.1 needs
-   the Pages click, and the branch stack is still unmerged. Every further phase adds code to a
-   channel that is not yet distributing. The highest-value next session is the owner list in
-   `## Now`, then the first supervised `format=tool` run — not another surface.
-2. v3-D — learning loop v1 once ~2 weeks of post-2026-08-24 analytics exist (target: AVD ≥ 2:00);
-   the ledger now carries `packaging`, `grounding_chars`, `receipts` and `tool_page` columns.
-3. v3-B.1 (only if the first CI tool runs show it) — capture hardening from real logs: PH/HF page
-   quirks, CI chromium sandbox, recording length vs 900-word scripts. On the first live tool run,
-   also read the receipts log line (🧾 worked / ↻ not checkable / ⚠️ failed — all three still
-   ship a video; only a repeating ⚠️ across days means a threshold is wrong) and the site line
-   (🌐 Page: <url> worked / ⚠️ site page failed — the video still ships either way).
+1. **v3-B.1 — why the tool lane never publishes** (0 of 33 since 2026-08-24, with
+   `"tool_format": true`). The whole v3 pivot is the tool lane and it has never run
+   unattended. Input needed from the owner: the "Auto Publish" run logs of a few evergreen days
+   (search `🧰`, `⛔ Skipping tool candidate`, `↻`, `No tool script — falling back`), or a
+   supervised `format=tool` dispatch (`## Now` #4). Once a tool video ships, the same row covers
+   capture hardening from real logs (PH/HF page quirks, CI chromium sandbox, recording length)
+   and reading the receipts 🧾 and site 🌐 lines.
+2. **Merge `v3-phase-d`, then read the first real scoreboard** in the CI analytics step
+   (`## Now` #1). It replaces the approximation in `output/demo/learn/scoreboard_approx.txt`.
+3. v3-D v2 (format choice / packaging) — only once arms are trusted (≥5 mature videos AND ≥100
+   views); at today's ~4 views per long-form that is weeks away. Meanwhile X (1.4) and Meta
+   (1.6) are still owner clicks: `notified_x.json`, `notified_ig.json`, `notified_fb.json` are
+   all empty on 2026-09-26.

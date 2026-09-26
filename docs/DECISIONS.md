@@ -376,3 +376,26 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   so clients need not hard-code a host — but that URL is where the Page token is about to be
   sent, so `reels._upload_url` honours it only on `https://rupload.facebook.com/` and falls
   back to our own constant otherwise. Same rule as `site.safe_link`, one layer down.
+
+## 2026-09-26 — v3-D learning loop v1 (spec: docs/spec/ai-pulse-v3d.md)
+
+- **v1 measures first and pulls one guarded lever.** The queued goal was "feed the ledger
+  into topic/packaging choices", but the data measured before locking cannot carry that: a
+  long-form gets 1-43 views (median ~4), and `estimatedMinutesWatched` is an integer, so a
+  2-view video reads as 0 s. A loop tuned on that learns noise. The only lever wired is the
+  news hook rotation, behind thresholds (>=5 mature videos AND >=100 views per arm, drop below
+  0.5x the best, never below 3 active) that keep it inert until the numbers mean something.
+- **Ask the API for the ledger's own video ids, not the top-N.** The top-25-by-views report is
+  crowded out by Shorts: 11 of the first 33 v3 long-forms never appeared in any snapshot.
+- **Weighted AVD comes from the API's per-video `averageViewDuration` seconds**, weighted by
+  views — never `minutes * 60 / views`.
+- **No new state file.** The rotation is recomputed from `runs.jsonl` + `analytics.jsonl` on
+  every run, so nothing needs the stash-list + `state_merge.FILES` treatment. Likewise the
+  per-run `output/demo/learn/scoreboard.txt` is gitignored; the committed inspection artifact
+  is `scoreboard_approx.txt`.
+- **`pick_hook_pattern`'s no-repeat window became `len(active) - 1`.** With all 5 active that
+  is the old 4, so behaviour is unchanged (tested against the old implementation over every
+  recent-history up to length 6). A fixed 4-wide window over a pool of 4 would exclude every
+  pattern and pin the fallback forever.
+- **Format choice stays out of the loop**, and v3-B.1 (why the tool lane published 0 of 33
+  videos with `tool_format: true`) outranks any loop v2: a loop can only tune lanes that run.

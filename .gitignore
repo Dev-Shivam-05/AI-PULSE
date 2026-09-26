@@ -16,6 +16,8 @@ output/videos/
 output/shorts/
 output/thumbnails/
 output/samples/
+# v3-D: rewritten by every run's analytics step — a runtime artifact, not a fixture
+output/demo/learn/scoreboard.txt
 logs/
 *.log
 

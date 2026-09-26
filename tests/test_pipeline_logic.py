@@ -942,7 +942,7 @@ def test_news_lane_never_writes_about_a_tool_candidate(monkeypatch):
     tried = []
     monkeypatch.setattr(ap, "script_news", lambda c, **k: tried.append(c["title"]) or None)
     monkeypatch.setattr(ap, "mark_failed", lambda t: None)
-    monkeypatch.setattr(ap.gates, "pick_hook_pattern", lambda r: "number")
+    monkeypatch.setattr(ap.gates, "pick_hook_pattern", lambda r, a=None: "number")
     monkeypatch.setattr(ap, "_recent_hook_patterns", lambda n=6: [])
     ap.build_script("news", _mixed_ranked())
     assert tried, "the news lane must still have candidates to try"
@@ -4040,3 +4040,202 @@ def test_reels_state_gets_the_both_halves_treatment():
     for name in ("config.json", "config.example.json"):
         text = (root / name).read_text(encoding="utf-8")
         assert '"instagram"' in text and '"facebook"' in text, name
+
+
+# --------------------------------------------------------------- v3-D learning loop
+import datetime as _dtd
+from factverse import learn
+from factverse import analytics as an
+from factverse import gates as _gates
+
+_TODAY = _dtd.date(2026, 9, 26)
+
+
+def _vid(n: int) -> str:
+    return f"vid{n:08d}"  # 11 chars, like a real YouTube id
+
+
+def _ledger_row(n, fmt="news", hook="number", day="2026-09-01", status="PUBLISHED"):
+    return {"status": status, "format": fmt, "hook_pattern": hook,
+            "youtube_url": f"https://youtube.com/watch?v={_vid(n)}",
+            "publish_at": f"{day}T16:45:00Z", "timestamp": f"{day}T12:30:00"}
+
+
+def _write_state(tmp_path, rows, ledger, extra_lines=()):
+    runs, ana = tmp_path / "runs.jsonl", tmp_path / "analytics.jsonl"
+    runs.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    snap = {"collected": "2026-09-25T18:57:55",
+            "ledger_headers": ["video", "views", "estimatedMinutesWatched",
+                               "averageViewDuration", "averageViewPercentage"],
+            "ledger_videos": [[vid, views, 0, avd, 50.0] for vid, views, avd in ledger]}
+    ana.write_text("\n".join([json.dumps(snap), *extra_lines]) + "\n", encoding="utf-8")
+    return runs, ana
+
+
+def _hook_state(tmp_path, per_hook: dict):
+    """per_hook: pattern -> (n_videos, views_each, avd_each); all mature."""
+    rows, ledger, n = [], [], 0
+    for hook, (count, views, avd) in per_hook.items():
+        for _ in range(count):
+            n += 1
+            rows.append(_ledger_row(n, hook=hook))
+            ledger.append((_vid(n), views, avd))
+    return _write_state(tmp_path, rows, ledger)
+
+
+def test_ledger_query_args_filter_floor_and_cap():
+    ids = [_vid(i) for i in range(250)]
+    a = an.ledger_query_args(ids, _TODAY)
+    assert a["filters"] == "video==" + ",".join(ids[-200:])
+    assert a["startDate"] == "2026-08-24" and a["endDate"] == "2026-09-26"
+    assert a["maxResults"] == 200 and a["dimensions"] == "video"
+    assert "averageViewDuration" in a["metrics"].split(",")
+    assert an.ledger_query_args([], _TODAY) is None
+
+
+def test_ledger_ids_published_since_floor_once_each():
+    early = _ledger_row(1, day="2026-08-20")                  # before the self-view cutoff
+    rows = [early, _ledger_row(2, status="FACTCHECK_BLOCKED"),
+            {"status": "PUBLISHED", "timestamp": "2026-09-02T10:00:00"},  # no url
+            _ledger_row(3), _ledger_row(3), "junk", _ledger_row(4, day="2026-09-03")]
+    assert learn.ledger_ids(rows) == [_vid(3), _vid(4)]
+
+
+class _FakeYta:
+    """Answers the two existing reports; the ledger query (the only one with
+    `filters`) raises or answers depending on `fail`."""
+    def __init__(self, fail):
+        self.fail, self.calls = fail, []
+
+    def reports(self):
+        return self
+
+    def query(self, **kw):
+        self.calls.append(kw)
+        if "filters" in kw and self.fail:
+            raise RuntimeError("Invalid filter")
+        if "filters" in kw:
+            rows = [[_vid(1), 10, 1, 90, 40.0]]
+            heads = ["video", "views", "estimatedMinutesWatched", "averageViewDuration",
+                     "averageViewPercentage"]
+        else:
+            rows, heads = [["2026-09-01", 5]], ["day", "views"]
+        answer = {"rows": rows, "columnHeaders": [{"name": h} for h in heads]}
+
+        class _Q:
+            def execute(self):
+                return answer
+        return _Q()
+
+
+def test_collect_survives_a_failing_ledger_query(monkeypatch):
+    monkeypatch.setattr(an.learn, "read_runs", lambda path=None: [_ledger_row(1)])
+    snap = an.collect(_FakeYta(fail=True))
+    assert snap["channel_days"] and snap["top_videos_7d"], "existing reports lost"
+    assert "ledger_videos" not in snap
+    ok = _FakeYta(fail=False)
+    snap = an.collect(ok)
+    assert snap["ledger_videos"] == [[_vid(1), 10, 1, 90, 40.0]]
+    assert ok.calls[-1]["filters"] == "video==" + _vid(1)
+
+
+def test_score_weights_api_seconds_and_waits_for_maturity(tmp_path):
+    rows = [_ledger_row(1), _ledger_row(2), _ledger_row(3, day="2026-09-21")]  # #3 is 5 days old
+    runs, ana = _write_state(tmp_path, rows, [(_vid(1), 30, 100), (_vid(2), 10, 20),
+                                              (_vid(3), 500, 600)])
+    s = learn.score(learn.read_runs(runs), learn.latest_metrics(ana), _TODAY)["hook:number"]
+    assert s["videos"] == 3 and s["mature"] == 2 and s["views"] == 40
+    assert s["wavd"] == (30 * 100 + 10 * 20) / 40   # 80 s; the immature 600 s is ignored
+    assert s["share_target"] == 0.0 and not s["trusted"]
+
+
+def test_trusted_needs_five_videos_and_a_hundred_views(tmp_path):
+    for per_hook, want in (({"number": (4, 1000, 100)}, False),
+                           ({"number": (5, 19, 100)}, False),     # 95 views
+                           ({"number": (5, 20, 100)}, True)):     # 100 views
+        runs, ana = _hook_state(tmp_path, per_hook)
+        s = learn.score(learn.read_runs(runs), learn.latest_metrics(ana), _TODAY)
+        assert s["hook:number"]["trusted"] is want, per_hook
+
+
+def test_drop_rule_thresholds(tmp_path):
+    def drops(per_hook):
+        runs, ana = _hook_state(tmp_path, per_hook)
+        return learn.dropped_patterns(
+            learn.score(learn.read_runs(runs), learn.latest_metrics(ana), _TODAY))
+    # one trusted arm: nothing to compare against
+    assert drops({"number": (5, 20, 200), "quiet": (4, 20, 1)}) == []
+    # exactly half is not below half
+    assert drops({"number": (5, 20, 200), "quiet": (5, 20, 100)}) == []
+    assert drops({"number": (5, 20, 200), "quiet": (5, 20, 99)}) == ["quiet"]
+    # four losers: worst first, and never fewer than 3 active
+    assert drops({"number": (5, 20, 200), "quiet": (5, 20, 10), "filter": (5, 20, 30),
+                  "correction": (5, 20, 20), "consequence": (5, 20, 40)}) == ["quiet", "correction"]
+
+
+def _old_pick(recent):
+    # gates.pick_hook_pattern as it was before v3-D
+    recent = set(recent[-4:])
+    for p in _gates.HOOK_PATTERNS:
+        if p not in recent:
+            return p
+    return _gates.HOOK_PATTERNS[0]
+
+
+def test_pick_hook_pattern_unchanged_when_nothing_is_dropped():
+    import itertools
+    pats = _gates.HOOK_PATTERNS
+    for k in range(0, 7):
+        for recent in itertools.product(pats, repeat=min(k, 4)):
+            recent = list(pats[:max(0, k - 4)]) + list(recent)
+            assert _gates.pick_hook_pattern(recent) == _old_pick(recent), recent
+            assert _gates.pick_hook_pattern(recent, pats) == _old_pick(recent), recent
+
+
+def test_shrunk_rotation_still_rotates_and_never_picks_a_dropped_pattern():
+    active = ("correction", "filter", "number")
+    recent = ["quiet", "consequence"]
+    for _ in range(12):
+        p = _gates.pick_hook_pattern(recent, active)
+        assert p in active and p not in recent[-2:], (p, recent)
+        recent.append(p)
+    assert set(recent[2:]) == set(active)
+
+
+def test_bad_data_keeps_every_hook_pattern(tmp_path, monkeypatch):
+    all5 = _gates.HOOK_PATTERNS
+    assert learn.active_hook_patterns(tmp_path / "nope", tmp_path / "nope2", _TODAY) == all5
+    runs, ana = _write_state(tmp_path, [_ledger_row(1), {"status": "PUBLISHED", "youtube_url": 7}],
+                             [(_vid(1), "many", None)], extra_lines=("{not json", "[1,2]"))
+    assert learn.active_hook_patterns(runs, ana, _TODAY) == all5
+    ana.write_text('{"ledger_videos": [[1]], "ledger_headers": "video"}\n', encoding="utf-8")
+    assert learn.active_hook_patterns(runs, ana, _TODAY) == all5
+
+    # json.loads accepts Infinity; int(inf) raised and took the scoreboard with it
+    runs, ana = _write_state(tmp_path, [_ledger_row(1)], [(_vid(1), float("inf"), float("nan"))])
+    assert "Infinity" in ana.read_text(encoding="utf-8")
+    assert "hook:number" in learn.scoreboard(runs, ana, _TODAY)
+
+    def boom(*a, **k):
+        raise RuntimeError("x")
+    monkeypatch.setattr(learn, "score", boom)
+    assert learn.active_hook_patterns(runs, ana, _TODAY) == all5
+
+
+def test_news_lane_uses_the_learned_rotation(monkeypatch):
+    seen = []
+    monkeypatch.setattr(ap, "script_news", lambda c, **k: seen.append(k["hook_pattern"]) or None)
+    monkeypatch.setattr(ap, "mark_failed", lambda t: None)
+    monkeypatch.setattr(ap, "_recent_hook_patterns", lambda n=6: ["filter", "number"])
+    monkeypatch.setattr(ap.learn, "active_hook_patterns", lambda: ("filter", "number", "quiet"))
+    ap.build_script("news", _mixed_ranked())
+    assert seen and set(seen) == {"quiet"}
+
+
+def test_scoreboard_renders_arms_and_rotation(tmp_path):
+    runs, ana = _hook_state(tmp_path, {"number": (5, 20, 130), "quiet": (2, 3, 10)})
+    text = learn.scoreboard(runs, ana, _TODAY)
+    assert "hook:number" in text and "format:news" in text and "2:10" in text
+    assert "dropped: none" in text
+    line = next(ln for ln in text.splitlines() if ln.startswith("hook:number"))
+    assert line.split()[-2:] == ["100%", "yes"]
