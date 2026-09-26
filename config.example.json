@@ -28,6 +28,7 @@
     "deliverable_base_url": "https://dev-shivam-05.github.io/AI-PULSE",
     "promo_block": "",
     "tool_format": true,
+    "storyboard_shorts": true,
     "debate_format": true,
     "debate_panel": [
         {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},

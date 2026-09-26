@@ -4496,3 +4496,238 @@ def test_debate_wiring_secrets_config_and_keep_quotes():
         assert all(r["provider"] in dbt.PROVIDERS or r["provider"] == "gemini" for r in cfg["debate_panel"])
     src = (root / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
     assert src.count("{_KEEP_QUOTES}") == 3 and "+ _KEEP_QUOTES +" in src   # 3 rewrite passes + advice
+
+
+# --------------------------------------------------------------- v3-G.1 storyboard Shorts
+from factverse import storyboard as sbd
+
+_SBT_NARR = ("Your phone already does what ChatGPT does. Type I'll be there in five, and your "
+             "keyboard suggests minutes. In one test the top suggestion was right 71 percent of the "
+             "time, the second 12 percent. Small models run on your laptop, big models need a data center.")
+
+
+def _sbt_words(text=_SBT_NARR, step=0.4):
+    return [(round(i * step, 3), round(i * step + 0.35, 3), w) for i, w in enumerate(text.split())]
+
+
+def _sbt_raw(extra=None):
+    beats = [
+        {"cue": "Your", "template": "statement",
+         "slots": {"line": {"text": "Your phone already does this", "cue": "Your"}, "accent": "phone"}},
+        {"cue": "Type", "template": "chat",
+         "slots": {"user": {"text": "I'll be there in five", "cue": "Type"}, "ai": {"text": "minutes", "cue": "minutes"}}},
+        {"cue": "In one", "template": "bars",
+         "slots": {"bars": [{"label": {"text": "top suggestion", "cue": "top"}, "value": "71%"},
+                            {"label": {"text": "second", "cue": "second"}, "value": "12%"}]}},
+        {"cue": "Small models", "template": "compare",
+         "slots": {"left": [{"text": "Small models", "cue": "Small"}, {"text": "run on your laptop", "cue": "laptop"}],
+                   "right": [{"text": "Big models", "cue": "big"}, {"text": "need a data center", "cue": "data"}]}},
+    ]
+    return {"beats": beats + (extra or [])}
+
+
+def _sbt_board(raw=None, domain=""):
+    w = _sbt_words()
+    return sbd.build_board(raw or _sbt_raw(), w, w[-1][1] + 0.5, domain), w
+
+
+def test_storyboard_happy_path_keeps_every_beat_and_times_them():
+    board, w = _sbt_board()
+    assert [b["template"] for b in board["beats"]] == ["statement", "chat", "bars", "compare"]
+    b0, b1 = board["beats"][0], board["beats"][1]
+    assert b0["start"] == 0.0 and all(e["t"] < 0 for e in b0["els"])          # frame 1 fully drawn
+    assert b1["start"] == w[7][0]                                            # the word "Type"
+    ai = [e for e in b1["els"] if e["role"] == "ai"][0]
+    assert ai["t"] == [x[0] for x in w if x[2].startswith("minutes")][0]     # revealed on its own word
+    for a, b in zip(board["beats"], board["beats"][1:]):
+        assert a["end"] == b["start"]
+
+
+def test_storyboard_hostile_answers_never_raise():
+    w = _sbt_words()
+    for junk in (None, "beats", {"beats": "x"}, {"beats": [1, 2, 3]}, {"nope": []}):
+        assert sbd.build_board(junk, w, 40.0) is None
+    two = {"beats": _sbt_raw()["beats"][:2]}
+    assert sbd.build_board(two, w, 40.0) is None                             # < 3 beats
+    many = {"beats": _sbt_raw()["beats"][:1] + [
+        {"cue": x[2], "template": "statement", "slots": {"line": {"text": "phone keyboard", "cue": x[2]}}}
+        for x in w[1:40]]}
+    board = sbd.build_board(many, w, 40.0)
+    assert len(board["beats"]) == sbd.MAX_BEATS                              # 40 beats -> 8
+    raw = _sbt_raw()
+    raw["beats"][1] = {"cue": "Type", "template": "hologram", "slots": {}}   # unknown template
+    raw["beats"][2]["slots"] = {"bars": "71%"}                              # wrong shape
+    raw["beats"][3]["slots"]["left"][1]["text"] = "run on your laptop every single day"  # over 5 words
+    board = sbd.build_board(raw, w, 40.0)
+    assert [b["template"] for b in board["beats"]] == ["statement"] * 4
+    assert board["beats"][1]["els"][0]["text"] == "Type I'll be there in five,"   # its first 6 narration words
+
+
+def test_storyboard_gate_numbers_words_and_stop_words():
+    narr = "the top suggestion was right 71 percent of the time"
+    ok = [{"role": "bar", "text": "top suggestion", "value": "71%"}]
+    assert sbd.gate_ok(ok, narr)
+    assert not sbd.gate_ok([{"role": "bar", "text": "top suggestion", "value": "93%"}], narr)   # invented
+    assert not sbd.gate_ok([{"role": "line", "text": "totally unrelated banana"}], narr)
+    assert not sbd.gate_ok([{"role": "line", "text": "there that with"}], "there that with")   # stop-words only
+    assert sbd.gate_ok([{"role": "chip", "text": "arxiv.org", "exempt": True},
+                        {"role": "line", "text": "suggestion time"}], narr)
+    # model text is data: markup survives as literal text and is judged like any text
+    board, _ = _sbt_board()
+    raw = _sbt_raw()
+    raw["beats"][0]["slots"]["line"]["text"] = "<b>phone</b> keyboard"
+    b0 = sbd.build_board(raw, _sbt_words(), 40.0)["beats"][0]
+    assert b0["template"] == "statement" and b0["els"][0]["text"] == "<b>phone</b> keyboard"
+
+
+def test_storyboard_timing_rules():
+    w = _sbt_words()
+    raw = _sbt_raw()
+    # "ChatGPT" is spoken only BEFORE the chat beat's cue: a monotonic match cannot find it
+    raw["beats"].insert(2, {"cue": "ChatGPT", "template": "statement",
+                            "slots": {"line": {"text": "phone", "cue": "ChatGPT"}}})
+    raw["beats"][1]["slots"]["ai"]["cue"] = "never said"                    # unmatched element cue
+    board = sbd.build_board(raw, w, w[-1][1] + 0.5)
+    assert [b["template"] for b in board["beats"]] == ["statement", "chat", "bars", "compare"]
+    user, ai = board["beats"][1]["els"]
+    assert ai["t"] == user["t"]                                               # appears with the previous element
+    same = {"beats": raw["beats"][:2] + [{"cue": "In one", "template": "bars", "slots": {"bars": [
+        {"label": {"text": "top suggestion", "cue": "top"}, "value": "71%"},
+        {"label": {"text": "second suggestion", "cue": "top"}, "value": "12%"}]}}] + raw["beats"][4:]}
+    bars = sbd.build_board(same, w, w[-1][1] + 0.5)["beats"][2]["els"]
+    assert round(bars[1]["t"] - bars[0]["t"], 3) == sbd.STAGGER_S           # same word -> 120 ms stagger
+    ev = sbd._events(board) + [board["length"]]
+    assert max(b - a for a, b in zip(ev, ev[1:])) <= sbd.MAX_GAP_S          # the 2.5 s rule
+
+
+def test_storyboard_beat_starts_on_its_first_element():
+    """A beat whose first element is cued later used to leave an EMPTY stage."""
+    w = _sbt_words()
+    raw = _sbt_raw()
+    raw["beats"][2]["cue"] = "In one"
+    raw["beats"][2]["slots"]["bars"][0]["label"]["cue"] = "suggestion"     # later than "In one"
+    board = sbd.build_board(raw, w, w[-1][1] + 0.5)
+    bars = board["beats"][2]
+    assert bars["start"] == min(e["t"] for e in bars["els"])
+    assert board["beats"][1]["end"] == bars["start"]
+
+
+def test_storyboard_frames_concat_and_encode_args():
+    board, _ = _sbt_board()
+    ts = sbd.frame_times(board)
+    assert ts[0] == 0.0 and ts == sorted(set(ts)) and ts[-1] < board["length"]
+    assert all(b["start"] in ts for b in board["beats"])
+    txt = sbd.concat_list([(f"C:\\t\\{i}.png", t) for i, t in enumerate(ts)], board["length"])
+    assert txt.startswith("ffconcat version 1.0") and "\\" not in txt
+    durs = [float(l.split()[1]) for l in txt.splitlines() if l.startswith("duration")]
+    assert abs(sum(durs) - board["length"]) < 0.01
+    assert txt.strip().splitlines()[-1] == f"file 'C:/t/{len(ts) - 1}.png'"   # last frame listed twice
+    a = sbd.encode_args("l.txt", "o.mp4")
+    assert a[a.index("-crf") + 1] == "20" and a[a.index("-preset") + 1] == "medium"
+    assert "fps=30,format=yuv420p" in a and "-an" in a
+
+
+def test_storyboard_engine_index_and_label():
+    import datetime as dt
+    even = next(dt.date(2026, 10, d) for d in range(1, 9) if dt.date(2026, 10, d).timetuple().tm_yday % 2 == 0)
+    assert sbd.engine_index(even) == 0 and sbd.engine_index(even + dt.timedelta(days=1)) == 1
+    assert sbd.engine_of("C:\\out\\short_1_sb_20260930_1200.mp4") == "storyboard"
+    assert sbd.engine_of("/tmp/out/short_2_20260930_1200.mp4") == "crop"
+
+
+def _sbt_shorts_env(monkeypatch, tmp_path, flag=True):
+    from factverse import shorts as sh
+    monkeypatch.setattr(sh.eng, "dur", lambda v: 60.0)
+    monkeypatch.setattr(sh.eng, "find_best_moments", lambda s: [{"scene_num": 1, "hook_text": "Your keyboard is an AI"}])
+    monkeypatch.setattr(sh, "_ensure_font", lambda: tmp_path)
+    monkeypatch.setattr(sh.fv, "SHORTS", tmp_path)
+    monkeypatch.setattr(sh.fv, "TEMP", tmp_path)
+    monkeypatch.setattr(sh.fv, "flag", lambda name, default=False: flag if name == "storyboard_shorts" else default)
+    monkeypatch.setattr(sh.cap, "build_ass", lambda *a, **k: str(tmp_path / "x.ass"))
+    calls = []
+
+    class _R:
+        returncode, stderr = 0, ""
+
+    def fake_run(args, **k):
+        calls.append(args)
+        Path(args[-1]).write_bytes(b"0" * 20000)
+        return _R()
+    monkeypatch.setattr(sh.subprocess, "run", fake_run)
+    return sh, calls
+
+
+def test_make_shorts_storyboard_arm_and_its_fallback(monkeypatch, tmp_path):
+    import datetime as dt
+    even = next(dt.date(2026, 10, d) for d in range(1, 9) if dt.date(2026, 10, d).timetuple().tm_yday % 2 == 0)
+    words = _sbt_words()
+    sh, calls = _sbt_shorts_env(monkeypatch, tmp_path)
+    vis = tmp_path / "vis.mp4"
+    vis.write_bytes(b"0" * 20000)
+    monkeypatch.setattr(sh.sb, "plan", lambda sub, length, dom: {"length": length})
+    monkeypatch.setattr(sh.sb, "render", lambda board, out, sub: str(vis))
+    out = sh.make_shorts("c.mp4", {"scenes": [{"narration": "x"}]}, words, scene_starts=[0.0],
+                         max_count=1, source_domain="arxiv.org", today=even)
+    assert len(out) == 1 and "_sb_" in out[0]
+    mux = [c for c in calls if str(vis) in c][0]
+    assert mux[mux.index("-map") + 1] == "0:v:0" and "1:a:0" in mux          # our picture, the control's audio
+    assert "Your keyboard is an AI" in mux[mux.index("-vf") + 1]              # same hook overlay
+    # plan fails / render fails / plan raises -> the crop path, no _sb_ file
+    for plan, render in ((lambda *a: None, None), (lambda *a: {"length": 1}, lambda *a: None),
+                         (lambda *a: 1 / 0, None)):
+        monkeypatch.setattr(sh.sb, "plan", plan)
+        if render:
+            monkeypatch.setattr(sh.sb, "render", render)
+        calls.clear()
+        out = sh.make_shorts("c.mp4", {"scenes": [{"narration": "x"}]}, words, scene_starts=[0.0],
+                             max_count=1, source_domain="arxiv.org", today=even)
+        assert len(out) == 1 and "_sb_" not in out[0]
+        assert any("crop=ih*9/16" in " ".join(map(str, c)) for c in calls)
+    # the odd day uses Short 2 for the storyboard, so Short 1 stays on the crop path
+    monkeypatch.setattr(sh.sb, "plan", lambda *a: (_ for _ in ()).throw(AssertionError("must not plan")))
+    out = sh.make_shorts("c.mp4", {"scenes": [{"narration": "x"}]}, words, scene_starts=[0.0],
+                         max_count=1, today=even + dt.timedelta(days=1))
+    assert "_sb_" not in out[0]
+
+
+def test_storyboard_never_imports_playwright_at_module_level_and_page_is_inert():
+    import ast
+    root = Path(__file__).resolve().parents[1]
+    tree = ast.parse((root / "factverse" / "storyboard.py").read_text(encoding="utf-8"))
+    top = [n for n in tree.body if isinstance(n, (ast.Import, ast.ImportFrom))]
+    assert not any("playwright" in ast.dump(n) for n in top)
+    page = (root / "assets" / "storyboard" / "storyboard.html").read_text(encoding="utf-8")
+    assert "innerHTML" not in page and "<script src" not in page
+    assert "http://" not in page and "https://" not in page
+    for name in ("config.json", "config.example.json"):
+        assert json.loads((root / name).read_text(encoding="utf-8"))["storyboard_shorts"] is True
+
+
+def test_learn_reads_the_shorts_ab(tmp_path):
+    rows = []
+    for d, (sb_avp, crop_avp) in enumerate(((60, 40), (30, 50), (55, 35)), start=1):
+        day = f"2026-09-{d + 1:02d}"
+        rows.append({"status": "PUBLISHED", "format": "news", "timestamp": f"{day}T12:30:00",
+                     "publish_at": f"{day}T16:45:00Z", "youtube_url": f"https://youtube.com/watch?v=lng{d:08d}",
+                     "shorts": [{"url": f"https://youtube.com/shorts/sbx{d:08d}", "engine": "storyboard"},
+                                {"url": f"https://youtube.com/shorts/crp{d:08d}", "engine": "crop"},
+                                {"url": "junk", "engine": "storyboard"}, "junk"]})
+    ids = learn.ledger_ids(rows)
+    assert ids[:3] == ["lng00000001", "sbx00000001", "crp00000001"]
+    metrics = {}
+    for d, (sa, ca) in enumerate(((60, 40), (30, 50), (55, 35)), start=1):
+        metrics[f"sbx{d:08d}"] = {"views": 100, "avp": sa}
+        metrics[f"crp{d:08d}"] = {"views": 100, "avp": ca}
+    ab = learn.shorts_ab(rows, metrics, _dtd.date(2026, 9, 26))
+    assert ab["pairs"] == 3 and ab["wins"] == 2 and ab["verdict"] == ""
+    assert round(ab["short:storyboard"]["wavp"], 1) == 48.3 and ab["short:crop"]["mature"] == 3
+    stats = learn.score(rows, metrics, _dtd.date(2026, 9, 26))
+    assert not any(k.startswith("short:") for k in stats)                    # never in the format/hook arms
+    runs, ana = tmp_path / "r.jsonl", tmp_path / "a.jsonl"
+    runs.write_text("\n".join(json.dumps(r) for r in rows) + "\n", encoding="utf-8")
+    ana.write_text(json.dumps({"ledger_headers": ["video", "views", "estimatedMinutesWatched",
+                                                   "averageViewDuration", "averageViewPercentage"],
+                               "ledger_videos": [[k, v["views"], 0, 10, v["avp"]] for k, v in metrics.items()]})
+                   + "\n", encoding="utf-8")
+    text = learn.scoreboard(runs, ana, _dtd.date(2026, 9, 26))
+    assert "short:storyboard" in text and "A/B pairs: 3 · storyboard wins: 2" in text

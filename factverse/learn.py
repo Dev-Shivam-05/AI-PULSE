@@ -95,8 +95,46 @@ def ledger_videos(rows: list[dict]) -> list[dict]:
     return out
 
 
+SHORT_MATURE_DAYS = 2      # v3-G.1 row 13: a Short gets most of its views in 48 h
+AB_PAIRS, AB_BUILD, AB_STOP = 10, 8, 5   # v3-G.1 row 14
+
+
+def ledger_shorts(rows: list[dict]) -> list[dict]:
+    """v3-G.1: the Shorts a PUBLISHED row recorded as {url, engine}, with the row
+    they belong to (a pair is one row = one day, both arms)."""
+    floor = _date(DATA_FLOOR)
+    out, seen = [], set()
+    for k, r in enumerate(rows):
+        if not isinstance(r, dict) or r.get("status") != "PUBLISHED":
+            continue
+        stamped = _date(r.get("timestamp"))
+        items = r.get("shorts")
+        if stamped is None or stamped < floor or not isinstance(items, list):
+            continue
+        for it in items:
+            vid = video_id(it.get("url")) if isinstance(it, dict) else None
+            eng = it.get("engine") if isinstance(it, dict) else None
+            if vid and vid not in seen and eng in ("storyboard", "crop"):
+                seen.add(vid)
+                out.append({"id": vid, "engine": eng, "row": k,
+                            "published": _date(r.get("publish_at")) or stamped})
+    return out
+
+
 def ledger_ids(rows: list[dict], cap: int = LEDGER_CAP) -> list[str]:
-    return [v["id"] for v in ledger_videos(rows)][-cap:]
+    """Long-forms AND the A/B Shorts, in ledger order, most recent `cap`."""
+    shorts_by_row: dict[int, list[str]] = {}
+    for s in ledger_shorts(rows):
+        shorts_by_row.setdefault(s["row"], []).append(s["id"])
+    long_ids = {v["id"] for v in ledger_videos(rows)}
+    ids, seen = [], set()
+    for k, r in enumerate(rows):
+        vid = video_id(r.get("youtube_url")) if isinstance(r, dict) else None
+        for i in ([vid] if vid in long_ids else []) + shorts_by_row.get(k, []):
+            if i not in seen:
+                seen.add(i)
+                ids.append(i)
+    return ids[-cap:]
 
 
 def latest_metrics(path: Path | None = None) -> dict[str, dict]:
@@ -116,12 +154,45 @@ def latest_metrics(path: Path | None = None) -> dict[str, dict]:
                                 heads.index("averageViewDuration"))
         except (ValueError, AttributeError):
             continue
+        iavp = heads.index("averageViewPercentage") if "averageViewPercentage" in heads else None
         out = {}
         for row in snap["ledger_videos"]:
             if isinstance(row, list) and len(row) > max(iv, iviews, iavd):
-                out[str(row[iv])] = {"views": _num(row[iviews]), "avd_s": _num(row[iavd])}
+                out[str(row[iv])] = {"views": _num(row[iviews]), "avd_s": _num(row[iavd]),
+                                     "avp": _num(row[iavp]) if iavp is not None and len(row) > iavp else 0.0}
         return out
     return {}
+
+
+def shorts_ab(rows: list[dict], metrics: dict[str, dict], today: dt.date | None = None) -> dict:
+    """v3-G.1 rows 13-14: views-weighted % viewed per arm, and the daily pairs."""
+    today = today or dt.date.today()
+    arms = {"storyboard": [], "crop": []}
+    by_row: dict[int, dict[str, dict]] = {}
+    for s in ledger_shorts(rows):
+        m = metrics.get(s["id"], {})
+        item = {"mature": (today - s["published"]).days >= SHORT_MATURE_DAYS,
+                "views": _num(m.get("views")), "avp": _num(m.get("avp"))}
+        arms[s["engine"]].append(item)
+        by_row.setdefault(s["row"], {})[s["engine"]] = item
+    out = {}
+    for eng, items in arms.items():
+        mature = [i for i in items if i["mature"] and i["views"] > 0]
+        views = sum(i["views"] for i in mature)
+        out[f"short:{eng}"] = {"videos": len(items), "mature": len(mature), "views": int(views),
+                               "wavp": (sum(i["avp"] * i["views"] for i in mature) / views) if views else 0.0}
+    pairs = wins = 0
+    for day in by_row.values():
+        a, b = day.get("storyboard"), day.get("crop")
+        if a and b and a["mature"] and b["mature"] and a["views"] > 0 and b["views"] > 0:
+            pairs += 1
+            wins += a["avp"] > b["avp"]
+    verdict = ""
+    if pairs >= AB_PAIRS:
+        verdict = ("build v3-G.2" if wins >= AB_BUILD else
+                   "stop and rethink" if wins <= AB_STOP else "run 10 more pairs")
+    out["pairs"], out["wins"], out["verdict"] = pairs, wins, verdict
+    return out
 
 
 def _arm(items: list[dict]) -> dict:
@@ -189,8 +260,10 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
                today: dt.date | None = None) -> str:
     today = today or dt.date.today()
     metrics = latest_metrics(analytics_path)
-    stats = score(read_runs(runs_path), metrics, today)
+    rows = read_runs(runs_path)
+    stats = score(rows, metrics, today)
     drop = dropped_patterns(stats)
+    ab = shorts_ab(rows, metrics, today)
     lines = [f"v3-D scoreboard - {today.isoformat()}  (data from {DATA_FLOOR}; a video "
              f"matures {MATURE_DAYS} days after publish; trusted = >={MIN_VIDEOS} mature "
              f"and >={MIN_VIEWS} views)",
@@ -205,6 +278,14 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
     active = [p for p in gates.HOOK_PATTERNS if p not in drop]
     lines += ["", "active hook patterns: " + ", ".join(active)
               + f"  (dropped: {', '.join(drop) if drop else 'none'})"]
+    # v3-G.1 rows 13-14: the storyboard A/B (Shorts mature after 2 days)
+    lines += ["", f"{'shorts A/B':<22}{'videos':>7}{'mature':>9}{'views':>8}{'%viewed':>9}"]
+    for arm in ("short:storyboard", "short:crop"):
+        s = ab[arm]
+        pct = f"{s['wavp']:.1f}%" if s["views"] else "-"
+        lines.append(f"{arm:<22}{s['videos']:>7}{s['mature']:>9}{s['views']:>8}{pct:>9}")
+    lines.append(f"A/B pairs: {ab['pairs']} · storyboard wins: {ab['wins']}"
+                 + (f"  → {ab['verdict']}" if ab["verdict"] else f"  (verdict at {AB_PAIRS})"))
     return "\n".join(lines) + "\n"
 
 

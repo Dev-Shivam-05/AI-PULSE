@@ -1,6 +1,6 @@
 # Spec — v3-G.1: storyboard Shorts
 
-Status: **locked** (15 decisions, approved with `go` on 2026-09-26). **Not built yet.**
+Status: **locked** (15 decisions, approved with `go` on 2026-09-26). **Built 2026-09-26** on `v3-phase-g`.
 Build **after v3-B.1**, on a branch stacked on it (`v3-phase-g`).
 The code goes in a NEW `factverse/storyboard.py`, a NEW `assets/storyboard/storyboard.html`, and an
 integration into `factverse/shorts.py`.
@@ -286,3 +286,19 @@ Demo artifacts: `output/demo/storyboard/`.
   will show it. Any fix that needs a new number is a new spec row.
 - **The verdict is the 10-pair A/B, not the sample.** One extra Gemini call a day on the free
   tier; if it is rate-limited, that day's Short falls back to crop.
+
+## Build notes (2026-09-26) — found by rendering, no new numbers
+
+- **A beat starts on its first element's word.** The fixture's `steps` beat had its first element
+  cued 2.9 s after the beat's own cue, which left an EMPTY stage (the 2.5 s rule had nothing to
+  highlight). The previous beat now holds until the new beat's first element is spoken
+  (`time_elements`), so the picture changes exactly on the word that introduces it.
+- **Typed words hide with `opacity`, not `visibility`.** A child's `visibility: visible` overrides a
+  hidden parent: the chat's typed words leaked into every later beat. Inactive beats are also
+  `display: none` after the fit pass.
+- **A card or bubble enters WITH its first element**, so no empty box is ever on screen.
+- **A number value never wraps** (`white-space: nowrap`); the fit loop shrinks it instead.
+- Measured locally: the sample Short (31 s, 7 beats, 284 frames) rendered in **76.2 s** on the
+  owner's PC; the whole make_shorts storyboard arm (plan stub + render + mux + captions) took
+  134 s. Artifacts: `output/demo/storyboard/templates_sheet.png` (7 templates × 3 moments),
+  `sample_short_sheet.png` (12 frames of the final Short), `sample/sample_short.mp4`.

@@ -1770,7 +1770,7 @@ def run(publish: bool = False, force_format: str | None = None,
     # Revisit only if Shorts→long CTR sustains >6% for 30 days.
     shorts_n = int(fv.setting("shorts_per_day", 2))
     shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
-                                    max_count=min(shorts_n, 4))
+                                    max_count=min(shorts_n, 4), source_domain=src_domain)
 
     print("  📝 Burning live word-by-word captions...")
     ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"), play_w=eng.WIDTH, play_h=eng.HEIGHT)
@@ -1835,6 +1835,7 @@ def run(publish: bool = False, force_format: str | None = None,
     print(f"  🧭 Confidence {conf['score']:.2f} → {conf['routing'].upper()}")
 
     status, yt_url, yt_shorts = "RENDER_ONLY", None, []
+    short_rows = []          # v3-G.1: [{"url", "engine"}] for the A/B readout
     long_publish_at = None
     if publish and fv.flag("auto_upload_youtube"):
         if conf["routing"] == "hold" and not __import__("os").environ.get("FORCE_PUBLISH"):
@@ -1888,6 +1889,9 @@ def run(publish: bool = False, force_format: str | None = None,
                               publish_at=(slots[i] if i < len(slots) else None))
             if u:
                 yt_shorts.append(u)
+                # v3-G.1 row 13: which arm drew this Short (post-upload zone:
+                # storyboard.engine_of is a substring test on our own name, cannot raise)
+                short_rows.append({"url": u, "engine": shorts_mod.sb.engine_of(sp)})
                 # visible path from the Short to the full video (description links
                 # are hidden on the Shorts player; a channel comment is tappable)
                 eng.yt_comment(u, f"▶️ Full breakdown: {yt_url}")
@@ -1931,6 +1935,7 @@ def run(publish: bool = False, force_format: str | None = None,
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
                packaging=_pk["fixed"],
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
+               shorts=short_rows,
                shorts_rendered=len(shorts),
                viral_score=(viral[1] if viral else None),
                hook_pattern=script.get("hook_pattern"),
