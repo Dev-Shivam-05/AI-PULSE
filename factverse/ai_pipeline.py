@@ -12,6 +12,8 @@ viral judge scores the top-ranked stories on shock, stakes, and broad appeal.
                  deliverable in the description. The default lane once visuals land.
   * evergreen  — fallback when nothing is hot and no tool signal exists
   * roundup    (Sun) — curated weekly top-5 (curation = added value = policy-safe)
+  * debate     (Wed, v3-H) — up to five models from different labs debate one question
+                 through their official APIs; the video narrates what they actually said
 
 Safety rails (YouTube's 2025 "inauthentic content" policy is the #1 threat):
   * every script passes a critique/retention rewrite pass (originality + hooks)
@@ -23,7 +25,7 @@ Safety rails (YouTube's 2025 "inauthentic content" policy is the #1 threat):
 Run:
     python -m factverse.ai_pipeline           # render only (safe)
     python -m factverse.ai_pipeline publish   # render + upload
-    python -m factverse.ai_pipeline publish news|evergreen|roundup|tool  # force format
+    python -m factverse.ai_pipeline publish news|evergreen|roundup|tool|debate  # force format
 
 Exit code is 0 only when the run truly succeeded — CI goes red otherwise.
 """
@@ -51,6 +53,7 @@ from factverse import infographics
 from factverse import screencap
 from factverse import receipts
 from factverse import deliverable
+from factverse import debate
 from factverse import site
 from factverse import scheduling
 from factverse import gates
@@ -328,7 +331,9 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # hole for the rewrite passes too: every pass validates, then _carry_over copies
     # the legitimate value back from the previous script. Measured: without this, a
     # name planted in critique_pass's answer shipped a dead ".../tools/" link.
-    for planted in ("receipts", "cheat_sheet"):
+    # v3-H: "debate" (the transcript) is the pipeline's own too — a planted one
+    # would put words in a model's mouth that the quote gate then trusts.
+    for planted in ("receipts", "cheat_sheet", "debate"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -816,14 +821,68 @@ ROUNDUP RULES:
     return s
 
 
+# --------------------------------------------------------------- format: debate (v3-H)
+def script_debate(q: dict, t: dict) -> dict | None:
+    """Narrate a debate the panel actually held (docs/spec/ai-pulse-v3h.md #8)."""
+    yes, no = debate.split(t)
+    n = len(t.get("seats") or [])
+    seats = "\n".join(f"- {s['name']} ({s['lab']}) — round 1 [{s['stance']}]: {s['r1']}\n"
+                      f"  round 2 [final {s['final']}]: {s.get('r2') or '(no rebuttal)'}"
+                      for s in t["seats"])
+    prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}. {n} AI models from different labs just
+debated one question through their official APIs. Write the video about what they ACTUALLY said.
+
+QUESTION: {t['question']}
+STORY IT CAME FROM: {q.get('title', '')} ({q.get('source', '')})
+SOURCE EXCERPT (the facts; rephrase, never copy):
+{q['grounding'][:3000]}
+
+THE DEBATE (final split: {yes} YES, {no} NO):
+{seats}
+
+DEBATE RULES:
+- Scene 1 = hook: the question, the split ("{yes} of {n} said yes"), and why it matters to the viewer.
+- Give every model its own moment. Name it EXACTLY as written above (e.g. "{t['seats'][0]['name']}").
+- When you quote a model, copy at most 25 of its words VERBATIM inside double quotation marks.
+  Double quotation marks are ONLY for the models' verbatim words — never paraphrase inside them.
+- Show the sharpest clash (a rebuttal that hits), and any model that changed its answer.
+- One scene on what the SOURCE actually supports — that judgement is YOUR added value.
+- Final scene: the scoreboard, then ask "Which AI got it right? Tell us in the comments", then subscribe.
+- Title pattern: "{n} AIs Debated: <the question, shortened>". thumb_text states the split, e.g. "{yes} SAID YES".
+- The models' opinions are theirs: attribute every one; never present them as advice.
+{_RETENTION_RULES}
+{_VISUAL_RULES}
+
+{_output_contract("14-18", "55-80")}"""
+    s = llm.generate_json(prompt, max_tokens=8192)
+    s = _validate_script(s, f"{n} AIs Debated: {t['question']}"[:95], q.get("url", ""))
+    if not s:
+        return None
+    s["format"] = "debate"
+    s["debate"] = t
+    # v3-H #10: the fact-checker verifies "Qwen argued ..." against what Qwen said
+    s["grounding"] = q["grounding"] + "\n\n" + debate.transcript_text(t)
+    bad = debate.fabricated_quotes(s)
+    if bad:
+        print(f"     🛑 debate script put words in a model's mouth: {bad[:2]}")
+        return None
+    return s
+
+
 # --------------------------------------------------------------- quality passes
+# v3-H #9: the debate lane quotes models verbatim and the quote gate checks it — a
+# rewrite pass that "improves" a quote turns it into words nobody said.
+_KEEP_QUOTES = ("Keep every passage inside double quotation marks exactly as written "
+                "(those are verbatim quotes).")
+
 # Top-level script keys that every LLM rewrite pass must carry across, because the
 # rewrite prompt never sees them and _validate_script resets them (deliverable ->
 # None, filter_segment -> False). Missing one here silently changes the video.
 _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_claim",
           "filter_segment", "hook_pattern", "deliverable", "cheat_sheet",
           "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
-          "receipts")        # v3-E.2 #6: the measured check must survive them too
+          "receipts",        # v3-E.2 #6: the measured check must survive them too
+          "debate")          # v3-H #13: the transcript the quotes and cards are checked against
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -923,6 +982,10 @@ def place_description_blocks(script: dict) -> None:
             desc = desc[:end] + "\n\n" + promo + desc[end:]
         else:                                       # other formats: after the hook paragraph
             desc = _insert_after_hook(desc, promo)
+    # v3-H #12: who debated, and how — under the hook, once
+    if (script.get("format") == "debate" and isinstance(script.get("debate"), dict)
+            and debate.PANEL_MARK not in desc):
+        desc = _insert_after_hook(desc[:_MAX_DESC], debate.panel_block(script["debate"]))
     # A roundup burns "Sources in description" on screen for its whole runtime,
     # while _validate_script credits exactly one URL — story 1's. Keep the promise.
     if script.get("format") == "roundup" and _SRC_MARK not in desc:
@@ -947,7 +1010,7 @@ irresistible curiosity gap in <=4 words? (6) does ANY scene restate a point an e
 already made? DELETE it — repetition is the #1 retention killer on this channel.
 
 Rewrite EVERY weak part. Keep the same JSON schema. CUTTING is welcome (delete repetition and
-filler); never pad. Keep every visual_query unless the narration changed meaning. Never add facts
+filler); never pad. {_KEEP_QUOTES} Keep every visual_query unless the narration changed meaning. Never add facts
 that were not present.
 
 SCRIPT:
@@ -977,7 +1040,7 @@ def enforce_length(script: dict, min_words: int) -> dict:
     try:
         prompt = f"""This YouTube script is too short ({words} words; it needs {min_words}+ to hit the
 target watch time). Expand it by DEEPENING scenes (real examples, mechanisms, implications) — not
-padding. Keep the same JSON schema, hooks, and visual_query values; add 2-4 new scenes with fresh
+padding. {_KEEP_QUOTES} Keep the same JSON schema, hooks, and visual_query values; add 2-4 new scenes with fresh
 visual_query values where depth is missing. Never invent numbers.
 
 SCRIPT:
@@ -1010,7 +1073,7 @@ def enforce_max_length(script: dict, max_words: int) -> dict:
 down by deleting scenes that restate an earlier point, merging thin scenes, and tightening every
 sentence. NEVER cut: the scene-1 hook, the deliverable/CTA in the final scene, or any concrete
 number or command. Keep the same JSON schema and the visual_query values of the scenes you keep.
-Do not add anything new.
+{_KEEP_QUOTES} Do not add anything new.
 
 SCRIPT:
 {json.dumps({k: script[k] for k in ('title', 'thumb_text', 'description', 'tags', 'scenes')}, ensure_ascii=False)}
@@ -1206,14 +1269,21 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
     (viral judge >= VIRAL_THRESHOLD) runs as news; otherwise the utility lane —
     a hands-on tool video when a tool signal exists (config flag "tool_format"),
     else an evergreen explainer. Returns (fmt, viral_hint)."""
-    if force in ("news", "evergreen", "roundup", "tool"):
+    if force in ("news", "evergreen", "roundup", "tool", "debate"):
         return force, (viral_pick(ranked) if force == "news" else None)
-    if (today or _dt.date.today()).weekday() == 6:
+    day = today or _dt.date.today()
+    if day.weekday() == 6:
         return "roundup", None
     viral = viral_pick(ranked)
     if viral and viral[1] >= VIRAL_THRESHOLD:
         print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
         return "news", viral
+    # v3-H #1: Wednesday is debate day — only when the panel can seat a debate
+    # (panel() is key presence only; no network is spent deciding)
+    if (fv.flag("debate_format", False) and day.weekday() == debate.DEBATE_WEEKDAY
+            and len(debate.panel()) >= debate.MIN_SEATS):
+        print("  🥊 Debate day — the AI panel takes the question.")
+        return "debate", None
     if fv.flag("tool_format", False) and any(i.get("kind") == "tool" for i in ranked):
         print("  🧰 No breakout story — running the utility lane (tool video).")
         return "tool", None
@@ -1223,6 +1293,17 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
 
 
 def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
+    if fmt == "debate":
+        q = debate.pick_question(news_candidates(ranked), fetch_text)
+        t = debate.run_debate(q) if q else None
+        s = script_debate(q, t) if t else None
+        if s:
+            s["signal_title"] = q["title"]
+            return s
+        # the utility lane's own order: tool when it is on, else evergreen
+        nxt = "tool" if fv.flag("tool_format", False) else "evergreen"
+        print(f"   ⚠️ No debate today — falling back to {nxt}.")
+        return build_script(nxt, ranked, viral_hint)
     if fmt == "roundup":
         print("  🗞️  Weekly roundup from", len(ranked), "candidates")
         s = script_roundup(ranked)
@@ -1291,7 +1372,7 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
 # v3: 4:00-6:00 runtime at ~150 wpm. The old 850-1000 floors forced the LLM to
 # pad — the root cause of the 0:38 average view duration. The floor now only
 # catches truly thin scripts; the CAP is what fights padding.
-MIN_WORDS = {"news": 620, "evergreen": 620, "roundup": 620, "tool": 600}
+MIN_WORDS = {"news": 620, "evergreen": 620, "roundup": 620, "tool": 600, "debate": 620}
 MAX_WORDS = 900
 MAX_OVERLAP = 0.08
 
@@ -1299,7 +1380,8 @@ MAX_OVERLAP = 0.08
 PLAYLIST_BY_FORMAT = {"news": "AI News, Decoded",
                       "evergreen": "How AI Actually Works",
                       "roundup": "Weekly AI Roundup",
-                      "tool": "Free AI Tools, Tested"}
+                      "tool": "Free AI Tools, Tested",
+                   "debate": "AI vs AI: The Debates"}
 
 
 def _last_published_url() -> str:
@@ -1528,7 +1610,8 @@ def run(publish: bool = False, force_format: str | None = None,
         fixed = llm.generate_json(
             "Rewrite this video script JSON to REMOVE all prescriptive advice to viewers about "
             "finance, health, legal, or political action. Report and explain; never tell viewers "
-            "what they should do. Keep the same JSON schema and all other content.\n\n"
+            "what they should do. Keep the same JSON schema and all other content. "
+            + _KEEP_QUOTES + "\n\n"
             + json.dumps({k: script[k] for k in ("title", "thumb_text", "description", "tags",
                                                  "synthesis_claim", "scenes") if k in script},
                          ensure_ascii=False), max_tokens=8192, temperature=0.3)
@@ -1539,6 +1622,16 @@ def run(publish: bool = False, force_format: str | None = None,
         if gates.advice_framing(narration).get("advice"):
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
             record_run(status="ADVICE_BLOCKED", format=fmt, title=script["title"])
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback)
+
+    # v3-H #9: after every rewrite pass (critique, length, advice), a debate may
+    # only quote what a model actually said. A reworded quote is a misattribution.
+    if script.get("format") == "debate":
+        bad = debate.fabricated_quotes(script)
+        if bad:
+            print(f"  🛑 QUOTE GATE: words no model said, inside quotes: {bad[:2]}")
+            record_run(status="QUOTE_BLOCKED", format=fmt, title=script["title"])
             mark_failed(script.get("signal_title", script["title"]))
             return _fall_back(publish, fmt, force_format, fallback)
 
@@ -1637,6 +1730,10 @@ def run(publish: bool = False, force_format: str | None = None,
     # count-up mid-scene) or is cut before the number reaches its real value.
     infographics.inject_cards(script, scene_clips, source_domain=src_domain,
                               scene_durs=durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+    if script.get("format") == "debate":
+        # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
+        # _lead_with replaces a stat card rather than stacking a third clip
+        debate.inject_cards(script, scene_clips)
     if script.get("format") == "tool":
         # the deliverable, on screen as a terminal card, in the scenes that speak it.
         # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
@@ -1858,6 +1955,6 @@ def run(publish: bool = False, force_format: str | None = None,
 if __name__ == "__main__":
     args = [a.lower() for a in sys.argv[1:]]
     do_publish = "publish" in args
-    forced = next((a for a in args if a in ("news", "evergreen", "roundup", "tool")), None)
+    forced = next((a for a in args if a in ("news", "evergreen", "roundup", "tool", "debate")), None)
     ok = run(publish=do_publish, force_format=forced)
     sys.exit(0 if ok else 1)

@@ -4286,5 +4286,213 @@ def test_every_gate_uses_the_fallback_helper():
     """The three gate sites used to hard-code evergreen; a fourth copy of that
     inline condition would silently bypass the tool-first rule."""
     src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
-    assert src.count("return _fall_back(publish, fmt, force_format, fallback)") == 3
+    # policy, advice, fact-check (v3-B.1) + the debate quote gate (v3-H #9)
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback)") == 4
     assert 'force_format="evergreen")' not in src
+
+
+# --------------------------------------------------------------- v3-H debate lane
+from factverse import debate as dbt
+
+
+def _dbt_transcript():
+    seats = []
+    for name, lab, st, r1, r2 in (
+            ("Gemini 2.5 Flash", "Google", "YES",
+             "Yes. Agents already draft code that juniors used to write, and the source shows teams hiring fewer of them.",
+             "The cost argument ignores review time. FINAL: YES"),
+            ("GPT-OSS 120B", "OpenAI", "NO",
+             "No. Someone still has to review every change, and review is how juniors become seniors.",
+             "Fewer hires is not zero hires. FINAL: NO"),
+            ("Qwen 3.8", "Alibaba", "NO",
+             "No. The source describes a slowdown in hiring, not a replacement of the role itself.",
+             "")):
+        seats.append({"name": name, "lab": lab, "short": name.split()[0], "provider": "x",
+                      "model": "m", "served": "m", "r1": r1, "r2": r2, "stance": st,
+                      "final": dbt.final_stance(r2, st)})
+    return {"question": "Will AI agents replace junior developers?", "date": "2026-09-30",
+            "story": {"title": "Teams hire fewer juniors", "url": "https://x.test/a", "source": "s"},
+            "seats": seats}
+
+
+def test_debate_panel_needs_keys_and_known_providers(monkeypatch):
+    rows = [{"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},
+            {"name": "GPT-OSS 120B", "lab": "OpenAI", "provider": "groq", "model": "openai/gpt-oss-120b"},
+            {"name": "Nemotron", "lab": "NVIDIA", "provider": "openrouter", "model": "n:free"},  # no key
+            {"name": "Mystery", "lab": "X", "provider": "carrier-pigeon", "model": "m"},          # unknown
+            "junk", {"name": "", "lab": "L", "provider": "groq", "model": "m"},                   # malformed
+            {"name": "A", "lab": "L", "provider": "groq", "model": "a"},
+            {"name": "B", "lab": "L", "provider": "groq", "model": "b"},
+            {"name": "C", "lab": "L", "provider": "groq", "model": "c"}]
+    monkeypatch.setattr(dbt.fv, "setting", lambda n, d=None: rows if n == "debate_panel" else d)
+    monkeypatch.setattr(dbt.fv, "GEMINI_KEY", "g-key")
+    monkeypatch.setenv("GROQ_API_KEY", "q-key")
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    seats = dbt.panel()
+    assert [s["name"] for s in seats] == ["Gemini 2.5 Flash", "GPT-OSS 120B", "A", "B", "C"]
+    assert seats[1]["short"] == "GPT-OSS"
+    monkeypatch.setattr(dbt.fv, "GEMINI_KEY", "")
+    monkeypatch.delenv("GROQ_API_KEY")
+    assert dbt.panel() == []                         # no keys, no seats — Wednesday runs normally
+
+
+def test_debate_chat_bearer_only_and_fails_soft(monkeypatch, capsys):
+    seen = {}
+
+    class _R:
+        def __init__(self, code, body):
+            self.status_code, self._b = code, body
+
+        def json(self):
+            return self._b
+
+    def fake_post(url, json=None, headers=None, timeout=None):
+        seen.update(url=url, headers=headers, body=json)
+        return _R(200, {"model": "openai/gpt-oss-120b-served",
+                        "choices": [{"message": {"content": "<think>hidden plan</think> YES, **because** the source says so."}}]})
+    monkeypatch.setenv("GROQ_API_KEY", "SECRET-KEY-123")
+    monkeypatch.setattr(dbt.requests, "post", fake_post)
+    seat = {"name": "GPT-OSS 120B", "lab": "OpenAI", "provider": "groq", "model": "openai/gpt-oss-120b"}
+    txt, served = dbt._chat(seat, "Q?", 300)
+    assert txt == "YES, because the source says so." and served == "openai/gpt-oss-120b-served"
+    assert "SECRET-KEY-123" not in seen["url"]
+    assert seen["headers"]["Authorization"] == "Bearer SECRET-KEY-123"
+    monkeypatch.setattr(dbt.requests, "post", lambda *a, **k: _R(401, {"error": "bad key"}))
+    assert dbt._chat(seat, "Q?", 300) == (None, "HTTP 401")
+
+    def boom(*a, **k):
+        raise dbt.requests.ConnectionError("Max retries exceeded with url: /v1?key=SECRET-KEY-123")
+    monkeypatch.setattr(dbt.requests, "post", boom)
+    txt, why = dbt._chat(seat, "Q?", 300)
+    assert txt is None and why == "ConnectionError" and "SECRET" not in why
+    assert "SECRET-KEY-123" not in capsys.readouterr().out
+    monkeypatch.setattr(dbt.llm, "generate_exact", lambda p, m, **k: "No. Because.")
+    g = {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"}
+    assert dbt._chat(g, "Q?", 300) == ("No. Because.", "gemini-2.5-flash")
+
+
+def test_debate_stance_final_and_verbatim_trim():
+    assert dbt.stance("Yes. Because") == "YES" and dbt.stance("  no — it") == "NO"
+    assert dbt.stance("Maybe so") == "UNCLEAR"
+    assert dbt.final_stance("fewer is not zero. FINAL: NO.", "YES") == "NO"
+    assert dbt.final_stance("no marker", "YES") == "YES"
+    long = ("Agents already write the boilerplate. Review still needs people. "
+            "Teams are hiring fewer juniors this year according to the source")
+    cut = dbt.trim_words(long, 12)
+    assert cut == "Agents already write the boilerplate. Review still needs people."
+    one = " ".join(f"w{i}" for i in range(40))
+    c1 = dbt.trim_words(one, 10)
+    assert c1.endswith("…") and one.startswith(c1[:-1])
+
+
+def test_run_debate_needs_three_and_round_two_sees_the_others(monkeypatch):
+    prompts = []
+
+    def fake_chat(seat, prompt, max_tokens):
+        prompts.append((seat["name"], prompt))
+        if seat["name"] == "D":
+            return None, "HTTP 404"
+        if "YOUR FIRST ANSWER" in prompt:
+            return "That misses the review cost. FINAL: NO", seat["model"]
+        return ("Yes. " if seat["name"] == "A" else "No. ") + "Because the source says so.", seat["model"]
+    monkeypatch.setattr(dbt, "_chat", fake_chat)
+    seats = [{"name": n, "lab": "L", "provider": "groq", "model": n.lower(), "short": n} for n in "ABCD"]
+    q = {"question": "Will it?", "grounding": "x" * 300, "title": "T", "url": "u", "source": "s"}
+    t = dbt.run_debate(q, seats)
+    assert [s["name"] for s in t["seats"]] == ["A", "B", "C"]
+    assert t["seats"][0]["stance"] == "YES" and t["seats"][0]["final"] == "NO"
+    r2 = [p for n, p in prompts if n == "A" and "YOUR FIRST ANSWER" in p][0]
+    assert "- B (L):" in r2 and "- C (L):" in r2 and "- A (L):" not in r2
+    assert dbt.run_debate(q, seats[2:]) is None      # 1 of 2 answer -> no debate today
+
+
+def test_quote_gate_catches_words_no_model_said():
+    t = _dbt_transcript()
+    ok = {"debate": t, "scenes": [
+        {"narration": 'Gemini put it bluntly: "Agents already draft code that juniors used to write".'},
+        {"narration": 'GPT-OSS pushed back: “Someone still has to review every change”.'},
+        {"narration": 'The question was simple: "Will AI agents replace junior developers?"'},
+        {"narration": 'Qwen called it "a slowdown" and moved on.'}]}      # 2 words: not a quote claim
+    assert dbt.fabricated_quotes(ok) == []
+    bad = {"debate": t, "scenes": [
+        {"narration": 'Qwen said "juniors are finished within two years" and meant it.'}]}
+    assert dbt.fabricated_quotes(bad) == ["juniors are finished within two years"]
+    assert dbt.fabricated_quotes({"scenes": bad["scenes"]}) == []          # not a debate script
+
+
+def test_debate_transcript_is_popped_and_carried():
+    raw = {"title": "T", "description": "d", "scenes": [{"narration": f"s{i}", "visual_query": "q"}
+                                                         for i in range(6)],
+           "debate": {"question": "planted", "seats": []}}
+    s = ap._validate_script(raw, "T")
+    assert "debate" not in s                        # a planted transcript never survives validation
+    assert "debate" in ap._CARRY
+    real = {"debate": _dbt_transcript()}
+    assert ap._carry_over(real, s)["debate"]["question"].startswith("Will AI agents")
+
+
+def test_decide_format_debate_day(monkeypatch):
+    import datetime as dt
+    wed, thu = dt.date(2026, 9, 30), dt.date(2026, 10, 1)
+    flags = {"tool_format": True, "debate_format": True}
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: flags.get(name, default))
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 9.0, "a", "h"))
+    monkeypatch.setattr(ap.debate, "panel", lambda: [{}] * 3)
+    assert ap.decide_format(None, [_sig("tool")], today=wed)[0] == "debate"
+    assert ap.decide_format(None, [_sig("tool")], today=thu)[0] == "tool"
+    monkeypatch.setattr(ap.debate, "panel", lambda: [{}] * 2)
+    assert ap.decide_format(None, [_sig("tool")], today=wed)[0] == "tool"       # 2 seats: no debate
+    monkeypatch.setattr(ap.debate, "panel", lambda: [{}] * 3)
+    monkeypatch.setattr(ap, "viral_pick", lambda r: (r[0], 10.0, "a", "h"))
+    assert ap.decide_format(None, [_sig("tool")], today=wed)[0] == "news"       # a 10/10 story wins
+    flags["debate_format"] = False
+    monkeypatch.setattr(ap, "viral_pick", lambda r: None)
+    assert ap.decide_format(None, [_sig("tool")], today=wed)[0] == "tool"
+    assert ap.decide_format("debate", [])[0] == "debate"                        # forced is honoured
+
+
+def test_build_script_debate_falls_back_to_the_utility_lane(monkeypatch):
+    calls, orig = [], ap.build_script
+    monkeypatch.setattr(ap, "build_script",
+                        lambda fmt, r, v=None: calls.append(fmt) or (orig(fmt, r, v) if fmt == "debate" else "LANE"))
+    monkeypatch.setattr(ap.debate, "pick_question", lambda c, f: None)
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    assert ap.build_script("debate", []) == "LANE" and calls == ["debate", "tool"]
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: False)
+    calls.clear()
+    assert ap.build_script("debate", []) == "LANE" and calls == ["debate", "evergreen"]
+
+
+def test_debate_panel_block_is_idempotent():
+    s = {"format": "debate", "title": "3 AIs Debated", "deliverable": None,
+         "description": "Three AIs, one question.\n\nWhat each said.", "debate": _dbt_transcript()}
+    ap.place_description_blocks(s)
+    ap.place_description_blocks(s)
+    assert s["description"].count(dbt.PANEL_MARK) == 1
+    assert s["description"].index(dbt.PANEL_MARK) < s["description"].index("What each said")
+    assert "GPT-OSS 120B (OpenAI)" in s["description"] and "not advice" in s["description"]
+
+
+def test_debate_cards_render(tmp_path):
+    from PIL import Image
+    t = _dbt_transcript()
+    t["seats"][2]["final"] = "UNCLEAR"
+    t["seats"][0]["r1"] = " ".join(["verylongargument"] * 60)
+    q = dbt.render_quote_card(t["seats"][0], t["date"], str(tmp_path / "q.png"))
+    b = dbt.render_scoreboard(t, str(tmp_path / "b.png"))
+    assert q and b
+    assert Image.open(q).size == (1280, 720) and Image.open(b).size == (1280, 720)
+
+
+def test_debate_wiring_secrets_config_and_keep_quotes():
+    root = Path(__file__).resolve().parents[1]
+    wf = (root / ".github/workflows/publish.yml").read_text(encoding="utf-8")
+    for sec in ("GROQ_API_KEY", "OPENROUTER_API_KEY"):
+        assert f"secrets.{sec}" in wf
+    assert "tool | debate" in wf
+    for name in ("config.json", "config.example.json"):
+        cfg = json.loads((root / name).read_text(encoding="utf-8"))
+        assert cfg["debate_format"] is True and len(cfg["debate_panel"]) == 5
+        assert all(r["provider"] in dbt.PROVIDERS or r["provider"] == "gemini" for r in cfg["debate_panel"])
+    src = (root / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
+    assert src.count("{_KEEP_QUOTES}") == 3 and "+ _KEEP_QUOTES +" in src   # 3 rewrite passes + advice

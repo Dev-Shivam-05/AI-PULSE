@@ -28,6 +28,14 @@
     "deliverable_base_url": "https://dev-shivam-05.github.io/AI-PULSE",
     "promo_block": "",
     "tool_format": true,
+    "debate_format": true,
+    "debate_panel": [
+        {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},
+        {"name": "GPT-OSS 120B", "lab": "OpenAI", "provider": "groq", "model": "openai/gpt-oss-120b"},
+        {"name": "Qwen 3.8", "lab": "Alibaba", "provider": "groq", "model": "qwen/qwen3.8-27b"},
+        {"name": "Nemotron 3 Super", "lab": "NVIDIA", "provider": "openrouter", "model": "nvidia/nemotron-3-super-120b-a12b:free"},
+        {"name": "Inkling", "lab": "Thinking Machines", "provider": "openrouter", "model": "thinkingmachines/inkling:free"}
+    ],
     "tagline": "AI YOU CAN USE",
     "elevenlabs_tts": false,
     "elevenlabs_voice_id": "",
