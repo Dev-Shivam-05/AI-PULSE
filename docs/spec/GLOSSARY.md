@@ -68,3 +68,20 @@
   secrets, its own `notified` list and its own `try` block: Telegram (F.2), X (F.3),
   Instagram and Facebook (F.4). Four now, and every new one repeats the same three files:
   a config flag, an entry in `state_merge.FILES`, and an entry in its workflow's stash list.
+- **ledger videos** - v3-D: the PUBLISHED long-forms in `state/runs.jsonl` since `2026-08-24`,
+  one per YouTube id (`learn.ledger_videos`). The nightly collector asks the Analytics API for
+  exactly these ids (`analytics.ledger_query_args`) and stores the answer in the snapshot as
+  `ledger_videos` + `ledger_headers`, because the older top-25 report is crowded out by Shorts.
+- **mature video** - v3-D: a ledger video at least 7 days past its `publish_at` date
+  (`learn.MATURE_DAYS`). Only mature videos count toward an arm's numbers.
+- **arm** - v3-D: one group the scoreboard reports on, keyed `format:<format>` or
+  `hook:<pattern>`. A video with a hook pattern sits in two arms.
+- **weighted AVD** - v3-D: `sum(averageViewDuration_s * views) / sum(views)` over an arm's
+  mature videos with views > 0, from the API's per-video seconds. Never
+  `estimatedMinutesWatched * 60 / views`, which is 0 s on a 2-view video.
+- **trusted arm** - v3-D: an arm with >= 5 mature videos AND >= 100 views. Only trusted arms
+  can drop a hook pattern.
+- **active hook patterns** - v3-D: the news hook rotation after the learning loop's drop rule
+  (`learn.active_hook_patterns`): a trusted pattern below 0.5x the best trusted one is dropped,
+  worst first, never below 3 active. Recomputed every run from the state files; any failure
+  returns all five.

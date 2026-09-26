@@ -54,6 +54,7 @@ from factverse import deliverable
 from factverse import site
 from factverse import scheduling
 from factverse import gates
+from factverse import learn
 from factverse import l2
 from factverse import shorts as shorts_mod
 from factverse.intelligence import signal_engine
@@ -1229,7 +1230,7 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         print("   ⚠️ No roundup script — falling back to evergreen.")
         return build_script("evergreen", ranked, viral_hint)
     if fmt == "news":
-        pattern = gates.pick_hook_pattern(_recent_hook_patterns())
+        pattern = gates.pick_hook_pattern(_recent_hook_patterns(), learn.active_hook_patterns())
         # hottest story first, then ranking order — stories only (see news_candidates)
         order = news_candidates(ranked)
         if not order:

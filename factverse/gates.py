@@ -327,13 +327,19 @@ HOOK_PATTERN_PROMPTS = {
 }
 
 
-def pick_hook_pattern(recent_patterns: list[str]) -> str:
-    """Rotate hook structures: never repeat within the recent window (O4)."""
-    recent = set(recent_patterns[-4:])
-    for p in HOOK_PATTERNS:
+def pick_hook_pattern(recent_patterns: list[str], active=None) -> str:
+    """Rotate hook structures: never repeat within the recent window (O4).
+    `active` is the learning loop's rotation (v3-D). The window is len(pool) - 1
+    so a shrunk pool still rotates — a fixed 4-wide window over 4 patterns would
+    exclude all of them and pin the fallback forever."""
+    pool = tuple(p for p in HOOK_PATTERNS if active is None or p in active) or HOOK_PATTERNS
+    window = len(pool) - 1
+    # [-0:] is the WHOLE list, not an empty one
+    recent = set(recent_patterns[-window:]) if window > 0 else set()
+    for p in pool:
         if p not in recent:
             return p
-    return HOOK_PATTERNS[0]
+    return pool[0]
 
 
 # --------------------------------------------------------------- confidence router
