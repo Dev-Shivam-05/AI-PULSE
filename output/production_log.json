@@ -3889,5 +3889,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-09-26T16:50:28.436638",
+    "title": "AI Agents Go Autonomous: The Unseen Risks",
+    "description": "What happens when AI agents become fully autonomous? Explore the spectrum of AI autonomy, from current 'agentic' capabilities to speculative futures. Discover the potential for unprecedented productivity and the inherent risks of uncontrolled self-direction. This deep dive breaks down the complex reality of AI agents gaining independence, moving beyond simple task execution to independent decision-making and action. We'll examine the implications for industries, economies, and our daily lives. Understand the control mechanisms, the ethical considerations, and the future possibilities as AI agents evolve. What are the true limits of their autonomy, and what safeguards are essential? This is your essential guide to the next frontier of artificial intelligence. #AI #ArtificialIntelligence #Automation #FutureTech #MachineLearning #AIagents #TechExplained #ToolDojo Subscribe to ToolDojo\n\nChapters:\n0:00 Active Goal Pursuit\n1:29 Productivity Gains Staggering\n3:14 Control Is Paramount\n4:14 Deeper Cognitive Abilities\n5:46 Autonomous AI Coming\n\n▶ Watch next: https://youtube.com/watch?v=jqSCmL5Qqzc",
+    "tags": [
+      "AI agents",
+      "autonomous AI",
+      "AI autonomy",
+      "artificial intelligence",
+      "future of AI",
+      "AI risks",
+      "AI productivity",
+      "AI control",
+      "AI explained",
+      "tech trends",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Agents_Go_Autonomous_The_Unseen_Risks_20260926_163927_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20260926_164220.mp4",
+      "output/shorts/short_2_20260926_164312.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20260926_164211.jpg",
+    "youtube_url": "https://youtube.com/watch?v=kFROco-tFho",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=cy34JO2H26E",
+      "https://youtube.com/watch?v=awOx5LUJE7I"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Autonomy DANGER! 🤖 #Shorts",
+        "description": "Unmasking the terrifying, hidden risks of self-driving AI agents. Prepare for the unexpected.",
+        "instagram_caption": "🤖 AI agents are going autonomous, but are we ready for the chaos? Discover the unseen dangers lurking behind this powerful technology. Follow @tooldojo!\n#AI #ArtificialIntelligence #AutonomousAI #AIrisks #FutureTech #TechTrends #Innovation #Cybersecurity #AIethics #MachineLearning #DeepLearning #AIdangers #TechExplained #ScaryTech #TechUpdate #Robotics #FutureOfAI #AIrevolution #TechNews #MustKnow"
+      },
+      {
+        "title": "SHOCKING AI Risks Revealed! 🤯 #Shorts",
+        "description": "The alarming truth about autonomous AI you WON'T believe. Are we prepared for this?",
+        "instagram_caption": "🤯 Autonomous AI is here, but the risks are shockingly real and often ignored. Are you aware of what could go wrong? Follow @tooldojo!\n#AI #ArtificialIntelligence #AutonomousAgents #TechRisks #FutureShock #AIexplained #TechInsights #InnovationDanger #AIdevelopment #MachineIntelligence #DigitalFuture #TechAwareness #AIGuardians #AIfrontier #CyberRisk #TechBreakdown #AIwatch #NextGenAI #TechWarnings #AIgovernance"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
