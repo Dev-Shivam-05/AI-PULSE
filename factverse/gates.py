@@ -315,6 +315,22 @@ def replication_test(script: dict, sources_text: str) -> dict:
             "distinct": str(d.get("distinct_elements", ""))[:200]}
 
 
+# --------------------------------------------------------------- honest titles (v3-G.3a)
+# The first eight are from this channel's own published Shorts titles (Studio,
+# 2026-09-26); the rest are find_best_moments' own "discounted hype" examples.
+HYPE_TERMS = ("mind-blowing", "mind blowing", "exposed", "meltdown", "unleashed", "unlock",
+              "secret", "secrets", "shocking", "insane", "game-changing", "game changer",
+              "won't believe", "breaks free", "jaw-dropping", "crazy", "nobody is talking",
+              "blow your mind")
+_HYPE_RE = [(t, re.compile(rf"(?<![\w-]){re.escape(t)}(?![\w-])", re.I)) for t in HYPE_TERMS]
+
+
+def hype_terms(title: str) -> list[str]:
+    """Hype terms a title contains — word-boundary matches, so 'secretary' is clean."""
+    t = str(title or "").replace("’", "'")
+    return [term for term, rx in _HYPE_RE if rx.search(t)]
+
+
 # --------------------------------------------------------------- hook rotation
 HOOK_PATTERNS = ("correction", "consequence", "filter", "number", "quiet")
 

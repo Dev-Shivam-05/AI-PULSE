@@ -4731,3 +4731,48 @@ def test_learn_reads_the_shorts_ab(tmp_path):
                    + "\n", encoding="utf-8")
     text = learn.scoreboard(runs, ana, _dtd.date(2026, 9, 26))
     assert "short:storyboard" in text and "A/B pairs: 3 · storyboard wins: 2" in text
+
+
+# --------------------------------------------------------------- v3-G.3a honest Shorts titles
+def test_hype_terms_catch_the_channels_own_titles():
+    from factverse import gates as gt
+    published = ["Unlock LLM Secrets: 1 Billion Power! #Shorts",
+                 "Mind-Blowing LLMs: Billions of Brains! #Shorts",
+                 "AI MELTDOWN! ChatGPT, Grok, Claude DOWN! #Shorts",
+                 "Meta Muse AI EXPOSED: what it really does",
+                 "AI Breaks Free! NO Investigation! #Shorts"]
+    for t in published:
+        assert gt.hype_terms(t), t
+    clean = ["Ollama runs Llama 3 offline in 2 commands #Shorts",
+             "GPT-4 was trained on 13 trillion tokens #Shorts",
+             "Why juniors still matter when agents write code #Shorts",
+             "The secretary problem, solved by an LLM #Shorts",       # 'secretary' is not 'secret'
+             "Unlocked phones and AI assistants #Shorts"]             # 'unlocked' is not 'unlock'
+    for t in clean:
+        assert gt.hype_terms(t) == [], t
+    assert gt.hype_terms("You won’t believe this") == ["won't believe"]  # curly apostrophe
+
+
+def test_hype_title_falls_back_to_the_shorts_own_hook(monkeypatch):
+    script = {"title": "LLMs: How Billion Parameters Understand You", "description": "d"}
+    meta = [{"title": "Unlock LLM Secrets: 1 Billion Power! #Shorts", "description": "a"},
+            {"title": "Mind-Blowing LLMs! #Shorts", "description": "b"},
+            {"title": "GPT-4 read 13 trillion tokens #Shorts", "description": "c"}]
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "honest_titles")
+    out = ap.normalize_shorts_meta([dict(m) for m in meta], 3, script,
+                                   hooks=["Your keyboard is a tiny AI", "", "unused"])
+    assert out[0]["title"] == "Your keyboard is a tiny AI #Shorts"
+    assert out[1]["title"] == "LLMs: How Billion Parameters Understand You Part 2 #Shorts"   # no hook
+    assert out[2]["title"] == meta[2]["title"]                                   # clean: untouched
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: False)
+    off = ap.normalize_shorts_meta([dict(m) for m in meta], 3, script, hooks=["h1", "h2", "h3"])
+    assert [m["title"] for m in off] == [m["title"] for m in meta]                # flag off: as before
+
+
+def test_shorts_meta_prompt_no_longer_asks_for_power_words():
+    root = Path(__file__).resolve().parents[1]
+    eng_src = (root / "scripts" / "factverse_engine.py").read_text(encoding="utf-8")
+    body = eng_src[eng_src.index("def step8_meta"):eng_src.index("def step8_meta") + 1400]
+    assert "power words" not in body and "No hype words" in body
+    for name in ("config.json", "config.example.json"):
+        assert json.loads((root / name).read_text(encoding="utf-8"))["honest_titles"] is True

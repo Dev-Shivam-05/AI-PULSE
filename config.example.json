@@ -29,6 +29,7 @@
     "promo_block": "",
     "tool_format": true,
     "storyboard_shorts": true,
+    "honest_titles": true,
     "debate_format": true,
     "debate_panel": [
         {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},

@@ -768,7 +768,10 @@ def step7_thumb(video_path, title, thumb_text=None):
 def step8_meta(script, n=3):
     print("\n[8/10] 📝 Generating metadata...")
     prompt = f"""Video: "{script['title']}"
-Create metadata for {n} YouTube Shorts. Each DIFFERENT title under 90 chars with #Shorts + power words.
+Create metadata for {n} YouTube Shorts. Each DIFFERENT title at most 70 chars INCLUDING " #Shorts":
+name the concrete thing the clip shows (the model, tool, company or number). No hype words
+(no "mind-blowing", "exposed", "meltdown", "unlock", "secrets", "shocking", "insane"), no
+all-caps words, never a claim the clip does not make.
 Each Instagram caption: hook emoji + 2 sentences + "Follow @{HANDLE}!" + 20 hashtags.
 Return ONLY JSON:
 {{"shorts_meta":[{{"title":"...#Shorts","description":"...","instagram_caption":"..."}}]}}"""

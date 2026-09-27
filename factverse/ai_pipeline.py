@@ -1462,17 +1462,26 @@ def _save_asset_record(script, fc, syn, rep, conf, l2_rec) -> None:
         print(f"   ⚠️ asset store save failed: {e}")
 
 
-def normalize_shorts_meta(meta, n: int, script: dict) -> list[dict]:
+def normalize_shorts_meta(meta, n: int, script: dict, hooks: list | None = None) -> list[dict]:
     """step8_meta returns the model's `shorts_meta` unvalidated — it comes back
     short, with an empty title, or as a list of strings. Each of those used to
     raise inside the publish block, AFTER the long-form was already on YouTube
     and BEFORE anything wrote a PUBLISHED row, so the retry cron published a
-    second video for the same day. Give every Short a real title instead."""
+    second video for the same day. Give every Short a real title instead.
+    v3-G.3a: a title carrying hype is replaced by the Short's own fact-checked
+    hook (the prompt asked for "power words" until 2026-09-26)."""
     out = [m if isinstance(m, dict) else {} for m in (meta or [])][:n]
     out += [{} for _ in range(n - len(out))]
+    honest = fv.flag("honest_titles", False)
     for i, m in enumerate(out):
-        if not str(m.get("title", "")).strip():
-            m["title"] = f"{str(script.get('title', ''))[:70]} Part {i + 1} #Shorts"
+        title = str(m.get("title", "")).strip()
+        hype = gates.hype_terms(title) if honest else []
+        if not title or hype:
+            hook = str((hooks or [])[i]).strip() if hooks and i < len(hooks) and hooks[i] else ""
+            m["title"] = (f"{hook} #Shorts" if hook
+                          else f"{str(script.get('title', ''))[:70]} Part {i + 1} #Shorts")
+            if hype:
+                print(f"  ✂️ Shorts title had hype ({', '.join(hype)}) — using its hook: {m['title']!r}")
         if not str(m.get("description", "")).strip():
             m["description"] = str(script.get("description", ""))[:400]
     return out
@@ -1809,7 +1818,8 @@ def run(publish: bool = False, force_format: str | None = None,
             script["description"] = script["description"].rstrip() + "\n\n" + chapters
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
-    meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script)
+    meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script,
+                                 hooks=list(shorts_mod.last_hooks))
     # Trip the re-hook tripwire HERE, while nothing is uploaded and aborting is
     # still free. It used to run after the long-form was already on YouTube.
     if shorts:

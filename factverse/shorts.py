@@ -130,6 +130,7 @@ def ensure_vertical_bumpers():
 # loop lands back on the hook.
 MAX_SHORT = 35
 HOOK_MARGIN = 60          # keep the hook clear of the vertical frame's edges
+last_hooks: list[str] = []   # v3-G.3a: set by make_shorts, read by ai_pipeline.normalize_shorts_meta
 HOOK_SIZES = (64, 50)     # the two sizes the overlay has always used
 
 
@@ -270,6 +271,9 @@ def make_shorts(content_video, script, words, scene_starts=None,
     brand = fv.CHANNEL_NAME
     fonts_dir = _ensure_font()
     out_shorts = []
+    # v3-G.3a: each output Short's fact-checked hook, in output order — the honest
+    # fallback title when the metadata model reaches for hype
+    last_hooks.clear()
     # v3-G.1 row 2: one Short a day is drawn from its own narration (the A/B arm)
     engine_idx = (sb.engine_index(today or date.today())
                   if fv.flag("storyboard_shorts", False) else None)
@@ -362,6 +366,7 @@ def make_shorts(content_video, script, words, scene_starts=None,
         if done:
             print(f"    ✅ {final.name}")
             out_shorts.append(str(final))
+            last_hooks.append(hook)
         else:
             print(f"    ⚠️ Short {idx+1} failed (see logs/shorts_error.log)")
 
