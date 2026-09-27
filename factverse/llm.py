@@ -99,6 +99,13 @@ def generate(
     return None
 
 
+def generate_exact(prompt: str, model: str, *, temperature: float = 0.7,
+                   max_tokens: int = 1024, retries: int = 2) -> str | None:
+    """ONE named model, no fallback chain — for callers that must say which model
+    answered (a debate seat's name is on screen; generate() may silently switch)."""
+    return _gemini_once(prompt, model, temperature, max_tokens, retries)
+
+
 def generate_json(prompt: str, **kw):
     """Generate and parse the first JSON object/array found in the response."""
     return _strip_json(generate(prompt, **kw))

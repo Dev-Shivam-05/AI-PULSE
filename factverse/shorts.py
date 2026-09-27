@@ -13,7 +13,7 @@ import os
 import shutil
 import subprocess
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -21,6 +21,7 @@ from PIL import Image, ImageDraw
 from factverse import config as fv
 from factverse import captions as cap
 from factverse import branding as br
+from factverse import storyboard as sb
 
 sys.path.insert(0, str(fv.BASE / "scripts"))
 import factverse_engine as eng  # noqa: E402
@@ -129,6 +130,7 @@ def ensure_vertical_bumpers():
 # loop lands back on the hook.
 MAX_SHORT = 35
 HOOK_MARGIN = 60          # keep the hook clear of the vertical frame's edges
+last_hooks: list[str] = []   # v3-G.3a: set by make_shorts, read by ai_pipeline.normalize_shorts_meta
 HOOK_SIZES = (64, 50)     # the two sizes the overlay has always used
 
 
@@ -214,8 +216,49 @@ def normalize_moments(raw, num_scenes: int) -> list:
     return out
 
 
+def storyboard_mux_args(vis: str, content_video: str, start: float, length: float,
+                        overlays: str, out: str) -> list[str]:
+    """v3-G.1: the storyboard picture + the SAME audio slice and overlays as the
+    control arm (hook, watermark, CTA) — only the picture differs between arms."""
+    return [fv.FFMPEG or "ffmpeg", "-y", "-i", str(vis), "-ss", str(start), "-i", str(content_video),
+            "-t", str(length), "-map", "0:v:0", "-map", "1:a:0", "-vf", f"setsar=1,{overlays}",
+            "-c:v", "libx264", "-preset", "fast", "-crf", "22",
+            "-c:a", "aac", "-b:a", "128k", str(out)]
+
+
+def _storyboard_raw(content_video, start, length, words, source_domain, overlays,
+                    fonts_dir, tag, idx) -> str | None:
+    """Plan + render + mux one storyboard Short; None (with the reason logged) on
+    ANY failure, so the caller runs today's crop path instead (spec row 12)."""
+    reason = "unknown"
+    try:
+        sub = [(max(0.0, s - start), max(0.0, e - start), w) for (s, e, w) in words
+               if start <= s < start + length]
+        board = sb.plan(sub, length, source_domain) if sub else None
+        if not sub:
+            reason = "no narration words in the window"
+        elif not board:
+            reason = "no usable storyboard"
+        else:
+            vis = sb.render(board, str(fv.TEMP / f"sb_vis{tag}_{idx}.mp4"), sub)
+            if not vis:
+                reason = "render failed"
+            else:
+                raw = fv.TEMP / f"sh_sbraw{tag}_{idx}.mp4"
+                r = subprocess.run(storyboard_mux_args(vis, content_video, start, length, overlays, str(raw)),
+                                   cwd=str(fonts_dir), capture_output=True, text=True, timeout=600)
+                if r.returncode == 0 and raw.exists() and raw.stat().st_size > 10000:
+                    return str(raw)
+                reason = "mux failed"
+    except Exception as e:  # noqa: BLE001 — the control path must still run
+        reason = type(e).__name__
+    print(f"  ↻ storyboard short fell back: {reason}")
+    return None
+
+
 def make_shorts(content_video, script, words, scene_starts=None,
-                cta_text="Full video on the channel", max_count=3, tag=""):
+                cta_text="Full video on the channel", max_count=3, tag="",
+                source_domain="", today=None):
     vdur = eng.dur(content_video)
     num_sc = len(script.get("scenes", []))
     if vdur <= 0 or num_sc <= 0:
@@ -228,6 +271,12 @@ def make_shorts(content_video, script, words, scene_starts=None,
     brand = fv.CHANNEL_NAME
     fonts_dir = _ensure_font()
     out_shorts = []
+    # v3-G.3a: each output Short's fact-checked hook, in output order — the honest
+    # fallback title when the metadata model reaches for hype
+    last_hooks.clear()
+    # v3-G.1 row 2: one Short a day is drawn from its own narration (the A/B arm)
+    engine_idx = (sb.engine_index(today or date.today())
+                  if fv.flag("storyboard_shorts", False) else None)
     print(f"\n[6/10] 📱 Creating {max_count} vertical Shorts (9:16, loop-cut, no bumpers)...")
 
     for idx, m in enumerate(moments[:max_count]):
@@ -260,20 +309,25 @@ def make_shorts(content_video, script, words, scene_starts=None,
             for i, l in enumerate(hlines))
 
         cta = _esc(cta_text)
-        raw = fv.TEMP / f"sh_raw{tag}_{idx}.mp4"
-        vf = (
-            f"crop=ih*9/16:ih:(iw-ih*9/16)/2:0,scale={VW}:{VH},setsar=1,"
+        overlays = (
             f"{hook_draws}"
             f"drawtext=fontfile=short.ttf:text='{brand}':fontsize=42:fontcolor=white:borderw=2:bordercolor=black:x=44:y=54,"
             f"drawtext=fontfile=short.ttf:text='{cta}':fontsize=46:fontcolor=yellow:borderw=2:bordercolor=black:"
             f"x=(w-text_w)/2:y=h*0.82:enable='gt(t,{length-5})'"
         )
-        # -ss BEFORE -i (input seeking): timestamps reset to 0, so the drawtext
-        # enable= windows (hook first 3.5s, CTA last 6s) land where intended.
-        rc = subprocess.run([_ff(), "-y", "-ss", str(start), "-i", str(content_video), "-t", str(length),
-                             "-vf", vf, "-c:v", "libx264", "-preset", "fast", "-crf", "22",
-                             "-c:a", "aac", "-b:a", "128k", str(raw)],
-                            cwd=str(fonts_dir), capture_output=True, text=True, timeout=600)
+        raw = fv.TEMP / f"sh_raw{tag}_{idx}.mp4"
+        sb_raw = (_storyboard_raw(content_video, start, length, words, source_domain, overlays,
+                                  fonts_dir, tag, idx) if idx == engine_idx else None)
+        if sb_raw:
+            raw = Path(sb_raw)
+        else:
+            vf = f"crop=ih*9/16:ih:(iw-ih*9/16)/2:0,scale={VW}:{VH},setsar=1,{overlays}"
+            # -ss BEFORE -i (input seeking): timestamps reset to 0, so the drawtext
+            # enable= windows (hook first 3.5s, CTA last 6s) land where intended.
+            rc = subprocess.run([_ff(), "-y", "-ss", str(start), "-i", str(content_video), "-t", str(length),
+                                 "-vf", vf, "-c:v", "libx264", "-preset", "fast", "-crf", "22",
+                                 "-c:a", "aac", "-b:a", "128k", str(raw)],
+                                cwd=str(fonts_dir), capture_output=True, text=True, timeout=600)
         if not raw.exists() or raw.stat().st_size < 10000:
             try:
                 (fv.LOGS / "shorts_error.log").write_text((rc.stderr or "")[-2000:], encoding="utf-8")
@@ -284,7 +338,8 @@ def make_shorts(content_video, script, words, scene_starts=None,
 
         # 9:16-sized live captions for just this window — this IS the final short
         # (content from frame one; the loop lands straight back on the hook)
-        final = fv.SHORTS / f"short{tag}_{idx+1}_{ts}.mp4"
+        # "_sb_" is how run() labels the A/B arm in the ledger (spec derived detail)
+        final = fv.SHORTS / f"short{tag}_{idx+1}{'_sb' if sb_raw else ''}_{ts}.mp4"
         done = False
         sub = [(max(0.0, s - start), max(0.0, e - start), w) for (s, e, w) in words if start <= s < start + length]
         if sub:
@@ -311,6 +366,7 @@ def make_shorts(content_video, script, words, scene_starts=None,
         if done:
             print(f"    ✅ {final.name}")
             out_shorts.append(str(final))
+            last_hooks.append(hook)
         else:
             print(f"    ⚠️ Short {idx+1} failed (see logs/shorts_error.log)")
 

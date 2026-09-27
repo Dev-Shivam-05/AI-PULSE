@@ -33,10 +33,13 @@
 - **MAX_WORDS** — 900. The anti-padding cap enforced by `enforce_max_length` (cut, never pad).
 - **word floor** — 600–620 sanity floor (`MIN_WORDS`), NOT a target. The old 850–1000 floors are
   banned; they were the root cause of the 0:38 average view duration.
-- **utility lane** — decide_format's default when no story scores ≥ 8/10: tool if a tool signal
-  exists (and flag on), else evergreen.
+- **utility lane** — decide_format's default when no story scores 10/10 (`VIRAL_THRESHOLD`,
+  v3-B.1; it was 8, which the judge's max-of-8 score cleared every weekday): tool if a tool
+  signal exists (and flag on), else evergreen.
 - **blocked-day fallback** — a FACTCHECK/ADVICE/POLICY block on an automatic run re-runs the day
-  as forced evergreen. Forced runs (`force_format` set) still fail honestly with no fallback.
+  as `tool` when `tool_format` is on (else evergreen); a blocked fallback drops to evergreen,
+  one level only (`ai_pipeline._fallback_format`, v3-B.1). Owner-forced runs (`force_format`
+  from a dispatch or the CLI) still fail honestly with no fallback.
 - **notified state** - `state/notified.json`, the list of YouTube URLs already announced on
   Telegram. Written only after a successful send; in `state_merge.FILES` and both workflows'
   stash lists, so `checkout -B main origin/main` cannot make the bot repeat itself.
@@ -85,3 +88,20 @@
   (`learn.active_hook_patterns`): a trusted pattern below 0.5x the best trusted one is dropped,
   worst first, never below 3 active. Recomputed every run from the state files; any failure
   returns all five.
+- **storyboard** - v3-G.1: the per-Short plan the model writes from the Short's exact narration:
+  3-8 beats `{cue, template, slots}`, validated and gated by `factverse/storyboard.py`, rendered
+  by `assets/storyboard/storyboard.html`. It draws the narration's own example; it never decorates.
+- **beat** - one screen of a storyboard: one template, starting on its cue word and lasting until
+  the next beat's cue. Beat changes are hard cuts; elements animate in on their own cue words.
+- **cue** - a 1-3 word phrase copied from the narration marking where a beat or an element
+  appears; matched monotonically against the window's word timings.
+- **storyboard templates** - `statement`, `number`, `compare`, `steps`, `chat`, `bars`,
+  `headline` (limits in `docs/spec/ai-pulse-v3g1.md` row 4).
+- **visual grounding gate** - v3-G.1 row 5: every on-screen number is spoken in its beat, and every
+  text element shares a 4+-letter non-stop-word with the beat's narration; a failing beat becomes
+  a `statement` of its first 6 narration words. The hook overlay is exempt (already fact-checked).
+- **engine (Shorts)** - `storyboard` or `crop`: which path drew a Short's picture. Storyboard files
+  carry `_sb_` in their name; the PUBLISHED row's `shorts` field records `{url, engine}`.
+- **A/B pair** - one ledger row with one mature Short of each engine (2 days past `publish_at`,
+  views > 0); the storyboard Short wins when its % viewed is higher. Verdict after 10 pairs:
+  >= 8 wins -> build v3-G.2; <= 5 -> stop and rethink; 6-7 -> 10 more pairs.

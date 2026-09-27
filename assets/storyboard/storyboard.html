@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>storyboard</title>
+<!-- v3-G.1 (docs/spec/ai-pulse-v3g1.md). Rendered by factverse/storyboard.py in headless
+     Chromium, one frame per __seek(t). Model text is only ever set with textContent — never
+     parsed as markup — and the page loads no external script and no network URL; the fonts
+     load from assets/fonts. -->
+<style>
+@font-face { font-family: "Inter"; font-weight: 900; src: url("../fonts/Inter-Black.ttf"); }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Regular.ttf"); }
+:root {
+  --bg: #090D18; --text: #F4F7FF; --subt: #96AACD; --cyan: #22D3EE; --blue: #3B82F6;
+  --violet: #8B5CF6; --yellow: #FFD60A; --card-top: #0D1426; --card-bot: #182E5C;
+}
+html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; background: var(--bg);
+  overflow: hidden; }
+body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
+#stage { position: absolute; left: 120px; top: 300px; width: 840px; height: 850px; }
+.beat { position: absolute; left: 0; top: 0; width: 840px; height: 850px; visibility: hidden;
+  display: flex; flex-direction: column; justify-content: center; gap: 60px; }
+.beat.center { align-items: center; text-align: center; }
+.el { max-width: 840px; overflow-wrap: normal; word-break: normal; }
+.w { border-radius: 16px; padding: 0 0.08em; }
+.card { background: linear-gradient(var(--card-top), var(--card-bot)); border-radius: 16px;
+  padding: 28px; display: flex; flex-direction: column; gap: 26px; }
+.cols { display: flex; gap: 60px; }
+.cols .card { flex: 1; min-width: 0; }
+.list { display: flex; flex-direction: column; gap: 26px; }
+.tag { font-family: "JetBrains Mono", monospace; font-weight: 400; font-size: 46px;
+  line-height: 72px; color: var(--subt); }
+.bubble { border-radius: 16px; padding: 28px; }
+.bubble.user { align-self: flex-end; background: var(--blue); }
+.bubble.ai { align-self: flex-start; background: linear-gradient(var(--card-top), var(--card-bot)); }
+.chat { display: flex; flex-direction: column; gap: 26px; }
+.chat .tag.user { align-self: flex-end; }
+.chip { align-self: flex-start; font-family: "JetBrains Mono", monospace; font-weight: 400;
+  color: var(--cyan); background: var(--card-bot); border-radius: 999px; padding: 0 28px; }
+.barrow { display: flex; flex-direction: column; gap: 26px; }
+.track { display: flex; align-items: center; gap: 26px; }
+.barwrap { flex: 1; min-width: 0; }
+.bar { height: 46px; background: var(--cyan); border-radius: 999px; width: 0; }
+.val { font-family: "JetBrains Mono", monospace; font-weight: 400; font-size: 46px;
+  line-height: 72px; color: var(--yellow); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+(function () {
+  "use strict";
+  var AREA_H = 850, FLOOR = 44, STEP = 4;
+  var ENTER = 0.32, HL = 0.24, COUNT = 0.70, BAR = 0.70, CPS = 32, RISE = 28;
+  var START = { line: 130, value: 307, label: 67, ltitle: 68, litem: 68, rtitle: 68, ritem: 68,
+                step: 68, user: 64, ai: 64, bar: 68, chip: 46 };
+  var COLOR = { ltitle: "var(--cyan)", rtitle: "var(--violet)", value: "var(--yellow)",
+                chip: "var(--cyan)" };
+  var board = null, beats = [];
+
+  // cubic-bezier(0.16, 1, 0.3, 1) — the approved entrance curve
+  function bezier(p1x, p1y, p2x, p2y) {
+    function a(a1, a2) { return 1 - 3 * a2 + 3 * a1; }
+    function b(a1, a2) { return 3 * a2 - 6 * a1; }
+    function c(a1) { return 3 * a1; }
+    function at(t, a1, a2) { return ((a(a1, a2) * t + b(a1, a2)) * t + c(a1)) * t; }
+    function slope(t, a1, a2) { return 3 * a(a1, a2) * t * t + 2 * b(a1, a2) * t + c(a1); }
+    return function (x) {
+      if (x <= 0) return 0; if (x >= 1) return 1;
+      var t = x;
+      for (var i = 0; i < 8; i++) {
+        var s = slope(t, p1x, p2x); if (s === 0) break;
+        t -= (at(t, p1x, p2x) - x) / s;
+      }
+      return at(Math.min(1, Math.max(0, t)), p1y, p2y);
+    };
+  }
+  var enterEase = bezier(0.16, 1, 0.3, 1);
+  function cubicOut(q) { return 1 - Math.pow(1 - q, 3); }   // the stat card's count-up curve
+  function clamp(x) { return Math.max(0, Math.min(1, x)); }
+
+  function mk(tag, cls, parent) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function textEl(e, parent) {
+    var d = mk("div", "el", parent);
+    // a counted value is ONE span: the count-up rewrites the whole string each frame
+    var words = e.role === "value" ? [String(e.text)] : String(e.text).split(/\s+/).filter(Boolean);
+    if (e.role === "value") d.style.whiteSpace = "nowrap";   // one line; the fit loop shrinks it
+    d._words = [];
+    words.forEach(function (w, i) {
+      if (i) d.appendChild(document.createTextNode(" "));
+      var s = mk("span", "w", d);
+      s.textContent = w;
+      d._words.push(s);
+    });
+    d._e = e;
+    if (COLOR[e.role]) d.style.color = COLOR[e.role];
+    setSize(d, START[e.role] || 68);
+    var target = null;
+    if (e.accent) {
+      for (var i = 0; i < words.length; i++) if (words[i] === e.accent) { target = d._words[i]; break; }
+    }
+    d._hlTarget = target || d._words[d._words.length - 1];
+    return d;
+  }
+  function setSize(d, px) { d._size = px; d.style.fontSize = px + "px"; d.style.lineHeight = (px + 26) + "px"; }
+
+  function build(b) {
+    var root = mk("div", "beat", document.getElementById("stage"));
+    root._b = b; root._els = [];
+    var els = b.els, t = b.template;
+    function add(e, parent) { var d = textEl(e, parent); root._els.push(d); return d; }
+    if (t === "statement" || t === "number") {
+      root.classList.add("center");
+      els.forEach(function (e) { add(e, root); });
+    } else if (t === "compare") {
+      var cols = mk("div", "cols", root), cards = { l: mk("div", "card", cols), r: mk("div", "card", cols) };
+      els.forEach(function (e) { add(e, cards[e.role.charAt(0)]); });
+    } else if (t === "steps") {
+      var list = mk("div", "list", root);
+      els.forEach(function (e) { add(e, mk("div", "card", list)); });
+    } else if (t === "chat") {
+      var chat = mk("div", "chat", root);
+      els.forEach(function (e) {
+        var tag = mk("div", "tag " + e.role, chat);
+        tag.textContent = e.role === "user" ? "You" : "AI";
+        if (e.role === "ai") tag.style.color = "var(--cyan)";
+        var d = add(e, mk("div", "bubble " + e.role, chat));
+        d._tag = tag;
+      });
+    } else if (t === "bars") {
+      var max = Math.max.apply(null, els.map(function (e) { return Math.abs(e.num) || 0; })) || 1;
+      els.forEach(function (e) {
+        var row = mk("div", "barrow", root);
+        var d = add(e, row);
+        var track = mk("div", "track", row), wrap = mk("div", "barwrap", track);
+        d._bar = mk("div", "bar", wrap);
+        d._frac = Math.abs(e.num) / max;
+        d._val = mk("div", "val", track);
+        d._val.textContent = e.value;
+        d._row = row;
+      });
+    } else if (t === "headline") {
+      els.forEach(function (e) {
+        var d = add(e, root);
+        if (e.role === "chip") { d.classList.add("chip"); d.style.fontFamily = '"JetBrains Mono", monospace'; }
+      });
+    }
+    return root;
+  }
+
+  // row 10: shrink 4 px at a time, never below 44; say which beats still do not fit
+  function fits(root) {
+    var ok = root.scrollHeight <= AREA_H + 1;
+    root._els.forEach(function (d) { if (d.scrollWidth > d.clientWidth + 1) ok = false; });
+    return ok;
+  }
+  function fit(root) {
+    root._els.forEach(function (d) {
+      while (d.scrollWidth > d.clientWidth + 1 && d._size - STEP >= FLOOR) setSize(d, d._size - STEP);
+    });
+    var guard = 0;
+    while (!fits(root) && guard++ < 200) {
+      var shrunk = false;
+      root._els.forEach(function (d) {
+        if (d._size - STEP >= FLOOR) { setSize(d, d._size - STEP); shrunk = true; }
+      });
+      if (!shrunk) break;
+    }
+    return fits(root);
+  }
+
+  window.__load = function (b) {
+    board = b;
+    var stage = document.getElementById("stage");
+    while (stage.firstChild) stage.removeChild(stage.firstChild);
+    beats = board.beats.map(build);
+    var unfit = [];
+    beats.forEach(function (root, i) { if (!fit(root)) unfit.push(i); });
+    window.__seek(0);
+    return unfit;
+  };
+
+  function latest(times, t) {
+    var best = null;
+    (times || []).forEach(function (h) { if (h <= t && (best === null || h > best)) best = h; });
+    return best;
+  }
+  function countText(e, q) {
+    if (q >= 1) return e.text;                     // the spoken string, exactly
+    var m = String(e.text).match(/^([^\d-]*)(-?\d[\d,]*\.?\d*)(.*)$/);
+    if (!m) return e.text;
+    var raw = m[2], val = parseFloat(raw.replace(/,/g, "")), cur = val * cubicOut(q);
+    var dec = raw.indexOf(".") >= 0 ? raw.split(".")[1].length : 0;
+    var s = cur.toFixed(dec);
+    if (raw.indexOf(",") >= 0) s = Number(s).toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    return m[1] + s + m[3];
+  }
+
+  function apply(root, t) {
+    var b = root._b, active = null;
+    root._els.forEach(function (d) {
+      var e = d._e;
+      if (e.role === "step" && t >= e.t) active = d;
+    });
+    root._els.forEach(function (d) {
+      var e = d._e, p = clamp((t - e.t) / ENTER), k = enterEase(p);
+      // a card/bubble enters WITH its first element — never an empty box on screen
+      var par = d.parentNode;
+      var boxed = par && par.classList && (par.classList.contains("card") || par.classList.contains("bubble"));
+      var host = boxed && par.firstChild === d ? par : d;
+      var node = e.role === "bar" ? d._row : host;
+      node.style.opacity = String(t >= e.t ? k : 0);
+      node.style.transform = "translateY(" + ((1 - (t >= e.t ? k : 0)) * RISE) + "px)";
+      if (d._tag) { d._tag.style.opacity = node.style.opacity; d._tag.style.transform = node.style.transform; }
+      if (e.role === "value") d._words[0].textContent = countText(e, clamp((t - e.t) / COUNT));
+      if (e.role === "bar") d._bar.style.width = (d._frac * 100 * cubicOut(clamp((t - e.t) / BAR))) + "%";
+      if (e.role === "step") d.style.color = d === active ? "var(--cyan)" : "var(--text)";
+      if (e.role === "user" || e.role === "ai") {
+        var n = Math.max(0, Math.floor((t - e.t) * CPS)), acc = 0;
+        d._words.forEach(function (w) {
+          acc += w.textContent.length + 1;
+          // opacity, NOT visibility: a child's visibility:visible overrides a hidden
+          // parent, which leaked typed words into every later beat
+          w.style.opacity = t >= e.t && n >= acc - 1 ? "1" : "0";
+        });
+      }
+      d._words.forEach(function (w) { w.style.backgroundImage = "none"; w.style.color = ""; });
+      var h = latest(e.hl, t);
+      if (h !== null && d._hlTarget) {
+        var q = clamp((t - h) / HL);
+        d._hlTarget.style.backgroundImage = "linear-gradient(var(--cyan), var(--cyan))";
+        d._hlTarget.style.backgroundRepeat = "no-repeat";
+        d._hlTarget.style.backgroundSize = (q * 100) + "% 100%";
+        d._hlTarget.style.color = q >= 0.5 ? "var(--bg)" : "";
+      }
+    });
+  }
+
+  window.__seek = function (t) {
+    if (!board) return;
+    var last = beats.length - 1;
+    beats.forEach(function (root, i) {
+      var b = root._b, on = t >= b.start && (t < b.end || i === last);
+      if (i === 0 && t < b.start) on = true;
+      root.style.visibility = on ? "visible" : "hidden";
+      root.style.display = on ? "flex" : "none";       // nothing of a hidden beat can paint
+      if (on) apply(root, t);
+    });
+  };
+  window.__timeline = function () { return board ? board.intervals : []; };
+
+  Promise.all([document.fonts.load('900 64px "Inter"'), document.fonts.load('46px "JetBrains Mono"')])
+    .then(function () { window.__ready = true; }, function () { window.__ready = true; });
+})();
+</script>
+</body>
+</html>
