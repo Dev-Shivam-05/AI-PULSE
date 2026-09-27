@@ -433,3 +433,13 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   `docs/spec/ai-pulse-v3g1.md`.
 - **Order: B.1 then G.1, each in its own session** (one phase per session). B.1 is small, and
   every day without it publishes another hype-news video under the ToolDojo name.
+
+## 2026-09-27 — built B.1, H, G.1, G.3a in one session (owner: "implement everything, do not stop")
+
+- **The owner's browser-automation idea was answered with official free APIs.** The goal was a
+  multi-AI debate; the lane now uses Gemini + Groq + OpenRouter free tiers. There is no login,
+  no account risk, and it runs in CI.
+- **The Shorts "power words" prompt was the root cause of the hype titles.** It has been replaced
+  and backed by a deterministic screen.
+- **A storyboard beat starts on its first element's word**, so the stage is never empty. This was
+  found by rendering.

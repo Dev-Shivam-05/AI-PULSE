@@ -135,6 +135,11 @@ name that is not written there. If a decision is missing, add a row and get one 
   report is crowded out by Shorts; 11 of the first 33 v3 long-forms never appeared in any
   snapshot. `analytics.ledger_query_args` asks for the ledger's own ids. And `json.loads`
   accepts `Infinity`: coerce with `math.isfinite` (`learn._num`) before any `int()`.
+- **In the storyboard page, hide with `opacity`/`display`, never child `visibility`.** A child's
+  `visibility: visible` overrides a hidden parent — typed chat words leaked into every later beat.
+  Tests passed; only rendered frames showed it. Render and LOOK after any template change.
+- **Free LLM routes move.** GitHub Models was retired 2026-07-30; Groq/OpenRouter free rosters
+  change monthly. `debate.panel()` skips a seat whose call fails — fix the config row, not code.
 - Tests never run ffmpeg, the LLM, or the network. Build command args in a pure function and
   assert on the args; stub module attributes as the consumer sees them (`ap.llm.generate_json`).
 
