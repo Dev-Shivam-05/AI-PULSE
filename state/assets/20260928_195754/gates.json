@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "OpenAI is just having a minor hiccup with some AI models",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "OpenAI's pause signals a critical inflection point where the pursuit of AI capability is now directly confronting the fundamental need for control and predictability, suggesting that future AI development will be as much about safety engineering as it is about raw power."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative flow and specific phrasing that goes beyond simply listing facts from the source. For example, 'Everyone's saying OpenAI is just having a minor hiccup...' and 'The cor"
+  },
+  "confidence": {
+    "score": 0.854,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
