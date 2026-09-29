@@ -1,0 +1,210 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.78,Live,,0,0,0,{\k12}If {\k10}you {\k28}use {\k28}AI
+Dialogue: 0,0:00:00.78,0:00:01.54,Live,,0,0,0,{\k28}to {\k20}help {\k16}with {\k12}your
+Dialogue: 0,0:00:01.54,0:00:02.74,Live,,0,0,0,{\k30}work {\k34}{\k18}prepare {\k26}for {\k12}a
+Dialogue: 0,0:00:02.74,0:00:03.26,Live,,0,0,0,{\k42}shift
+Dialogue: 0,0:00:03.88,0:00:05.82,Live,,0,0,0,{\k28}Open {\k54}AI {\k46}{\k8}the {\k58}powerhouse
+Dialogue: 0,0:00:05.82,0:00:07.96,Live,,0,0,0,{\k36}behind {\k34}Chat {\k86}GPT {\k34}{\k24}has
+Dialogue: 0,0:00:07.96,0:00:09.06,Live,,0,0,0,{\k22}just {\k42}launched {\k22}what {\k24}looks
+Dialogue: 0,0:00:09.06,0:00:09.78,Live,,0,0,0,{\k12}a {\k18}lot {\k22}like {\k20}its
+Dialogue: 0,0:00:09.78,0:00:11.58,Live,,0,0,0,{\k22}own {\k38}office {\k62}productivity {\k48}suite
+Dialogue: 0,0:00:11.88,0:00:13.46,Live,,0,0,0,{\k22}directly {\k78}challenging {\k24}a {\k34}major
+Dialogue: 0,0:00:13.46,0:00:15.08,Live,,0,0,0,{\k32}part {\k20}of {\k70}Microsoft's {\k30}business
+Dialogue: 0,0:00:15.34,0:00:16.46,Live,,0,0,0,{\k38}This {\k30}isn't {\k10}a {\k34}minor
+Dialogue: 0,0:00:16.46,0:00:18.38,Live,,0,0,0,{\k50}update {\k70}{\k12}At {\k16}their {\k44}recent
+Dialogue: 0,0:00:18.38,0:00:20.16,Live,,0,0,0,{\k34}Dev {\k24}Day {\k40}event {\k52}{\k28}Open
+Dialogue: 0,0:00:20.16,0:00:22.14,Live,,0,0,0,{\k42}AI {\k68}revealed {\k58}several {\k30}new
+Dialogue: 0,0:00:22.14,0:00:24.32,Live,,0,0,0,{\k32}Chat {\k80}GPT {\k50}features {\k56}aimed
+Dialogue: 0,0:00:24.32,0:00:25.90,Live,,0,0,0,{\k70}squarely {\k12}at {\k34}office {\k42}workers
+Dialogue: 0,0:00:25.90,0:00:27.56,Live,,0,0,0,{\k96}It's {\k6}a {\k28}clear {\k36}move
+Dialogue: 0,0:00:27.56,0:00:29.96,Live,,0,0,0,{\k34}into {\k66}territory {\k58}long {\k82}dominated
+Dialogue: 0,0:00:29.96,0:00:31.64,Live,,0,0,0,{\k26}by {\k48}giants {\k36}like {\k58}Microsoft
+Dialogue: 0,0:00:31.64,0:00:33.16,Live,,0,0,0,{\k42}and {\k36}Google {\k34}{\k22}The {\k18}most
+Dialogue: 0,0:00:33.16,0:00:34.64,Live,,0,0,0,{\k56}significant {\k48}announcement {\k32}is {\k12}a
+Dialogue: 0,0:00:34.64,0:00:36.50,Live,,0,0,0,{\k26}feature {\k34}called {\k46}Space {\k60}{\k20}Think
+Dialogue: 0,0:00:36.50,0:00:37.02,Live,,0,0,0,{\k12}of {\k12}it {\k20}as {\k8}a
+Dialogue: 0,0:00:37.02,0:00:38.66,Live,,0,0,0,{\k36}shared {\k50}workspace {\k40}within {\k38}Chat
+Dialogue: 0,0:00:38.66,0:00:39.90,Live,,0,0,0,{\k70}GPT {\k44}itself
+Dialogue: 0,0:00:40.52,0:00:42.34,Live,,0,0,0,{\k28}Here {\k48}{\k30}coworkers {\k36}can {\k40}collaborate
+Dialogue: 0,0:00:42.34,0:00:43.40,Live,,0,0,0,{\k40}not {\k26}just {\k20}with {\k20}each
+Dialogue: 0,0:00:43.40,0:00:44.84,Live,,0,0,0,{\k22}other {\k40}{\k10}but {\k44}also {\k28}with
+Dialogue: 0,0:00:44.84,0:00:46.90,Live,,0,0,0,{\k24}AI {\k56}agents {\k42}{\k40}These {\k44}AI
+Dialogue: 0,0:00:46.90,0:00:48.62,Live,,0,0,0,{\k58}agents {\k22}are {\k34}called {\k48}Dots
+Dialogue: 0,0:00:48.88,0:00:49.78,Live,,0,0,0,{\k20}and {\k12}they {\k12}can {\k46}actually
+Dialogue: 0,0:00:49.78,0:00:51.20,Live,,0,0,0,{\k50}perform {\k42}tasks {\k36}on {\k14}your
+Dialogue: 0,0:00:51.20,0:00:51.68,Live,,0,0,0,{\k38}behalf
+Dialogue: 0,0:00:52.30,0:00:53.98,Live,,0,0,0,{\k40}Sam {\k48}Altman {\k44}described {\k36}these
+Dialogue: 0,0:00:53.98,0:00:55.52,Live,,0,0,0,{\k50}Spaces {\k24}as {\k34}feeling {\k46}alive
+Dialogue: 0,0:00:55.52,0:00:57.34,Live,,0,0,0,{\k66}with {\k48}pages {\k28}and {\k40}files
+Dialogue: 0,0:00:57.34,0:00:59.26,Live,,0,0,0,{\k44}all {\k32}living {\k54}together {\k36}{\k26}much
+Dialogue: 0,0:00:59.26,0:01:00.86,Live,,0,0,0,{\k22}like {\k12}a {\k40}cloud {\k76}drive
+Dialogue: 0,0:01:01.16,0:01:02.92,Live,,0,0,0,{\k40}Imagine {\k84}instructing {\k10}a {\k42}page
+Dialogue: 0,0:01:02.92,0:01:04.08,Live,,0,0,0,{\k32}to {\k34}monitor {\k24}a {\k26}team
+Dialogue: 0,0:01:04.08,0:01:05.80,Live,,0,0,0,{\k44}channel {\k52}and {\k14}then {\k62}automatically
+Dialogue: 0,0:01:05.80,0:01:07.18,Live,,0,0,0,{\k56}update {\k36}itself {\k26}with {\k20}new
+Dialogue: 0,0:01:07.18,0:01:09.06,Live,,0,0,0,{\k58}information {\k62}{\k44}That's {\k10}the {\k14}kind
+Dialogue: 0,0:01:09.06,0:01:10.74,Live,,0,0,0,{\k16}of {\k48}collaborative {\k24}{\k32}dynamic {\k48}open
+Dialogue: 0,0:01:10.74,0:01:12.70,Live,,0,0,0,{\k34}AI {\k58}is {\k32}building {\k50}{\k22}Then
+Dialogue: 0,0:01:12.70,0:01:13.66,Live,,0,0,0,{\k24}there {\k12}are {\k50}Pages
+Dialogue: 0,0:01:14.26,0:01:15.74,Live,,0,0,0,{\k30}Open {\k48}AI {\k48}calls {\k22}it
+Dialogue: 0,0:01:15.74,0:01:16.48,Live,,0,0,0,{\k8}a {\k20}new {\k28}type {\k18}of
+Dialogue: 0,0:01:16.48,0:01:18.14,Live,,0,0,0,{\k58}document {\k40}{\k22}built {\k22}for {\k24}both
+Dialogue: 0,0:01:18.14,0:01:20.06,Live,,0,0,0,{\k46}humans {\k42}and {\k48}AI {\k56}agents
+Dialogue: 0,0:01:20.06,0:01:22.18,Live,,0,0,0,{\k32}working {\k56}together {\k90}This {\k34}appears
+Dialogue: 0,0:01:22.18,0:01:23.12,Live,,0,0,0,{\k22}to {\k14}be {\k20}their {\k38}direct
+Dialogue: 0,0:01:23.12,0:01:24.80,Live,,0,0,0,{\k52}answer {\k24}to {\k24}word {\k68}processors
+Dialogue: 0,0:01:24.80,0:01:26.70,Live,,0,0,0,{\k42}like {\k66}Microsoft {\k56}Word {\k26}and
+Dialogue: 0,0:01:26.70,0:01:28.62,Live,,0,0,0,{\k30}Google {\k96}Docs {\k16}With {\k40}Pages
+Dialogue: 0,0:01:28.96,0:01:30.42,Live,,0,0,0,{\k24}users {\k28}can {\k26}write {\k38}{\k30}conduct
+Dialogue: 0,0:01:30.42,0:01:32.92,Live,,0,0,0,{\k48}research {\k60}{\k24}generate {\k40}charts {\k58}{\k20}create
+Dialogue: 0,0:01:32.92,0:01:35.20,Live,,0,0,0,{\k50}images {\k34}{\k10}or {\k46}visualize {\k78}information
+Dialogue: 0,0:01:35.60,0:01:36.70,Live,,0,0,0,{\k28}all {\k26}within {\k24}this {\k32}AI
+Dialogue: 0,0:01:36.70,0:01:39.02,Live,,0,0,0,{\k58}enhanced {\k44}document {\k60}environment {\k52}{\k18}And
+Dialogue: 0,0:01:39.02,0:01:39.98,Live,,0,0,0,{\k12}for {\k74}presentations
+Dialogue: 0,0:01:40.64,0:01:42.48,Live,,0,0,0,{\k40}Open {\k46}AI {\k46}has {\k52}introduced
+Dialogue: 0,0:01:42.48,0:01:45.04,Live,,0,0,0,{\k78}collaborative {\k62}slides {\k48}{\k26}The {\k42}idea
+Dialogue: 0,0:01:45.04,0:01:46.10,Live,,0,0,0,{\k32}is {\k16}you {\k16}can {\k42}simply
+Dialogue: 0,0:01:46.10,0:01:47.20,Live,,0,0,0,{\k32}talk {\k34}about {\k24}what {\k20}you
+Dialogue: 0,0:01:47.20,0:01:48.16,Live,,0,0,0,{\k30}want {\k22}in {\k6}a {\k38}presentation
+Dialogue: 0,0:01:48.16,0:01:50.78,Live,,0,0,0,{\k66}within {\k40}chat {\k100}GPT {\k40}{\k16}and
+Dialogue: 0,0:01:50.78,0:01:51.82,Live,,0,0,0,{\k10}it {\k14}will {\k56}generate {\k24}the
+Dialogue: 0,0:01:51.82,0:01:54.02,Live,,0,0,0,{\k66}slides {\k24}{\k42}Multiple {\k56}people {\k32}and
+Dialogue: 0,0:01:54.02,0:01:55.58,Live,,0,0,0,{\k30}AI {\k66}agents {\k40}can {\k20}then
+Dialogue: 0,0:01:55.58,0:01:56.46,Live,,0,0,0,{\k20}work {\k18}on {\k16}these {\k34}slides
+Dialogue: 0,0:01:56.46,0:01:58.58,Live,,0,0,0,{\k52}together {\k48}{\k16}leaving {\k50}comments {\k46}and
+Dialogue: 0,0:01:58.58,0:02:00.26,Live,,0,0,0,{\k28}making {\k34}edits {\k60}{\k40}It's {\k6}a
+Dialogue: 0,0:02:00.26,0:02:01.74,Live,,0,0,0,{\k46}streamlined {\k66}approach {\k24}to {\k12}a
+Dialogue: 0,0:02:01.74,0:02:03.24,Live,,0,0,0,{\k32}task {\k32}that {\k34}often {\k52}involves
+Dialogue: 0,0:02:03.24,0:02:04.80,Live,,0,0,0,{\k44}multiple {\k40}steps {\k28}and {\k34}tools
+Dialogue: 0,0:02:05.26,0:02:06.12,Live,,0,0,0,{\k10}But {\k30}here's {\k10}the {\k36}critical
+Dialogue: 0,0:02:06.12,0:02:07.60,Live,,0,0,0,{\k38}point {\k62}{\k12}Why {\k14}does {\k22}this
+Dialogue: 0,0:02:07.60,0:02:09.58,Live,,0,0,0,{\k30}matter {\k56}{\k10}For {\k44}years {\k34}{\k24}Microsoft
+Dialogue: 0,0:02:09.58,0:02:11.02,Live,,0,0,0,{\k50}has {\k20}built {\k28}its {\k46}empire
+Dialogue: 0,0:02:11.02,0:02:12.86,Live,,0,0,0,{\k34}on {\k38}workplace {\k76}software {\k36}like
+Dialogue: 0,0:02:12.86,0:02:15.10,Live,,0,0,0,{\k34}Word {\k56}{\k30}Excel {\k46}{\k6}and {\k42}PowerPoint
+Dialogue: 0,0:02:15.86,0:02:17.44,Live,,0,0,0,{\k40}Open {\k44}AI {\k54}is {\k20}now
+Dialogue: 0,0:02:17.44,0:02:19.32,Live,,0,0,0,{\k52}offering {\k20}a {\k52}direct {\k64}AI
+Dialogue: 0,0:02:19.32,0:02:21.62,Live,,0,0,0,{\k58}native {\k64}alternative {\k50}{\k24}This {\k34}isn't
+Dialogue: 0,0:02:21.62,0:02:22.50,Live,,0,0,0,{\k18}just {\k26}about {\k28}having {\k16}a
+Dialogue: 0,0:02:22.50,0:02:23.64,Live,,0,0,0,{\k44}chatbot {\k26}that {\k18}can {\k26}write
+Dialogue: 0,0:02:23.64,0:02:24.26,Live,,0,0,0,{\k52}emails
+Dialogue: 0,0:02:24.86,0:02:26.26,Live,,0,0,0,{\k16}It's {\k16}about {\k60}integrating {\k48}AI
+Dialogue: 0,0:02:26.26,0:02:27.50,Live,,0,0,0,{\k42}into {\k12}the {\k26}very {\k44}fabric
+Dialogue: 0,0:02:27.50,0:02:28.66,Live,,0,0,0,{\k20}of {\k16}how {\k38}teams {\k42}create
+Dialogue: 0,0:02:28.66,0:02:31.10,Live,,0,0,0,{\k56}documents {\k60}{\k26}analyze {\k50}data {\k24}{\k28}and
+Dialogue: 0,0:02:31.10,0:02:31.92,Live,,0,0,0,{\k28}present {\k44}ideas
+Dialogue: 0,0:02:32.60,0:02:33.88,Live,,0,0,0,{\k12}The {\k44}potential {\k24}for {\k48}efficiency
+Dialogue: 0,0:02:33.88,0:02:36.04,Live,,0,0,0,{\k38}gains {\k40}is {\k46}massive {\k52}{\k40}Consider
+Dialogue: 0,0:02:36.04,0:02:37.62,Live,,0,0,0,{\k22}the {\k62}implications {\k30}for {\k44}project
+Dialogue: 0,0:02:37.62,0:02:39.60,Live,,0,0,0,{\k66}management {\k52}{\k26}A {\k30}Space {\k24}could
+Dialogue: 0,0:02:39.60,0:02:40.86,Live,,0,0,0,{\k52}potentially {\k40}act {\k24}as {\k10}a
+Dialogue: 0,0:02:40.86,0:02:43.14,Live,,0,0,0,{\k40}central {\k42}hub {\k76}managing {\k60}tasks
+Dialogue: 0,0:02:43.62,0:02:46.02,Live,,0,0,0,{\k40}documents {\k32}{\k1}and {\k76}communications {\k56}{\k36}all
+Dialogue: 0,0:02:46.02,0:02:47.74,Live,,0,0,0,{\k54}powered {\k30}by {\k36}AI {\k52}that
+Dialogue: 0,0:02:47.74,0:02:50.00,Live,,0,0,0,{\k60}understands {\k84}context {\k34}{\k24}This {\k24}move
+Dialogue: 0,0:02:50.00,0:02:51.38,Live,,0,0,0,{\k48}forces {\k22}a {\k18}re {\k50}evaluation
+Dialogue: 0,0:02:51.38,0:02:53.64,Live,,0,0,0,{\k34}of {\k42}traditional {\k54}software {\k48}{\k48}Instead
+Dialogue: 0,0:02:53.64,0:02:54.86,Live,,0,0,0,{\k16}of {\k28}buying {\k42}separate {\k36}tools
+Dialogue: 0,0:02:54.86,0:02:56.80,Live,,0,0,0,{\k28}for {\k34}writing {\k52}{\k40}presenting {\k36}{\k4}and
+Dialogue: 0,0:02:56.80,0:02:57.48,Live,,0,0,0,{\k58}collaborating
+Dialogue: 0,0:02:58.10,0:02:59.26,Live,,0,0,0,{\k20}users {\k36}might {\k28}soon {\k32}find
+Dialogue: 0,0:02:59.26,0:03:01.06,Live,,0,0,0,{\k32}one {\k46}AI {\k72}environment {\k30}that
+Dialogue: 0,0:03:01.06,0:03:02.30,Live,,0,0,0,{\k16}does {\k14}it {\k26}all {\k32}{\k36}perhaps
+Dialogue: 0,0:03:02.30,0:03:04.64,Live,,0,0,0,{\k36}more {\k66}intuitively {\k56}{\k18}While {\k58}Microsoft
+Dialogue: 0,0:03:04.64,0:03:05.98,Live,,0,0,0,{\k42}and {\k30}others {\k32}are {\k30}busy
+Dialogue: 0,0:03:05.98,0:03:07.74,Live,,0,0,0,{\k46}adding {\k44}AI {\k54}features {\k32}to
+Dialogue: 0,0:03:07.74,0:03:09.94,Live,,0,0,0,{\k18}their {\k40}existing {\k68}software {\k94}open
+Dialogue: 0,0:03:09.94,0:03:11.76,Live,,0,0,0,{\k52}AI {\k50}is {\k38}building {\k42}AI
+Dialogue: 0,0:03:11.76,0:03:14.18,Live,,0,0,0,{\k62}into {\k16}the {\k70}foundation {\k46}{\k48}This
+Dialogue: 0,0:03:14.18,0:03:15.16,Live,,0,0,0,{\k20}could {\k18}be {\k10}a {\k50}significant
+Dialogue: 0,0:03:15.16,0:03:17.30,Live,,0,0,0,{\k66}advantage {\k40}in {\k34}user {\k74}experience
+Dialogue: 0,0:03:17.30,0:03:19.24,Live,,0,0,0,{\k28}and {\k68}capabilities {\k58}{\k20}The {\k20}core
+Dialogue: 0,0:03:19.24,0:03:20.32,Live,,0,0,0,{\k36}promise {\k32}here {\k24}is {\k16}that
+Dialogue: 0,0:03:20.32,0:03:21.78,Live,,0,0,0,{\k28}these {\k32}AI {\k42}powered {\k44}tools
+Dialogue: 0,0:03:21.78,0:03:23.08,Live,,0,0,0,{\k36}will {\k20}feel {\k30}more {\k44}alive
+Dialogue: 0,0:03:23.08,0:03:25.02,Live,,0,0,0,{\k34}and {\k52}responsive {\k62}than {\k46}traditional
+Dialogue: 0,0:03:25.02,0:03:26.88,Live,,0,0,0,{\k48}software {\k48}{\k46}It's {\k16}about {\k28}making
+Dialogue: 0,0:03:26.88,0:03:28.84,Live,,0,0,0,{\k48}complex {\k52}tasks {\k70}simpler {\k26}by
+Dialogue: 0,0:03:28.84,0:03:31.06,Live,,0,0,0,{\k40}leveraging {\k74}advanced {\k40}AI {\k58}agents
+Dialogue: 0,0:03:31.38,0:03:32.26,Live,,0,0,0,{\k34}So {\k30}if {\k14}you're {\k10}a
+Dialogue: 0,0:03:32.26,0:03:33.74,Live,,0,0,0,{\k56}professional {\k24}who {\k34}relies {\k34}on
+Dialogue: 0,0:03:33.74,0:03:35.90,Live,,0,0,0,{\k38}office {\k66}software {\k50}{\k22}start {\k40}paying
+Dialogue: 0,0:03:35.90,0:03:37.68,Live,,0,0,0,{\k60}attention {\k84}The {\k18}way {\k16}we
+Dialogue: 0,0:03:37.68,0:03:39.54,Live,,0,0,0,{\k62}collaborate {\k28}and {\k32}create {\k64}documents
+Dialogue: 0,0:03:39.54,0:03:40.74,Live,,0,0,0,{\k26}is {\k30}likely {\k28}to {\k36}change
+Dialogue: 0,0:03:40.74,0:03:43.14,Live,,0,0,0,{\k80}dramatically {\k54}{\k28}driven {\k38}by {\k40}AI
+Dialogue: 0,0:03:43.14,0:03:45.50,Live,,0,0,0,{\k82}environments {\k34}like {\k42}these {\k54}{\k24}What
+Dialogue: 0,0:03:45.50,0:03:46.36,Live,,0,0,0,{\k24}feels {\k24}like {\k12}a {\k26}direct
+Dialogue: 0,0:03:46.36,0:03:48.16,Live,,0,0,0,{\k58}challenge {\k26}to {\k32}Microsoft {\k64}today
+Dialogue: 0,0:03:48.16,0:03:49.64,Live,,0,0,0,{\k56}could {\k30}become {\k18}the {\k44}standard
+Dialogue: 0,0:03:49.64,0:03:51.56,Live,,0,0,0,{\k24}for {\k38}workplace {\k76}productivity {\k44}tomorrow
+Dialogue: 0,0:03:52.14,0:03:53.10,Live,,0,0,0,{\k24}Will {\k14}your {\k28}current {\k30}tools
+Dialogue: 0,0:03:53.10,0:03:54.48,Live,,0,0,0,{\k32}keep {\k24}up {\k42}{\k24}This {\k16}is
+Dialogue: 0,0:03:54.48,0:03:55.38,Live,,0,0,0,{\k26}more {\k20}than {\k24}just {\k20}a
+Dialogue: 0,0:03:55.38,0:03:56.96,Live,,0,0,0,{\k20}new {\k34}feature {\k32}set {\k58}{\k14}it's
+Dialogue: 0,0:03:56.96,0:03:58.50,Live,,0,0,0,{\k6}a {\k40}potential {\k54}paradigm {\k54}shift
+Dialogue: 0,0:03:58.50,0:03:59.48,Live,,0,0,0,{\k22}in {\k18}how {\k30}work {\k28}gets
+Dialogue: 0,0:03:59.48,0:04:01.96,Live,,0,0,0,{\k36}done {\k56}{\k50}integrating {\k54}AI {\k52}deeply
+Dialogue: 0,0:04:01.96,0:04:03.86,Live,,0,0,0,{\k50}into {\k32}core {\k36}business {\k72}processes
+Dialogue: 0,0:04:03.86,0:04:06.34,Live,,0,0,0,{\k114}Subscribe {\k38}to {\k38}Tool {\k58}Dojo
+Dialogue: 0,0:04:06.34,0:04:07.44,Live,,0,0,0,{\k24}for {\k22}more {\k54}insights
+Dialogue: 0,0:04:33.86,0:04:35.66,Live,,0,0,0,{\k64}complete {\k30}with {\k56}citations {\k30}and
+Dialogue: 0,0:04:35.66,0:04:37.70,Live,,0,0,0,{\k94}visualizations {\k48}{\k16}ready {\k30}for {\k16}your
+Dialogue: 0,0:04:37.70,0:04:39.72,Live,,0,0,0,{\k40}review {\k40}and {\k52}refinement {\k34}{\k36}This
+Dialogue: 0,0:04:39.72,0:04:41.24,Live,,0,0,0,{\k32}isn't {\k16}just {\k32}about {\k62}convenience
+Dialogue: 0,0:04:41.76,0:04:42.76,Live,,0,0,0,{\k20}it's {\k18}about {\k14}a {\k48}fundamental
+Dialogue: 0,0:04:42.76,0:04:44.26,Live,,0,0,0,{\k60}change {\k34}in {\k46}workflow
+Dialogue: 0,0:04:44.90,0:04:47.00,Live,,0,0,0,{\k48}Traditional {\k64}software {\k60}often {\k38}requires
+Dialogue: 0,0:04:47.00,0:04:48.42,Live,,0,0,0,{\k62}users {\k24}to {\k10}be {\k46}experts
+Dialogue: 0,0:04:48.42,0:04:50.10,Live,,0,0,0,{\k36}in {\k46}multiple {\k76}applications
+Dialogue: 0,0:04:50.78,0:04:52.84,Live,,0,0,0,{\k40}Open {\k74}AI's {\k42}approach {\k50}suggests
+Dialogue: 0,0:04:52.84,0:04:54.44,Live,,0,0,0,{\k50}that {\k16}the {\k42}AI {\k52}itself
+Dialogue: 0,0:04:54.44,0:04:56.76,Live,,0,0,0,{\k44}becomes {\k30}the {\k46}expert {\k102}intermediary
+Dialogue: 0,0:04:57.14,0:04:58.84,Live,,0,0,0,{\k40}translating {\k56}user {\k44}intent {\k30}into
+Dialogue: 0,0:04:58.84,0:05:01.18,Live,,0,0,0,{\k50}complex {\k60}actions {\k44}across {\k80}various
+Dialogue: 0,0:05:01.18,0:05:03.36,Live,,0,0,0,{\k64}functions {\k54}This {\k20}could {\k80}significantly
+Dialogue: 0,0:05:03.36,0:05:04.46,Live,,0,0,0,{\k34}lower {\k22}the {\k30}barrier {\k24}to
+Dialogue: 0,0:05:04.46,0:05:06.56,Live,,0,0,0,{\k42}entry {\k28}for {\k58}sophisticated {\k82}document
+Dialogue: 0,0:05:06.56,0:05:08.86,Live,,0,0,0,{\k64}creation {\k66}and {\k32}data {\k58}analysis
+Dialogue: 0,0:05:09.26,0:05:10.92,Live,,0,0,0,{\k50}Consider {\k22}the {\k58}implications {\k36}for
+Dialogue: 0,0:05:10.92,0:05:13.06,Live,,0,0,0,{\k52}collaborative {\k98}brainstorming {\k40}{\k16}In {\k8}a
+Dialogue: 0,0:05:13.06,0:05:14.60,Live,,0,0,0,{\k42}traditional {\k42}setting {\k46}{\k6}you {\k18}might
+Dialogue: 0,0:05:14.60,0:05:15.90,Live,,0,0,0,{\k26}use {\k10}a {\k48}whiteboard {\k46}or
+Dialogue: 0,0:05:15.90,0:05:17.34,Live,,0,0,0,{\k16}a {\k20}shared {\k58}document {\k34}{\k16}With
+Dialogue: 0,0:05:17.34,0:05:18.48,Live,,0,0,0,{\k32}Spaces {\k46}{\k12}you {\k14}could {\k10}have
+Dialogue: 0,0:05:18.48,0:05:20.00,Live,,0,0,0,{\k14}an {\k28}AI {\k54}agent {\k56}actively
+Dialogue: 0,0:05:20.00,0:05:22.86,Live,,0,0,0,{\k86}participating {\k54}{\k34}suggesting {\k68}ideas {\k44}based
+Dialogue: 0,0:05:22.86,0:05:24.24,Live,,0,0,0,{\k14}on {\k36}vast {\k26}data {\k52}sets
+Dialogue: 0,0:05:24.60,0:05:26.36,Live,,0,0,0,{\k44}identifying {\k68}potential {\k40}flaws {\k24}in
+Dialogue: 0,0:05:26.36,0:05:28.42,Live,,0,0,0,{\k50}proposals {\k56}{\k22}or {\k38}even {\k40}drafting
+Dialogue: 0,0:05:28.42,0:05:30.16,Live,,0,0,0,{\k44}initial {\k60}responses {\k34}to {\k36}client
+Dialogue: 0,0:05:30.16,0:05:31.54,Live,,0,0,0,{\k44}inquiries {\k30}in {\k22}real {\k42}time
+Dialogue: 0,0:05:31.54,0:05:33.12,Live,,0,0,0,{\k72}all {\k26}within {\k14}a {\k36}shared
+Dialogue: 0,0:05:33.42,0:05:35.54,Live,,0,0,0,{\k32}dynamic {\k80}environment {\k36}{\k36}This {\k28}level
+Dialogue: 0,0:05:35.54,0:05:36.98,Live,,0,0,0,{\k18}of {\k54}integration {\k36}means {\k36}that
+Dialogue: 0,0:05:36.98,0:05:38.26,Live,,0,0,0,{\k22}the {\k34}AI {\k54}isn't {\k18}just
+Dialogue: 0,0:05:38.26,0:05:39.28,Live,,0,0,0,{\k20}a {\k34}tool {\k24}you {\k24}call
+Dialogue: 0,0:05:39.28,0:05:41.40,Live,,0,0,0,{\k54}upon {\k36}{\k30}it's {\k8}a {\k74}co-worker
+Dialogue: 0,0:05:41.86,0:05:43.10,Live,,0,0,0,{\k12}The {\k32}alive {\k42}feeling {\k38}Sam
+Dialogue: 0,0:05:43.10,0:05:45.12,Live,,0,0,0,{\k52}Altman {\k64}mentioned {\k52}likely {\k34}stems
+Dialogue: 0,0:05:45.12,0:05:47.12,Live,,0,0,0,{\k40}from {\k22}this {\k68}constant {\k70}context
+Dialogue: 0,0:05:47.12,0:05:49.28,Live,,0,0,0,{\k42}aware {\k74}interaction {\k40}{\k12}It {\k48}implies
+Dialogue: 0,0:05:49.28,0:05:50.88,Live,,0,0,0,{\k30}an {\k42}AI {\k44}that {\k44}remembers
+Dialogue: 0,0:05:50.88,0:05:53.96,Live,,0,0,0,{\k50}past {\k80}conversations {\k52}{\k62}understands {\k64}project
+Dialogue: 0,0:05:53.96,0:05:56.22,Live,,0,0,0,{\k44}goals {\k44}{\k22}and {\k58}proactively {\k58}offers
+Dialogue: 0,0:05:56.22,0:05:58.16,Live,,0,0,0,{\k76}assistance {\k74}much {\k26}like {\k18}a
+Dialogue: 0,0:05:58.16,0:06:00.14,Live,,0,0,0,{\k36}human {\k56}colleague {\k40}would {\k54}{\k12}but
+Dialogue: 0,0:06:00.14,0:06:01.16,Live,,0,0,0,{\k20}with {\k12}the {\k44}speed {\k26}and
+Dialogue: 0,0:06:01.16,0:06:02.74,Live,,0,0,0,{\k28}data {\k52}processing {\k56}power {\k22}of
+Dialogue: 0,0:06:02.74,0:06:03.28,Live,,0,0,0,{\k8}a {\k36}machine

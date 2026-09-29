@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Excel",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "By integrating core office suite functionalities directly into ChatGPT, OpenAI is blurring the lines between AI interaction and content creation, potentially shifting the paradigm from AI as a tool to AI as an environment for work."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces specific terminology like 'Dots' for AI agents and 'Pages' for a new type of document, and 'collaborative slides' for presentations. While the source text mentions 'AI agent per"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
