@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "According to OpenAI, it's not",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The disruption of this coordinated model distillation campaign highlights that the primary frontier for AI security is no longer just data privacy or direct model breaches, but the subtle manipulation of model interactions to reverse-engineer internal processes, demanding a shift towards understandi"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses a narrative structure ('N things happened. Only one matters. Here's how to tell.') and specific phrasing ('Imagine someone trying', 'This wasn't a traditional hack', 'Think of it as',"
+  },
+  "confidence": {
+    "score": 0.836,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.63,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
