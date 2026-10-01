@@ -21,7 +21,7 @@ from pathlib import Path
 
 from factverse import config as fv
 
-REC_W, REC_H = 1920, 1080     # record above delivery size; engine scales to 720p
+REC_W, REC_H = 1920, 1080     # the delivery canvas size (fv.VIDEO_W/H, v3-G.4)
 HEAD_TRIM = 2.5               # first seconds of every recording are page-load blank
 MIN_SEG = 4.0                 # a scene clip shorter than this reads as a glitch
 REC_MIN, REC_MAX = 60.0, 300.0

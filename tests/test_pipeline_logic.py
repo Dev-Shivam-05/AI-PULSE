@@ -4867,3 +4867,63 @@ def test_planted_verified_facts_cannot_license_a_number():
     real = dict(v, verified_facts={"stars": 21102})
     carried = ap._carry_over(real, ap._validate_script(dict(planted), "T", ""))
     assert carried["verified_facts"] == {"stars": 21102}
+
+
+# --------------------------------------------------------------- v3-G.4 1080p long-form
+from factverse import branding as _g4_br
+from factverse import l2 as _g4_l2
+
+
+class _G4Proc:
+    returncode = 1
+    stderr = ""
+
+
+def _g4_capture(monkeypatch, module):
+    seen = {}
+
+    def fake_run(cmd, **k):
+        seen["cmd"] = cmd
+        return _G4Proc()
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    return seen
+
+
+def test_g4_canvas_is_1080p_and_the_engine_reads_it():
+    assert (ap.fv.VIDEO_W, ap.fv.VIDEO_H) == (1920, 1080)
+    assert (ap.eng.WIDTH, ap.eng.HEIGHT) == (1920, 1080)
+
+
+def test_g4_bumper_and_l2_splices_scale_to_the_canvas(monkeypatch, tmp_path):
+    """Both splices concat their inputs at one size; a 1280:720 filter left behind
+    would downscale the whole 1080p long-form back to 720p at the last step."""
+    intro, outro = tmp_path / "i.mp4", tmp_path / "o.mp4"
+    intro.write_bytes(b"x")
+    outro.write_bytes(b"x")
+    monkeypatch.setattr(_g4_br, "ensure_assets", lambda: (intro, outro))
+    monkeypatch.setattr(_g4_br.fv, "LOGS", tmp_path)
+    seen = _g4_capture(monkeypatch, _g4_br)
+    _g4_br.add_intro_outro(str(tmp_path / "v.mp4"), split_at=5.0)
+    fc = seen["cmd"][seen["cmd"].index("-filter_complex") + 1]
+    assert "scale=1920:1080" in fc and "1280" not in fc
+
+    seen = _g4_capture(monkeypatch, _g4_l2)
+    assert _g4_l2.splice(str(tmp_path / "v.mp4"), str(tmp_path / "s.mp4"), 3.0) is None
+    fc = seen["cmd"][seen["cmd"].index("-filter_complex") + 1]
+    assert "scale=1920:1080" in fc and "1280" not in fc
+
+
+def test_g4_captions_keep_their_720_layout():
+    """libass scales PlayRes to the video: the layout space must stay 1280x720 or
+    every caption shrinks to two thirds of its locked size at 1080p."""
+    assert (captions.LAYOUT_W, captions.LAYOUT_H) == (1280, 720)
+    src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
+    assert "play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H" in src
+    assert "play_w=eng.WIDTH" not in src
+
+
+def test_g4_citation_chip_scales_with_the_canvas(tmp_path):
+    """drawtext is in video pixels: the 720p chip (26 / 10 / 28 / 34) times 1.5."""
+    vf = captions._citation_filters([(1.0, 7.0, "techcrunch.com")], tmp_path)
+    assert "fontsize=39:" in vf and "boxborderw=15:" in vf
+    assert "x=w-text_w-42:" in vf and "y=51:" in vf

@@ -1794,7 +1794,9 @@ def run(publish: bool = False, force_format: str | None = None,
                                     max_count=min(shorts_n, 4), source_domain=src_domain)
 
     print("  📝 Burning live word-by-word captions...")
-    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"), play_w=eng.WIDTH, play_h=eng.HEIGHT)
+    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
+    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
+                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
     # on-screen source chips during fact delivery (content timeline; frames carry
     # the overlay through the cold-open re-order untouched)
     cites = []

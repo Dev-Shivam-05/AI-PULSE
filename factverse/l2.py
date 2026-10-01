@@ -133,7 +133,7 @@ def splice(video: str, segment: str, at: float) -> str | None:
     injected. The video itself is never lost — inject() keeps the input path.
     """
     out = str(video).replace(".mp4", "_l2.mp4")
-    nv = "scale=1280:720,setsar=1,fps=30"
+    nv = f"scale={fv.VIDEO_W}:{fv.VIDEO_H},setsar=1,fps=30"
     # every audio branch is format-normalized — concat requires identical
     # sample rate + channel layout, and human recordings vary
     na = "aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo"
