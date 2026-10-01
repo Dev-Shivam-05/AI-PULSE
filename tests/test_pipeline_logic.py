@@ -4776,3 +4776,76 @@ def test_shorts_meta_prompt_no_longer_asks_for_power_words():
     assert "power words" not in body and "No hype words" in body
     for name in ("config.json", "config.example.json"):
         assert json.loads((root / name).read_text(encoding="utf-8"))["honest_titles"] is True
+
+
+# ---------------------------------------------------------------- v3-B.2: fact sources
+def test_fact_check_reads_the_facts_the_writer_was_handed(monkeypatch):
+    """v3-B.2: script_tool orders the writer to use VERIFIED FACTS verbatim, then run()
+    checked the title against the README alone. 4 of 4 tool scripts (09-27..09-30)
+    were FACTCHECK_BLOCKED on '21,102 stars on GitHub' / '4,478 likes' — numbers the
+    pipeline itself supplied. The checker must see the same lines the writer saw."""
+    from factverse import gates
+    readme = "ZCode is a coding workbench. Install: pip install zcode. " * 10
+    s = {"title": "ZCode: Run Your Own AI Coder (7,243 Stars)", "thumb_text": "7,243 STARS",
+         "grounding": readme,
+         "verified_facts": {"stars": 7243, "license": "Apache-2.0",
+                            "last_update": "2026-09-29", "open_issues": 11},
+         "scenes": [{"narration": "ZCode already has 7,243 stars on GitHub."}]}
+    src = gates.fact_sources(s)
+    assert src.startswith("VERIFIED FACTS"), "facts first, so the [:12000] cut never drops them"
+    assert "- stars: 7,243" in src and "- license: Apache-2.0" in src and readme in src
+
+    # a checker that supports the claim only if the SOURCE TEXT contains the number
+    claim = "ZCode already has 7,243 stars on GitHub"
+
+    def checker(p, **k):
+        if "SOURCE TEXT:" not in p:
+            return {"claims": [{"text": claim, "type": "number", "critical": True}]}
+        ok = "7,243" in p.split("SOURCE TEXT:", 1)[1]
+        return {"results": [{"claim": claim, "verdict": "supported" if ok else "unsupported"}]}
+    monkeypatch.setattr(gates.llm, "generate_json", checker)
+    assert gates.fact_check(s, [s["title"], s["thumb_text"]], src)["passed"]
+    before = gates.fact_check(s, [s["title"], s["thumb_text"]], s["grounding"])
+    assert not before["passed"], "sanity: the README alone reproduces the 09-30 block"
+
+    # the writer's block and the checker's block come from ONE renderer
+    prompts = []
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: "install: ```\npip install repo\n``` prose. " * 40)
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {"stars": 21102, "license": "MIT"})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: [])
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or None)
+    ap.script_tool({"title": "org/repo", "source": "gh", "url": "https://github.com/org/repo"})
+    assert gates.facts_lines({"stars": 21102, "license": "MIT"}) in prompts[0]
+
+    # run() hands fact_check fact_sources, not the bare grounding
+    body = Path(ap.__file__).read_text(encoding="utf-8")
+    call = body[body.index("fc = gates.fact_check("):][:200]
+    assert "gates.fact_sources(script)" in call
+
+
+def test_fact_sources_is_the_grounding_when_there_are_no_facts():
+    """Every non-tool lane (and a tool whose API fetch failed) must check exactly
+    what it checked before v3-B.2 — including evergreen's empty-grounding skip."""
+    from factverse import gates
+    assert gates.fact_sources({"grounding": "news page text"}) == "news page text"
+    assert gates.fact_sources({"grounding": "g", "verified_facts": {}}) == "g"
+    assert gates.fact_sources({"grounding": "", "verified_facts": None}) == ""
+    assert gates.fact_sources({"grounding": "g", "verified_facts": "stars: 9"}) == "g"
+    assert gates.fact_check({"scenes": []}, [], gates.fact_sources({"grounding": ""}))["passed"]
+
+
+def test_planted_verified_facts_cannot_license_a_number():
+    """v3-B.2: verified_facts is now support for fact_check (and already was for
+    packaging_payoff). A model that answers with its own "verified_facts" would
+    vouch for its own invented number, so _validate_script drops it on every pass
+    and _carry_over hands the real fetched value back."""
+    planted = {"title": "T 99,999 stars", "description": "hook.\n\nbody", "tags": [],
+               "verified_facts": {"stars": 99999},
+               "scenes": [{"narration": "w " * 40, "visual_query": "v"} for _ in range(6)]}
+    v = ap._validate_script(dict(planted), "T", "https://github.com/x/y")
+    assert "verified_facts" not in v
+
+    real = dict(v, verified_facts={"stars": 21102})
+    carried = ap._carry_over(real, ap._validate_script(dict(planted), "T", ""))
+    assert carried["verified_facts"] == {"stars": 21102}
