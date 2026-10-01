@@ -208,6 +208,17 @@ name that is not written there. If a decision is missing, add a row and get one 
   when `pick_evergreen_topic` returns no topic (09-29: tool blocked → news blocked → news
   published). Read the ledger `format`, not the log line that announced the fallback.
 
+- **Captions and drawtext live in different coordinate systems.** `build_ass` writes PlayRes
+  units, which libass scales to the real frame, so it stays at `captions.LAYOUT_W/H`
+  (1280×720) whatever the canvas is. `drawtext` (the citation chip) is in VIDEO pixels and must
+  scale with `fv.VIDEO_H`. Since v3-G.4 the long-form is 1920×1080, while every generated card
+  is still a 1280×720 layout that the engine scales up. A new overlay has to pick the right
+  system.
+- **Re-binding `fmt` to the script's own format changes what the fallback sees.** An
+  "evergreen" fallback that `build_script` turned into news looked like a fresh news block,
+  and the chain re-ran without limit (09-29: 3 attempts). `MAX_DAY_ATTEMPTS` (v3-B.3) bounds it
+  through `run(attempt=…)`. A new recursion into `run()` must pass `attempt`.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.

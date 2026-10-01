@@ -27,7 +27,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-B.3: bounded fallback chain** | found 2026-10-01 from the ledger: `build_script("evergreen")` falls through to news, `run()` re-binds `fmt`, so `_fallback_format` re-ran the "evergreen" fallback again — 09-29 and 09-30 went tool → news blocked → news published, bounded only by the 90-min CI kill. `MAX_DAY_ATTEMPTS = 3` (owner: "cap at 3"), counted through `run(attempt=…)` | ✅ built 2026-10-01 (259/259; the 09-29 chain shape pinned) | branch `v3-phase-b3` (stacked on B.2); spec: docs/spec/ai-pulse-v3b3.md |
 | v3-G.2: storyboard long-form | the same engine for long-form scenes (stock only as fallback) + zoomed/highlighted tool-UI callouts | ⏳ conditional | only if G.1's A/B says build |
 | v3-G.3: packaging | titles and hooks that sell the ToolDojo promise instead of the viral judge's "fear / outrage" rubric; impressions + CTR data (not in the Analytics API we use) | ⏳ queued | needs its own spec |
-| v3-G.4: production basics | 1080p long-form (today 1280×720 x264 ultrafast), a license-clean music bed (`assets/music` is empty and untracked, so CI mixes none), transitions | ⏳ queued | needs its own spec |
+| **v3-G.4: 1080p long-form** | delivery canvas 1920×1080 from one constant (`fv.VIDEO_W/H`), read by the engine and both splices; generated cards keep their locked 1280×720 layouts and are scaled; captions keep PlayRes 1280×720 (`captions.LAYOUT_W/H`, libass scales it); the citation chip's video-pixel values ×1.5. Encoder presets/CRFs and thumbnails unchanged | ✅ built 2026-10-01 (263/263; a 305 s long-form rendered at both sizes through the real path: 1080p takes 2.6× as long, 646.7 s vs 249.7 s locally; frames read: chip 20.7% of the width and caption 5.1% of the height at both sizes) | branch `v3-phase-g4` (stacked on B.3); spec: docs/spec/ai-pulse-v3g4.md; **watch the first CI run's duration** (90-min timeout) |
+| v3-G.4b: production basics, rest | a license-clean music bed (code exists: `step5_build` mixes any `.mp3` in `assets/music` at 0.07; the folder is empty, so CI mixes none) and transitions (no spec values; they interact with per-scene timing) | ⏳ queued | music = owner supplies tracks; transitions need a spec |
 
 ## Now (owner, in this order)
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
@@ -47,8 +48,9 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. ✅ *v3-D merged (#32), and B.1/H/G.1/G.3a merged (#33), both by 2026-09-27. Still to do:
-   read the analytics line below on main.* **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
+1. ✅ *v3-D merged (#32), and B.1/H/G.1/G.3a merged (#33), both by 2026-09-27. 2026-10-01: the
+   ledger query works live. Every `state/analytics.jsonl` snapshot on main since 09-29 carries
+   29-32 `ledger_videos`.* **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
    verified 2026-09-26: `origin/v3-phase-f` is an ancestor of `origin/main`. For v3-phase-d,
    `git merge-tree --write-tree origin/main origin/v3-phase-d` exits 0 and main had 0 commits
    the branch lacks on 2026-09-26 — re-run that read-only check before merging, because each
@@ -88,7 +90,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
    BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.
    If the page is stale after a run, `GITHUB_TOKEN` pushes did not trigger the Pages build and
    it needs the Actions-based deploy instead of branch-deploy (a small F.1b row).
-3. **`gates.UNSUITABLE_TOOL` has now been measured and fixed** (v3-C.4) — it was refusing
+3. ✅ *2026-10-01: owner said "keep refusing" voice-cloning TTS projects. Closed, no code change.*
+   **`gates.UNSUITABLE_TOOL` has now been measured and fixed** (v3-C.4) — it was refusing
    ComfyUI, unsloth, transformers, the official C2PA SDK/CLI, two deepfake detectors, two NSFW
    classifiers and NeMo-Guardrails, while the day's live provenance stripper passed its title
    screen. One editorial row is left for you: decision 6 makes `voice clon` match READMEs, so a
@@ -130,14 +133,17 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-1. **Merge `v3-phase-b2`** (PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-b2).
-   Without it, every tool day is blocked by the fact-checker on the tool's own star/like count.
-   B.1, H, G.1 and G.3a are already on main (#33, 2026-09-27).
-2. **Read the first tool rows after the merge** in `state/runs.jsonl` on main. Expect a
-   `PUBLISHED` `format=tool` row, or a block whose critical failures are not API facts (e.g. a
-   speed claim the README never makes, which is correct). Then do Now #2: `curl -I` the page
-   and the PDF.
+1. **Merge the stack in order: `v3-phase-b2` → `v3-phase-b3` → `v3-phase-g4`.** Each branch is
+   stacked on the one before it, so merging g4 alone brings all three. Without B.2, every tool
+   day is blocked by the fact-checker on the tool's own star or like count. B.1, H, G.1 and
+   G.3a are already on main (#33, 2026-09-27).
+   PRs: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-b2 (then b3, then g4).
+2. **Read the first run after the merge.** In `state/runs.jsonl` on main, expect a `PUBLISHED`
+   `format=tool` row, or a block whose critical failures are not API facts. Then do Now #2:
+   `curl -I` the page and the PDF. Also read that run's **duration** in the Actions tab: it is
+   the first 1080p render on the 4-vCPU runner (local ratio 2.6×; the job timeout is 90 min).
 3. **Read the A/B after 10 daily pairs** (the scoreboard prints `A/B pairs: N · storyboard wins:
-   W`). There are 3 storyboard Shorts so far (09-27, 09-28, 09-30); 09-29 shipped crop+crop.
-   ≥ 8 → spec v3-G.2; ≤ 5 → stop and rethink; 6-7 → 10 more. X (1.4), Meta (1.6) and the two
-   debate secrets are still owner clicks.
+   W`). On 2026-10-01 there was 1 mature pair, and storyboard lost it. Note that G.4 sharpens
+   the crop arm's source (607×1080 instead of 405×720) mid-experiment. ≥ 8 → spec v3-G.2;
+   ≤ 5 → stop and rethink; 6-7 → 10 more. X (1.4), Meta (1.6) and the two debate secrets are
+   still owner clicks.

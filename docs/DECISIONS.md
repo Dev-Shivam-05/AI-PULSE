@@ -474,3 +474,20 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 - **Why `pick_evergreen_topic` returned nothing on 3 days in a row is still unknown.** The CI
   logs answer 403. The used-topics list is full of "how LLMs think" and "agents go rogue"
   variants, so a 0.7 near-duplicate rejection of all 5 proposals is plausible but unproven.
+
+## 2026-10-01 — v3-G.4: 1080p long-form (owner: "Build 1080p now")
+
+- **Only the canvas changes.** `fv.VIDEO_W/H = 1920, 1080` is read by the engine and by the
+  bumper and L2 splices. Every generated card keeps its spec-locked 1280×720 layout and is
+  scaled, because re-laying them out would change locked numbers (the code card's 22 px) and
+  every measured-text surface. Native 1080 cards are a possible G.4b.
+- **Two coordinate systems.** ASS captions are in PlayRes units, which libass scales, so they
+  stay at 1280×720. The `drawtext` citation chip is in video pixels, so its values scale by 1.5.
+  Passing the canvas size to `build_ass`, which the old call did, would have shrunk every
+  caption to two thirds.
+- **Encoder settings are unchanged.** Measured locally, the render takes 2.6× as long. The first
+  CI run is the real number.
+- **Music and transitions were not built.** The music mix already exists and needs tracks from
+  the owner. Transitions have no spec values.
+- **Read from main's state on 2026-10-01:** evergreen's weighted AVD is 2:31 against news at 1:03.
+  Evergreen is not trusted yet: 44 views, below the 100 threshold.

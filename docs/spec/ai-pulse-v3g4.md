@@ -31,6 +31,30 @@ YouTube's 720p bitrate ladder, which is where the softness comes from.
   source becomes 607×1080 instead of 405×720. The control gets sharper partway through the
   experiment. The note goes in the scoreboard row's context, not in the code.
 
+## Measured 2026-10-01 (local, 20 threads, ffmpeg 8.1.2)
+
+The same input was put through the real `step5_build` → `burn_ass` (with 3 citation chips) →
+`add_intro_outro` path: 10 scenes over a 305 s voice track, with 1920×1080 `testsrc2` "stock"
+(high-entropy, so a worst case for the encoder), a stat card and a code card. Script:
+`scratchpad/g4_render.py` (not committed).
+
+| | 720p | 1080p | × |
+|--|--|--|--|
+| output | 1280×720, 312.2 s, 58.0 MB | 1920×1080, 312.2 s, 197.5 MB | 3.4 |
+| `step5_build` | 182.0 s | 304.6 s | 1.7 |
+| captions burn | 29.6 s | 169.3 s | 5.7 |
+| bumpers | 38.0 s | 172.7 s | 4.5 |
+| **total render** | **249.7 s** | **646.7 s** | **2.6** |
+
+Frames extracted from the 1080p file and inspected:
+
+- The citation chip covers 20.7% of the frame width at both sizes.
+- Caption cap height is about 5.1% of the frame height at both sizes.
+- The stat card, code card and outro bumper are scaled from 720, unclipped, and readable.
+
+The CI runner has 4 vCPUs, not 20, so the absolute numbers will be larger there. The first
+CI run is the real measurement, and the job's 90-minute timeout is the limit to watch.
+
 ## Done when
 
 1. `fv.VIDEO_W, fv.VIDEO_H == 1920, 1080`, and the engine, `branding.add_intro_outro` and
