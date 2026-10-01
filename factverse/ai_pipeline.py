@@ -333,7 +333,9 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # name planted in critique_pass's answer shipped a dead ".../tools/" link.
     # v3-H: "debate" (the transcript) is the pipeline's own too — a planted one
     # would put words in a model's mouth that the quote gate then trusts.
-    for planted in ("receipts", "cheat_sheet", "debate"):
+    # v3-B.2: "verified_facts" is support for fact_check and packaging_payoff — a
+    # planted one would license the model's own invented numbers past both.
+    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -626,8 +628,7 @@ def script_tool(item: dict) -> dict | None:
         facts_block = ("VERIFIED FACTS (fetched " + _dt.date.today().isoformat()
                        + " from the official API — use these numbers verbatim; they are the"
                        " ONLY numbers you may state about the tool itself):\n"
-                       + "\n".join((f"- {k}: {v:,}" if isinstance(v, int) else f"- {k}: {v}")
-                                    for k, v in facts.items()) + "\n\n")
+                       + gates.facts_lines(facts) + "\n\n")
     lim_rule = ('- ONE honest limitation scene (who should NOT bother; what it can not do '
                 'yet) — mark it "filter": true.')
     if issues:
@@ -1544,17 +1545,28 @@ def _fallback_format(fmt: str, force_format: str | None, fallback: bool,
     return "tool"
 
 
-def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool):
+# v3-B.3: build_script's evergreen -> news fall-through makes an evergreen fallback
+# look like news to _fallback_format, which re-runs it as evergreen again. On 09-29
+# and 09-30 that chain published on attempt 3; nothing but the 90-minute CI kill
+# bounded it, and a kill in the post-upload zone is the double-publish window.
+MAX_DAY_ATTEMPTS = 3
+
+
+def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool,
+               attempt: int = 1):
     nxt = _fallback_format(fmt, force_format, fallback, fv.flag("tool_format", False))
     if not nxt:
         return None
+    if attempt >= MAX_DAY_ATTEMPTS:
+        print(f"  🛑 {MAX_DAY_ATTEMPTS} attempts today — publishing nothing.")
+        return None
     what = "a tool video" if nxt == "tool" else "an evergreen explainer"
     print(f"  ↪️  Falling back to {what} — a blocked story must not cost the day.")
-    return run(publish=publish, force_format=nxt, fallback=True)
+    return run(publish=publish, force_format=nxt, fallback=True, attempt=attempt + 1)
 
 
 def run(publish: bool = False, force_format: str | None = None,
-        fallback: bool = False) -> dict | None:
+        fallback: bool = False, attempt: int = 1) -> dict | None:
     print("=" * 70)
     print(f"  {fv.CHANNEL_NAME} — content pipeline v2 (viral-first)")
     print("=" * 70)
@@ -1609,7 +1621,7 @@ def run(publish: bool = False, force_format: str | None = None,
         print(f"  🛑 POLICY GATE: {overlap:.0%} of the narration is verbatim from the source. Blocking.")
         record_run(status="POLICY_BLOCKED", format=fmt, title=script["title"], overlap=round(overlap, 3))
         mark_failed(script.get("signal_title", script["title"]))
-        return _fall_back(publish, fmt, force_format, fallback)
+        return _fall_back(publish, fmt, force_format, fallback, attempt)
 
     # Bucket-3 gate: reporting is allowed; ADVISING viewers on finance/health/legal/
     # politics is a hard fail. One rewrite attempt, then abort loudly.
@@ -1632,7 +1644,7 @@ def run(publish: bool = False, force_format: str | None = None,
             print("  🛑 Advice framing persists — publishing nothing is better. Aborting.")
             record_run(status="ADVICE_BLOCKED", format=fmt, title=script["title"])
             mark_failed(script.get("signal_title", script["title"]))
-            return _fall_back(publish, fmt, force_format, fallback)
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
 
     # v3-H #9: after every rewrite pass (critique, length, advice), a debate may
     # only quote what a model actually said. A reworded quote is a misattribution.
@@ -1642,19 +1654,19 @@ def run(publish: bool = False, force_format: str | None = None,
             print(f"  🛑 QUOTE GATE: words no model said, inside quotes: {bad[:2]}")
             record_run(status="QUOTE_BLOCKED", format=fmt, title=script["title"])
             mark_failed(script.get("signal_title", script["title"]))
-            return _fall_back(publish, fmt, force_format, fallback)
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
 
     # Accuracy gate: claim-level fact check against the bound sources. A hook/
     # thumbnail claim that cannot be traced to a source is a hard fail.
     fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
-                          script.get("grounding", ""))
+                          gates.fact_sources(script))
     if not fc.get("passed", True):
         print(f"  🛑 FACT-CHECK GATE: critical claim unsupported: "
               f"{[c['text'][:80] for c in fc['critical_failures']]}")
         record_run(status="FACTCHECK_BLOCKED", format=fmt, title=script["title"],
                    factcheck=fc)
         mark_failed(script.get("signal_title", script["title"]))
-        return _fall_back(publish, fmt, force_format, fallback)
+        return _fall_back(publish, fmt, force_format, fallback, attempt)
     if fc.get("soft_failures"):
         print(f"  ⚠️ {len(fc['soft_failures'])} soft claim(s) unsupported — confidence reduced.")
 
@@ -1782,7 +1794,9 @@ def run(publish: bool = False, force_format: str | None = None,
                                     max_count=min(shorts_n, 4), source_domain=src_domain)
 
     print("  📝 Burning live word-by-word captions...")
-    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"), play_w=eng.WIDTH, play_h=eng.HEIGHT)
+    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
+    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
+                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
     # on-screen source chips during fact delivery (content timeline; frames carry
     # the overlay through the cold-open re-order untouched)
     cites = []

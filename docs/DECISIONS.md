@@ -443,3 +443,51 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   and backed by a deterministic screen.
 - **A storyboard beat starts on its first element's word**, so the stage is never empty. This was
   found by rendering.
+
+## 2026-10-01 — v3-B.2: the fact-checker reads the tool's verified facts
+
+- **The checker reads exactly what the writer was ordered to use.** After #33 opened the tool lane,
+  4 of 4 tool scripts (09-27..09-30) were `FACTCHECK_BLOCKED`. Each was blocked on a star, like
+  or download count that `_verified_facts` fetched and the writer was told to use verbatim, while
+  `fact_check` read the README only.
+  - `gates.fact_sources` puts the facts first, so the `[:12000]` cut cannot drop them.
+  - `gates.facts_lines` is the one renderer for both the writer and the checker.
+  - Spec: `docs/spec/ai-pulse-v3b2.md`.
+- **`verified_facts` is now popped in `_validate_script`**, like `receipts`/`cheat_sheet`/
+  `debate`. Once it counts as fact-check support, a model-planted value would license its own
+  invented numbers. `packaging_payoff` already had that hole.
+- **Merge B.2 before any supervised `format=tool` dispatch (Now #4).** A dispatch without it
+  would have been blocked the same way.
+
+## 2026-10-01 — v3-B.3: the blocked-day fallback chain is capped at 3 attempts
+
+- **B.1's "one level only" was not enforced.** `build_script("evergreen")` falls through to news
+  when `pick_evergreen_topic` finds no topic, and `run()` re-binds `fmt` to that news, so
+  `_fallback_format` re-ran it as evergreen again. On 09-29 and 09-30 the chain was tool blocked,
+  then news blocked, then news published. Nothing but the 90-minute CI kill bounded it.
+- **The owner picked a cap, not the literal spec.** The literal reading ("a blocked evergreen
+  fallback publishes nothing") would have published nothing on 09-29 and 09-30. With
+  `MAX_DAY_ATTEMPTS = 3` (the longest chain observed), those days publish as they did, and the
+  unbounded tail is gone. Spec: `docs/spec/ai-pulse-v3b3.md`.
+- **Voice-cloning TTS projects stay refused** (PHASES Now #3, owner: "keep refusing"). No code
+  change.
+- **Why `pick_evergreen_topic` returned nothing on 3 days in a row is still unknown.** The CI
+  logs answer 403. The used-topics list is full of "how LLMs think" and "agents go rogue"
+  variants, so a 0.7 near-duplicate rejection of all 5 proposals is plausible but unproven.
+
+## 2026-10-01 — v3-G.4: 1080p long-form (owner: "Build 1080p now")
+
+- **Only the canvas changes.** `fv.VIDEO_W/H = 1920, 1080` is read by the engine and by the
+  bumper and L2 splices. Every generated card keeps its spec-locked 1280×720 layout and is
+  scaled, because re-laying them out would change locked numbers (the code card's 22 px) and
+  every measured-text surface. Native 1080 cards are a possible G.4b.
+- **Two coordinate systems.** ASS captions are in PlayRes units, which libass scales, so they
+  stay at 1280×720. The `drawtext` citation chip is in video pixels, so its values scale by 1.5.
+  Passing the canvas size to `build_ass`, which the old call did, would have shrunk every
+  caption to two thirds.
+- **Encoder settings are unchanged.** Measured locally, the render takes 2.6× as long. The first
+  CI run is the real number.
+- **Music and transitions were not built.** The music mix already exists and needs tracks from
+  the owner. Transitions have no spec values.
+- **Read from main's state on 2026-10-01:** evergreen's weighted AVD is 2:31 against news at 1:03.
+  Evergreen is not trusted yet: 44 views, below the 100 threshold.

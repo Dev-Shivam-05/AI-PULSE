@@ -4272,9 +4272,10 @@ def test_blocked_runs_recurse_tool_then_evergreen(monkeypatch):
     monkeypatch.setattr(ap, "run", lambda **k: calls.append(k) or {"ok": True})
     monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
     assert ap._fall_back(True, "news", None, False) == {"ok": True}
-    assert calls[-1] == {"publish": True, "force_format": "tool", "fallback": True}
-    ap._fall_back(True, "tool", "tool", True)
-    assert calls[-1] == {"publish": True, "force_format": "evergreen", "fallback": True}
+    assert calls[-1] == {"publish": True, "force_format": "tool", "fallback": True, "attempt": 2}
+    ap._fall_back(True, "tool", "tool", True, 2)
+    assert calls[-1] == {"publish": True, "force_format": "evergreen", "fallback": True,
+                         "attempt": 3}
     n = len(calls)
     # an owner-forced tool run that is blocked publishes nothing and recurses nowhere
     assert ap._fall_back(True, "tool", "tool", False) is None
@@ -4287,8 +4288,25 @@ def test_every_gate_uses_the_fallback_helper():
     inline condition would silently bypass the tool-first rule."""
     src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
     # policy, advice, fact-check (v3-B.1) + the debate quote gate (v3-H #9)
-    assert src.count("return _fall_back(publish, fmt, force_format, fallback)") == 4
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 4
     assert 'force_format="evergreen")' not in src
+
+
+def test_fallback_chain_stops_at_three_attempts(monkeypatch):
+    """v3-B.3: the 09-29 shape — tool blocked, then an evergreen request that fell
+    through to news and was blocked, twice. Attempt 3 is the last; before the cap
+    _fallback_format("news", "evergreen", True) re-ran it as evergreen forever."""
+    calls = []
+    monkeypatch.setattr(ap, "run", lambda **k: calls.append(k) or {"ok": True})
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    assert ap.MAX_DAY_ATTEMPTS == 3
+    ap._fall_back(True, "tool", None, False, 1)
+    assert calls[-1]["force_format"] == "evergreen" and calls[-1]["attempt"] == 2
+    ap._fall_back(True, "news", "evergreen", True, 2)
+    assert calls[-1]["force_format"] == "evergreen" and calls[-1]["attempt"] == 3
+    n = len(calls)
+    assert ap._fall_back(True, "news", "evergreen", True, 3) is None
+    assert len(calls) == n
 
 
 # --------------------------------------------------------------- v3-H debate lane
@@ -4776,3 +4794,136 @@ def test_shorts_meta_prompt_no_longer_asks_for_power_words():
     assert "power words" not in body and "No hype words" in body
     for name in ("config.json", "config.example.json"):
         assert json.loads((root / name).read_text(encoding="utf-8"))["honest_titles"] is True
+
+
+# ---------------------------------------------------------------- v3-B.2: fact sources
+def test_fact_check_reads_the_facts_the_writer_was_handed(monkeypatch):
+    """v3-B.2: script_tool orders the writer to use VERIFIED FACTS verbatim, then run()
+    checked the title against the README alone. 4 of 4 tool scripts (09-27..09-30)
+    were FACTCHECK_BLOCKED on '21,102 stars on GitHub' / '4,478 likes' — numbers the
+    pipeline itself supplied. The checker must see the same lines the writer saw."""
+    from factverse import gates
+    readme = "ZCode is a coding workbench. Install: pip install zcode. " * 10
+    s = {"title": "ZCode: Run Your Own AI Coder (7,243 Stars)", "thumb_text": "7,243 STARS",
+         "grounding": readme,
+         "verified_facts": {"stars": 7243, "license": "Apache-2.0",
+                            "last_update": "2026-09-29", "open_issues": 11},
+         "scenes": [{"narration": "ZCode already has 7,243 stars on GitHub."}]}
+    src = gates.fact_sources(s)
+    assert src.startswith("VERIFIED FACTS"), "facts first, so the [:12000] cut never drops them"
+    assert "- stars: 7,243" in src and "- license: Apache-2.0" in src and readme in src
+
+    # a checker that supports the claim only if the SOURCE TEXT contains the number
+    claim = "ZCode already has 7,243 stars on GitHub"
+
+    def checker(p, **k):
+        if "SOURCE TEXT:" not in p:
+            return {"claims": [{"text": claim, "type": "number", "critical": True}]}
+        ok = "7,243" in p.split("SOURCE TEXT:", 1)[1]
+        return {"results": [{"claim": claim, "verdict": "supported" if ok else "unsupported"}]}
+    monkeypatch.setattr(gates.llm, "generate_json", checker)
+    assert gates.fact_check(s, [s["title"], s["thumb_text"]], src)["passed"]
+    before = gates.fact_check(s, [s["title"], s["thumb_text"]], s["grounding"])
+    assert not before["passed"], "sanity: the README alone reproduces the 09-30 block"
+
+    # the writer's block and the checker's block come from ONE renderer
+    prompts = []
+    monkeypatch.setattr(ap, "fetch_text",
+                        lambda u, limit=4000: "install: ```\npip install repo\n``` prose. " * 40)
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {"stars": 21102, "license": "MIT"})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: [])
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or None)
+    ap.script_tool({"title": "org/repo", "source": "gh", "url": "https://github.com/org/repo"})
+    assert gates.facts_lines({"stars": 21102, "license": "MIT"}) in prompts[0]
+
+    # run() hands fact_check fact_sources, not the bare grounding
+    body = Path(ap.__file__).read_text(encoding="utf-8")
+    call = body[body.index("fc = gates.fact_check("):][:200]
+    assert "gates.fact_sources(script)" in call
+
+
+def test_fact_sources_is_the_grounding_when_there_are_no_facts():
+    """Every non-tool lane (and a tool whose API fetch failed) must check exactly
+    what it checked before v3-B.2 — including evergreen's empty-grounding skip."""
+    from factverse import gates
+    assert gates.fact_sources({"grounding": "news page text"}) == "news page text"
+    assert gates.fact_sources({"grounding": "g", "verified_facts": {}}) == "g"
+    assert gates.fact_sources({"grounding": "", "verified_facts": None}) == ""
+    assert gates.fact_sources({"grounding": "g", "verified_facts": "stars: 9"}) == "g"
+    assert gates.fact_check({"scenes": []}, [], gates.fact_sources({"grounding": ""}))["passed"]
+
+
+def test_planted_verified_facts_cannot_license_a_number():
+    """v3-B.2: verified_facts is now support for fact_check (and already was for
+    packaging_payoff). A model that answers with its own "verified_facts" would
+    vouch for its own invented number, so _validate_script drops it on every pass
+    and _carry_over hands the real fetched value back."""
+    planted = {"title": "T 99,999 stars", "description": "hook.\n\nbody", "tags": [],
+               "verified_facts": {"stars": 99999},
+               "scenes": [{"narration": "w " * 40, "visual_query": "v"} for _ in range(6)]}
+    v = ap._validate_script(dict(planted), "T", "https://github.com/x/y")
+    assert "verified_facts" not in v
+
+    real = dict(v, verified_facts={"stars": 21102})
+    carried = ap._carry_over(real, ap._validate_script(dict(planted), "T", ""))
+    assert carried["verified_facts"] == {"stars": 21102}
+
+
+# --------------------------------------------------------------- v3-G.4 1080p long-form
+from factverse import branding as _g4_br
+from factverse import l2 as _g4_l2
+
+
+class _G4Proc:
+    returncode = 1
+    stderr = ""
+
+
+def _g4_capture(monkeypatch, module):
+    seen = {}
+
+    def fake_run(cmd, **k):
+        seen["cmd"] = cmd
+        return _G4Proc()
+    monkeypatch.setattr(module.subprocess, "run", fake_run)
+    return seen
+
+
+def test_g4_canvas_is_1080p_and_the_engine_reads_it():
+    assert (ap.fv.VIDEO_W, ap.fv.VIDEO_H) == (1920, 1080)
+    assert (ap.eng.WIDTH, ap.eng.HEIGHT) == (1920, 1080)
+
+
+def test_g4_bumper_and_l2_splices_scale_to_the_canvas(monkeypatch, tmp_path):
+    """Both splices concat their inputs at one size; a 1280:720 filter left behind
+    would downscale the whole 1080p long-form back to 720p at the last step."""
+    intro, outro = tmp_path / "i.mp4", tmp_path / "o.mp4"
+    intro.write_bytes(b"x")
+    outro.write_bytes(b"x")
+    monkeypatch.setattr(_g4_br, "ensure_assets", lambda: (intro, outro))
+    monkeypatch.setattr(_g4_br.fv, "LOGS", tmp_path)
+    seen = _g4_capture(monkeypatch, _g4_br)
+    _g4_br.add_intro_outro(str(tmp_path / "v.mp4"), split_at=5.0)
+    fc = seen["cmd"][seen["cmd"].index("-filter_complex") + 1]
+    assert "scale=1920:1080" in fc and "1280" not in fc
+
+    seen = _g4_capture(monkeypatch, _g4_l2)
+    assert _g4_l2.splice(str(tmp_path / "v.mp4"), str(tmp_path / "s.mp4"), 3.0) is None
+    fc = seen["cmd"][seen["cmd"].index("-filter_complex") + 1]
+    assert "scale=1920:1080" in fc and "1280" not in fc
+
+
+def test_g4_captions_keep_their_720_layout():
+    """libass scales PlayRes to the video: the layout space must stay 1280x720 or
+    every caption shrinks to two thirds of its locked size at 1080p."""
+    assert (captions.LAYOUT_W, captions.LAYOUT_H) == (1280, 720)
+    src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
+    assert "play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H" in src
+    assert "play_w=eng.WIDTH" not in src
+
+
+def test_g4_citation_chip_scales_with_the_canvas(tmp_path):
+    """drawtext is in video pixels: the 720p chip (26 / 10 / 28 / 34) times 1.5."""
+    vf = captions._citation_filters([(1.0, 7.0, "techcrunch.com")], tmp_path)
+    assert "fontsize=39:" in vf and "boxborderw=15:" in vf
+    assert "x=w-text_w-42:" in vf and "y=51:" in vf

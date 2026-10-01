@@ -127,6 +127,11 @@ CHANNEL_HANDLE = setting("channel_handle", "aipulse")
 TAGLINE = setting("tagline", "AI YOU CAN USE")   # v3-E #10
 CHANNEL_TAGLINE = setting("channel_tagline", "AI news, decoded")
 
+# --------------------------------------------------------------- canvas -----
+# v3-G.4: the long-form's delivery size. Generated cards keep their locked
+# 1280x720 layouts and are scaled onto this canvas; only the canvas changes.
+VIDEO_W, VIDEO_H = 1920, 1080
+
 # --------------------------------------------------------------- paths ------
 OUTPUT = BASE / "output"
 VIDEOS = OUTPUT / "videos"

@@ -23,9 +23,12 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-G.1: storyboard Shorts** | one of the 2 daily Shorts gets a picture drawn from its own narration: a Gemini storyboard (3-8 beats, 7 templates), a grounding gate (every on-screen number spoken, every element shares a narration word), word-timed reveals, native 1080×1920 rendered by headless Chromium; the other Short stays on today's 405×720 crop as the control; ledger `shorts: [{url, engine}]` + scoreboard A/B pairs | ✅ built 2026-09-26 (252/252; 7 templates × 3 moments rendered and read; a full 31 s Short rendered through the production make_shorts path in 76 s; 3 render defects found by looking and fixed) | branch `v3-phase-g` (stacked on H); spec: docs/spec/ai-pulse-v3g1.md; verdict after 10 daily pairs: storyboard wins ≥ 8 → G.2 |
 | **v3-H: AI debate lane** | Wednesdays: up to 5 models from different labs debate one yes/no question built from the day's story, through their OFFICIAL APIs (free Sep 2026: Gemini + GPT-OSS 120B & Qwen 3.8 on Groq + Nemotron & Inkling on OpenRouter; paid seats pre-wired). Two rounds, verbatim-quote gate, the transcript is the fact-checker's grounding, quote + scoreboard cards, a panel block in the description. Browser automation of consumer AI accounts was evaluated and declined | ✅ built 2026-09-26 (242/242; cards rendered and read in `output/demo/debate/`; live 401 from BOTH Groq and OpenRouter handled as a clean skip) | branch `v3-phase-h` (stacked on B.1); spec: docs/spec/ai-pulse-v3h.md; **needs 2 free secrets** (`GROQ_API_KEY`, `OPENROUTER_API_KEY`) — until then Wednesday runs the normal lane |
 | **v3-G.3a: honest Shorts titles** | `step8_meta` asked for "#Shorts + power words" — the source of "Unlock LLM Secrets", "MELTDOWN", "EXPOSED". Prompt now asks for the concrete thing the clip shows (≤70 chars, no hype); `gates.hype_terms` screens titles before upload and falls back to the Short's own fact-checked hook | ✅ built 2026-09-26 (255/255) | branch `v3-phase-g3`; spec: docs/spec/ai-pulse-v3g3a.md; kill switch `honest_titles` |
+| **v3-B.2: tool fact-check reads its own facts** | found 2026-10-01 from the ledger: after #33 merged, the tool lane ran 4 of 4 days (09-27..09-30) and was `FACTCHECK_BLOCKED` every time, on star/like counts the pipeline itself handed the writer ("use these verbatim") but never handed `fact_check` (README only). `gates.fact_sources` puts the `verified_facts` lines (one shared renderer, `facts_lines`) ahead of the grounding; `_validate_script` now pops a planted `verified_facts` | ✅ built 2026-10-01 (live: the real ZCode README has no star count; the new source text leads with `- stars: 7,274`) | branch `v3-phase-b2`; spec: docs/spec/ai-pulse-v3b2.md; live proof = the next tool day's ledger row |
+| **v3-B.3: bounded fallback chain** | found 2026-10-01 from the ledger: `build_script("evergreen")` falls through to news, `run()` re-binds `fmt`, so `_fallback_format` re-ran the "evergreen" fallback again — 09-29 and 09-30 went tool → news blocked → news published, bounded only by the 90-min CI kill. `MAX_DAY_ATTEMPTS = 3` (owner: "cap at 3"), counted through `run(attempt=…)` | ✅ built 2026-10-01 (259/259; the 09-29 chain shape pinned) | branch `v3-phase-b3` (stacked on B.2); spec: docs/spec/ai-pulse-v3b3.md |
 | v3-G.2: storyboard long-form | the same engine for long-form scenes (stock only as fallback) + zoomed/highlighted tool-UI callouts | ⏳ conditional | only if G.1's A/B says build |
 | v3-G.3: packaging | titles and hooks that sell the ToolDojo promise instead of the viral judge's "fear / outrage" rubric; impressions + CTR data (not in the Analytics API we use) | ⏳ queued | needs its own spec |
-| v3-G.4: production basics | 1080p long-form (today 1280×720 x264 ultrafast), a license-clean music bed (`assets/music` is empty and untracked, so CI mixes none), transitions | ⏳ queued | needs its own spec |
+| **v3-G.4: 1080p long-form** | delivery canvas 1920×1080 from one constant (`fv.VIDEO_W/H`), read by the engine and both splices; generated cards keep their locked 1280×720 layouts and are scaled; captions keep PlayRes 1280×720 (`captions.LAYOUT_W/H`, libass scales it); the citation chip's video-pixel values ×1.5. Encoder presets/CRFs and thumbnails unchanged | ✅ built 2026-10-01 (263/263; a 305 s long-form rendered at both sizes through the real path: 1080p takes 2.6× as long, 646.7 s vs 249.7 s locally; frames read: chip 20.7% of the width and caption 5.1% of the height at both sizes) | branch `v3-phase-g4` (stacked on B.3); spec: docs/spec/ai-pulse-v3g4.md; **watch the first CI run's duration** (90-min timeout) |
+| v3-G.4b: production basics, rest | a license-clean music bed (code exists: `step5_build` mixes any `.mp3` in `assets/music` at 0.07; the folder is empty, so CI mixes none) and transitions (no spec values; they interact with per-scene timing) | ⏳ queued | music = owner supplies tracks; transitions need a spec |
 
 ## Now (owner, in this order)
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
@@ -45,7 +48,9 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
+1. ✅ *v3-D merged (#32), and B.1/H/G.1/G.3a merged (#33), both by 2026-09-27. 2026-10-01: the
+   ledger query works live. Every `state/analytics.jsonl` snapshot on main since 09-29 carries
+   29-32 `ledger_videos`.* **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
    verified 2026-09-26: `origin/v3-phase-f` is an ancestor of `origin/main`. For v3-phase-d,
    `git merge-tree --write-tree origin/main origin/v3-phase-d` exits 0 and main had 0 commits
    the branch lacks on 2026-09-26 — re-run that read-only check before merging, because each
@@ -85,7 +90,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
    BOTH the page and the PDF: they share a stem, so one 200 + one 404 means the naming drifted.
    If the page is stale after a run, `GITHUB_TOKEN` pushes did not trigger the Pages build and
    it needs the Actions-based deploy instead of branch-deploy (a small F.1b row).
-3. **`gates.UNSUITABLE_TOOL` has now been measured and fixed** (v3-C.4) — it was refusing
+3. ✅ *2026-10-01: owner said "keep refusing" voice-cloning TTS projects. Closed, no code change.*
+   **`gates.UNSUITABLE_TOOL` has now been measured and fixed** (v3-C.4) — it was refusing
    ComfyUI, unsloth, transformers, the official C2PA SDK/CLI, two deepfake detectors, two NSFW
    classifiers and NeMo-Guardrails, while the day's live provenance stripper passed its title
    screen. One editorial row is left for you: decision 6 makes `voice clon` match READMEs, so a
@@ -93,7 +99,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
    refused. That is the existing policy without its spelling hole, not a new policy — say the
    word and it is one tuple edit. `captcha solver` / `anti-detect browser` were measured as
    passing and deliberately NOT added (C.1 fenced widening as out of scope).
-4. **Supervised first tool run — this now gates v3-B.1's merge.** Never done: the last 100
+4. *2026-10-01: B.1 was merged (#33) without this run. The tool lane has since been tried
+   unattended 4 times, and all 4 were blocked by the defect v3-B.2 fixes. A dispatch before
+   v3-B.2 is merged would have been blocked the same way, so **merge `v3-phase-b2` first**. Then
+   either dispatch, or let the cron try the tool lane: it reached it on 4 of 4 days after #33.*
+   **Supervised first tool run.** Never done: the last 100
    Actions runs are all `schedule`, none `workflow_dispatch` (checked 2026-09-26). On a
    **weekday** (a Sunday dispatch would cost that week's roundup): Actions tab → "AI Pulse — Auto Publish" → Run workflow →
    format = `tool`, BEFORE 12:23 UTC (5:53 PM IST) so the day's cron no-ops afterwards. Watch the
@@ -123,13 +133,17 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-1. **Build v3-B.1** (spec locked: docs/spec/ai-pulse-v3b1.md) on `v3-phase-b1` — small: the
-   threshold, a pure `_fallback_format` helper at the three gate sites, tests. Its PR waits for
-   Now #4 (the supervised tool dispatch).
-2. **Build v3-G.1** (spec locked: docs/spec/ai-pulse-v3g1.md) on `v3-phase-g`, in its own
-   session — the storyboard Shorts engine and its A/B. Read the whole spec first: every layout
-   number is already traced to a constant in the repo; anything else is a new spec row.
+1. **Merge the stack in order: `v3-phase-b2` → `v3-phase-b3` → `v3-phase-g4`.** Each branch is
+   stacked on the one before it, so merging g4 alone brings all three. Without B.2, every tool
+   day is blocked by the fact-checker on the tool's own star or like count. B.1, H, G.1 and
+   G.3a are already on main (#33, 2026-09-27).
+   PRs: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-b2 (then b3, then g4).
+2. **Read the first run after the merge.** In `state/runs.jsonl` on main, expect a `PUBLISHED`
+   `format=tool` row, or a block whose critical failures are not API facts. Then do Now #2:
+   `curl -I` the page and the PDF. Also read that run's **duration** in the Actions tab: it is
+   the first 1080p render on the 4-vCPU runner (local ratio 2.6×; the job timeout is 90 min).
 3. **Read the A/B after 10 daily pairs** (the scoreboard prints `A/B pairs: N · storyboard wins:
-   W`): ≥ 8 → spec v3-G.2 (long-form); ≤ 5 → stop and rethink; 6-7 → 10 more. Meanwhile merge
-   `v3-phase-d` and read the first real v3-D scoreboard (Now #1); X (1.4) and Meta (1.6) are still
-   owner clicks.
+   W`). On 2026-10-01 there was 1 mature pair, and storyboard lost it. Note that G.4 sharpens
+   the crop arm's source (607×1080 instead of 405×720) mid-experiment. ≥ 8 → spec v3-G.2;
+   ≤ 5 → stop and rethink; 6-7 → 10 more. X (1.4), Meta (1.6) and the two debate secrets are
+   still owner clicks.

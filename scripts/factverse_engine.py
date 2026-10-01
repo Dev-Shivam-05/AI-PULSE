@@ -54,9 +54,10 @@ if _missing:
 BRAND  = fv.CHANNEL_NAME
 HANDLE = fv.CHANNEL_HANDLE
 
-# SPEED OPTIMIZATION: 720p (YouTube re-encodes everything anyway)
-WIDTH = 1280
-HEIGHT = 720
+# v3-G.4: 1080p delivery. The screen recorder and Pexels stock are already 1080p;
+# a 720p canvas threw that away and put the upload on YouTube's 720p bitrate ladder.
+WIDTH = fv.VIDEO_W
+HEIGHT = fv.VIDEO_H
 FPS = 30
 PRESET = "ultrafast"  # 10x faster than "fast" on CPU
 
@@ -287,7 +288,7 @@ def sub_durations(scene_dur, planned, survived):
 
 
 def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
-    print("\n[5/10] 🎬 Building video (720p, ultrafast)...")
+    print(f"\n[5/10] 🎬 Building video ({HEIGHT}p, ultrafast)...")
 
     adur = dur(audio_path)
     if adur <= 0: print("  ❌ Can't read audio"); return None

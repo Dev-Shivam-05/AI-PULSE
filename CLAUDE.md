@@ -198,6 +198,27 @@ name that is not written there. If a decision is missing, add a row and get one 
   `notified_fb.json`). Never share one list between two surfaces: whichever posts first
   retires the video for the other, which then never posts it at all.
 
+- **The checker must read everything the writer was ORDERED to use.** `script_tool` gave the
+  writer `verified_facts` with the order "use these verbatim", then `run()` fact-checked against
+  `grounding` (the README) alone. After B.1 opened the tool lane, all 4 tool scripts were blocked
+  on their own true star and like counts. `gates.fact_sources` is the single source text for the
+  check. Any new input a prompt hands the writer belongs in it, and must be popped in
+  `_validate_script` so the model cannot plant it.
+- **"Fallback to evergreen" can publish NEWS.** `build_script("evergreen")` falls through to news
+  when `pick_evergreen_topic` returns no topic (09-29: tool blocked → news blocked → news
+  published). Read the ledger `format`, not the log line that announced the fallback.
+
+- **Captions and drawtext live in different coordinate systems.** `build_ass` writes PlayRes
+  units, which libass scales to the real frame, so it stays at `captions.LAYOUT_W/H`
+  (1280×720) whatever the canvas is. `drawtext` (the citation chip) is in VIDEO pixels and must
+  scale with `fv.VIDEO_H`. Since v3-G.4 the long-form is 1920×1080, while every generated card
+  is still a 1280×720 layout that the engine scales up. A new overlay has to pick the right
+  system.
+- **Re-binding `fmt` to the script's own format changes what the fallback sees.** An
+  "evergreen" fallback that `build_script` turned into news looked like a fresh news block,
+  and the chain re-ran without limit (09-29: 3 attempts). `MAX_DAY_ATTEMPTS` (v3-B.3) bounds it
+  through `run(attempt=…)`. A new recursion into `run()` must pass `attempt`.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.

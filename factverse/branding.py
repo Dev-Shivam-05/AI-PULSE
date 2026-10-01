@@ -378,7 +378,7 @@ def add_intro_outro(video, split_at=None):
     if not intro.exists() or not outro.exists():
         return video
     out = str(video).replace(".mp4", "_final.mp4")
-    nv = "scale=1280:720,setsar=1,fps=30"
+    nv = f"scale={fv.VIDEO_W}:{fv.VIDEO_H},setsar=1,fps=30"
     if split_at and float(split_at) > 2.5:
         s = float(split_at)
         fc = (

@@ -251,6 +251,29 @@ def extract_claims(script: dict, hook_texts: list[str]) -> list[dict]:
 FACTCHECK_MIN_CHARS = 200
 
 
+def facts_lines(facts) -> str:
+    """The `- key: value` lines of an official-API facts dict. ONE renderer for the
+    writer's prompt and for fact_sources: if the two formatted a number differently
+    ("21,102" vs "21102") the checker would disagree with the writer again."""
+    if not isinstance(facts, dict):
+        return ""
+    return "\n".join((f"- {k}: {v:,}" if isinstance(v, int) and not isinstance(v, bool)
+                      else f"- {k}: {v}") for k, v in facts.items())
+
+
+def fact_sources(script: dict) -> str:
+    """What fact_check verifies against: the grounding PLUS the verified facts the
+    writer was ordered to use. v3-B.2: the tool lane told the writer "these are the
+    ONLY numbers you may state", then checked those numbers against the README alone
+    — 4 of 4 tool scripts were blocked on their own star/like counts (09-27..09-30).
+    Facts go FIRST so fact_check's [:12000] cut can never drop them."""
+    grounding = str(script.get("grounding") or "")
+    lines = facts_lines(script.get("verified_facts"))
+    if not lines:
+        return grounding
+    return "VERIFIED FACTS (official API):\n" + lines + "\n\n" + grounding
+
+
 def fact_check(script: dict, hook_texts: list[str], sources_text: str) -> dict:
     """Claim-level verification against the bound sources.
     Returns {passed, critical_failures[], soft_failures[], checked}.

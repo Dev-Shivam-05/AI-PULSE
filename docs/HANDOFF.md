@@ -1,66 +1,76 @@
-# HANDOFF — ToolDojo — v3-B.1 + v3-H + v3-G.1 + v3-G.3a built — 2026-09-27
-
-Built in one session at the owner's instruction ("implement everything, do not stop"). Four
-branches, stacked in this order, all pushed, 255/255 tests passing:
-`v3-phase-b1` → `v3-phase-h` → `v3-phase-g` → `v3-phase-g3`.
-Merging `v3-phase-g3` brings all four; it has no conflicts with main (v3-D, PR #32, is merged).
+# HANDOFF — ToolDojo — Phases v3-B.3 + v3-G.4 — 2026-10-01
 
 ## Done
-
-- **v3-B.1: tool-lane unblock.** `VIRAL_THRESHOLD` goes from 8 to 10, and a blocked story now
-  falls back to a tool video first (`_fallback_format`).
-- **v3-H: AI debate lane**, on Wednesdays. Up to 5 models from different labs (Gemini, GPT-OSS
-  120B, Qwen 3.8, Nemotron, Inkling) debate the day's question through their official, free APIs.
-  - A quote gate rejects any quote that isn't word-for-word what a model said.
-  - The transcript is part of what the fact-check checks against.
-  - Quote and scoreboard cards were rendered and read.
-  - Groq and OpenRouter answered a live 401, which the lane handles.
-- **v3-G.1: storyboard Shorts** (A/B test). One of the two daily Shorts is drawn from its own
-  narration, word-timed, at 1080×1920. A full 31 s Short went through the real production path;
-  rendering took 76 s. Viewing the frames turned up three defects, all fixed.
-- **v3-G.3a: honest Shorts titles.** The prompt that asked for "power words" is replaced, and a
-  hype screen with a fallback to the Short's hook runs before upload.
-- **No code came from `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`.** Browser automation of consumer
-  AI accounts was declined (DECISIONS 2026-09-26).
+- **v3-B.3: a day's blocked-fallback chain now stops at 3 attempts.** Before, an "evergreen"
+  fallback that `build_script` turned into news could re-run without limit. On 09-29 and 09-30
+  the chain was tool blocked → news blocked → news published. Those days would still publish
+  under the cap; attempt 4 now prints `🛑 3 attempts today — publishing nothing.`
+- **v3-G.4: the long-form renders at 1920×1080.**
+  - Verified by a real 305 s render through `step5_build` → `burn_ass` → `add_intro_outro`. The
+    output was 1920×1080 and 312.2 s long.
+  - Frames were read. The citation chip is 20.7% of the frame width and caption cap height is
+    5.1% of the frame height, the same as at 720p. The stat card, code card and outro are
+    unclipped.
+  - The render takes 2.6× as long locally: 646.7 s vs 249.7 s.
+- 263/263 tests pass. Both branches are pushed: `v3-phase-b3` (stacked on b2) and
+  `v3-phase-g4` (stacked on b3).
+- **Read from main's state:**
+  - The v3-D ledger query works live: 29-32 `ledger_videos` in every snapshot since 09-29.
+  - The scoreboard has evergreen's weighted AVD at 2:31 against news at 1:03. Evergreen is not
+    trusted yet (44 views).
+  - The A/B has 1 mature pair, and storyboard lost it.
+- **Closed by the owner:** voice-cloning TTS projects stay refused (Now #3).
 
 ## Files changed
-
-- New: `factverse/debate.py`, `factverse/storyboard.py`, `assets/storyboard/storyboard.html`.
-- Modified: `factverse/ai_pipeline.py`, `shorts.py`, `learn.py`, `llm.py`, `gates.py`,
-  `scripts/factverse_engine.py`, both configs, `publish.yml`, tests.
-- Specs: `docs/spec/ai-pulse-v3b1.md`, `v3h.md`, `v3g1.md`, `v3g3a.md`.
-- Demo artifacts: `output/demo/debate/`, `output/demo/storyboard/`.
+- `factverse/ai_pipeline.py`:
+  - `MAX_DAY_ATTEMPTS = 3`, and `run(attempt=…)` / `_fall_back(…, attempt)`.
+  - The `build_ass` call now uses `captions.LAYOUT_W/H` instead of the canvas.
+- `factverse/config.py`: `VIDEO_W, VIDEO_H = 1920, 1080`, the one canvas constant.
+- `scripts/factverse_engine.py`: `WIDTH`/`HEIGHT` read the canvas constant, and the build log
+  line prints the real height.
+- `factverse/branding.py`, `factverse/l2.py`: the splice `nv` scale filter reads the canvas
+  constant. Left at 1280:720, it would have downscaled the finished video.
+- `factverse/captions.py`:
+  - `LAYOUT_W/H = 1280, 720` is the PlayRes layout space.
+  - The citation chip's drawtext values scale by `VIDEO_H/720`.
+- `factverse/screencap.py`: a comment only.
+- `tests/test_pipeline_logic.py`: 1 B.3 test (the 09-29 chain) and 4 G.4 tests (canvas, both
+  splices, caption layout, chip scale). 2 existing tests were updated for `attempt`.
+- `docs/spec/ai-pulse-v3b3.md`, `docs/spec/ai-pulse-v3g4.md`: new specs, with the evidence and
+  measurements.
+- `docs/PHASES.md`: B.3, G.4 and G.4b rows; Now #1 and #3 closed; Next 3 rewritten.
+- `docs/DECISIONS.md`: B.3 and G.4 entries.
+- `CLAUDE.md`: 2 traps (caption vs drawtext coordinate systems, and fmt re-binding in the
+  fallback chain).
 
 ## Decisions made
-
-- The debate uses official free APIs, not browser logins. GitHub Models was retired on
-  2026-07-30, which was checked. Paid seats (DeepSeek, xAI, OpenAI, Perplexity, Mistral) are
-  already wired and each needs only a secret plus a panel row.
-- H and G.3a values were chosen by Claude under the "do not stop" instruction. Each spec says
-  they are revisable.
+- **Cap the chain at 3 attempts** (owner). The literal B.1 spec would have published nothing on
+  09-29 and 09-30.
+- **Only the G.4 canvas changes.** Cards keep their locked 1280×720 layouts and are scaled.
+  Re-laying them out would change spec-locked numbers and every measured-text surface.
+- **Encoder presets, CRFs and thumbnails are unchanged.** G.4 changes resolution only.
 
 ## Known broken / deliberately skipped
-
-- **The debate needs two free secrets:** `GROQ_API_KEY` and `OPENROUTER_API_KEY`. Until they
-  exist, Wednesday runs the normal lane.
-- **The free model rosters change.** A seat that disappears is skipped, and the log names it.
-- **Nothing new has run in CI yet.** The storyboard prompt and the debate first meet a real model
-  there. Their log lines are: `🎨 Storyboard: k/n beats kept`, `🎨 Storyboard short rendered in`,
-  `🥊 Debate:`, `↷ seat … skipped`, `↻ storyboard short fell back:`.
-- **The CI render time is unknown.** It is 76 s locally for 284 frames.
-- **B.1 should merge after one supervised `format=tool` dispatch** (Now #4). It has still not
-  been done.
-- **Self-views.** The owner says 2–5 of the 8–12 long-form viewers are their own IDs. That
-  distorts every metric, including G.1's A/B, and breaks YouTube's fake-engagement policy.
-- **Two files were left in place.** Local demo intermediates (`output/demo/storyboard/sample/`
-  content, voice and frames) are untracked because the delete was not permitted. The
-  owner-supplied `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md` is still untracked.
+- **The music bed was not built.** The code already mixes any `.mp3` in `assets/music`; the
+  owner has to supply license-clean tracks.
+- **Transitions were not built.** There are no spec values, and they interact with the
+  per-scene timing. Both are in the G.4b row.
+- **The 1080p CI duration is unmeasured.** The runner has 4 vCPUs against 20 locally, and the
+  job timeout is 90 min. The first CI run after the merge is the measurement.
+- **Why `pick_evergreen_topic` returned no topic on 09-28..09-30 is unknown.** The CI logs
+  answer 403. The near-duplicate screen does reject "how LLMs think" and "agents go rogue"
+  re-words against the live used list, so that is plausible, but it is not proven.
+- **The outro bumper says "for daily AI news"**, which is off-brand for ToolDojo. It was seen in
+  the frames and left alone because it was out of scope.
+- **The crop Short (the A/B control) gets a sharper source with G.4** while the experiment is
+  running.
+- **Untracked files are still untracked:** `output/demo/storyboard/sample/*` and
+  `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`.
 
 ## Next session starts here
-
-- **Phase:** none to build. First read the first CI logs after the merge, then the A/B after 10
-  daily pairs (the scoreboard verdict line).
+- **Phase:** none to build. The owner merges `v3-phase-g4`, which carries b2 and b3 with it.
+  Then read the first run's ledger row and its Actions duration (the first 1080p CI render).
 - **First command:** `/boot`
-- **Watch out for:** a CSS child with `visibility: visible` shows through a hidden parent. That
-  bug leaked chat text into every later storyboard beat and was only found by looking at
-  rendered frames. Always inspect the frames.
+- **Watch out for:** a run that times out at 90 min after the merge. If it does, the 1080p
+  passes are the cause (captions burn 5.7×, bumpers 4.5× locally). The quick fix is one
+  constant back to 1280×720, not a rewrite.

@@ -140,7 +140,14 @@ def _ts(t: float) -> str:
     return f"{h:d}:{m:02d}:{s:02d}.{c:02d}"
 
 
-def build_ass(words, out_ass: str, play_w: int = 1280, play_h: int = 720,
+# v3-G.4: the caption LAYOUT space. libass scales PlayRes coordinates to the real
+# video, so a 1080p burn keeps today's caption size and position while rasterising
+# sharper. Passing the 1920x1080 canvas here instead would shrink every caption
+# (fontsize 50, margin 70) to two thirds of its locked size.
+LAYOUT_W, LAYOUT_H = 1280, 720
+
+
+def build_ass(words, out_ass: str, play_w: int = LAYOUT_W, play_h: int = LAYOUT_H,
               font: str = "Arial", fontsize: int = 50, max_words: int = 4,
               max_gap: float = 0.7, margin_v: int = 70) -> str:
     """Group words into short phrases and write a karaoke ASS (active word = cyan)."""
@@ -214,12 +221,17 @@ def _citation_filters(citations, ass_dir: Path) -> str:
     except Exception:
         return ""
     parts = []
+    # drawtext is in VIDEO pixels, not PlayRes: the chip's 720p values scale with the
+    # canvas or it shrinks to two thirds at 1080p (v3-G.4 decision 4). Only the
+    # long-form passes citations, so the canvas is the frame being drawn on.
+    k = fv.VIDEO_H / LAYOUT_H
+    fs, bw, inset, top = round(26 * k), round(10 * k), round(28 * k), round(34 * k)
     for (st, en, text) in citations:
         t = (str(text).replace("\\", "").replace("'", "").replace('"', "")
                       .replace(":", "\\:").replace("%", "%%"))[:48]
         parts.append(
-            f"drawtext=fontfile=cite.ttf:text='{t}':fontsize=26:fontcolor=white@0.85:"
-            f"box=1:boxcolor=black@0.45:boxborderw=10:x=w-text_w-28:y=34:"
+            f"drawtext=fontfile=cite.ttf:text='{t}':fontsize={fs}:fontcolor=white@0.85:"
+            f"box=1:boxcolor=black@0.45:boxborderw={bw}:x=w-text_w-{inset}:y={top}:"
             f"enable='between(t,{st:.2f},{en:.2f})'")
     return "," + ",".join(parts)
 
