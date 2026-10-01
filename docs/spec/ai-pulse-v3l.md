@@ -264,6 +264,6 @@ and `origin/v3-phase-b2` is clean for everything this branch changes.
   - if approved, nothing to build: the owner runs §8 steps 2-3, and the session after
     session 4 + 7 days runs `py -3 scripts/live_scorecard.py`.
 - **Watch out for:**
-  - the branch's upstream is `origin/main`. Push with `git push origin v3-phase-l`, never a bare
-    `git push`;
+  - the branch was cut from `origin/main` and now tracks `origin/v3-phase-l`. Keep pushing
+    with the explicit `git push origin v3-phase-l`;
   - merge `v3-phase-g4` first; this branch merges cleanly on top of it.
