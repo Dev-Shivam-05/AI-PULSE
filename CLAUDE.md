@@ -21,6 +21,13 @@ name that is not written there. If a decision is missing, add a row and get one 
   file; do not shorten the run to fit a timeout.
 - Git Bash heredocs choke on nested quotes/emoji — write Python and Markdown files with the
   Write tool, not `cat > file << 'EOF'`.
+- **ffmpeg 8.1.2 is on PATH** (winget) and **OBS Studio is installed but has never been launched**
+  (verified 2026-10-01). For screen capture use `ddagrab` (Desktop Duplication, what OBS uses):
+  `gdigrab` was measured at ~20 of 30 fps at 1080p on this laptop. `scripts/live_preflight.py`.
+- **Another Claude session may own the shared working dir.** Work in a separate worktree, and before
+  committing shared docs (PHASES/HANDOFF/DECISIONS/CLAUDE.md) run the read-only
+  `git merge-tree --write-tree origin/<their-branch> <your-branch>` — a board row placed next to a
+  row their branch rewrote is a merge conflict the owner then has to resolve in the GitHub UI.
 
 ## Traps in this codebase
 - **`_CARRY` (factverse/ai_pipeline.py)** — every LLM rewrite pass (critique, expand, tighten,
