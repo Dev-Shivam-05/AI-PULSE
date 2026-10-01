@@ -4272,9 +4272,10 @@ def test_blocked_runs_recurse_tool_then_evergreen(monkeypatch):
     monkeypatch.setattr(ap, "run", lambda **k: calls.append(k) or {"ok": True})
     monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
     assert ap._fall_back(True, "news", None, False) == {"ok": True}
-    assert calls[-1] == {"publish": True, "force_format": "tool", "fallback": True}
-    ap._fall_back(True, "tool", "tool", True)
-    assert calls[-1] == {"publish": True, "force_format": "evergreen", "fallback": True}
+    assert calls[-1] == {"publish": True, "force_format": "tool", "fallback": True, "attempt": 2}
+    ap._fall_back(True, "tool", "tool", True, 2)
+    assert calls[-1] == {"publish": True, "force_format": "evergreen", "fallback": True,
+                         "attempt": 3}
     n = len(calls)
     # an owner-forced tool run that is blocked publishes nothing and recurses nowhere
     assert ap._fall_back(True, "tool", "tool", False) is None
@@ -4287,8 +4288,25 @@ def test_every_gate_uses_the_fallback_helper():
     inline condition would silently bypass the tool-first rule."""
     src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
     # policy, advice, fact-check (v3-B.1) + the debate quote gate (v3-H #9)
-    assert src.count("return _fall_back(publish, fmt, force_format, fallback)") == 4
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 4
     assert 'force_format="evergreen")' not in src
+
+
+def test_fallback_chain_stops_at_three_attempts(monkeypatch):
+    """v3-B.3: the 09-29 shape — tool blocked, then an evergreen request that fell
+    through to news and was blocked, twice. Attempt 3 is the last; before the cap
+    _fallback_format("news", "evergreen", True) re-ran it as evergreen forever."""
+    calls = []
+    monkeypatch.setattr(ap, "run", lambda **k: calls.append(k) or {"ok": True})
+    monkeypatch.setattr(ap.fv, "flag", lambda name, default=False: name == "tool_format")
+    assert ap.MAX_DAY_ATTEMPTS == 3
+    ap._fall_back(True, "tool", None, False, 1)
+    assert calls[-1]["force_format"] == "evergreen" and calls[-1]["attempt"] == 2
+    ap._fall_back(True, "news", "evergreen", True, 2)
+    assert calls[-1]["force_format"] == "evergreen" and calls[-1]["attempt"] == 3
+    n = len(calls)
+    assert ap._fall_back(True, "news", "evergreen", True, 3) is None
+    assert len(calls) == n
 
 
 # --------------------------------------------------------------- v3-H debate lane
