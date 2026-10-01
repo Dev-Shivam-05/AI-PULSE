@@ -46,7 +46,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
    incumbents). Steps: Studio → rename channel + claim @tooldojo; then config.json
    `channel_name` + `youtube_channel_name` = "ToolDojo"; brand asset regen is a v3-E row.
    Grab tooldojo.in (~Rs 300/yr) whenever convenient — not a blocker.
-1. **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
+1. ✅ *v3-D merged (#32), and B.1/H/G.1/G.3a merged (#33), both by 2026-09-27. Still to do:
+   read the analytics line below on main.* **Merge `v3-phase-d` into main** (v3-D, 2 commits). `v3-phase-f` is ALREADY merged —
    verified 2026-09-26: `origin/v3-phase-f` is an ancestor of `origin/main`. For v3-phase-d,
    `git merge-tree --write-tree origin/main origin/v3-phase-d` exits 0 and main had 0 commits
    the branch lacks on 2026-09-26 — re-run that read-only check before merging, because each
@@ -128,13 +129,14 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-1. **Build v3-B.1** (spec locked: docs/spec/ai-pulse-v3b1.md) on `v3-phase-b1` — small: the
-   threshold, a pure `_fallback_format` helper at the three gate sites, tests. Its PR waits for
-   Now #4 (the supervised tool dispatch).
-2. **Build v3-G.1** (spec locked: docs/spec/ai-pulse-v3g1.md) on `v3-phase-g`, in its own
-   session — the storyboard Shorts engine and its A/B. Read the whole spec first: every layout
-   number is already traced to a constant in the repo; anything else is a new spec row.
+1. **Merge `v3-phase-b2`** (PR: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-b2).
+   Without it, every tool day is blocked by the fact-checker on the tool's own star/like count.
+   B.1, H, G.1 and G.3a are already on main (#33, 2026-09-27).
+2. **Read the first tool rows after the merge** in `state/runs.jsonl` on main. Expect a
+   `PUBLISHED` `format=tool` row, or a block whose critical failures are not API facts (e.g. a
+   speed claim the README never makes, which is correct). Then do Now #2: `curl -I` the page
+   and the PDF.
 3. **Read the A/B after 10 daily pairs** (the scoreboard prints `A/B pairs: N · storyboard wins:
-   W`): ≥ 8 → spec v3-G.2 (long-form); ≤ 5 → stop and rethink; 6-7 → 10 more. Meanwhile merge
-   `v3-phase-d` and read the first real v3-D scoreboard (Now #1); X (1.4) and Meta (1.6) are still
-   owner clicks.
+   W`). There are 3 storyboard Shorts so far (09-27, 09-28, 09-30); 09-29 shipped crop+crop.
+   ≥ 8 → spec v3-G.2; ≤ 5 → stop and rethink; 6-7 → 10 more. X (1.4), Meta (1.6) and the two
+   debate secrets are still owner clicks.

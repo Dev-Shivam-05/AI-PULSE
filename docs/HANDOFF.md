@@ -1,66 +1,60 @@
-# HANDOFF — ToolDojo — v3-B.1 + v3-H + v3-G.1 + v3-G.3a built — 2026-09-27
-
-Built in one session at the owner's instruction ("implement everything, do not stop"). Four
-branches, stacked in this order, all pushed, 255/255 tests passing:
-`v3-phase-b1` → `v3-phase-h` → `v3-phase-g` → `v3-phase-g3`.
-Merging `v3-phase-g3` brings all four; it has no conflicts with main (v3-D, PR #32, is merged).
+# HANDOFF — ToolDojo — Phase v3-B.2 — 2026-10-01
 
 ## Done
-
-- **v3-B.1: tool-lane unblock.** `VIRAL_THRESHOLD` goes from 8 to 10, and a blocked story now
-  falls back to a tool video first (`_fallback_format`).
-- **v3-H: AI debate lane**, on Wednesdays. Up to 5 models from different labs (Gemini, GPT-OSS
-  120B, Qwen 3.8, Nemotron, Inkling) debate the day's question through their official, free APIs.
-  - A quote gate rejects any quote that isn't word-for-word what a model said.
-  - The transcript is part of what the fact-check checks against.
-  - Quote and scoreboard cards were rendered and read.
-  - Groq and OpenRouter answered a live 401, which the lane handles.
-- **v3-G.1: storyboard Shorts** (A/B test). One of the two daily Shorts is drawn from its own
-  narration, word-timed, at 1080×1920. A full 31 s Short went through the real production path;
-  rendering took 76 s. Viewing the frames turned up three defects, all fixed.
-- **v3-G.3a: honest Shorts titles.** The prompt that asked for "power words" is replaced, and a
-  hype screen with a fallback to the Short's hook runs before upload.
-- **No code came from `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`.** Browser automation of consumer
-  AI accounts was declined (DECISIONS 2026-09-26).
+- **The fact-checker now sees the tool facts the writer was handed.** `run()` calls
+  `gates.fact_check` with `gates.fact_sources(script)`, which puts a `VERIFIED FACTS (official
+  API)` block (stars, license, last_update, open_issues; or HF downloads/likes) ahead of the
+  README.
+  - Before the fix, all 4 tool scripts since #33 (09-27..09-30) were blocked on their own true
+    star or like count.
+  - Verified live against the real 09-30 candidate (`zai-org/ZCode`): its README has no star
+    count, and the new source text leads with `- stars: 7,274`.
+- **A model can no longer plant `verified_facts`.** `_validate_script` pops it on every pass,
+  and `_carry_over` hands the fetched value back.
+- 258/258 tests pass. Branch `v3-phase-b2` is pushed (2 commits plus this handoff).
+- **Post-merge reading of #33, from the ledger:**
+  - B.1 works: the tool lane was reached on 4 of 4 days.
+  - G.1 works: 3 storyboard Shorts shipped (09-27, 09-28, 09-30); 09-29 shipped crop+crop.
+  - H did not run: 09-30 was a Wednesday with no debate row, because the 2 secrets are still
+    missing.
 
 ## Files changed
-
-- New: `factverse/debate.py`, `factverse/storyboard.py`, `assets/storyboard/storyboard.html`.
-- Modified: `factverse/ai_pipeline.py`, `shorts.py`, `learn.py`, `llm.py`, `gates.py`,
-  `scripts/factverse_engine.py`, both configs, `publish.yml`, tests.
-- Specs: `docs/spec/ai-pulse-v3b1.md`, `v3h.md`, `v3g1.md`, `v3g3a.md`.
-- Demo artifacts: `output/demo/debate/`, `output/demo/storyboard/`.
+- `factverse/gates.py`: new `facts_lines` (one renderer) and `fact_sources` (the checker's
+  source text).
+- `factverse/ai_pipeline.py`: the writer's facts block uses `facts_lines`, `_validate_script`
+  pops `verified_facts`, and the fact_check call uses `fact_sources`.
+- `tests/test_pipeline_logic.py`: 3 tests. One reproduces the 09-30 block and shows it passing
+  after the fix. One shows that grounding is unchanged when there are no facts. One shows a
+  planted value being dropped while the real value survives a rewrite pass.
+- `docs/spec/ai-pulse-v3b2.md`: the new spec, with the ledger evidence.
+- `docs/PHASES.md`: B.2 row, Now #1/#4 notes, and a new Next 3.
+- `docs/DECISIONS.md`: B.2 entry.
+- `CLAUDE.md`: 2 traps (the checker must read the writer's inputs, and the "evergreen" fallback
+  can publish news).
 
 ## Decisions made
-
-- The debate uses official free APIs, not browser logins. GitHub Models was retired on
-  2026-07-30, which was checked. Paid seats (DeepSeek, xAI, OpenAI, Perplexity, Mistral) are
-  already wired and each needs only a secret plus a panel row.
-- H and G.3a values were chosen by Claude under the "do not stop" instruction. Each spec says
-  they are revisable.
+- **Facts go before the grounding** so `fact_check`'s `[:12000]` cut can never drop them.
+- **No facts means the grounding is passed through unchanged**, so the non-tool lanes behave
+  exactly as before.
+- `verify_synthesis` and `replication_test` still read the grounding only. That is out of scope.
 
 ## Known broken / deliberately skipped
-
-- **The debate needs two free secrets:** `GROQ_API_KEY` and `OPENROUTER_API_KEY`. Until they
-  exist, Wednesday runs the normal lane.
-- **The free model rosters change.** A seat that disappears is skipped, and the log names it.
-- **Nothing new has run in CI yet.** The storyboard prompt and the debate first meet a real model
-  there. Their log lines are: `🎨 Storyboard: k/n beats kept`, `🎨 Storyboard short rendered in`,
-  `🥊 Debate:`, `↷ seat … skipped`, `↻ storyboard short fell back:`.
-- **The CI render time is unknown.** It is 76 s locally for 284 frames.
-- **B.1 should merge after one supervised `format=tool` dispatch** (Now #4). It has still not
-  been done.
-- **Self-views.** The owner says 2–5 of the 8–12 long-form viewers are their own IDs. That
-  distorts every metric, including G.1's A/B, and breaks YouTube's fake-engagement policy.
-- **Two files were left in place.** Local demo intermediates (`output/demo/storyboard/sample/`
-  content, voice and frames) are untracked because the delete was not permitted. The
-  owner-supplied `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md` is still untracked.
+- **09-27's `7 Secs` claim stays blocked** if the README does not say it. That is correct
+  behaviour, not this bug.
+- **"Fallback to evergreen" published news on 09-29.** `build_script("evergreen")` falls through
+  to news when `pick_evergreen_topic` returns no topic. It was not investigated why there was no
+  topic; the CI logs are 403 without admin rights.
+- **The tool README can be Chinese** (ZCode's is). It is not known whether the writer and
+  checker handle that well; it was not looked at.
+- **Untracked files are still untracked:** `output/demo/storyboard/sample/*` and
+  `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`, as before.
+- **Self-views (Now #0) still distort every metric**, including G.1's A/B.
 
 ## Next session starts here
-
-- **Phase:** none to build. First read the first CI logs after the merge, then the A/B after 10
-  daily pairs (the scoreboard verdict line).
+- **Phase:** none to build. After the owner merges `v3-phase-b2`, read the next tool rows in
+  `state/runs.jsonl` on main (`git fetch` then `git show origin/main:state/runs.jsonl | tail`).
+  Expect a `PUBLISHED` `format=tool` row; then `curl -I` the page and the PDF (Now #2).
 - **First command:** `/boot`
-- **Watch out for:** a CSS child with `visibility: visible` shows through a hidden parent. That
-  bug leaked chat text into every later storyboard beat and was only found by looking at
-  rendered frames. Always inspect the frames.
+- **Watch out for:** a new input that a prompt hands the writer must also go into
+  `gates.fact_sources` and be popped in `_validate_script`. Otherwise the checker blocks the
+  writer for obeying, or the model plants it.

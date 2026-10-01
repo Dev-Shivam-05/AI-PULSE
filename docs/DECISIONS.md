@@ -443,3 +443,18 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   and backed by a deterministic screen.
 - **A storyboard beat starts on its first element's word**, so the stage is never empty. This was
   found by rendering.
+
+## 2026-10-01 — v3-B.2: the fact-checker reads the tool's verified facts
+
+- **The checker reads exactly what the writer was ordered to use.** After #33 opened the tool lane,
+  4 of 4 tool scripts (09-27..09-30) were `FACTCHECK_BLOCKED`. Each was blocked on a star, like
+  or download count that `_verified_facts` fetched and the writer was told to use verbatim, while
+  `fact_check` read the README only.
+  - `gates.fact_sources` puts the facts first, so the `[:12000]` cut cannot drop them.
+  - `gates.facts_lines` is the one renderer for both the writer and the checker.
+  - Spec: `docs/spec/ai-pulse-v3b2.md`.
+- **`verified_facts` is now popped in `_validate_script`**, like `receipts`/`cheat_sheet`/
+  `debate`. Once it counts as fact-check support, a model-planted value would license its own
+  invented numbers. `packaging_payoff` already had that hole.
+- **Merge B.2 before any supervised `format=tool` dispatch (Now #4).** A dispatch without it
+  would have been blocked the same way.
