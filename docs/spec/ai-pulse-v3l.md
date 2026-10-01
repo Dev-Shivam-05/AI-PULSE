@@ -241,3 +241,29 @@ Confounders:
 - [ ] Owner approves §6/§7
 - [ ] Private test stream healthy (§8, step 3): **blocked on the owner**
 - [ ] 4 sessions logged and the verdict printed (day 21)
+
+## 11. Session handoff (2026-10-01)
+
+This lives here rather than in `docs/HANDOFF.md` on purpose. `v3-phase-g4` (the other session's
+unmerged branch) rewrote HANDOFF.md and appended to DECISIONS.md, so writing either one from
+this branch would be a guaranteed merge conflict. `git merge-tree` against `origin/v3-phase-g4`
+and `origin/v3-phase-b2` is clean for everything this branch changes.
+
+- **Done:**
+  - the spec;
+  - `scripts/live_preflight.py` and `scripts/live_scorecard.py`;
+  - `tests/test_live.py` (20 tests); the full suite is 275/275 in the worktree;
+  - the PHASES row;
+  - 2 CLAUDE.md environment facts.
+- **Not done:**
+  - no stream was started, and no YouTube setting or credential was touched;
+  - OBS was not launched or configured (no profile exists yet);
+  - the uplink was not measured.
+- **Next session starts here:**
+  - read the owner's answer on §6/§7;
+  - if approved, nothing to build: the owner runs §8 steps 2-3, and the session after
+    session 4 + 7 days runs `py -3 scripts/live_scorecard.py`.
+- **Watch out for:**
+  - the branch's upstream is `origin/main`. Push with `git push origin v3-phase-l`, never a bare
+    `git push`;
+  - merge `v3-phase-g4` first; this branch merges cleanly on top of it.
