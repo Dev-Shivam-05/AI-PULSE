@@ -334,3 +334,13 @@ def test_punctuate_restores_the_scripts_punctuation():
     assert out[7] == "feder"                 # no clean match: keeps the spoken form
     assert [p[2] for p in rd.phrases(rd.punctuate(spoken, text))][0] == \
         "Number 3 on the radar: dots,"
+
+
+def test_bilingual_description_speaks_only_its_readable_half():
+    d = "AI生成の日本語を自然な日本語へ推敲するAgent Skill / Agent Skill for Refining AI-Generated Japanese"
+    assert rd.spoken_description(d) == "Agent Skill for Refining AI-Generated Japanese"
+    assert rd.spoken_description("一个自己找热点的网站框架") == ""
+    assert rd.spoken_description("Plain English, no split.") == "Plain English, no split."
+    s = rd.template_narration(_gh(desc=d), 5)
+    assert s.endswith("In its own words: Agent Skill for Refining AI-Generated Japanese.")
+    assert "日本語" not in s

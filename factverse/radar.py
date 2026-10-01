@@ -324,10 +324,20 @@ def readable(text: str) -> bool:
     return sum(c.isascii() for c in letters) / len(letters) >= READABLE_SHARE
 
 
+def spoken_description(text: str) -> str:
+    """The part of a description the English voice should read. Bilingual repos write
+    "<Japanese> / <English>" (seen on stream: yomiyasu), which passes the 70% rule as
+    a whole, so each " / " or " | " part is judged on its own and only readable parts
+    are spoken. The card still shows the full description."""
+    parts = [p.strip() for p in re.split(r"\s[/|]\s", str(text or "")) if p.strip()]
+    keep = [p for p in parts if readable(p)]
+    return " / ".join(keep)
+
+
 def spotlightable(t: dict, have_llm: bool) -> bool:
     """A template spotlight needs a readable description; a written one (LLM, gated)
     is grounded in the README instead, so it may take any tool."""
-    return have_llm or (t["kind"] == "hf") or readable(t.get("desc", ""))
+    return have_llm or (t["kind"] == "hf") or bool(spoken_description(t.get("desc", "")))
 
 
 def template_narration(t: dict, rank_no: int, history: dict | None = None) -> str:
@@ -337,8 +347,8 @@ def template_narration(t: dict, rank_no: int, history: dict | None = None) -> st
     if t["kind"] == "hf":
         task = t.get("task")
         return f"{head} It is a trending {task} model." if task else head
-    desc = t.get("desc") or "no description yet"
-    return f"{head} In its own words: {desc}."
+    desc = spoken_description(t.get("desc", "")) or "no description yet"
+    return f"{head} In its own words: {desc.rstrip('.')}."
 
 
 _NUM = re.compile(r"\d[\d,]*(?:\.\d+)?")

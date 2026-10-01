@@ -5,6 +5,10 @@ proposals and need the owner's one-word approval before the first public stream.
 `v3-phase-l` (cut from `origin/main` at `984fb6a`), in a separate worktree, so the other
 session's `v3-phase-g4` working directory was never touched.
 
+**2026-10-01, later the same day:** the owner made zero human in the loop mandatory. That rules
+out the human-hosted Live Lab in §6, so the pilot is now **ToolDojo Radar Live**
+(`ai-pulse-v3l2.md`). §2-§3 (baseline, policy), §5 (encoder) and §7 (scorecard) still apply.
+
 Labels used below: **[policy]** official YouTube text, fetched on the date given · **[observed]**
 read from this repo's state files · **[measured]** run on the owner's laptop this session ·
 **[estimate]** arithmetic on observed numbers · **[proposal]** needs approval · **[unknown]**.

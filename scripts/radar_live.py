@@ -327,7 +327,7 @@ class Producer:
             text = rd.llm_narration(tool, rd.facts(tool, self.history_at_start), readme)
             source = "llm" if text else "template"
         if not text:
-            if not rd.readable(tool.get("desc", "")) and tool["kind"] == "github":
+            if tool["kind"] == "github" and not rd.spoken_description(tool.get("desc", "")):
                 return None                  # no written narration and nothing readable
             text = rd.template_narration(tool, rank_no, self.history_at_start)
         words, secs = voice(text, d / "voice.mp3")
@@ -548,8 +548,18 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
         if not standby:
             summary["status"] = "failed: standby segment did not render"
             return summary
+        # connect only once the first real segment exists, so a session opens on a
+        # spotlight instead of 20 s of silent standby (seen in the second local session)
+        try:
+            first = q.get(timeout=READY_TIMEOUT)
+        except queue.Empty:
+            first = None
+        if first is None or first.get("ready"):
+            summary["status"] = "failed: no first segment"
+            return summary
         streamer = Streamer(dest)
         streamer.start()
+        pending = [first]
         offset, deadline = 0.0, time.monotonic() + minutes * 60
         while time.monotonic() < deadline:
             if max_segments and summary["segments"] >= max_segments:
@@ -568,7 +578,7 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
                 offset = 0.0              # a new connection is a new timeline
                 continue
             try:
-                seg = q.get(timeout=0.5)
+                seg = pending.pop() if pending else q.get(timeout=0.5)
             except queue.Empty:
                 if not streamer.starving():
                     continue              # a whole segment is still in reserve: keep waiting
