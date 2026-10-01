@@ -458,3 +458,19 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   invented numbers. `packaging_payoff` already had that hole.
 - **Merge B.2 before any supervised `format=tool` dispatch (Now #4).** A dispatch without it
   would have been blocked the same way.
+
+## 2026-10-01 — v3-B.3: the blocked-day fallback chain is capped at 3 attempts
+
+- **B.1's "one level only" was not enforced.** `build_script("evergreen")` falls through to news
+  when `pick_evergreen_topic` finds no topic, and `run()` re-binds `fmt` to that news, so
+  `_fallback_format` re-ran it as evergreen again. On 09-29 and 09-30 the chain was tool blocked,
+  then news blocked, then news published. Nothing but the 90-minute CI kill bounded it.
+- **The owner picked a cap, not the literal spec.** The literal reading ("a blocked evergreen
+  fallback publishes nothing") would have published nothing on 09-29 and 09-30. With
+  `MAX_DAY_ATTEMPTS = 3` (the longest chain observed), those days publish as they did, and the
+  unbounded tail is gone. Spec: `docs/spec/ai-pulse-v3b3.md`.
+- **Voice-cloning TTS projects stay refused** (PHASES Now #3, owner: "keep refusing"). No code
+  change.
+- **Why `pick_evergreen_topic` returned nothing on 3 days in a row is still unknown.** The CI
+  logs answer 403. The used-topics list is full of "how LLMs think" and "agents go rogue"
+  variants, so a 0.7 near-duplicate rejection of all 5 proposals is plausible but unproven.
