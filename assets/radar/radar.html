@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>radar</title>
+<!-- v3-L.2 (docs/spec/ai-pulse-v3l2.md). Rendered by scripts/radar_live.py in headless
+     Chromium: __load(segment) once per segment, then one screenshot per __seek(t).
+     API and model text is only ever set with textContent, never parsed as markup, and the
+     page loads no script and no network URL; fonts come from assets/fonts. Text is fitted by
+     MEASURING it (CLAUDE.md: never size text by character count). Palette and fonts are the
+     storyboard's (assets/storyboard/storyboard.html). -->
+<style>
+@font-face { font-family: "Inter"; font-weight: 900; src: url("../fonts/Inter-Black.ttf"); }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Regular.ttf"); }
+:root {
+  --bg: #090D18; --text: #F4F7FF; --subt: #96AACD; --cyan: #22D3EE; --blue: #3B82F6;
+  --violet: #8B5CF6; --yellow: #FFD60A; --card-top: #0D1426; --card-bot: #182E5C;
+}
+html, body { margin: 0; padding: 0; width: 1920px; height: 1080px; background: var(--bg);
+  overflow: hidden; }
+body { font-family: "Inter", "Segoe UI", "Microsoft YaHei", "Yu Gothic", sans-serif;
+  font-weight: 900; color: var(--text); }
+.mono { font-family: "JetBrains Mono", "Consolas", monospace; font-weight: 400; }
+#top { position: absolute; left: 80px; top: 36px; width: 1760px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between; }
+#brand { font-size: 40px; letter-spacing: 2px; }
+#brand span { color: var(--cyan); }
+#asof { font-size: 26px; color: var(--subt); }
+#card { position: absolute; left: 80px; top: 140px; width: 1100px; height: 700px;
+  box-sizing: border-box; padding: 48px; border-radius: 16px;
+  background: linear-gradient(var(--card-top), var(--card-bot));
+  display: flex; flex-direction: column; gap: 28px; }
+#chips { display: flex; gap: 18px; height: 52px; }
+.chip { font-size: 26px; line-height: 52px; padding: 0 22px; border-radius: 999px;
+  background: var(--bg); color: var(--cyan); white-space: nowrap; }
+.chip.rank { color: var(--yellow); }
+#name { height: 150px; font-size: 120px; line-height: 1.1; overflow: hidden;
+  overflow-wrap: anywhere; }
+#owner { height: 40px; font-size: 30px; color: var(--subt); white-space: nowrap;
+  overflow: hidden; }
+#desc { height: 190px; font-size: 44px; line-height: 1.3; overflow: hidden;
+  overflow-wrap: anywhere; }
+#facts { display: flex; flex-wrap: wrap; gap: 14px 18px; height: 120px; overflow: hidden;
+  align-content: flex-start; }
+.fact { font-size: 26px; line-height: 50px; padding: 0 20px; border-radius: 12px;
+  background: rgba(9, 13, 24, 0.55); color: var(--text); white-space: nowrap; }
+#bigboard { display: none; position: absolute; left: 80px; top: 140px; width: 1760px;
+  height: 700px; box-sizing: border-box; padding: 48px; border-radius: 16px;
+  background: linear-gradient(var(--card-top), var(--card-bot)); }
+#bigboard h1 { margin: 0 0 24px 0; font-size: 64px; }
+#bigboard h1 span { color: var(--cyan); }
+#side { position: absolute; left: 1240px; top: 140px; width: 600px; height: 700px; overflow: hidden;
+  box-sizing: border-box; padding: 36px 32px; border-radius: 16px; background: var(--card-top); }
+#side h2 { margin: 0 0 4px 0; font-size: 30px; color: var(--cyan); letter-spacing: 2px; }
+.by { font-size: 20px; color: var(--subt); margin: 0 0 14px 0; }
+#bigboard .by { font-size: 24px; margin: -12px 0 20px 0; }
+.row { display: flex; align-items: center; gap: 16px; height: 66px; border-radius: 12px;
+  padding: 0 14px; }
+.row.hl { background: var(--card-bot); }
+.row .rk { width: 44px; font-size: 28px; color: var(--subt); }
+.row .nm { flex: 1; min-width: 0; font-size: 30px; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; }
+.row .num { font-size: 24px; color: var(--yellow); white-space: nowrap; }
+.row .gain { font-size: 22px; color: var(--cyan); white-space: nowrap; }
+#bigboard .row { height: 64px; }
+#bigboard .row .nm { font-size: 36px; }
+#cap { position: absolute; left: 80px; top: 880px; width: 1760px; height: 110px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 50px; line-height: 1.1; overflow: hidden; }
+#bar { position: absolute; left: 80px; top: 862px; height: 6px; width: 0;
+  background: var(--cyan); border-radius: 999px; }
+#foot { position: absolute; left: 80px; top: 1012px; width: 1760px; height: 40px;
+  font-size: 22px; color: var(--subt); text-align: center; }
+</style>
+</head>
+<body>
+<div id="top"><div id="brand">TOOLDOJO <span>RADAR</span></div>
+  <div id="asof" class="mono"></div></div>
+<div id="card">
+  <div id="chips"></div>
+  <div id="name"></div>
+  <div id="owner" class="mono"></div>
+  <div id="desc"></div>
+  <div id="facts"></div>
+</div>
+<div id="bigboard"><h1>THE <span>BOARD</span></h1>
+  <div class="by mono">ranked by momentum: GitHub stars per day · Hugging Face trending score</div>
+  <div id="bigrows"></div></div>
+<div id="side"><h2>THE BOARD</h2><div class="by mono">by momentum, not total</div>
+  <div id="rows"></div></div>
+<div id="bar"></div>
+<div id="cap"></div>
+<div id="foot" class="mono">Automated stream · AI voice · data from the GitHub and Hugging Face public APIs</div>
+<script>
+(function () {
+  "use strict";
+  var seg = null;
+  var CAP_HOLD = 0.6;   // a phrase stays up this long after its last word, unless the next starts
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = String(text);
+    return e;
+  }
+  function clear(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+  function over(e) { return e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1; }
+  // Shrink until it fits; report what still does not fit at the floor.
+  function fit(e, max, min) {
+    var s = max;
+    e.style.fontSize = s + "px";
+    while (over(e) && s > min) { s -= 2; e.style.fontSize = s + "px"; }
+    return !over(e);
+  }
+  function fmt(n) { return Number(n || 0).toLocaleString("en-US"); }
+
+  function rows(target, list, hl) {
+    clear(target);
+    (list || []).forEach(function (r) {
+      var row = el("div", "row" + (r.id === hl ? " hl" : ""));
+      row.appendChild(el("div", "rk mono", "#" + r.rank));
+      row.appendChild(el("div", "nm", r.name));
+      row.appendChild(el("div", "num mono", fmt(r.number) + (r.unit === "stars" ? " ★" : " ♥")));
+      if (r.gain > 0) row.appendChild(el("div", "gain mono", "+" + fmt(r.gain)));
+      target.appendChild(row);
+    });
+  }
+
+  window.__load = function (s) {
+    seg = s;
+    var unfit = [];
+    document.getElementById("asof").textContent = s.as_of ? "data as of " + s.as_of : "";
+    var card = document.getElementById("card"), big = document.getElementById("bigboard");
+    var side = document.getElementById("side");
+    if (s.type === "spotlight") {
+      card.style.display = "flex"; big.style.display = "none"; side.style.display = "block";
+      var t = s.tool, chips = document.getElementById("chips");
+      clear(chips);
+      chips.appendChild(el("div", "chip rank mono", s.rank_label));
+      chips.appendChild(el("div", "chip mono", t.kind === "github" ? "GITHUB" : "HUGGING FACE"));
+      document.getElementById("name").textContent = t.name;
+      document.getElementById("owner").textContent = t.url_text;
+      document.getElementById("desc").textContent = t.desc;
+      var facts = document.getElementById("facts");
+      clear(facts);
+      (s.facts || []).forEach(function (f) { facts.appendChild(el("div", "fact mono", f)); });
+      if (!fit(document.getElementById("name"), 120, 56)) unfit.push("name");
+      if (!fit(document.getElementById("desc"), 44, 28)) unfit.push("desc");
+      if (!fit(document.getElementById("owner"), 30, 20)) unfit.push("owner");
+      if (over(facts)) unfit.push("facts");
+      rows(document.getElementById("rows"), s.board, s.highlight);
+    } else {
+      card.style.display = "none"; big.style.display = "block"; side.style.display = "none";
+      rows(document.getElementById("bigrows"), s.board, null);
+    }
+    window.__seek(0);
+    return unfit;
+  };
+
+  window.__seek = function (t) {
+    if (!seg) return;
+    var cap = document.getElementById("cap"), text = "";
+    var ph = seg.phrases || [];
+    for (var i = 0; i < ph.length; i++) {
+      var nextStart = i + 1 < ph.length ? ph[i + 1][0] : Infinity;
+      if (t >= ph[i][0] && t < Math.min(nextStart, ph[i][1] + CAP_HOLD)) { text = ph[i][2]; break; }
+    }
+    cap.textContent = text;
+    if (text) fit(cap, 50, 30);
+    var w = seg.length > 0 ? Math.min(1, t / seg.length) : 0;
+    document.getElementById("bar").style.width = Math.round(1760 * w) + "px";
+  };
+
+  window.__ready = true;
+})();
+</script>
+</body>
+</html>
