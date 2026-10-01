@@ -1,0 +1,195 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.30,Live,,0,0,0,{\k40}Imagine {\k28}an {\k28}AI {\k34}that
+Dialogue: 0,0:00:01.30,0:00:03.24,Live,,0,0,0,{\k32}writes {\k36}{\k42}debugs {\k24}{\k8}and {\k52}refactors
+Dialogue: 0,0:00:03.24,0:00:04.28,Live,,0,0,0,{\k28}code {\k52}right {\k14}on {\k10}your
+Dialogue: 0,0:00:04.28,0:00:04.70,Live,,0,0,0,{\k32}machine
+Dialogue: 0,0:00:05.48,0:00:06.94,Live,,0,0,0,{\k42}ZCode {\k32}{\k16}with {\k16}its {\k40}7
+Dialogue: 0,0:00:06.94,0:00:09.94,Live,,0,0,0,{\k152}286 {\k32}GitHub {\k46}stars {\k46}{\k24}is
+Dialogue: 0,0:00:09.94,0:00:11.78,Live,,0,0,0,{\k18}that {\k54}powerful {\k42}agent {\k52}{\k18}and
+Dialogue: 0,0:00:11.78,0:00:12.34,Live,,0,0,0,{\k10}you {\k12}can {\k12}be {\k22}running
+Dialogue: 0,0:00:12.34,0:00:13.00,Live,,0,0,0,{\k22}it {\k12}in {\k10}the {\k22}next
+Dialogue: 0,0:00:13.00,0:00:14.52,Live,,0,0,0,{\k28}ten {\k20}minutes {\k58}{\k30}We’ll {\k16}show
+Dialogue: 0,0:00:14.52,0:00:15.52,Live,,0,0,0,{\k14}you {\k34}exactly {\k40}how {\k12}to
+Dialogue: 0,0:00:15.52,0:00:17.28,Live,,0,0,0,{\k14}get {\k78}ZCode's {\k38}intelligent {\k46}coding
+Dialogue: 0,0:00:17.28,0:00:19.12,Live,,0,0,0,{\k44}AI {\k64}working {\k40}directly {\k36}from
+Dialogue: 0,0:00:19.12,0:00:20.36,Live,,0,0,0,{\k12}your {\k36}terminal {\k40}or {\k36}browser
+Dialogue: 0,0:00:20.36,0:00:22.24,Live,,0,0,0,{\k36}today {\k50}{\k42}ZCode {\k30}an {\k30}AI
+Dialogue: 0,0:00:22.24,0:00:23.94,Live,,0,0,0,{\k56}programming {\k52}workbench {\k26}from {\k26}Z
+Dialogue: 0,0:00:24.48,0:00:25.96,Live,,0,0,0,{\k34}AI {\k60}offers {\k20}a {\k34}desktop
+Dialogue: 0,0:00:25.96,0:00:27.46,Live,,0,0,0,{\k42}app {\k24}{\k14}web {\k36}interface {\k26}{\k8}and
+Dialogue: 0,0:00:27.46,0:00:29.56,Live,,0,0,0,{\k32}robust {\k50}terminal {\k44}agent {\k52}{\k32}As
+Dialogue: 0,0:00:29.56,0:00:30.72,Live,,0,0,0,{\k12}an {\k26}open {\k36}source {\k32}harness
+Dialogue: 0,0:00:30.94,0:00:31.82,Live,,0,0,0,{\k4}it {\k32}provides {\k28}the {\k24}core
+Dialogue: 0,0:00:31.82,0:00:32.78,Live,,0,0,0,{\k30}engine {\k22}to {\k22}build {\k22}your
+Dialogue: 0,0:00:32.78,0:00:34.74,Live,,0,0,0,{\k22}AI {\k46}coding {\k62}environment {\k46}{\k20}giving
+Dialogue: 0,0:00:34.74,0:00:36.16,Live,,0,0,0,{\k20}you {\k20}full {\k46}control {\k42}{\k14}not
+Dialogue: 0,0:00:36.16,0:00:37.14,Live,,0,0,0,{\k22}just {\k14}a {\k18}black {\k34}box
+Dialogue: 0,0:00:37.78,0:00:39.66,Live,,0,0,0,{\k32}This {\k70}repository {\k60}includes {\k26}the
+Dialogue: 0,0:00:39.66,0:00:42.18,Live,,0,0,0,{\k40}client {\k38}{\k30}backend {\k60}{\k20}UI {\k54}components
+Dialogue: 0,0:00:42.40,0:00:43.82,Live,,0,0,0,{\k8}and {\k24}full {\k44}Agent {\k66}CLI
+Dialogue: 0,0:00:43.82,0:00:45.34,Live,,0,0,0,{\k32}source {\k34}code {\k24}{\k28}It's {\k34}designed
+Dialogue: 0,0:00:45.34,0:00:47.04,Live,,0,0,0,{\k30}as {\k14}an {\k54}extensible {\k62}platform
+Dialogue: 0,0:00:47.28,0:00:48.12,Live,,0,0,0,{\k16}not {\k24}just {\k20}an {\k24}AI
+Dialogue: 0,0:00:48.12,0:00:49.64,Live,,0,0,0,{\k46}tool {\k58}{\k12}With {\k14}its {\k22}Apache
+Dialogue: 0,0:00:49.64,0:00:51.90,Live,,0,0,0,{\k50}2 {\k58}0 {\k52}license {\k56}{\k10}you
+Dialogue: 0,0:00:51.90,0:00:53.70,Live,,0,0,0,{\k16}can {\k44}modify {\k36}{\k32}extend {\k30}{\k22}and
+Dialogue: 0,0:00:53.70,0:00:55.48,Live,,0,0,0,{\k66}redistribute {\k12}your {\k52}customized {\k48}AI
+Dialogue: 0,0:00:55.48,0:00:57.98,Live,,0,0,0,{\k50}coding {\k60}environment {\k68}{\k34}It's {\k38}actively
+Dialogue: 0,0:00:57.98,0:00:59.50,Live,,0,0,0,{\k62}updated {\k44}with {\k20}its {\k26}last
+Dialogue: 0,0:00:59.50,0:01:00.66,Live,,0,0,0,{\k38}commit {\k26}just {\k32}two {\k20}days
+Dialogue: 0,0:01:00.66,0:01:02.22,Live,,0,0,0,{\k26}ago {\k22}on {\k34}September {\k64}29
+Dialogue: 0,0:01:02.72,0:01:05.08,Live,,0,0,0,{\k108}2026 {\k48}{\k6}and {\k32}only {\k42}11
+Dialogue: 0,0:01:05.08,0:01:06.76,Live,,0,0,0,{\k40}open {\k34}issues {\k42}{\k26}Before {\k26}diving
+Dialogue: 0,0:01:06.76,0:01:07.78,Live,,0,0,0,{\k26}in {\k14}{\k4}a {\k18}quick {\k30}check
+Dialogue: 0,0:01:08.06,0:01:08.82,Live,,0,0,0,{\k12}you'll {\k8}need {\k22}Git {\k24}node
+Dialogue: 0,0:01:09.22,0:01:10.94,Live,,0,0,0,{\k20}JS {\k32}version {\k62}24 {\k58}14
+Dialogue: 0,0:01:10.94,0:01:13.08,Live,,0,0,0,{\k72}0 {\k30}{\k8}and {\k68}pnpm {\k36}version
+Dialogue: 0,0:01:13.08,0:01:14.46,Live,,0,0,0,{\k38}10 {\k56}33 {\k34}2
+Dialogue: 0,0:01:15.06,0:01:16.66,Live,,0,0,0,{\k50}These {\k44}specific {\k44}versions {\k22}are
+Dialogue: 0,0:01:16.66,0:01:17.96,Live,,0,0,0,{\k36}critical {\k50}and {\k22}show {\k22}your
+Dialogue: 0,0:01:17.96,0:01:19.40,Live,,0,0,0,{\k46}environment {\k38}matches {\k28}to {\k32}avoid
+Dialogue: 0,0:01:19.40,0:01:21.26,Live,,0,0,0,{\k42}setup {\k36}headaches {\k66}{\k24}Check {\k18}the
+Dialogue: 0,0:01:21.26,0:01:22.84,Live,,0,0,0,{\k32}official {\k40}Maci {\k34}{\k34}TAML {\k4}{\k14}for
+Dialogue: 0,0:01:22.84,0:01:25.44,Live,,0,0,0,{\k32}precise {\k62}requirements {\k62}{\k38}First {\k52}{\k14}clone
+Dialogue: 0,0:01:25.44,0:01:27.06,Live,,0,0,0,{\k24}the {\k16}Z {\k30}code {\k82}repository
+Dialogue: 0,0:01:27.60,0:01:28.60,Live,,0,0,0,{\k10}From {\k14}the {\k24}root {\k38}{\k14}run
+Dialogue: 0,0:01:28.60,0:01:30.90,Live,,0,0,0,{\k88}pnpm {\k56}bootstrap {\k30}{\k24}This {\k32}crucial
+Dialogue: 0,0:01:30.90,0:01:32.74,Live,,0,0,0,{\k32}step {\k82}installs {\k28}all {\k42}workspace
+Dialogue: 0,0:01:32.74,0:01:35.00,Live,,0,0,0,{\k72}dependencies {\k36}{\k38}and {\k32}prepares {\k48}local
+Dialogue: 0,0:01:35.00,0:01:37.60,Live,,0,0,0,{\k38}desktop {\k74}resources {\k56}{\k44}ensuring {\k48}correct
+Dialogue: 0,0:01:37.60,0:01:38.32,Live,,0,0,0,{\k62}configuration
+Dialogue: 0,0:01:39.22,0:01:41.34,Live,,0,0,0,{\k38}Once {\k48}bootstrap {\k44}completes {\k60}{\k22}launch
+Dialogue: 0,0:01:41.34,0:01:42.66,Live,,0,0,0,{\k22}Z {\k40}codes {\k38}command {\k32}line
+Dialogue: 0,0:01:42.66,0:01:44.66,Live,,0,0,0,{\k50}agent {\k30}by {\k26}running {\k94}pnpm
+Dialogue: 0,0:01:44.66,0:01:46.00,Live,,0,0,0,{\k42}filter {\k44}at {\k22}Z {\k26}code
+Dialogue: 0,0:01:46.00,0:01:47.58,Live,,0,0,0,{\k42}slash {\k28}client {\k48}dev {\k18}{\k22}This
+Dialogue: 0,0:01:47.58,0:01:49.20,Live,,0,0,0,{\k28}starts {\k24}the {\k30}Agent {\k70}CLI
+Dialogue: 0,0:01:49.46,0:01:50.60,Live,,0,0,0,{\k14}putting {\k14}a {\k50}powerful {\k36}AI
+Dialogue: 0,0:01:50.60,0:01:51.96,Live,,0,0,0,{\k48}coding {\k52}assistant {\k22}at {\k14}your
+Dialogue: 0,0:01:51.96,0:01:53.72,Live,,0,0,0,{\k44}fingertips {\k35}{\k35}ready {\k22}to {\k40}interact
+Dialogue: 0,0:01:53.72,0:01:54.78,Live,,0,0,0,{\k22}in {\k8}your {\k38}terminal {\k38}without
+Dialogue: 0,0:01:54.78,0:01:56.22,Live,,0,0,0,{\k14}a {\k28}full {\k40}desktop {\k52}app
+Dialogue: 0,0:01:56.82,0:01:58.44,Live,,0,0,0,{\k20}Prefer {\k26}a {\k40}graphical {\k66}interface
+Dialogue: 0,0:01:58.86,0:02:01.16,Live,,0,0,0,{\k32}After {\k78}pnpm {\k58}bootstrap {\k50}{\k12}start
+Dialogue: 0,0:02:01.16,0:02:02.38,Live,,0,0,0,{\k22}the {\k20}web {\k32}based {\k48}workbench
+Dialogue: 0,0:02:02.38,0:02:04.46,Live,,0,0,0,{\k42}by {\k38}typing {\k98}pnpm {\k30}dev
+Dialogue: 0,0:02:04.46,0:02:06.28,Live,,0,0,0,{\k64}web {\k44}{\k14}This {\k36}launches {\k24}the
+Dialogue: 0,0:02:06.28,0:02:07.66,Live,,0,0,0,{\k16}web {\k32}server {\k22}and {\k58}backend
+Dialogue: 0,0:02:07.88,0:02:09.66,Live,,0,0,0,{\k30}typically {\k54}accessible {\k30}at {\k54}HTTP
+Dialogue: 0,0:02:10.22,0:02:11.62,Live,,0,0,0,{\k26}slash {\k26}slash {\k34}local {\k44}host
+Dialogue: 0,0:02:12.78,0:02:14.68,Live,,0,0,0,{\k70}5173 {\k34}{\k28}providing {\k22}a {\k36}visual
+Dialogue: 0,0:02:14.68,0:02:15.86,Live,,0,0,0,{\k44}workspace {\k32}for {\k20}your {\k22}AI
+Dialogue: 0,0:02:15.86,0:02:18.04,Live,,0,0,0,{\k48}coding {\k46}tasks {\k56}{\k50}Now {\k18}that
+Dialogue: 0,0:02:18.04,0:02:19.18,Live,,0,0,0,{\k28}it's {\k24}running {\k40}{\k8}what {\k14}can
+Dialogue: 0,0:02:19.18,0:02:20.70,Live,,0,0,0,{\k16}you {\k48}asterisk {\k16}do {\k62}asterisk
+Dialogue: 0,0:02:21.08,0:02:22.18,Live,,0,0,0,{\k36}Prompt {\k16}Z {\k30}code {\k28}to
+Dialogue: 0,0:02:22.18,0:02:24.36,Live,,0,0,0,{\k38}generate {\k50}code {\k40}{\k38}refactor {\k42}functions
+Dialogue: 0,0:02:24.54,0:02:25.84,Live,,0,0,0,{\k30}or {\k34}debug {\k34}issues {\k32}by
+Dialogue: 0,0:02:25.84,0:02:27.68,Live,,0,0,0,{\k50}analyzing {\k32}your {\k56}project {\k32}{\k14}Its
+Dialogue: 0,0:02:27.68,0:02:29.50,Live,,0,0,0,{\k56}capabilities {\k58}extend {\k32}to {\k36}managing
+Dialogue: 0,0:02:29.50,0:02:32.04,Live,,0,0,0,{\k56}files {\k56}{\k36}executing {\k42}tests {\k44}{\k20}and
+Dialogue: 0,0:02:32.04,0:02:33.66,Live,,0,0,0,{\k46}integrating {\k34}with {\k30}version {\k42}control
+Dialogue: 0,0:02:34.34,0:02:35.62,Live,,0,0,0,{\k18}The {\k34}agent {\k32}harness {\k44}allows
+Dialogue: 0,0:02:35.62,0:02:37.88,Live,,0,0,0,{\k66}defining {\k68}complex {\k30}coding {\k52}workflows
+Dialogue: 0,0:02:38.42,0:02:40.46,Live,,0,0,0,{\k36}automating {\k42}entire {\k64}development {\k52}cycles
+Dialogue: 0,0:02:40.80,0:02:42.48,Live,,0,0,0,{\k20}making {\k50}repetitive {\k46}tasks {\k52}a
+Dialogue: 0,0:02:42.48,0:02:43.32,Live,,0,0,0,{\k20}thing {\k16}of {\k12}the {\k26}past
+Dialogue: 0,0:02:44.02,0:02:45.18,Live,,0,0,0,{\k22}Who {\k26}should {\k44}asterisk {\k24}not
+Dialogue: 0,0:02:45.18,0:02:46.54,Live,,0,0,0,{\k56}asterisk {\k32}bother {\k32}with {\k16}Z
+Dialogue: 0,0:02:46.54,0:02:47.76,Live,,0,0,0,{\k30}code {\k54}If {\k14}you {\k24}seek
+Dialogue: 0,0:02:47.76,0:02:48.92,Live,,0,0,0,{\k16}a {\k22}one {\k32}click {\k36}{\k10}no
+Dialogue: 0,0:02:48.92,0:02:50.32,Live,,0,0,0,{\k22}set {\k20}up {\k44}solution {\k38}{\k16}or
+Dialogue: 0,0:02:50.32,0:02:51.70,Live,,0,0,0,{\k20}are {\k52}unfamiliar {\k40}with {\k26}command
+Dialogue: 0,0:02:51.70,0:02:53.32,Live,,0,0,0,{\k34}line {\k36}tools {\k60}{\k12}it {\k20}might
+Dialogue: 0,0:02:53.32,0:02:55.30,Live,,0,0,0,{\k28}feel {\k24}too {\k52}complex {\k68}{\k26}It's
+Dialogue: 0,0:02:55.30,0:02:56.56,Live,,0,0,0,{\k18}built {\k22}for {\k54}developers {\k32}wanting
+Dialogue: 0,0:02:56.56,0:02:58.44,Live,,0,0,0,{\k34}deep {\k44}control {\k30}and {\k70}customization
+Dialogue: 0,0:02:58.74,0:02:59.80,Live,,0,0,0,{\k26}not {\k12}a {\k30}fully {\k38}managed
+Dialogue: 0,0:02:59.80,0:03:01.30,Live,,0,0,0,{\k54}service {\k36}{\k12}To {\k10}get {\k38}started
+Dialogue: 0,0:03:01.30,0:03:02.34,Live,,0,0,0,{\k26}with {\k10}Z {\k20}code {\k38}today
+Dialogue: 0,0:03:02.78,0:03:03.80,Live,,0,0,0,{\k12}use {\k16}the {\k26}exact {\k48}commands
+Dialogue: 0,0:03:03.80,0:03:06.60,Live,,0,0,0,{\k94}pnpm {\k56}bootstrap {\k44}{\k8}and {\k78}pnpm
+Dialogue: 0,0:03:06.60,0:03:07.74,Live,,0,0,0,{\k38}filter {\k34}at {\k18}Z {\k24}code
+Dialogue: 0,0:03:07.74,0:03:09.24,Live,,0,0,0,{\k40}slash {\k36}CLI {\k32}dev {\k42}they’re
+Dialogue: 0,0:03:09.24,0:03:10.42,Live,,0,0,0,{\k18}in {\k8}the {\k40}description {\k42}below
+Dialogue: 0,0:03:10.94,0:03:12.14,Live,,0,0,0,{\k46}What’s {\k10}the {\k28}first {\k36}coding
+Dialogue: 0,0:03:12.14,0:03:13.32,Live,,0,0,0,{\k32}task {\k32}you'd {\k20}given {\k34}AI
+Dialogue: 0,0:03:13.32,0:03:14.92,Live,,0,0,0,{\k52}agent {\k54}{\k22}Let {\k12}us {\k20}know
+Dialogue: 0,0:03:14.92,0:03:16.12,Live,,0,0,0,{\k14}in {\k8}the {\k42}comments {\k56}and
+Dialogue: 0,0:03:16.12,0:03:17.60,Live,,0,0,0,{\k42}subscribe {\k30}to {\k28}Tool {\k48}Dojo
+Dialogue: 0,0:03:17.60,0:03:18.62,Live,,0,0,0,{\k24}for {\k20}more {\k38}hands {\k20}on
+Dialogue: 0,0:03:18.62,0:03:20.64,Live,,0,0,0,{\k36}AI {\k46}tech {\k66}{\k40}Let's {\k14}delve
+Dialogue: 0,0:03:20.64,0:03:21.96,Live,,0,0,0,{\k40}deeper {\k26}into {\k26}Z {\k40}code's
+Dialogue: 0,0:03:21.96,0:03:24.04,Live,,0,0,0,{\k72}extensibility {\k38}{\k14}Its {\k24}core {\k60}architecture
+Dialogue: 0,0:03:24.04,0:03:25.92,Live,,0,0,0,{\k46}uses {\k40}plugins {\k60}{\k18}letting {\k24}you
+Dialogue: 0,0:03:25.92,0:03:27.06,Live,,0,0,0,{\k28}swap {\k22}out {\k12}the {\k52}underlying
+Dialogue: 0,0:03:27.06,0:03:29.28,Live,,0,0,0,{\k88}LLM {\k46}like {\k68}integrating {\k20}a
+Dialogue: 0,0:03:29.28,0:03:31.14,Live,,0,0,0,{\k34}local {\k50}Ollama {\k38}instance {\k64}or
+Dialogue: 0,0:03:31.14,0:03:32.58,Live,,0,0,0,{\k54}proprietary {\k80}API
+Dialogue: 0,0:03:33.18,0:03:35.26,Live,,0,0,0,{\k28}The {\k78}pnpm {\k48}bootstrap {\k54}command
+Dialogue: 0,0:03:35.26,0:03:36.74,Live,,0,0,0,{\k44}sets {\k22}up {\k68}scaffolding {\k14}for
+Dialogue: 0,0:03:36.74,0:03:38.58,Live,,0,0,0,{\k26}these {\k36}plugins {\k52}{\k24}Find {\k46}custom
+Dialogue: 0,0:03:38.58,0:03:40.44,Live,,0,0,0,{\k34}agent {\k56}configurations {\k50}in {\k46}examples
+Dialogue: 0,0:03:40.44,0:03:42.42,Live,,0,0,0,{\k40}slash {\k58}agents {\k22}{\k52}showing {\k26}how
+Dialogue: 0,0:03:42.42,0:03:43.70,Live,,0,0,0,{\k18}to {\k30}define {\k30}new {\k50}behaviors
+Dialogue: 0,0:03:43.70,0:03:45.70,Live,,0,0,0,{\k46}and {\k46}integrate {\k50}external {\k58}tools
+Dialogue: 0,0:03:45.70,0:03:47.04,Live,,0,0,0,{\k44}like {\k40}linters {\k32}into {\k18}the
+Dialogue: 0,0:03:47.04,0:03:48.06,Live,,0,0,0,{\k54}AI's {\k38}workflow
+Dialogue: 0,0:03:48.82,0:03:50.04,Live,,0,0,0,{\k30}Consider {\k24}a {\k30}real {\k38}world
+Dialogue: 0,0:03:50.04,0:03:52.14,Live,,0,0,0,{\k36}debugging {\k70}scenario {\k54}{\k34}Instead {\k16}of
+Dialogue: 0,0:03:52.14,0:03:53.78,Live,,0,0,0,{\k34}manual {\k34}log {\k42}searches {\k54}or
+Dialogue: 0,0:03:53.78,0:03:55.08,Live,,0,0,0,{\k32}line {\k18}by {\k26}line {\k44}stepping
+Dialogue: 0,0:03:55.62,0:03:56.74,Live,,0,0,0,{\k22}prompt {\k22}Z {\k30}code {\k38}with
+Dialogue: 0,0:03:56.74,0:03:57.96,Live,,0,0,0,{\k8}the {\k20}bug {\k54}description {\k40}and
+Dialogue: 0,0:03:57.96,0:03:59.76,Live,,0,0,0,{\k26}error {\k46}messages {\k52}{\k30}Using {\k26}its
+Dialogue: 0,0:03:59.76,0:04:01.66,Live,,0,0,0,{\k50}integrated {\k46}debugging {\k56}{\k10}Z {\k28}code
+Dialogue: 0,0:04:01.66,0:04:02.88,Live,,0,0,0,{\k26}can {\k40}analyze {\k30}the {\k26}stack
+Dialogue: 0,0:04:02.88,0:04:05.14,Live,,0,0,0,{\k34}trace {\k48}{\k40}identify {\k56}faulty {\k38}code
+Dialogue: 0,0:04:05.28,0:04:06.32,Live,,0,0,0,{\k12}and {\k30}suggest {\k52}fixes
+Dialogue: 0,0:04:06.94,0:04:08.14,Live,,0,0,0,{\k20}For {\k34}instance {\k44}{\k12}for {\k10}a
+Dialogue: 0,0:04:08.14,0:04:09.50,Live,,0,0,0,{\k16}type {\k36}error {\k18}in {\k56}JavaScript
+Dialogue: 0,0:04:10.02,0:04:11.02,Live,,0,0,0,{\k10}Z {\k26}code {\k22}could {\k42}analyze
+Dialogue: 0,0:04:11.02,0:04:12.80,Live,,0,0,0,{\k52}function {\k52}parameters {\k28}and {\k46}context
+Dialogue: 0,0:04:12.80,0:04:15.00,Live,,0,0,0,{\k128}pinpointing {\k16}where {\k12}an {\k64}unexpected
+Dialogue: 0,0:04:15.00,0:04:16.86,Live,,0,0,0,{\k64}undefined {\k46}value {\k16}is {\k50}passed
+Dialogue: 0,0:04:17.42,0:04:19.16,Live,,0,0,0,{\k16}Code {\k40}generation {\k78}implications {\k40}are
+Dialogue: 0,0:04:19.16,0:04:21.60,Live,,0,0,0,{\k60}significant {\k46}{\k22}Beyond {\k66}snippets {\k40}{\k10}Z
+Dialogue: 0,0:04:21.60,0:04:23.06,Live,,0,0,0,{\k30}code {\k26}can {\k42}generate {\k48}entire
+Dialogue: 0,0:04:23.06,0:04:24.80,Live,,0,0,0,{\k60}components {\k26}from {\k78}specifications
+Dialogue: 0,0:04:25.54,0:04:27.16,Live,,0,0,0,{\k50}Imagine {\k60}describing {\k22}a {\k30}user
+Dialogue: 0,0:04:27.16,0:04:29.54,Live,,0,0,0,{\k60}authentication {\k56}flow {\k38}{\k42}including {\k42}input
+Dialogue: 0,0:04:29.54,0:04:32.00,Live,,0,0,0,{\k60}validation {\k54}{\k30}API {\k60}calls {\k22}{\k20}and
+Dialogue: 0,0:04:32.00,0:04:34.10,Live,,0,0,0,{\k26}state {\k50}management {\k58}{\k42}Z {\k34}code
+Dialogue: 0,0:04:34.10,0:04:35.94,Live,,0,0,0,{\k24}can {\k44}generate {\k62}boilerplate {\k44}code
+Dialogue: 0,0:04:36.26,0:04:37.54,Live,,0,0,0,{\k40}adhering {\k12}to {\k18}best {\k58}practices
+Dialogue: 0,0:04:37.54,0:04:39.10,Live,,0,0,0,{\k56}and {\k34}even {\k28}unit {\k28}tests
+Dialogue: 0,0:04:39.44,0:04:41.20,Live,,0,0,0,{\k20}This {\k58}drastically {\k56}reduces {\k42}time
+Dialogue: 0,0:04:41.20,0:04:43.18,Live,,0,0,0,{\k32}on {\k44}repetitive {\k54}tasks {\k68}letting
+Dialogue: 0,0:04:43.18,0:04:44.96,Live,,0,0,0,{\k56}developers {\k44}focus {\k40}on {\k38}higher
+Dialogue: 0,0:04:44.96,0:04:47.10,Live,,0,0,0,{\k32}level {\k50}architectural {\k86}decisions {\k46}and
+Dialogue: 0,0:04:47.10,0:04:49.08,Live,,0,0,0,{\k38}problem {\k44}solving {\k62}{\k30}For {\k24}those
+Dialogue: 0,0:04:49.08,0:04:51.10,Live,,0,0,0,{\k66}contributing {\k40}or {\k60}understanding {\k36}inner
+Dialogue: 0,0:04:51.10,0:04:53.30,Live,,0,0,0,{\k56}workings {\k42}{\k4}the {\k38}Agent {\k80}CLI
+Dialogue: 0,0:04:53.30,0:04:54.60,Live,,0,0,0,{\k24}and {\k24}runtime {\k48}source {\k34}code
+Dialogue: 0,0:04:54.60,0:04:56.34,Live,,0,0,0,{\k30}is {\k30}fully {\k50}available {\k42}{\k22}Trace
+Dialogue: 0,0:04:56.34,0:04:58.44,Live,,0,0,0,{\k50}execution {\k36}flow {\k46}{\k44}understand {\k34}prompt
+Dialogue: 0,0:04:58.44,0:05:01.02,Live,,0,0,0,{\k58}processing {\k54}{\k42}LLM {\k26}response {\k68}parsing
+Dialogue: 0,0:05:01.08,0:05:02.80,Live,,0,0,0,{\k12}and {\k30}action {\k36}triggers {\k68}{\k26}The
+Dialogue: 0,0:05:02.80,0:05:04.50,Live,,0,0,0,{\k44}modular {\k48}design {\k42}with {\k36}distinct
+Dialogue: 0,0:05:04.50,0:05:06.30,Live,,0,0,0,{\k56}client {\k26}{\k22}backend {\k40}{\k14}and {\k22}UI
+Dialogue: 0,0:05:06.30,0:05:08.90,Live,,0,0,0,{\k56}components {\k102}simplifies {\k64}isolating {\k38}and
+Dialogue: 0,0:05:08.90,0:05:11.48,Live,,0,0,0,{\k38}modifying {\k52}parts {\k60}{\k36}This {\k62}transparency
+Dialogue: 0,0:05:11.90,0:05:12.82,Live,,0,0,0,{\k8}a {\k38}hallmark {\k20}of {\k26}open
+Dialogue: 0,0:05:12.82,0:05:14.84,Live,,0,0,0,{\k36}source {\k48}{\k28}allows {\k36}deep {\k54}customization
+Dialogue: 0,0:05:14.84,0:05:15.84,Live,,0,0,0,{\k58}and {\k32}learning

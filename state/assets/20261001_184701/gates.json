@@ -1,0 +1,51 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "you can be running it in the next ten minutes",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "its last commit just two days ago on September 29, 2026",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "subscribe to ToolDojo for more hands-on AI tech!",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "ZCode bridges the gap between raw LLM APIs and a functional, multi-interface coding assistant, making sophisticated agentic workflows accessible to developers who want control over their environment and providers."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline mentions 'ZCo | ZCode, an AI programming workbench from Z.ai, offers a desktop app, web interface'. The source text states 'ZCode 是 AI 编程工作台，提供桌面应用、浏览器界面和终端 Agent。' The outline's phrasing "
+  },
+  "confidence": {
+    "score": 0.79,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.3999999999999999,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

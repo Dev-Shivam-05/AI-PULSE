@@ -1,0 +1,116 @@
+{
+  "title": "ZCode: Get a Coding AI Running in Min (7,286 Stars)",
+  "thumb_text": "ZCode FREE. 7,286 STARS.",
+  "description": "Imagine an AI that writes, debugs, and refactors code right on your machine. ZCode, the powerful AI coding agent harness, boasts 7,286 GitHub stars and is completely free. In this hands-on video, ToolDojo shows you exactly how to get ZCode running locally in minutes, either from your terminal or a web interface. Discover its capabilities, from generating code snippets to automating entire development workflows. We'll cover the precise setup steps, essential prerequisites, and even who might find ZCode not suitable for their needs. Get ready to transform your coding process with an intelligent, extensible AI assistant. The exact commands are in the description. Subscribe to ToolDojo.\n\n🔧 Try it yourself:\npnpm bootstrap\nhttps://github.com/zai-org/ZCode\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-01-zcode-get-a-coding-ai-running-in-10-min.html\n\nSource: https://github.com/zai-org/ZCode\n\n#AI #ArtificialIntelligence #TechNews\n\nChapters:\n0:00 AI Code Assistant\n1:10 Prerequisites Check\n2:00 Launch Workbench\n2:46 Who Should Skip\n3:49 Debug Example\n\n▶ Watch next: https://youtube.com/watch?v=i71g-MdRYqM",
+  "tags": [
+    "AI coding",
+    "ZCode",
+    "AI agent",
+    "programming AI",
+    "open source AI",
+    "developer tools",
+    "GitHub trending",
+    "free AI tool",
+    "code generation",
+    "AI assistant",
+    "ToolDojo",
+    "Nodejs",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Imagine an AI that writes, debugs, and refactors code right on your machine. ZCode, with its 7,286 GitHub stars, is that powerful agent, and you can be running it in the next ten minutes. We’ll show you exactly how to get ZCode's intelligent coding AI working directly from your terminal or browser today.",
+      "visual_query": "developer coding screen"
+    },
+    {
+      "scene_num": 2,
+      "narration": "ZCode, an AI programming workbench from Z.ai, offers a desktop app, web interface, and robust terminal agent. As an open-source harness, it provides the core engine to build your AI coding environment, giving you full control, not just a black box.",
+      "visual_query": "AI robot coding"
+    },
+    {
+      "scene_num": 3,
+      "narration": "This repository includes the client, backend, UI components, and full Agent CLI source code. It's designed as an extensible platform, not just an AI tool. With its Apache-2.0 license, you can modify, extend, and redistribute your customized AI coding environment. It's actively updated, with its last commit just two days ago on September 29, 2026, and only 11 open issues.",
+      "visual_query": "multiple computer screens"
+    },
+    {
+      "scene_num": 4,
+      "narration": "Before diving in, a quick check: you'll need Git, Node.js version 24.14.0, and pnpm version 10.33.2. These specific versions are critical; ensure your environment matches to avoid setup headaches. Check the official `mise.toml` for precise requirements.",
+      "visual_query": "terminal command line"
+    },
+    {
+      "scene_num": 5,
+      "narration": "First, clone the ZCode repository. From the root, run `pnpm bootstrap`. This crucial step installs all workspace dependencies and prepares local desktop resources, ensuring correct configuration.",
+      "visual_query": "git clone command"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Once `bootstrap` completes, launch ZCode’s command-line agent by running `pnpm --filter @zcode/cli dev`. This starts the Agent CLI, putting a powerful AI coding assistant at your fingertips, ready to interact in your terminal without a full desktop app.",
+      "visual_query": "terminal AI chat"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Prefer a graphical interface? After `pnpm bootstrap`, start the web-based workbench by typing `pnpm dev:web`. This launches the web server and backend, typically accessible at `http://localhost:5173`, providing a visual workspace for your AI coding tasks.",
+      "visual_query": "web browser coding IDE"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Now that it's running, what can you *do*? Prompt ZCode to generate code, refactor functions, or debug issues by analyzing your project. Its capabilities extend to managing files, executing tests, and integrating with version control. The agent harness allows defining complex coding workflows, automating entire development cycles, making repetitive tasks a thing of the past.",
+      "visual_query": "code editor assistant"
+    },
+    {
+      "scene_num": 9,
+      "narration": "Who should *not* bother with ZCode? If you seek a one-click, no-setup solution or are unfamiliar with command-line tools, it might feel too complex. It's built for developers wanting deep control and customization, not a fully managed service.",
+      "visual_query": "confused person looking at code"
+    },
+    {
+      "scene_num": 10,
+      "narration": "To get started with ZCode today, use the exact commands `pnpm bootstrap` and `pnpm --filter @zcode/cli dev` – they’re in the description below. What’s the first coding task you’d give an AI agent? Let us know in the comments, and subscribe to ToolDojo for more hands-on AI tech!",
+      "visual_query": "thumbs up subscribe button"
+    },
+    {
+      "scene_num": 11,
+      "narration": "Let's delve deeper into ZCode's extensibility. Its core architecture uses plugins, letting you swap out the underlying LLM, like integrating a local Ollama instance or proprietary API. The `pnpm bootstrap` command sets up scaffolding for these plugins. Find custom agent configurations in `examples/agents`, showing how to define new behaviors and integrate external tools like linters into the AI's workflow.",
+      "visual_query": "plugin architecture diagram"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Consider a real-world debugging scenario. Instead of manual log searches or line-by-line stepping, prompt ZCode with the bug description and error messages. Using its integrated debugging, ZCode can analyze the stack trace, identify faulty code, and suggest fixes. For instance, for a `TypeError` in JavaScript, ZCode could analyze function parameters and context, pinpointing where an unexpected `undefined` value is passed.",
+      "visual_query": "debugging code with AI assistant"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Code generation implications are significant. Beyond snippets, ZCode can generate entire components from specifications. Imagine describing a user authentication flow, including input validation, API calls, and state management. ZCode can generate boilerplate code, adhering to best practices, and even unit tests. This drastically reduces time on repetitive tasks, letting developers focus on higher-level architectural decisions and problem-solving.",
+      "visual_query": "AI generating complex code structure"
+    },
+    {
+      "scene_num": 14,
+      "narration": "For those contributing or understanding inner workings, the `Agent CLI and runtime source code` is fully available. Trace execution flow, understand prompt processing, LLM response parsing, and action triggers. The modular design, with distinct client, backend, and UI components, simplifies isolating and modifying parts. This transparency, a hallmark of open-source, allows deep customization and learning.",
+      "visual_query": "source code analysis tool"
+    }
+  ],
+  "synthesis_claim": "ZCode bridges the gap between raw LLM APIs and a functional, multi-interface coding assistant, making sophisticated agentic workflows accessible to developers who want control over their environment and providers.",
+  "deliverable": {
+    "kind": "command",
+    "text": "pnpm bootstrap",
+    "url": "https://github.com/zai-org/ZCode"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/zai-org/ZCode",
+  "format": "tool",
+  "signal_title": "zai-org/ZCode: Z.ai's coding agent harness. Powerful, intelligent, extensible.",
+  "verified_facts": {
+    "stars": 7286,
+    "license": "Apache-2.0",
+    "last_update": "2026-09-29",
+    "open_issues": 11
+  },
+  "cheat_sheet": "2026-10-01-zcode-get-a-coding-ai-running-in-10-min.pdf"
+}
