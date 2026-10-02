@@ -4183,5 +4183,57 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-02T18:16:18.205203",
+    "title": "Laya AI: 0 Downloads, 4941 Likes. Why?",
+    "description": "Discover Laya AI, the trending text classification model with a surprising download count and huge potential. Learn how to install this non-autoregressive, multilingual decision engine in minutes and immediately put it to work for tasks like customer support routing or content moderation. We'll show you exactly how to get started, leveraging its mathematically calibrated probabilities for reliable, real-time decisions. No hallucinations, no parsing needed—just fast, accurate classification.\n\n🔧 Try it yourself:\npip install laya\nhttps://huggingface.co/convaiinnovations/laya\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-02-laya-ai-0-downloads-4941-likes-why.html\n\n#LayaAI #TextClassification #AItools #MachineLearning #HuggingFace #ToolDojo #AI\n\nSubscribe to ToolDojo for more hands-on AI tutorials.\n\nSource: https://huggingface.co/convaiinnovations/laya\n\nChapters:\n0:00 Likes Not Downloads\n0:46 Reinforcement Learning Rules\n1:31 Automated Customer Support\n2:28 New Model Status\n3:58 Content Moderation Implication\n\n▶ Watch next: https://youtube.com/watch?v=-zMkp0hnACk",
+    "tags": [
+      "Laya AI",
+      "Text Classification",
+      "AI Tools",
+      "Hugging Face",
+      "Machine Learning",
+      "Python AI",
+      "Natural Language Processing",
+      "AI Models",
+      "Developer Tools",
+      "Fast AI",
+      "Multilingual AI",
+      "AI for Business",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Laya_AI_0_Downloads_4941_Likes_Why_20261002_180821_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261002_181023.mp4",
+      "output/shorts/short_2_sb_20261002_181047.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261002_181022.jpg",
+    "youtube_url": "https://youtube.com/watch?v=yjgtYZdEWH8",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=l0C3kcKbkEk",
+      "https://youtube.com/watch?v=NMKbWvN5HJw"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Laya AI: 0 Downloads, 4941 Likes #Shorts",
+        "description": "This clip discusses Laya AI, noting its zero downloads despite a significant number of likes.",
+        "instagram_caption": "🤔 Laya AI has 0 downloads but 4941 likes. What's behind this unusual statistic? Explore the data. Follow @tooldojo!\n#layaai #artificialintelligence #tech #data #analytics #youtubestats #ai #software #developer #innovation #growth #engagement #contentcreation #marketing #business #trending #technology #opensource #community #opensourceai"
+      },
+      {
+        "title": "Laya AI Likes vs. Downloads Explained #Shorts",
+        "description": "Analyzing the disconnect between Laya AI's download count (zero) and its like count (4941).",
+        "instagram_caption": "📈 Laya AI shows a curious trend: zero downloads but nearly 5000 likes. Let's dive into this data point. Follow @tooldojo!\n#layaai #ai #techtrends #youtubedata #likes #downloads #analytics #artificialintelligence #softwaredevelopment #innovation #businessstrategy #marketinganalytics #digitalmarketing #contentstrategy #techcommunity #opensource #developerlife #aiethics #futureoftech #datascience"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

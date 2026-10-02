@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "under ten minutes",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "90% chance",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "Laya's 'System 1' non-generative approach, combined with RLCD, offers a compelling alternative to large generative models for high-stakes, real-time decision-making where determinism and calibrated probabilities are paramount, overcoming the hallucination and parsing challenges of traditional LLMs."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific phrasing like 'This AI model has zero downloads but 4,941 likes' and 'By the end of this video, you | Meet Laya, from ConvAIInnovations.' which are not directly present i"
+  },
+  "confidence": {
+    "score": 0.84,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
