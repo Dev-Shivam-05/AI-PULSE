@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "under ten minutes",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "Jev Chat Jarvis uniquely emphasizes preemptive intent analysis and user control, transforming AI assistance from a mere content generator into a decision-support system for real-time mobile communication."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline describes a process of getting AI chat replies on a phone, including downloading an APK, opening an assistant, configuring settings, and enabling permissions. It also details how the AI an"
+  },
+  "confidence": {
+    "score": 0.836,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.63,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

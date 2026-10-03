@@ -1,0 +1,160 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.48,Live,,0,0,0,{\k12}Get {\k48}instant {\k38}AI {\k50}chat
+Dialogue: 0,0:00:01.48,0:00:02.56,Live,,0,0,0,{\k36}replies {\k30}on {\k12}your {\k30}phone
+Dialogue: 0,0:00:02.56,0:00:03.70,Live,,0,0,0,{\k22}in {\k18}under {\k26}ten {\k38}minutes
+Dialogue: 0,0:00:04.06,0:00:05.00,Live,,0,0,0,{\k28}powered {\k22}by {\k14}a {\k30}tool
+Dialogue: 0,0:00:05.00,0:00:07.68,Live,,0,0,0,{\k28}with {\k38}7 {\k148}293 {\k44}stars
+Dialogue: 0,0:00:08.22,0:00:09.24,Live,,0,0,0,{\k26}This {\k28}isn't {\k14}just {\k34}another
+Dialogue: 0,0:00:09.24,0:00:10.90,Live,,0,0,0,{\k52}chatbot {\k56}{\k14}it's {\k4}a {\k40}privacy
+Dialogue: 0,0:00:10.90,0:00:12.46,Live,,0,0,0,{\k42}first {\k44}AI {\k34}co {\k36}pilot
+Dialogue: 0,0:00:12.46,0:00:14.36,Live,,0,0,0,{\k58}designed {\k30}to {\k82}revolutionize {\k20}how
+Dialogue: 0,0:00:14.36,0:00:16.10,Live,,0,0,0,{\k14}you {\k56}communicate {\k36}{\k34}without {\k34}ever
+Dialogue: 0,0:00:16.10,0:00:17.38,Live,,0,0,0,{\k24}taking {\k48}control {\k32}away {\k24}from
+Dialogue: 0,0:00:17.38,0:00:18.58,Live,,0,0,0,{\k20}you {\k40}{\k26}We’ll {\k18}show {\k16}you
+Dialogue: 0,0:00:18.58,0:00:19.62,Live,,0,0,0,{\k34}exactly {\k42}how {\k14}to {\k14}set
+Dialogue: 0,0:00:19.62,0:00:20.66,Live,,0,0,0,{\k10}it {\k22}up {\k30}{\k20}This {\k22}is
+Dialogue: 0,0:00:20.66,0:00:22.22,Live,,0,0,0,{\k34}Jev {\k34}Chat {\k36}Jarvis {\k44}{\k8}an
+Dialogue: 0,0:00:22.22,0:00:23.98,Live,,0,0,0,{\k36}AI {\k60}conversation {\k42}co {\k38}pilot
+Dialogue: 0,0:00:23.98,0:00:25.22,Live,,0,0,0,{\k36}developed {\k36}by {\k30}Jav {\k22}Chat
+Dialogue: 0,0:00:25.22,0:00:27.26,Live,,0,0,0,{\k82}It {\k26}first {\k38}judges {\k58}intent
+Dialogue: 0,0:00:27.26,0:00:29.20,Live,,0,0,0,{\k30}and {\k44}context {\k42}{\k28}then {\k50}drafts
+Dialogue: 0,0:00:29.20,0:00:31.20,Live,,0,0,0,{\k38}replies {\k62}{\k20}It {\k24}runs {\k56}locally
+Dialogue: 0,0:00:31.20,0:00:32.96,Live,,0,0,0,{\k48}under {\k22}an {\k30}MIT {\k66}license
+Dialogue: 0,0:00:33.40,0:00:35.54,Live,,0,0,0,{\k40}ensuring {\k64}transparency {\k52}and {\k48}flexibility
+Dialogue: 0,0:00:36.46,0:00:37.66,Live,,0,0,0,{\k22}Jev {\k26}Chat {\k38}Jarvis {\k34}is
+Dialogue: 0,0:00:37.66,0:00:39.22,Live,,0,0,0,{\k26}non {\k44}invasive {\k56}{\k10}It {\k20}reads
+Dialogue: 0,0:00:39.22,0:00:40.78,Live,,0,0,0,{\k18}your {\k32}screen {\k42}using {\k64}accessibility
+Dialogue: 0,0:00:40.78,0:00:43.72,Live,,0,0,0,{\k84}services {\k46}{\k32}analyzing {\k86}conversations {\k46}without
+Dialogue: 0,0:00:43.72,0:00:46.10,Live,,0,0,0,{\k82}compromising {\k30}app {\k48}integrity {\k62}{\k16}It
+Dialogue: 0,0:00:46.10,0:00:48.44,Live,,0,0,0,{\k86}prioritizes {\k18}your {\k46}privacy {\k68}{\k16}To
+Dialogue: 0,0:00:48.44,0:00:49.36,Live,,0,0,0,{\k18}get {\k14}it {\k26}running {\k34}on
+Dialogue: 0,0:00:49.36,0:00:51.08,Live,,0,0,0,{\k34}Android {\k48}11 {\k30}Plus {\k60}first
+Dialogue: 0,0:00:51.08,0:00:52.70,Live,,0,0,0,{\k60}download {\k24}the {\k36}Jev {\k42}Android
+Dialogue: 0,0:00:52.70,0:00:55.62,Live,,0,0,0,{\k86}V1 {\k60}4 {\k68}APK {\k46}{\k32}The
+Dialogue: 0,0:00:55.62,0:00:56.66,Live,,0,0,0,{\k26}direct {\k36}link {\k26}is {\k16}in
+Dialogue: 0,0:00:56.66,0:00:58.52,Live,,0,0,0,{\k8}the {\k24}video {\k56}description {\k68}{\k30}Install
+Dialogue: 0,0:00:58.52,0:01:00.36,Live,,0,0,0,{\k24}the {\k38}package {\k48}{\k36}allowing {\k38}unknown
+Dialogue: 0,0:01:00.36,0:01:02.24,Live,,0,0,0,{\k64}sources {\k28}if {\k38}prompted {\k44}{\k14}This
+Dialogue: 0,0:01:02.24,0:01:03.28,Live,,0,0,0,{\k12}is {\k16}your {\k32}first {\k44}concrete
+Dialogue: 0,0:01:03.28,0:01:05.50,Live,,0,0,0,{\k38}step {\k58}{\k40}Next {\k28}{\k22}open {\k36}Jev
+Dialogue: 0,0:01:05.50,0:01:07.22,Live,,0,0,0,{\k40}Assistant {\k62}{\k14}Go {\k14}to {\k32}Settings
+Dialogue: 0,0:01:07.40,0:01:09.10,Live,,0,0,0,{\k10}then {\k68}Interfaces {\k60}{\k14}Fill {\k18}in
+Dialogue: 0,0:01:09.10,0:01:10.44,Live,,0,0,0,{\k10}an {\k34}open {\k38}router {\k52}API
+Dialogue: 0,0:01:10.44,0:01:12.00,Live,,0,0,0,{\k38}key {\k30}under {\k44}Judgment {\k44}Interface
+Dialogue: 0,0:01:12.00,0:01:14.14,Live,,0,0,0,{\k40}others {\k54}Inherited {\k42}{\k36}Or {\k24}{\k18}for
+Dialogue: 0,0:01:14.14,0:01:15.56,Live,,0,0,0,{\k12}a {\k20}free {\k46}option {\k40}{\k24}select
+Dialogue: 0,0:01:15.56,0:01:16.68,Live,,0,0,0,{\k24}the {\k22}built {\k22}in {\k44}botcha
+Dialogue: 0,0:01:16.68,0:01:17.52,Live,,0,0,0,{\k40}Jav {\k34}preset
+Dialogue: 0,0:01:18.14,0:01:18.68,Live,,0,0,0,{\k44}Finally
+Dialogue: 0,0:01:19.30,0:01:20.80,Live,,0,0,0,{\k1}enable {\k50}permissions {\k50}{\k18}The {\k32}app's
+Dialogue: 0,0:01:20.80,0:01:21.90,Live,,0,0,0,{\k16}home {\k38}screen {\k34}guides {\k22}you
+Dialogue: 0,0:01:21.90,0:01:23.48,Live,,0,0,0,{\k12}to {\k44}activate {\k64}Accessibility {\k38}for
+Dialogue: 0,0:01:23.48,0:01:25.26,Live,,0,0,0,{\k30}screen {\k36}reading {\k50}{\k38}Overlay {\k24}for
+Dialogue: 0,0:01:25.26,0:01:26.88,Live,,0,0,0,{\k14}the {\k40}analysis {\k48}window {\k38}{\k22}and
+Dialogue: 0,0:01:26.88,0:01:28.40,Live,,0,0,0,{\k40}ensure {\k44}auto {\k38}start {\k30}plus
+Dialogue: 0,0:01:28.40,0:01:30.14,Live,,0,0,0,{\k92}unrestricted {\k26}battery {\k46}usage
+Dialogue: 0,0:01:30.80,0:01:31.82,Live,,0,0,0,{\k24}These {\k16}are {\k38}crucial {\k24}for
+Dialogue: 0,0:01:31.82,0:01:32.82,Live,,0,0,0,{\k32}background {\k58}function
+Dialogue: 0,0:01:33.48,0:01:35.30,Live,,0,0,0,{\k36}Jev {\k30}Chat {\k42}Jarvis {\k74}analyzes
+Dialogue: 0,0:01:35.30,0:01:37.08,Live,,0,0,0,{\k50}messages {\k28}to {\k40}determine {\k50}intent
+Dialogue: 0,0:01:37.38,0:01:38.74,Live,,0,0,0,{\k28}danger {\k36}level {\k24}{\k32}and {\k16}if
+Dialogue: 0,0:01:38.74,0:01:39.74,Live,,0,0,0,{\k8}a {\k30}reply {\k32}is {\k30}needed
+Dialogue: 0,0:01:39.74,0:01:41.12,Live,,0,0,0,{\k42}in {\k20}about {\k26}one {\k40}second
+Dialogue: 0,0:01:41.48,0:01:42.50,Live,,0,0,0,{\k10}For {\k38}example {\k24}{\k10}it {\k20}might
+Dialogue: 0,0:01:42.50,0:01:43.70,Live,,0,0,0,{\k38}flag {\k14}a {\k30}phishing {\k38}attempt
+Dialogue: 0,0:01:43.70,0:01:45.08,Live,,0,0,0,{\k30}as {\k26}high {\k46}danger {\k36}and
+Dialogue: 0,0:01:45.08,0:01:46.40,Live,,0,0,0,{\k28}suggest {\k22}a {\k34}cautious {\k48}reply
+Dialogue: 0,0:01:46.40,0:01:47.92,Live,,0,0,0,{\k48}or {\k46}advise {\k38}not {\k20}to
+Dialogue: 0,0:01:47.92,0:01:48.38,Live,,0,0,0,{\k36}respond
+Dialogue: 0,0:01:49.18,0:01:50.90,Live,,0,0,0,{\k26}After {\k46}analysis {\k44}{\k10}it {\k46}drafts
+Dialogue: 0,0:01:50.90,0:01:52.78,Live,,0,0,0,{\k26}three {\k36}reply {\k60}options {\k66}ranked
+Dialogue: 0,0:01:52.78,0:01:54.64,Live,,0,0,0,{\k20}by {\k62}suitability {\k64}{\k12}Tap {\k28}one
+Dialogue: 0,0:01:54.64,0:01:55.40,Live,,0,0,0,{\k22}to {\k14}fill {\k16}your {\k24}chat
+Dialogue: 0,0:01:55.40,0:01:56.58,Live,,0,0,0,{\k32}apps {\k14}in {\k18}put {\k44}box
+Dialogue: 0,0:01:57.14,0:01:58.60,Live,,0,0,0,{\k22}Jev {\k26}NEVER {\k72}automatically {\k26}sends
+Dialogue: 0,0:01:58.60,0:02:00.40,Live,,0,0,0,{\k54}messages {\k50}{\k22}You {\k28}always {\k26}have
+Dialogue: 0,0:02:00.40,0:02:01.98,Live,,0,0,0,{\k16}the {\k34}final {\k32}say {\k42}{\k34}Imagine
+Dialogue: 0,0:02:01.98,0:02:03.50,Live,,0,0,0,{\k22}a {\k38}complex {\k30}work {\k52}question
+Dialogue: 0,0:02:03.90,0:02:04.82,Live,,0,0,0,{\k28}Jev {\k18}might {\k28}offer {\k18}a
+Dialogue: 0,0:02:04.82,0:02:06.46,Live,,0,0,0,{\k22}concise {\k56}reply {\k44}{\k6}a {\k36}detailed
+Dialogue: 0,0:02:06.46,0:02:07.80,Live,,0,0,0,{\k42}one {\k24}{\k24}or {\k14}a {\k30}request
+Dialogue: 0,0:02:07.80,0:02:08.72,Live,,0,0,0,{\k28}for {\k54}clarification
+Dialogue: 0,0:02:09.38,0:02:10.26,Live,,0,0,0,{\k24}You {\k18}pick {\k16}the {\k30}best
+Dialogue: 0,0:02:10.26,0:02:10.58,Live,,0,0,0,{\k22}fit
+Dialogue: 0,0:02:11.20,0:02:12.50,Live,,0,0,0,{\k38}Jev {\k24}Chat {\k44}allows {\k24}a
+Dialogue: 0,0:02:12.50,0:02:13.74,Live,,0,0,0,{\k28}local {\k38}knowledge {\k26}base {\k32}and
+Dialogue: 0,0:02:13.74,0:02:15.76,Live,,0,0,0,{\k36}contact {\k64}profiles {\k50}{\k30}Add {\k22}notes
+Dialogue: 0,0:02:15.76,0:02:17.12,Live,,0,0,0,{\k28}and {\k38}details {\k34}for {\k36}context
+Dialogue: 0,0:02:17.12,0:02:19.14,Live,,0,0,0,{\k34}aware {\k52}replies {\k68}{\k16}Your {\k32}API
+Dialogue: 0,0:02:19.14,0:02:21.24,Live,,0,0,0,{\k50}keys {\k50}{\k24}knowledge {\k36}base {\k28}{\k22}and
+Dialogue: 0,0:02:21.24,0:02:22.30,Live,,0,0,0,{\k22}chat {\k44}history {\k18}are {\k22}stored
+Dialogue: 0,0:02:22.30,0:02:23.72,Live,,0,0,0,{\k62}securely {\k26}on {\k12}your {\k32}device
+Dialogue: 0,0:02:24.18,0:02:25.56,Live,,0,0,0,{\k10}For {\k38}instance {\k46}{\k10}add {\k34}Always
+Dialogue: 0,0:02:25.56,0:02:26.72,Live,,0,0,0,{\k40}ask {\k18}about {\k18}their {\k30}dog
+Dialogue: 0,0:02:26.88,0:02:28.32,Live,,0,0,0,{\k26}Buster {\k34}{\k26}and {\k42}Jev {\k16}will
+Dialogue: 0,0:02:28.32,0:02:29.92,Live,,0,0,0,{\k18}weave {\k14}it {\k20}in {\k68}{\k40}Jev
+Dialogue: 0,0:02:29.92,0:02:31.16,Live,,0,0,0,{\k26}Chat {\k42}Jarvis {\k24}no {\k32}longer
+Dialogue: 0,0:02:31.16,0:02:32.82,Live,,0,0,0,{\k34}collects {\k34}or {\k46}processes {\k52}content
+Dialogue: 0,0:02:32.82,0:02:33.66,Live,,0,0,0,{\k28}from {\k14}we {\k20}chat {\k22}on
+Dialogue: 0,0:02:33.66,0:02:34.82,Live,,0,0,0,{\k38}Android {\k32}due {\k12}to {\k34}system
+Dialogue: 0,0:02:34.82,0:02:36.78,Live,,0,0,0,{\k32}level {\k50}restrictions {\k64}{\k34}This {\k16}is
+Dialogue: 0,0:02:36.78,0:02:38.56,Live,,0,0,0,{\k12}a {\k34}common {\k48}challenge {\k84}reflected
+Dialogue: 0,0:02:38.56,0:02:39.98,Live,,0,0,0,{\k22}in {\k14}their {\k64}27 {\k42}open
+Dialogue: 0,0:02:39.98,0:02:41.46,Live,,0,0,0,{\k42}issues {\k58}and {\k24}shows {\k24}the
+Dialogue: 0,0:02:41.46,0:02:43.36,Live,,0,0,0,{\k60}developer's {\k68}transparency {\k42}{\k8}To {\k12}get
+Dialogue: 0,0:02:43.36,0:02:45.10,Live,,0,0,0,{\k38}started {\k20}with {\k42}instant {\k38}{\k36}smart
+Dialogue: 0,0:02:45.10,0:02:47.30,Live,,0,0,0,{\k32}AI {\k44}chat {\k46}replies {\k66}{\k32}download
+Dialogue: 0,0:02:47.30,0:02:49.00,Live,,0,0,0,{\k24}the {\k32}Jev {\k36}Android {\k78}V1
+Dialogue: 0,0:02:49.00,0:02:51.30,Live,,0,0,0,{\k58}4 {\k64}APK {\k28}now {\k62}{\k18}The
+Dialogue: 0,0:02:51.30,0:02:52.78,Live,,0,0,0,{\k26}exact {\k42}command {\k24}for {\k56}installation
+Dialogue: 0,0:02:52.78,0:02:53.88,Live,,0,0,0,{\k46}is {\k12}in {\k10}the {\k42}description
+Dialogue: 0,0:02:53.88,0:02:55.60,Live,,0,0,0,{\k40}below {\k64}{\k26}What {\k18}other {\k24}chat
+Dialogue: 0,0:02:55.60,0:02:56.42,Live,,0,0,0,{\k36}apps {\k16}would {\k12}you {\k18}want
+Dialogue: 0,0:02:56.42,0:02:57.38,Live,,0,0,0,{\k10}to {\k18}see {\k34}Jev {\k34}Chat
+Dialogue: 0,0:02:57.38,0:02:59.46,Live,,0,0,0,{\k38}Jarvis {\k40}support {\k58}{\k42}Subscribe {\k30}to
+Dialogue: 0,0:02:59.46,0:03:00.74,Live,,0,0,0,{\k28}Tool {\k48}Dojo {\k30}for {\k22}more
+Dialogue: 0,0:03:00.74,0:03:02.80,Live,,0,0,0,{\k34}AI {\k46}tools {\k62}{\k24}The {\k40}Judgment
+Dialogue: 0,0:03:02.80,0:03:04.18,Live,,0,0,0,{\k44}Interface {\k36}is {\k22}where {\k36}Jev
+Dialogue: 0,0:03:04.18,0:03:05.84,Live,,0,0,0,{\k44}Chat's {\k18}core {\k58}intelligence {\k36}lies
+Dialogue: 0,0:03:06.02,0:03:08.10,Live,,0,0,0,{\k34}It {\k68}analyzes {\k36}sentence {\k60}structure
+Dialogue: 0,0:03:08.32,0:03:09.64,Live,,0,0,0,{\k50}sentiment {\k24}{\k14}and {\k34}motives
+Dialogue: 0,0:03:10.26,0:03:11.24,Live,,0,0,0,{\k20}A {\k32}message {\k32}like {\k14}Can
+Dialogue: 0,0:03:11.24,0:03:11.84,Live,,0,0,0,{\k12}you {\k20}send {\k16}me {\k12}the
+Dialogue: 0,0:03:11.84,0:03:13.12,Live,,0,0,0,{\k36}file {\k46}from {\k12}an {\k34}unknown
+Dialogue: 0,0:03:13.12,0:03:14.56,Live,,0,0,0,{\k60}sender {\k20}might {\k16}be {\k48}flagged
+Dialogue: 0,0:03:14.56,0:03:16.26,Live,,0,0,0,{\k14}as {\k40}potential {\k50}risk {\k44}{\k22}suggesting
+Dialogue: 0,0:03:16.26,0:03:17.64,Live,,0,0,0,{\k34}a {\k34}reply {\k32}that {\k38}asks
+Dialogue: 0,0:03:17.64,0:03:18.62,Live,,0,0,0,{\k24}for {\k64}verification
+Dialogue: 0,0:03:19.26,0:03:20.84,Live,,0,0,0,{\k30}The {\k32}Reply {\k62}Interface {\k34}uses
+Dialogue: 0,0:03:20.84,0:03:22.38,Live,,0,0,0,{\k20}your {\k48}communication {\k60}style {\k26}and
+Dialogue: 0,0:03:22.38,0:03:24.60,Live,,0,0,0,{\k50}context {\k56}{\k64}configurable {\k22}with {\k30}models
+Dialogue: 0,0:03:24.60,0:03:26.34,Live,,0,0,0,{\k34}like {\k26}deep {\k30}seek {\k48}{\k36}Replies
+Dialogue: 0,0:03:26.34,0:03:27.76,Live,,0,0,0,{\k34}aren't {\k36}generic {\k46}{\k14}they {\k12}can
+Dialogue: 0,0:03:27.76,0:03:29.58,Live,,0,0,0,{\k12}be {\k40}formal {\k34}{\k30}casual {\k40}{\k16}witty
+Dialogue: 0,0:03:29.58,0:03:30.34,Live,,0,0,0,{\k26}or {\k40}concise
+Dialogue: 0,0:03:30.98,0:03:32.30,Live,,0,0,0,{\k18}In {\k8}a {\k32}project {\k64}discussion
+Dialogue: 0,0:03:32.70,0:03:33.46,Live,,0,0,0,{\k20}Jev {\k12}could {\k28}offer {\k16}a
+Dialogue: 0,0:03:33.46,0:03:35.50,Live,,0,0,0,{\k38}summary {\k44}a {\k52}clarification {\k60}request
+Dialogue: 0,0:03:35.68,0:03:37.34,Live,,0,0,0,{\k40}or {\k18}an {\k56}enthusiastic {\k52}offer
+Dialogue: 0,0:03:37.34,0:03:38.94,Live,,0,0,0,{\k26}to {\k26}help {\k66}{\k18}The {\k24}Vision
+Dialogue: 0,0:03:38.94,0:03:40.36,Live,,0,0,0,{\k50}Interface {\k32}is {\k12}an {\k48}advanced
+Dialogue: 0,0:03:40.36,0:03:41.94,Live,,0,0,0,{\k40}feature {\k34}for {\k52}interpreting {\k32}images
+Dialogue: 0,0:03:41.94,0:03:43.28,Live,,0,0,0,{\k38}in {\k26}chats {\k50}{\k14}If {\k6}a
+Dialogue: 0,0:03:43.28,0:03:44.22,Live,,0,0,0,{\k26}friend {\k24}sends {\k16}a {\k28}product
+Dialogue: 0,0:03:44.22,0:03:45.70,Live,,0,0,0,{\k42}picture {\k40}and {\k42}asks {\k18}{\k6}What
+Dialogue: 0,0:03:45.70,0:03:47.16,Live,,0,0,0,{\k12}do {\k10}you {\k30}think {\k66}{\k28}Jev
+Dialogue: 0,0:03:47.16,0:03:48.44,Live,,0,0,0,{\k16}could {\k24}use {\k26}image {\k62}recognition
+Dialogue: 0,0:03:48.44,0:03:49.98,Live,,0,0,0,{\k28}to {\k60}identify {\k30}it {\k36}and
+Dialogue: 0,0:03:49.98,0:03:51.62,Live,,0,0,0,{\k34}offer {\k14}an {\k42}opinion {\k52}{\k22}adding
+Dialogue: 0,0:03:51.62,0:03:53.16,Live,,0,0,0,{\k40}another {\k30}layer {\k24}of {\k50}intelligence

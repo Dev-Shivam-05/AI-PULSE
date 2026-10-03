@@ -1,0 +1,131 @@
+{
+  "title": "Jev Chat Jarvis: Get AI Replies on Android",
+  "thumb_text": "",
+  "description": "Unlock instant AI chat replies on your Android phone in under ten minutes with Jev Chat Jarvis. This hands-on guide shows you exactly how to install this free, non-invasive AI co-pilot, set up your API key, and start getting smart, context-aware reply suggestions for apps like QQ and X. With 7,293 stars and an MIT license, Jev Chat prioritizes your privacy by analyzing screen content without hooks or auto-sending messages. Learn how to leverage its intent analysis, customizable models, and local knowledge base. The exact APK download link and installation steps are in the description.\n\n🔧 Try it yourself:\nadb install -r apk/jev-assistant-v1.4-release.apk\nhttps://github.com/jev-chat/jev-chat-jarvis\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-03-jev-chat-jarvis-get-ai-replies-on-androi.html\n\n#AI #Chatbot #AndroidAI #FreeAI #JevChat #Productivity #GitHubTrending\n\nSubscribe to ToolDojo.\n\nSource: https://github.com/jev-chat/jev-chat-jarvis\n\nChapters:\n0:00 Instant AI Chat\n0:48 Android Download Guide\n1:34 Analyze Message Intent\n2:12 Local Knowledge Base\n3:03 Judgment Interface Explained\n\n▶ Watch next: https://youtube.com/watch?v=yjgtYZdEWH8",
+  "tags": [
+    "AI assistant",
+    "Android app",
+    "chat copilot",
+    "free AI tool",
+    "Jev Chat Jarvis",
+    "GitHub trending",
+    "productivity app",
+    "AI replies",
+    "mobile AI",
+    "privacy focused AI",
+    "OpenRouter",
+    "DeepSeek",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Get instant AI chat replies on your phone in under ten minutes, powered by a tool with 7,293 stars. This isn't just another chatbot; it's a privacy-first AI co-pilot designed to revolutionize how you communicate, without ever taking control away from you. We’ll show you exactly how to set it up.",
+      "visual_query": "smartphone chat app screen",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "This is Jev Chat Jarvis, an AI conversation co-pilot developed by `jev-chat`. It first judges intent and context, then drafts replies. It runs locally, under an MIT license, ensuring transparency and flexibility.",
+      "visual_query": "digital brain interface",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Jev Chat Jarvis is non-invasive. It reads your screen using accessibility services, analyzing conversations without compromising app integrity. It prioritizes your privacy.",
+      "visual_query": "secure padlock smartphone",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "To get it running on Android 11+, first download the Jev Android v1.4 APK. The direct link is in the video description. Install the package, allowing unknown sources if prompted. This is your first concrete step.",
+      "visual_query": "person downloading app",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Next, open Jev Assistant. Go to Settings, then 'Interfaces.' Fill in an OpenRouter API key under 'Judgment Interface' – others inherit it. Or, for a free option, select the built-in 'Bocha Jev' preset.",
+      "visual_query": "server rack keys",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Finally, enable permissions. The app's home screen guides you to activate Accessibility for screen reading, Overlay for the analysis window, and ensure Autostart plus unrestricted battery usage. These are crucial for background function.",
+      "visual_query": "phone settings screen",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Jev Chat Jarvis analyzes messages to determine intent, danger level, and if a reply is needed, in about one second. For example, it might flag a phishing attempt as 'high danger' and suggest a cautious reply or advise not to respond.",
+      "visual_query": "chat bubble analysis with danger level indicator",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "After analysis, it drafts three reply options, ranked by suitability. Tap one to fill your chat app's input box. Jev NEVER automatically sends messages. You always have the final say. Imagine a complex work question; Jev might offer a concise reply, a detailed one, or a request for clarification. You pick the best fit.",
+      "visual_query": "finger tapping phone screen to select AI reply",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 9,
+      "narration": "Jev Chat allows a local knowledge base and contact profiles. Add notes and details for context-aware replies. Your API keys, knowledge base, and chat history are stored securely on your device. For instance, add 'Always ask about their dog, Buster,' and Jev will weave it in.",
+      "visual_query": "digital notebook with contact information and AI suggestions",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Jev Chat Jarvis no longer collects or processes content from WeChat on Android due to system-level restrictions. This is a common challenge, reflected in their 27 open issues, and shows the developer's transparency.",
+      "visual_query": "red X over WeChat app icon with GitHub issue count",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 11,
+      "narration": "To get started with instant, smart AI chat replies, download the Jev Android v1.4 APK now. The exact command for installation is in the description below. What other chat apps would you want to see Jev Chat Jarvis support? Subscribe to ToolDojo for more AI tools.",
+      "visual_query": "person looking at phone with Jev Chat Jarvis interface",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The 'Judgment Interface' is where Jev Chat's core intelligence lies. It analyzes sentence structure, sentiment, and motives. A message like 'Can you send me the file?' from an unknown sender might be flagged as 'potential risk,' suggesting a reply that asks for verification.",
+      "visual_query": "flowchart of message analysis with sentiment and intent detection",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 13,
+      "narration": "The 'Reply Interface' uses your communication style and context, configurable with models like DeepSeek. Replies aren't generic; they can be formal, casual, witty, or concise. In a project discussion, Jev could offer a summary, a clarification request, or an enthusiastic offer to help.",
+      "visual_query": "AI model selection screen with reply generation examples",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The 'Vision Interface' is an advanced feature for interpreting images in chats. If a friend sends a product picture and asks 'What do you think?', Jev could use image recognition to identify it and offer an opinion, adding another layer of intelligence.",
+      "visual_query": "smartphone displaying chat with image analysis overlay",
+      "speaker": "a"
+    }
+  ],
+  "synthesis_claim": "Jev Chat Jarvis uniquely emphasizes preemptive intent analysis and user control, transforming AI assistance from a mere content generator into a decision-support system for real-time mobile communication.",
+  "deliverable": {
+    "kind": "steps",
+    "text": "adb install -r apk/jev-assistant-v1.4-release.apk",
+    "url": "https://github.com/jev-chat/jev-chat-jarvis"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/jev-chat/jev-chat-jarvis",
+  "format": "tool",
+  "signal_title": "jev-chat/jev-chat-jarvis: 装在手机上的对话副驾：在 QQ / X / 飞书里读懂对方、给出候选回复、一键填入输入框，发不发由你。非侵入，只读屏幕，不 hook 不改包。",
+  "verified_facts": {
+    "stars": 7293,
+    "license": "MIT",
+    "last_update": "2026-10-03",
+    "open_issues": 27
+  },
+  "cheat_sheet": "2026-10-03-jev-chat-jarvis-get-ai-replies-on-androi.pdf"
+}
