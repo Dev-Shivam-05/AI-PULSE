@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 6,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The rapid release of advanced AI models like GPT-6, coupled with internal safety concerns and the practical challenges of deploying AI agents, reveals a growing tension between AI's accelerating capabilities and the industry's capacity to manage its risks and ethical implications."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a specific structure for a \"This week's AI Roundup\" video, including a distinct opening, segment transitions, and a concluding synthesis claim. The sources provide individual ne"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
