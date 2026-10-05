@@ -24,6 +24,15 @@ name that is not written there. If a decision is missing, add a row and get one 
 - **ffmpeg 8.1.2 is on PATH** (winget) and **OBS Studio is installed but has never been launched**
   (verified 2026-10-01). For screen capture use `ddagrab` (Desktop Duplication, what OBS uses):
   `gdigrab` was measured at ~20 of 30 fps at 1080p on this laptop. `scripts/live_preflight.py`.
+- **`.env` is read from the checkout's own root** (`config.BASE`), so a worktree needs its own
+  gitignored copy. Without one, Radar Live silently uses template narration (no Gemini key)
+  or exits with "Radar Live is off" (no stream key). `E:\YOUTUBE\AI-PULSE\.env` holds
+  `GEMINI_API_KEY`, `YT_STREAM_URL`, `YT_STREAM_KEY` (verified 2026-10-05).
+- **Studio from a script:** launch Chrome with `--remote-debugging-port=9222
+  --user-data-dir=<scratchpad>/chrome-yt`, let the owner log in, then read the page through
+  Playwright `connect_over_cdp`. The stream key was written straight into `.env` and never
+  printed. Close that window afterwards: while it is open, anything local can drive the
+  logged-in browser. A stream key's next broadcast inherits Private (verified 2026-10-05).
 - **Another Claude session may own the shared working dir.** Work in a separate worktree, and before
   committing shared docs (PHASES/HANDOFF/DECISIONS/CLAUDE.md) run the read-only
   `git merge-tree --write-tree origin/<their-branch> <your-branch>` — a board row placed next to a

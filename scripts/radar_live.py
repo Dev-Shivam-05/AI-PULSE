@@ -49,6 +49,8 @@ REFRESH_SECONDS = 15 * 60                   # row 8
 READY_TIMEOUT = 300  # first data fetch + browser + standby render, before giving up
 TTS_SECONDS = 120    # wall clock for one narration
 MAX_FAILURES = 5     # row 21a: consecutive failed segments end the session
+PREROLL = 3          # v3l3 row 1: segments ready before the connection opens
+MUSIC_VOLUME = 0.07  # v3l3 row 4: the long-form's bed level (factverse_engine.py)
 # Each remuxed segment restarts its TS continuity counters, so the demuxer flags the
 # seam packet; decoding the received stream shows no damage. Counted, not logged.
 SEAM_NOISE = ("Packet corrupt", "corrupt input packet")
@@ -58,6 +60,7 @@ HISTORY = LIVE_DIR / "radar_history.json"
 LOG = fv.LOGS / "radar_live.log"
 SESSIONS = fv.LOGS / "radar_sessions.jsonl"
 PAGE = fv.ASSETS / "radar" / "radar.html"
+MUSIC_DIR = fv.ASSETS / "music" / "radar"
 
 _SECRETS: list = []
 
@@ -86,18 +89,34 @@ def ingest_target(url: str, key: str) -> str:
     return url.strip().rstrip("/") + "/" + key.strip()
 
 
+def pick_track(tracks, day_of_year: int) -> str | None:
+    """v3l3 row 4: one bed per session, by day of the year from the sorted list."""
+    tracks = sorted(str(t) for t in tracks)
+    return tracks[day_of_year % len(tracks)] if tracks else None
+
+
 def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
-                 ffmpeg: str = "ffmpeg") -> list:
+                 ffmpeg: str = "ffmpeg", music: str | None = None,
+                 music_at: float = 0.0) -> list:
     """One segment, encoded once at timeline 0. Exactly `length` seconds (an even
-    number, row 11) so the 2 s GOPs tile the whole stream."""
+    number, row 11) so the 2 s GOPs tile the whole stream. With `music`, the bed is
+    looped from `music_at` (the session's running music time) under the voice."""
     gop = FPS * lp.KEYFRAME_S
     cap = f"{PROFILE['kbps']}k"
     audio_in = (["-i", audio] if audio else
                 ["-f", "lavfi", "-i", f"anullsrc=r={lp.AUDIO_HZ}:cl=stereo"])
+    if music:
+        music_in = ["-stream_loop", "-1", "-ss", f"{max(0.0, music_at):.3f}", "-i", music]
+        # both inputs run forever (apad, loop); -t below is what ends the segment
+        mix = ["-filter_complex",
+               f"[1:a]apad[v];[2:a]volume={MUSIC_VOLUME}[m];"
+               "[v][m]amix=inputs=2:duration=shortest:normalize=0[a]",
+               "-map", "0:v", "-map", "[a]"]
+    else:
+        music_in, mix = [], ["-map", "0:v", "-map", "1:a", "-af", "apad"]
     return [
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
-        "-f", "concat", "-safe", "0", "-i", concat_path, *audio_in,
-        "-map", "0:v", "-map", "1:a",
+        "-f", "concat", "-safe", "0", "-i", concat_path, *audio_in, *music_in, *mix,
         "-vf", f"fps={FPS},format=yuv420p",
         "-c:v", "libx264", "-preset", lp.X264_PRESET, "-profile:v", "high", "-crf", CRF,
         # no B-frames: with them a segment's first DTS is negative, and after the offset
@@ -105,7 +124,7 @@ def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
         "-bf", "0",
         "-maxrate", cap, "-bufsize", cap,
         "-g", str(gop), "-keyint_min", str(gop), "-sc_threshold", "0",
-        "-af", "apad", "-c:a", "aac", "-b:a", f"{lp.AUDIO_KBPS}k",
+        "-c:a", "aac", "-b:a", f"{lp.AUDIO_KBPS}k",
         "-ar", str(lp.AUDIO_HZ), "-ac", "2",
         # exactly length*FPS frames: the concat list's doubled last frame made one extra,
         # a duplicate timestamp at the next seam (measured in the first local session)
@@ -213,7 +232,8 @@ class Renderer:
                 pass
 
 
-def encode(renderer: Renderer, spec: dict, audio: str | None, out_dir: Path) -> str | None:
+def encode(renderer: Renderer, spec: dict, audio: str | None, out_dir: Path,
+           music: str | None = None, music_at: float = 0.0) -> str | None:
     from factverse import storyboard   # pure concat_list; heavy deps are lazy there too
     shots, unfit = renderer.frames(spec, out_dir)
     if unfit:
@@ -222,7 +242,7 @@ def encode(renderer: Renderer, spec: dict, audio: str | None, out_dir: Path) -> 
     lst.write_text(storyboard.concat_list(shots, spec["length"]), encoding="utf-8")
     ts = out_dir / "segment.ts"
     r = subprocess.run(segment_args(str(lst), audio, spec["length"], str(ts),
-                                    fv.FFMPEG or "ffmpeg"),
+                                    fv.FFMPEG or "ffmpeg", music, music_at),
                        capture_output=True, text=True, timeout=600)
     if r.returncode != 0 or not ts.exists() or ts.stat().st_size < 10000:
         log(f"  segment encode failed: {(r.stderr or '')[-300:]}")
@@ -272,6 +292,22 @@ class Producer:
         self.failures = 0
         self.pool_size = 0
         self.standby = None
+        self.music, self.music_len, self.music_clock = None, 0.0, 0.0
+
+    def pick_music(self) -> None:
+        track = pick_track(MUSIC_DIR.glob("*.mp3"), datetime.now().timetuple().tm_yday)
+        secs = media_seconds(track) if track else 0.0
+        if track and secs > 1:
+            self.music, self.music_len = track, secs
+            log(f"  music bed: {Path(track).name}")
+
+    def _encode(self, spec: dict, audio: str | None, d: Path) -> str | None:
+        """encode() with the bed continued from where the previous segment left it."""
+        at = self.music_clock % self.music_len if self.music else 0.0
+        ts = encode(self.renderer, spec, audio, d, self.music, at)
+        if ts:
+            self.music_clock += spec["length"]
+        return ts
 
     def refresh(self, force: bool = False) -> None:
         if not force and time.monotonic() - self.last_refresh < REFRESH_SECONDS:
@@ -339,7 +375,7 @@ class Producer:
         length = rd.segment_seconds(secs)
         spec = self._spec("spotlight", rd.phrases(rd.punctuate(words, text)), length, tool,
                           rank_no)
-        ts = encode(self.renderer, spec, str(d / "voice.mp3"), d)
+        ts = self._encode(spec, str(d / "voice.mp3"), d)
         return {"ts": ts, "length": length, "kind": "spotlight", "tool": tool,
                 "narration": source} if ts else None
 
@@ -354,13 +390,14 @@ class Producer:
                 self.last_board = board_sig(rows)
         length = rd.BOARD_SECONDS
         spec = self._spec("board", phrases, length)
-        ts = encode(self.renderer, spec, audio, d)
+        ts = self._encode(spec, audio, d)
         return {"ts": ts, "length": length, "kind": "board", "tool": None} if ts else None
 
     def make_standby(self) -> dict | None:
         d = LIVE_DIR / "standby"
         shutil.rmtree(d, ignore_errors=True)
-        ts = encode(self.renderer, self._spec("board", [], STANDBY_SECONDS), None, d)
+        ts = encode(self.renderer, self._spec("board", [], STANDBY_SECONDS), None, d,
+                    self.music, 0.0)
         return {"ts": ts, "length": STANDBY_SECONDS, "kind": "standby", "tool": None} if ts else None
 
     def run(self):
@@ -368,6 +405,7 @@ class Producer:
             # Playwright's sync objects belong to the thread that made them, so the
             # browser is created, used and closed here, never on the sender's thread
             self.renderer = Renderer()
+            self.pick_music()
             self.refresh(force=True)
             self.pool_size = len(self.candidates())
             if self.pool_size >= rd.MIN_FRESH:
@@ -507,6 +545,29 @@ class Streamer:
             return self.proc.wait()
 
 
+def preroll(get, n: int, timeout: float, clock=time.monotonic) -> tuple:
+    """v3l3 row 1: wait for up to `n` real segments before the connection opens, so a
+    session never starts with one segment in hand and standby behind it (the first
+    private YouTube session showed 3 standbys in its first minute). Returns
+    (segments, producer_ended, producer_error); stops early at `timeout`."""
+    got, error, end = [], "", clock() + timeout
+    while len(got) < n:
+        left = end - clock()
+        if left <= 0:
+            break
+        try:
+            item = get(timeout=left)
+        except queue.Empty:
+            break
+        if item is None:
+            return got, True, error
+        if isinstance(item, dict) and item.get("ready"):
+            error = item.get("error", "") or error     # a late failure report
+            continue
+        got.append(item)
+    return got, False, error
+
+
 def remux(seg: dict, offset: float) -> bytes:
     r = subprocess.run(remux_args(seg["ts"], offset, fv.FFMPEG or "ffmpeg"),
                        capture_output=True, timeout=120)
@@ -548,18 +609,18 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
         if not standby:
             summary["status"] = "failed: standby segment did not render"
             return summary
-        # connect only once the first real segment exists, so a session opens on a
-        # spotlight instead of 20 s of silent standby (seen in the second local session)
-        try:
-            first = q.get(timeout=READY_TIMEOUT)
-        except queue.Empty:
-            first = None
-        if first is None or first.get("ready"):
-            summary["status"] = "failed: no first segment"
+        # connect only once PREROLL real segments exist, so a session opens on a
+        # spotlight with the next ones already written (v3l3 row 1)
+        pending, ended, producer_error = preroll(q.get, PREROLL, READY_TIMEOUT)
+        if not pending:
+            summary["status"] = "failed: no first segment" + (
+                f" ({producer_error})" if producer_error else "")
             return summary
+        if ended:
+            pending.append(None)
+        log(f"  pre-roll: {len([p for p in pending if p])} segments ready")
         streamer = Streamer(dest)
         streamer.start()
-        pending = [first]
         offset, deadline = 0.0, time.monotonic() + minutes * 60
         while time.monotonic() < deadline:
             if max_segments and summary["segments"] >= max_segments:
@@ -578,7 +639,7 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
                 offset = 0.0              # a new connection is a new timeline
                 continue
             try:
-                seg = pending.pop() if pending else q.get(timeout=0.5)
+                seg = pending.pop(0) if pending else q.get(timeout=0.5)
             except queue.Empty:
                 if not streamer.starving():
                     continue              # a whole segment is still in reserve: keep waiting

@@ -29,8 +29,10 @@ HF_ITEMS = 50                                                    # row 6
 BOARD_SIZE, BOARD_EVERY, BOARD_SECONDS = 8, 4, 20                # row 10
 TAIL_SECONDS = 3                                                 # row 11
 COOLDOWN_DAYS = 3                                                # row 12
-NARRATION_WORDS = (50, 90)                                       # row 13 (asked of the model)
-GATE_WORDS = (30, 120)                                           # row 14 (accepted)
+NARRATION_WORDS = (100, 160)                                     # v3l3 row 3 (asked of the model)
+GATE_WORDS = (70, 200)                                           # v3l3 row 3 (accepted)
+NARRATION_CHARS = 1400                                           # v3l3 row 3 (model text cap)
+NARRATION_MODEL = "gemini-3.5-flash-lite"                        # v3l3 row 1 (asked first)
 PHRASE_WORDS = 6                                                 # row 18
 MIN_FRESH = 10                                                   # row 5
 README_CHARS = 6000          # grounding handed to the model; READMEs run long
@@ -359,7 +361,7 @@ def _numbers(text: str) -> set:
 
 
 def narration_ok(text: str, grounding: str) -> bool:
-    """Row 14: numbers subset of grounding, no hype, 30-120 words."""
+    """Row 14: numbers subset of grounding, no hype, GATE_WORDS long (v3l3 row 3)."""
     words = len((text or "").split())
     if not GATE_WORDS[0] <= words <= GATE_WORDS[1]:
         return False
@@ -388,8 +390,11 @@ def llm_narration(t: dict, fact_lines: list, readme: str) -> str | None:
     if not fv.GEMINI_KEY or len(readme) < 200:
         return None
     try:
-        raw = llm.generate_json(_prompt(t, fact_lines, readme), temperature=0.4, max_tokens=1024)
-        text = _text((raw or {}).get("narration") if isinstance(raw, dict) else "", 900)
+        # v3l3 row 1: the shared chain opens on models that stalled the 2026-10-05 sessions
+        raw = llm.generate_json(_prompt(t, fact_lines, readme), model=NARRATION_MODEL,
+                                temperature=0.4, max_tokens=2048)
+        text = _text((raw or {}).get("narration") if isinstance(raw, dict) else "",
+                     NARRATION_CHARS)
     except Exception:  # noqa: BLE001
         return None
     grounding = " ".join(fact_lines) + " " + readme

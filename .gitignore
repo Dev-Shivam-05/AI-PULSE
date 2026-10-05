@@ -45,3 +45,6 @@ assets/voice_sample.ogg
 assets/voice_sample.wav
 assets/voice_sample_02.m4a
 assets/voice_clone_test.wav
+
+# Radar Live music bed (v3-L.3): local, owner-downloaded, ~40 MB - never committed
+assets/music/radar/*.mp3

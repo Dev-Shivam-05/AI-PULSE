@@ -491,3 +491,21 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   the owner. Transitions have no spec values.
 - **Read from main's state on 2026-10-01:** evergreen's weighted AVD is 2:31 against news at 1:03.
   Evergreen is not trusted yet: 44 views, below the 100 threshold.
+
+## 2026-10-05 — v3-L.3: Radar Live quality pass (owner: `go`)
+
+- **First private YouTube session passed** (L.2 code): health Excellent, 16/16 LLM narrations,
+  auto-stop worked. Its one visible defect was 3 silent standbys in the first minute.
+- **Pre-roll of 3 segments, not a different LLM source.** The standbys were start-up timing:
+  the stream connected with one segment in hand. After pre-roll: 0 standby in two sessions.
+- **Driving ChatGPT/Gemini web apps from a browser was declined:**
+  - both providers' terms forbid automated use of the chat UI;
+  - the Google account is the channel's own account;
+  - an unattended stream cannot pass a captcha.
+  Same call as v3-H. Narration stays on the Gemini API, with `gemini-3.5-flash-lite` asked
+  first, and is longer (100-160 words).
+- **Music bed at 0.07**, the long-form constant. Tracks are the owner's YouTube Audio Library
+  downloads in `assets/music/radar/`, gitignored. One track per session, by day of the year.
+- **The facts row drops chips rather than changing the locked card layout.**
+- **Dual stream stays off until a real vertical feed exists (L.4).** Shorts-feed placement
+  is YouTube's decision and is not promised.
