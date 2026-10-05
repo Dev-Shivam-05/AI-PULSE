@@ -509,3 +509,6 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 - **The facts row drops chips rather than changing the locked card layout.**
 - **Dual stream stays off until a real vertical feed exists (L.4).** Shorts-feed placement
   is YouTube's decision and is not promised.
+
+- **2026-10-05, after the session: the owner set Radar Live to Public** and merged L.3 (PR #38).
+  The daily schedule is not installed yet, so nothing streams on its own.
