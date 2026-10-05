@@ -56,3 +56,23 @@ It also showed:
    (Customization → Branding → Banner image). Generated 2026-10-05 by
    `branding.make_channel_banner`, which reads `channel_name` = ToolDojo.
 3. Keep **Dual stream OFF** until v3-L.4: the auto-crop cuts the card in half.
+
+## 6. Verified 2026-10-05
+
+- Full suite **332/332** (`py -3 -m pytest tests/ -q`, 132 s); 9 new L.3 tests.
+- **Local RTMP session**, 10 min (16:52-17:05 UTC; received file decoded with ffmpeg):
+  - pre-roll: 3 segments ready 108 s after the session started; **0 standby**, 0 restarts;
+  - 688 s received for a 688 s timeline, **0 decode errors**, 344 keyframes all **2.00 s** apart;
+  - 12 of 13 spotlights written by the LLM (1 template), segments 42-46 s (were ~30 s);
+  - audio: **0 silent seconds** (per-second RMS minimum -52 dB, median -23 dB) with a bed
+    in place, so the voice tails and boards are no longer dead air;
+  - 0 `facts` unfit lines; 5 sampled frames read, no clipped chip;
+  - 5 ffmpeg input lags (0.3-1.6 s) at 17:02-17:03 with no decode damage. L.2 measured 0;
+    cause not isolated (other work was running on the laptop at the time).
+- **Facts row, forced overflow** (7 chips on the `laya` card, rendered in Chromium): 3 chips
+  kept, nothing clipped, `unfit` empty. Finding: the card's fixed 700 px column (4 gaps
+  of 28 px + fixed boxes = 760 px) flex-shrinks the 120 px facts box below two rows, which
+  is why the 4th chip was cut in L.2. The layout is spec-locked, so the chips are dropped
+  rather than the box resized.
+- The local session used a generated test tone as the bed (no tracks yet). The owner's 5
+  Audio Library tracks were placed in `assets/music/radar/` the same evening.
