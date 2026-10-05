@@ -76,3 +76,15 @@ It also showed:
   rather than the box resized.
 - The local session used a generated test tone as the bed (no tracks yet). The owner's 5
   Audio Library tracks were placed in `assets/music/radar/` the same evening.
+- **Private YouTube session** with the owner's tracks (17:11-17:25 UTC, bed "Vibe Check",
+  measured at -34.2 dB mean after the 0.07 gain): pre-roll 3 segments, **0 standby**,
+  0 restarts, 12/12 spotlights written by the LLM, 680 s timeline. Studio: health
+  **Excellent**, Private, Dual stream off, **Stream Finished** by itself after the session.
+- **Open, not fixed: input lags at segment seams.** 37 ffmpeg "Resumed reading … after a lag"
+  lines (0.3-1.6 s) at the joins between segments (pts 6, 34, 78, 114, 195 …); the
+  connection ran 686 s of wall clock for 680 s of timeline. The L.2 code showed the same
+  lines in the 2026-10-05 15:53 YouTube session, so L.3 did not introduce it. YouTube
+  health stayed Excellent. Hypothesis (unverified): the main thread's `remux()` of the
+  NEXT segment (subprocess.run with capture_output, ~50 MB into Python memory) starts
+  at each seam and starves the writer thread. Next step: measure with the remux moved
+  off the writer's critical path before changing anything.
