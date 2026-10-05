@@ -123,7 +123,12 @@ def test_readable_rejects_cjk_descriptions():
 GOOD = ("agentkit is a terminal toolkit for building coding agents. It has 1,000 stars "
         "after 10 days, so it is young. Developers who script their own agents get "
         "a plugin system; the open question is how stable its API will be once more "
-        "people depend on it.")
+        "people depend on it. The README describes a command line that starts an agent "
+        "in the current folder, reads the files it is pointed at, and proposes edits that "
+        "you accept or reject one at a time. Plugins are plain Python modules placed in a "
+        "folder the tool scans when it starts. There is no hosted service: you bring your "
+        "own model key. Teams that already review every change by hand will find that "
+        "workflow familiar.")
 
 
 def test_narration_gate():
@@ -344,3 +349,89 @@ def test_bilingual_description_speaks_only_its_readable_half():
     s = rd.template_narration(_gh(desc=d), 5)
     assert s.endswith("In its own words: Agent Skill for Refining AI-Generated Japanese.")
     assert "日本語" not in s
+
+
+# ------------------------------------------------------------------ v3-L.3
+def test_l3_narration_bounds_and_cap():
+    assert rd.NARRATION_WORDS == (100, 160) and rd.GATE_WORDS == (70, 200)
+    assert rd.NARRATION_CHARS == 1400
+    grounding = "1,000 stars on GitHub; created 10 days ago"
+    assert 70 <= len(GOOD.split()) <= 200 and rd.narration_ok(GOOD, grounding)
+    assert not rd.narration_ok(" ".join(GOOD.split()[:60]), grounding)      # under 70
+    assert not rd.narration_ok(" ".join([GOOD] * 3), grounding)              # over 200
+    assert "100-160 words" in rd._prompt(_gh(), ["x"], "readme")
+
+
+def test_l3_narration_asks_the_working_model_first_and_keeps_long_text(monkeypatch):
+    seen = {}
+
+    long_text = GOOD + " " + " ".join(GOOD.split()[:60])     # ~165 words, ~1,000 chars
+
+    def gen(prompt, **k):
+        seen.update(k)
+        return {"narration": long_text}
+    monkeypatch.setattr(rd.fv, "GEMINI_KEY", "k")
+    monkeypatch.setattr(rd.llm, "generate_json", gen)
+    assert len(long_text) > 900     # the old 900-char cap would have cut it mid-word
+    assert rd.llm_narration(_gh(), rd.facts(_gh()), "README " * 60) == long_text
+    assert seen["model"] == "gemini-3.5-flash-lite"
+
+
+def test_l3_pick_track_is_stable_per_day_and_none_without_files():
+    assert rl.pick_track([], 278) is None
+    tracks = ["b.mp3", "a.mp3", "c.mp3"]
+    assert rl.pick_track(tracks, 0) == "a.mp3" and rl.pick_track(tracks, 4) == "b.mp3"
+    assert rl.pick_track(tracks, 278) == rl.pick_track(list(reversed(tracks)), 278)
+
+
+def test_l3_segment_args_mix_the_bed_under_the_voice():
+    a = rl.segment_args("list.txt", "v.mp3", 14, "s.ts", music="bed.mp3", music_at=73.25)
+    i = a.index("bed.mp3")
+    assert a[i - 5:i - 1] == ["-stream_loop", "-1", "-ss", "73.250"]
+    fc = _opt(a, "-filter_complex")
+    assert "volume=0.07" in fc and "amix=inputs=2" in fc and "normalize=0" in fc
+    assert "[1:a]apad" in fc and a[a.index("-map", a.index("-map") + 1) + 1] == "[a]"
+    assert "-af" not in a and _opt(a, "-t") == "14" and _opt(a, "-frames:v") == "420"
+
+
+def test_l3_silent_segment_still_carries_the_bed():
+    a = rl.segment_args("list.txt", None, 10, "s.ts", music="bed.mp3")
+    assert any(x.startswith("anullsrc") for x in a) and "bed.mp3" in a
+    assert _opt(a, "-ss") == "0.000"
+
+
+def test_l3_no_track_keeps_the_l2_audio_path():
+    a = rl.segment_args("list.txt", "v.mp3", 14, "s.ts")
+    assert _opt(a, "-af") == "apad" and "-filter_complex" not in a
+    assert a[a.index("-map", a.index("-map") + 1) + 1] == "1:a"
+
+
+def _queue_of(items):
+    import queue as _q
+    items = list(items)
+
+    def get(timeout):
+        if not items:
+            raise _q.Empty
+        return items.pop(0)
+    return get
+
+
+def test_l3_preroll_waits_for_three_segments_in_order():
+    segs = [{"kind": "spotlight", "n": i} for i in range(5)]
+    got, ended, err = rl.preroll(_queue_of(segs), 3, 300)
+    assert [g["n"] for g in got] == [0, 1, 2] and not ended and err == ""
+
+
+def test_l3_preroll_stops_at_the_producer_end_and_keeps_its_error():
+    late = {"ready": True, "error": "RuntimeError: boom"}
+    got, ended, err = rl.preroll(_queue_of([{"n": 0}, late, None]), 3, 300)
+    assert [g["n"] for g in got] == [0] and ended and err == "RuntimeError: boom"
+
+
+def test_l3_preroll_gives_up_at_the_timeout_with_what_it_has():
+    t = iter([0.0, 0.0, 301.0])
+    got, ended, _ = rl.preroll(_queue_of([{"n": 0}, {"n": 1}]), 3, 300, clock=lambda: next(t))
+    assert [g["n"] for g in got] == [0] and not ended
+    got, ended, _ = rl.preroll(_queue_of([]), 3, 300)
+    assert got == [] and not ended

@@ -126,6 +126,11 @@ body { font-family: "Inter", "Segoe UI", "Microsoft YaHei", "Yu Gothic", sans-se
     });
   }
 
+  window.__facts = function () {     // what is on the card after fitting (tests, frames)
+    return Array.prototype.map.call(document.getElementById("facts").children,
+                                    function (c) { return c.textContent; });
+  };
+
   window.__load = function (s) {
     seg = s;
     var unfit = [];
@@ -147,6 +152,9 @@ body { font-family: "Inter", "Segoe UI", "Microsoft YaHei", "Yu Gothic", sans-se
       if (!fit(document.getElementById("name"), 120, 56)) unfit.push("name");
       if (!fit(document.getElementById("desc"), 44, 28)) unfit.push("desc");
       if (!fit(document.getElementById("owner"), 30, 20)) unfit.push("owner");
+      // v3l3 row 2: drop the LAST fact chip while the row overflows; the first one
+      // (the headline number) always stays
+      while (over(facts) && facts.children.length > 1) facts.removeChild(facts.lastChild);
       if (over(facts)) unfit.push("facts");
       rows(document.getElementById("rows"), s.board, s.highlight);
     } else {
