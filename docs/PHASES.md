@@ -138,17 +138,14 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-1. **Merge the stack in order: `v3-phase-b2` → `v3-phase-b3` → `v3-phase-g4`.** Each branch is
-   stacked on the one before it, so merging g4 alone brings all three. Without B.2, every tool
-   day is blocked by the fact-checker on the tool's own star or like count. B.1, H, G.1 and
-   G.3a are already on main (#33, 2026-09-27).
-   PRs: https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-b2 (then b3, then g4).
-2. **Read the first run after the merge.** In `state/runs.jsonl` on main, expect a `PUBLISHED`
-   `format=tool` row, or a block whose critical failures are not API facts. Then do Now #2:
-   `curl -I` the page and the PDF. Also read that run's **duration** in the Actions tab: it is
-   the first 1080p render on the 4-vCPU runner (local ratio 2.6×; the job timeout is 90 min).
-3. **Read the A/B after 10 daily pairs** (the scoreboard prints `A/B pairs: N · storyboard wins:
-   W`). On 2026-10-01 there was 1 mature pair, and storyboard lost it. Note that G.4 sharpens
-   the crop arm's source (607×1080 instead of 405×720) mid-experiment. ≥ 8 → spec v3-G.2;
-   ≤ 5 → stop and rethink; 6-7 → 10 more. X (1.4), Meta (1.6) and the two debate secrets are
-   still owner clicks.
+1. **Owner: merge `v3-phase-l3`** (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-l3),
+   upload `output/brand/banner_tooldojo_2560x1440.png` as the channel banner, and decide on
+   Public. If Public: set Studio visibility to Public, then on the updated main checkout run
+   `powershell -File scripts/radar_schedule.ps1 -Install`. `.env` and `assets/music/radar/`
+   are already in `E:\YOUTUBE\AI-PULSE`. b2/b3/g4/l are all on main (verified 2026-10-05);
+   `v3-gemini-fallback` is not.
+2. **Build v3-L.5 (live link → Telegram)**, then measure the seam lags (spec v3l3 §6) before
+   any fix. L.4 (vertical) needs its CPU measurement first.
+3. **Read the daily runs and the A/B:** the ledger's `format` and the Actions duration of the
+   1080p renders (90-min timeout). After 10 mature pairs, read the storyboard A/B
+   (≥ 8 → v3-G.2). X (1.4), Meta (1.6) and the debate secrets are still owner clicks.
