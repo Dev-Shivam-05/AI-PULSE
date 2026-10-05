@@ -4387,5 +4387,55 @@
     ],
     "format": "tool",
     "status": "HELD"
+  },
+  {
+    "timestamp": "2026-10-05T22:18:18.034381",
+    "title": "AIHOT: Build Your Own News Site in 10 Mins",
+    "description": "Imagine an AI that hunts hot topics, writes daily reports, and is yours to command. This open-source engine, KKKKhazix/AIHOT, with almost 6,000 stars, lets you build that custom news hub in minutes. Discover how to deploy your own AI-powered news aggregator, tailor it to any industry, and get automated daily insights. This video shows you the exact steps to get it running.\n\n🔧 Try it yourself:\ngit clone https://github.com/KKKKhazix/AIHOT.git myhot\ncd myhot\nnode scripts/init-env.ts --llm-key\ndocker compose up -d --build\nhttps://github.com/KKKKhazix/AIHOT\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-05-aihot-build-your-own-news-site-in-10-min.html\n\n#AI #OpenSource #NewsAggregator #CustomAI #TechTools #ToolDojo #AIHOT\nSubscribe to ToolDojo for more hands-on AI tools!\n\nSource: https://github.com/KKKKhazix/AIHOT\n\nChapters:\n0:00 Your Custom AI News\n1:11 Setup Requirements\n2:15 Build Industry News\n3:27 Managed Plug And Play\n4:23 KnowHow Configuration\n\n▶ Watch next: https://youtube.com/watch?v=6MDDca1uhMw",
+    "tags": [
+      "AIHOT",
+      "AI News",
+      "Open Source AI",
+      "Custom News Feed",
+      "AI Aggregator",
+      "ToolDojo",
+      "GitHub Trending",
+      "Docker AI",
+      "LLM Tools",
+      "AI Automation",
+      "Free AI Tool",
+      "ai",
+      "artificial intelligence",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/AIHOT_Build_Your_Own_News_Site_in_10_Mins_20261005_220855_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261005_221109.mp4",
+      "output/shorts/short_2_20261005_221150.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261005_221052.jpg",
+    "youtube_url": "https://youtube.com/watch?v=FHfd45OkoRE",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=AOhmDo1CKl8",
+      "https://youtube.com/watch?v=tKlB7prfiAc"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AIHOT: News Site Creation Tool Demo #Shorts",
+        "description": "This clip demonstrates using the AIHOT tool to set up a news website. See its interface and key features for rapid deployment.",
+        "instagram_caption": "🚀 Discover AIHOT, the tool designed to streamline news site development. See how its features simplify the entire setup process for content publishers. Follow @tooldojo!\n#AIHOT #NewsSiteBuilder #WebDevTools #AIDriven #SiteCreation #TechDemo #DigitalPublishing #WebsiteBuilder #CMS #AItools #NoCodeSolutions #FrontendDev #BackendDev #TechInnovation #BuildWebsites #ContentMarketing #OnlineNews #ToolDojo #RapidPrototyping #DevCommunity"
+      },
+      {
+        "title": "Build a News Site in 10 Minutes with AIHOT #Shorts",
+        "description": "Watch how a complete news website can be built from scratch in just 10 minutes. This short highlights the fast setup process with AIHOT.",
+        "instagram_caption": "⏱️ Ever wondered if you could launch a news site in just 10 minutes? This clip showcases the incredibly fast setup process, getting you online in no time. Follow @tooldojo!\n#10MinuteBuild #FastWebsite #NewsSiteLaunch #QuickSetup #WebDevelopment #AIHOT #Speedrun #WebsiteInMinutes #DigitalMedia #OnlineBusiness #TechTips #DIYWebsites #ContentStrategy #WebDevLife #ProductivityTools #EfficientWorkflow #StartupTech #AIWebsite #TimeSaver #ToolDojo"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

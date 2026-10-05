@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 10,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "just two open issues",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "'Prioritize news related to renewable energy policy changes in the European Union, especially those impacting solar and wind power, and flag any mentions of government subsidies or new environmental regulations.'",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The KKKKhazix/AIHOT framework democratizes advanced AI news aggregation by separating the sophisticated LLM orchestration from domain-specific knowledge, allowing anyone to operationalize their industry expertise with powerful AI without needing to be an AI expert themselves."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a high-level overview of the AIHOT tool's functionality and purpose. While the source text details the technical aspects, the outline synthesizes this information into a more dige"
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

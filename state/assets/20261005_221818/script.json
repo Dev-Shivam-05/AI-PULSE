@@ -1,0 +1,134 @@
+{
+  "title": "AIHOT: Build Your Own News Site in 10 Mins",
+  "thumb_text": "AI NEWS, 5,989 STARS",
+  "description": "Imagine an AI that hunts hot topics, writes daily reports, and is yours to command. This open-source engine, KKKKhazix/AIHOT, with almost 6,000 stars, lets you build that custom news hub in minutes. Discover how to deploy your own AI-powered news aggregator, tailor it to any industry, and get automated daily insights. This video shows you the exact steps to get it running.\n\n🔧 Try it yourself:\ngit clone https://github.com/KKKKhazix/AIHOT.git myhot\ncd myhot\nnode scripts/init-env.ts --llm-key\ndocker compose up -d --build\nhttps://github.com/KKKKhazix/AIHOT\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-05-aihot-build-your-own-news-site-in-10-min.html\n\n#AI #OpenSource #NewsAggregator #CustomAI #TechTools #ToolDojo #AIHOT\nSubscribe to ToolDojo for more hands-on AI tools!\n\nSource: https://github.com/KKKKhazix/AIHOT\n\nChapters:\n0:00 Your Custom AI News\n1:11 Setup Requirements\n2:15 Build Industry News\n3:27 Managed Plug And Play\n4:23 KnowHow Configuration\n\n▶ Watch next: https://youtube.com/watch?v=6MDDca1uhMw",
+  "tags": [
+    "AIHOT",
+    "AI News",
+    "Open Source AI",
+    "Custom News Feed",
+    "AI Aggregator",
+    "ToolDojo",
+    "GitHub Trending",
+    "Docker AI",
+    "LLM Tools",
+    "AI Automation",
+    "Free AI Tool",
+    "ai",
+    "artificial intelligence",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Forget generic news feeds. Imagine an AI that hunts hot topics, writes daily reports, and is yours to command. This open-source engine, KKKKhazix/AIHOT, boasts 5,989 stars and lets you build that custom news hub in minutes. By the end of this video, you'll know how to run your own AI-powered news aggregator.",
+      "visual_query": "futuristic news interface"
+    },
+    {
+      "scene_num": 2,
+      "narration": "AIHOT autonomously finds hot topics and writes daily news reports. It pulls information from various sources, screens content with large language models, scores articles twice, and clusters related news into single events for accurate hot topic ranking. For instance, it would identify a core announcement, group technical discussions, and highlight impactful pieces for a cohesive narrative.",
+      "visual_query": "AI analyzing data streams"
+    },
+    {
+      "scene_num": 3,
+      "narration": "The creator open-sourced this MIT-licensed tool, last updated on 2026-10-05, because only industry experts know what truly matters. This hands you the power of AI-driven curation. A lawyer needs to track specific case law, a financial analyst needs to monitor market sentiment. AIHOT lets *you* define those crucial signals.",
+      "visual_query": "person designing website"
+    },
+    {
+      "scene_num": 4,
+      "narration": "To get this powerful engine running, you'll need Docker, Node.js 24, and an OpenAI-compatible API key. With just two open issues, this project is stable and ready for deployment. The setup takes mere minutes, allowing even non-DevOps engineers to get a sophisticated AI system operational with minimal fuss.",
+      "visual_query": "code terminal screen"
+    },
+    {
+      "scene_num": 5,
+      "narration": "First, clone the repository. Then, initialize your environment with your LLM key. Finally, use Docker Compose to spin everything up. The exact commands are simple and found in the description below. It’s as straightforward as running a few lines of code. Checked by ToolDojo on October 5: the download finished in 1.6 seconds at 22 megabytes.",
+      "visual_query": "person typing code"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Once running, AIHOT starts processing. Within minutes, you'll see content on your local site. The initial data import takes about half an hour to fully process, giving you a full, AI-generated news feed. This phase is crucial for the AI to build its foundational knowledge base.",
+      "visual_query": "glowing server racks"
+    },
+    {
+      "scene_num": 7,
+      "narration": "You can build your own industry-specific news site. Replace default AI sources with feeds relevant to finance, HR, or any niche. You define what's important, and the AI follows your rules. A real estate developer could monitor local planning meetings, permits, and competitor sales for a hyper-focused market intelligence hub.",
+      "visual_query": "finance news screen"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Beyond a public website, AIHOT generates automated daily, weekly, and monthly reports. Imagine internal teams receiving curated summaries without manual effort, perfect for competitive intelligence or trend analysis. A marketing team could get a daily digest of social media trends and competitor campaigns for rapid strategic adjustments.",
+      "visual_query": "business dashboard graphs"
+    },
+    {
+      "scene_num": 9,
+      "narration": "The framework supports six source types—RSS, web pages, JSON APIs, X accounts, WeChat, and custom scripts. It also provides Agent-consumable feeds via RSS, API, and Markdown, making it an ideal backend for custom AI agents. This versatility lets you integrate almost any data source.",
+      "visual_query": "robot reading data"
+    },
+    {
+      "scene_num": 10,
+      "narration": "But here's the problem: who shouldn't bother with KKKKhazix/AIHOT?",
+      "visual_query": "question mark digital"
+    },
+    {
+      "scene_num": 11,
+      "narration": "If you need a fully managed, plug-and-play solution without technical setup, or prefer pre-built industry-specific data, this isn't for you. It's an engine, not a finished product. You'll need to define your sources and 'KnowHow' for it to shine. If you expect it to magically understand nuances without input, you'll be disappointed.",
+      "visual_query": "complex circuit board"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Your industry knowledge fuels this AI engine. Customize selection prompts and thresholds in plain text files, teaching the AI what a 'hot topic' means for your domain. For example, in law, 'hot' might mean new Supreme Court rulings or federal regulation changes. Configure AIHOT to prioritize these signals.",
+      "visual_query": "person typing on keyboard"
+    },
+    {
+      "scene_num": 13,
+      "narration": "To get started, simply run the installation commands. The exact sequence is in the description. What industry will you build your AI hot topic site for first? Let us know in the comments, and subscribe to ToolDojo for more hands-on AI builds!",
+      "visual_query": "subscribe button animation"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The 'KnowHow' configuration is where the magic happens. You're writing natural language instructions. For instance, you can tell AIHOT: 'Prioritize news related to renewable energy policy changes in the European Union, especially those impacting solar and wind power, and flag any mentions of government subsidies or new environmental regulations.' This allows for incredibly granular control.",
+      "visual_query": "document with AI prompts"
+    },
+    {
+      "scene_num": 15,
+      "narration": "Consider the implications for R&D. A pharmaceutical company could use AIHOT to monitor scientific publications, clinical trial results, and competitor drug pipelines. By defining 'hot topics' as novel drug discoveries or breakthrough trial phases, they gain a significant advantage in staying ahead.",
+      "visual_query": "microscope and DNA helix"
+    },
+    {
+      "scene_num": 16,
+      "narration": "AIHOT's ability to cluster related news into single events is powerful for understanding complex issues. If a major geopolitical event occurs, AIHOT can group reports on its economic impact, humanitarian consequences, and diplomatic responses, presenting a comprehensive overview. This is invaluable for strategic decision-making.",
+      "visual_query": "world map with connected nodes"
+    }
+  ],
+  "synthesis_claim": "The KKKKhazix/AIHOT framework democratizes advanced AI news aggregation by separating the sophisticated LLM orchestration from domain-specific knowledge, allowing anyone to operationalize their industry expertise with powerful AI without needing to be an AI expert themselves.",
+  "deliverable": {
+    "kind": "command",
+    "text": "git clone https://github.com/KKKKhazix/AIHOT.git myhot\ncd myhot\nnode scripts/init-env.ts --llm-key\ndocker compose up -d --build",
+    "url": "https://github.com/KKKKhazix/AIHOT"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/KKKKhazix/AIHOT",
+  "format": "tool",
+  "signal_title": "KKKKhazix/AIHOT: 一个自己找热点、自己写日报的网站框架。把信源和精选标准换成你的，它就是你的行业热点站。",
+  "verified_facts": {
+    "stars": 5989,
+    "license": "MIT",
+    "last_update": "2026-10-05",
+    "open_issues": 2
+  },
+  "cheat_sheet": "2026-10-05-aihot-build-your-own-news-site-in-10-min.pdf",
+  "receipts": {
+    "kind": "clone",
+    "target": "https://github.com/KKKKhazix/AIHOT.git",
+    "seconds": 1.6,
+    "mb": 22,
+    "lines": [
+      "Cloning into 'receipts_dl'..."
+    ],
+    "date": "2026-10-05"
+  }
+}
