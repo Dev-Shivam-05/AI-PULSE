@@ -53,16 +53,24 @@
 - **Still untracked in `E:\YOUTUBE\AI-PULSE`:** `output/demo/storyboard/sample/*` and
   `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`. Not touched.
 
+## Owner update (2026-10-05, after this session)
+- `v3-phase-l3` is **merged** (PR #38, verified on `origin/main`).
+- The owner reports the live stream's Studio visibility is **Public**. Claude did not verify it.
+- **Still left:** upload the banner, install the daily schedule. Neither is done.
+
 ## Next session starts here
-- **Phase v3-L.5 (recommended):** post `youtube.com/@tooldojo/live` to the Telegram group 60 s
-  after the stream connects, so every session has at least a few first viewers.
-- **Before it, the owner should:**
-  1. Merge `v3-phase-l3` (https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-phase-l3).
-  2. Upload the banner.
-  3. Decide on Public. If yes: set Studio visibility to Public, then run
-     `powershell -File scripts/radar_schedule.ps1 -Install` from `E:\YOUTUBE\AI-PULSE` after
-     pulling main.
+- **Phase:** finish the L.3 rollout, then build v3-L.5.
+  1. Banner: the file is `E:\YOUTUBE\AI-PULSE\outputrandanner_tooldojo_2560x1440.png`.
+     Owner path: Studio → Customization → Branding → Banner image.
+  2. Schedule: `powershell -File scripts/radar_schedule.ps1 -Install`, run from a checkout
+     that is on **updated main**. Read the script first to see which path the task launches.
+  3. v3-L.5: post `youtube.com/@tooldojo/live` to the Telegram group 60 s after the stream
+     connects. Needs a spec-lock first.
 - **First command:** `/boot`
-- **Watch out for:** `.env` is read from the CHECKOUT's own root (`config.BASE`). A worktree
-  without its own `.env` runs with no Gemini key and no stream key, and silently falls back
-  to template narration or exits with "Radar Live is off".
+- **Watch out for:** `E:\YOUTUBE\AI-PULSE` is checked out on `v3-gemini-fallback`, which does
+  NOT have the L.3 code. A schedule launched from there streams the L.2 code, publicly, every
+  day (3 standbys at the start, no music, short narration). Put that checkout on updated
+  main, or point the task at one that is, before installing.
+  - It must keep its `.env` and `assets/music/radar/`: both are gitignored and already there.
+  - Its uncommitted and untracked files belong to another session. Do not discard them;
+    commit first if switching branches.
