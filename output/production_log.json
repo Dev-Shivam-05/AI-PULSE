@@ -4337,5 +4337,55 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-05T20:54:24.349447",
+    "title": "AIHOT: Your Free 5,990-Star AI News Engine",
+    "description": "Unlock the power of customized industry intelligence with KKKKhazix/AIHOT – a free, open-source AI news engine you can deploy in minutes. This hands-on guide shows you how to get your own automated hot-topic news site up and running locally, complete with LLM-powered filtering, event clustering, and daily reports, all tailored to your specific industry and sources.\n\n🔧 Try it yourself:\ngit clone https://github.com/KKKKhazix/AIHOT.git myhot • cd myhot • node scripts/init-env.ts --llm-key • docker compose up -d --build\nhttps://github.com/KKKKhazix/AIHOT\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-05-aihot-your-free-5-990-star-ai-news-engin.html\n\nWe'll walk through the exact commands needed to launch this 5,990-star GitHub project, customize its prompts without touching complex code, and transform raw data into actionable insights for your niche. Perfect for domain experts looking to leverage AI for hyper-focused information gathering.\n\n#AI #OpenSource #GitHub #TechTutorial #IndustryNews #LLM #ToolDojo #AISoftware\nSubscribe to ToolDojo.\n\nSource: https://github.com/KKKKhazix/AIHOT\n\nChapters:\n0:00 Custom AI News\n1:01 Designer Learns Code\n2:34 Automated Daily Reports\n3:33 For Human And Bot\n5:02 Unprecedented Control",
+    "tags": [
+      "AIHOT",
+      "KKKKhazix",
+      "AI News Engine",
+      "Open Source AI",
+      "Industry Hot Topics",
+      "LLM powered",
+      "Docker Compose",
+      "Node.js",
+      "Customizable AI",
+      "GitHub Trending",
+      "Free AI Tool",
+      "Tech Tutorial",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AIHOT_Your_Free_5990-Star_AI_News_Engine_20261005_204803_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261005_204943.mp4",
+      "output/shorts/short_2_20261005_205021.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261005_204942.jpg",
+    "youtube_url": null,
+    "youtube_shorts": [],
+    "shorts_meta": [
+      {
+        "title": "AIHOT: 5,990-Star AI News Engine #Shorts",
+        "description": "AIHOT is a free AI news engine with a 5,990-star rating. It aggregates AI news and updates.",
+        "instagram_caption": "🚀 Discover AIHOT, your free AI news engine boasting an impressive 5,990 stars. Stay informed on the latest AI developments effortlessly. Follow @tooldojo! #AINews #AItools #TechNews #ArtificialIntelligence #AIupdates #FreeAI #AIengine #Innovation #FutureTech #MachineLearning #DeepLearning #AIcommunity #TechUpdates #NewsAggregation #AIdevelopment #DigitalTransformation #AIforgood #TechTrends #AISolutions #AIhot"
+      },
+      {
+        "title": "AIHOT: Free AI News, 5,990 Stars #Shorts",
+        "description": "AIHOT provides free access to AI news, with a user rating of 5,990 stars. It's a platform for AI news aggregation.",
+        "instagram_caption": "💡 Curious about AI? AIHOT offers a free AI news engine with a remarkable 5,990-star rating. Get your daily dose of AI insights here. Follow @tooldojo! #AINewsEngine #AIUpdates #FreeTech #ArtificialIntelligenceNews #TechNewsDaily #AIengine #5990Stars #InnovationHub #MachineLearningNews #DeepLearningUpdates #AIcommunity #TechTrends2024 #DigitalNews #AIdevelopment #FutureofAI #AInewsfeed #TechDiscovery #AISummary #AIhotnews #Tooldojo"
+      }
+    ],
+    "format": "tool",
+    "status": "HELD"
   }
 ]
