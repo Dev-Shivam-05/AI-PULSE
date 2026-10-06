@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 7,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The attempt by OpenAI's PR to steer the conversation away from a user's suicide, even during an interview about the future of AI, suggests a reactive approach to ethical concerns rather than a proactive integration of empathy into their development and communication strategies."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative flow and specific dialogue snippets that are not explicitly present in the source text in that exact phrasing or sequence. For example, the outline mentions 'OpenAI's "
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

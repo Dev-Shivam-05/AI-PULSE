@@ -4437,5 +4437,54 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-06T18:58:19.411181",
+    "title": "OpenAI PR Shut Down Suicide Question",
+    "description": "OpenAI's PR team reportedly tried to cut short an interview when asked about a ChatGPT user's suicide. This raises serious questions about corporate accountability and AI's role in mental health crises. We break down what happened and why it matters to you. #AI #OpenAI #ChatGPT #TechEthics #MentalHealth #AISafety\n\nThis incident, reported by The Verge, highlights the sensitive nature of AI interactions and the responsibility of companies developing these powerful tools. As AI becomes more integrated into our lives, understanding these ethical boundaries is crucial. Subscribe to ToolDojo.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/1004827/openai-sam-altman-vanity-fair-interview-pr\n\nChapters:\n0:00 OpenAI PR Scandal\n0:55 Journalist Interrupted\n1:49 AI Influence Concerns\n2:46 AI Tragedy Mechanisms\n4:47 Subscribe For Insights\n\n▶ Watch next: https://youtube.com/watch?v=FHfd45OkoRE",
+    "tags": [
+      "OpenAI",
+      "ChatGPT",
+      "Sam Altman",
+      "AI Ethics",
+      "Mental Health",
+      "Tech News",
+      "Corporate Accountability",
+      "Artificial Intelligence",
+      "The Verge",
+      "Suicide",
+      "ai",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/OpenAI_PR_Shut_Down_Suicide_Question_20261006_183940_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261006_184521.mp4",
+      "output/shorts/short_2_sb_20261006_184610.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261006_184341.jpg",
+    "youtube_url": "https://youtube.com/watch?v=F5JNJ4XFwac",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=eQXnoUtE5yg",
+      "https://youtube.com/watch?v=g3UzEzfYNIY"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI PR shuts down suicide question #Shorts",
+        "description": "During a press event, OpenAI's public relations team intervened to stop a reporter from fully asking a question concerning suicide.",
+        "instagram_caption": "🛑 OpenAI's PR team quickly intervened during a press conference to shut down a reporter's question about suicide. This moment highlights the delicate balance between corporate communication and addressing sensitive topics publicly. Follow @tooldojo! #OpenAI #PR #PressConference #MediaRelations #CorporateComms #CrisisComms #PublicRelations #TechNews #AIethics #Journalism #Reporter #QuestionAndAnswer #CommunicationStrategy #SensitiveTopics #TechCompany #PublicScrutiny #TechIndustry #MediaControl #CorporateResponsibility #AIControversy"
+      },
+      {
+        "title": "OpenAI PR silences suicide question #Shorts",
+        "description": "This clip shows OpenAI's PR team preventing a reporter from continuing to ask a question related to the topic of suicide during a press conference.",
+        "instagram_caption": "🤐 Watch as OpenAI's PR team steps in to silence a reporter attempting to ask a question concerning suicide. The incident raises discussions about transparency and how companies manage difficult and sensitive public inquiries. Follow @tooldojo! #OpenAIPR #SuicideQuestion #MediaEthics #CorporateTransparency #AIdebate #PressBriefing #JournalismEthics #PublicInterest #TechCompanies #PRstrategy #SensitiveContent #ReporterRights #OpenAIincident #TechPolicy #AIrisks #PublicDialogue #MediaWatch #InformationControl #CorporatePR #TechTransparency"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
