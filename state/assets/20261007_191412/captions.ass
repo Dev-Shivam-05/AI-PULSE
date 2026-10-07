@@ -1,0 +1,188 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.16,Live,,0,0,0,{\k8}The {\k18}most {\k60}important {\k30}AI
+Dialogue: 0,0:00:01.16,0:00:02.42,Live,,0,0,0,{\k52}release {\k32}this {\k16}week {\k26}got
+Dialogue: 0,0:00:02.42,0:00:04.30,Live,,0,0,0,{\k32}almost {\k30}no {\k42}coverage {\k48}{\k36}We're
+Dialogue: 0,0:00:04.30,0:00:05.60,Live,,0,0,0,{\k30}talking {\k30}about {\k30}new {\k40}AI
+Dialogue: 0,0:00:05.60,0:00:06.90,Live,,0,0,0,{\k42}models {\k30}that {\k16}can {\k32}think
+Dialogue: 0,0:00:07.12,0:00:08.42,Live,,0,0,0,{\k24}not {\k26}just {\k44}generate {\k36}text
+Dialogue: 0,0:00:08.42,0:00:10.02,Live,,0,0,0,{\k34}or {\k42}images {\k60}{\k6}and {\k18}they're
+Dialogue: 0,0:00:10.02,0:00:10.84,Live,,0,0,0,{\k20}built {\k22}to {\k22}run {\k18}on
+Dialogue: 0,0:00:10.84,0:00:12.24,Live,,0,0,0,{\k12}your {\k44}devices {\k40}{\k28}not {\k16}in
+Dialogue: 0,0:00:12.24,0:00:13.48,Live,,0,0,0,{\k8}a {\k34}massive {\k32}data {\k40}center
+Dialogue: 0,0:00:14.04,0:00:14.68,Live,,0,0,0,{\k20}By {\k12}the {\k18}end {\k14}of
+Dialogue: 0,0:00:14.68,0:00:16.02,Live,,0,0,0,{\k28}this {\k24}{\k16}you'll {\k42}understand {\k24}what
+Dialogue: 0,0:00:16.02,0:00:17.34,Live,,0,0,0,{\k28}these {\k36}decision {\k32}models {\k36}are
+Dialogue: 0,0:00:17.34,0:00:18.70,Live,,0,0,0,{\k52}and {\k24}why {\k20}they {\k30}matter
+Dialogue: 0,0:00:19.00,0:00:20.30,Live,,0,0,0,{\k40}Hugging {\k32}Face {\k30}and {\k28}liquid
+Dialogue: 0,0:00:20.30,0:00:21.70,Live,,0,0,0,{\k40}AI {\k52}have {\k18}just {\k30}dropped
+Dialogue: 0,0:00:21.70,0:00:23.34,Live,,0,0,0,{\k38}two {\k38}open {\k36}source {\k52}d1
+Dialogue: 0,0:00:23.34,0:00:26.62,Live,,0,0,0,{\k36}decision {\k54}models {\k64}{\k58}D1 {\k116}3B
+Dialogue: 0,0:00:26.62,0:00:28.86,Live,,0,0,0,{\k26}and {\k48}D1 {\k38}Omni {\k102}600M
+Dialogue: 0,0:00:29.34,0:00:31.24,Live,,0,0,0,{\k36}Unlike {\k78}generative {\k34}AI {\k42}that
+Dialogue: 0,0:00:31.24,0:00:33.22,Live,,0,0,0,{\k32}creates {\k36}new {\k52}content {\k62}{\k16}these
+Dialogue: 0,0:00:33.22,0:00:34.62,Live,,0,0,0,{\k42}models {\k24}are {\k48}designed {\k26}for
+Dialogue: 0,0:00:34.62,0:00:37.08,Live,,0,0,0,{\k40}rapid {\k56}specific {\k66}answers {\k58}{\k26}Think
+Dialogue: 0,0:00:37.08,0:00:38.02,Live,,0,0,0,{\k14}of {\k18}them {\k24}as {\k38}AI
+Dialogue: 0,0:00:38.02,0:00:40.06,Live,,0,0,0,{\k52}that {\k20}makes {\k56}judgments {\k62}{\k14}And
+Dialogue: 0,0:00:40.06,0:00:41.06,Live,,0,0,0,{\k22}these {\k32}aren't {\k18}just {\k28}any
+Dialogue: 0,0:00:41.06,0:00:41.48,Live,,0,0,0,{\k32}models
+Dialogue: 0,0:00:42.12,0:00:43.80,Live,,0,0,0,{\k10}The {\k40}D1 {\k80}3B {\k38}model
+Dialogue: 0,0:00:43.80,0:00:45.70,Live,,0,0,0,{\k44}is {\k76}outperforming {\k30}larger {\k40}models
+Dialogue: 0,0:00:45.70,0:00:46.94,Live,,0,0,0,{\k24}on {\k12}the {\k36}Decision {\k42}Index
+Dialogue: 0,0:00:47.38,0:00:48.46,Live,,0,0,0,{\k38}achieving {\k20}a {\k26}score {\k24}of
+Dialogue: 0,0:00:48.46,0:00:50.10,Live,,0,0,0,{\k44}48 {\k110}57
+Dialogue: 0,0:00:50.72,0:00:51.54,Live,,0,0,0,{\k28}That {\k22}puts {\k14}it {\k18}ahead
+Dialogue: 0,0:00:51.54,0:00:52.74,Live,,0,0,0,{\k10}of {\k30}models {\k28}with {\k52}significantly
+Dialogue: 0,0:00:52.74,0:00:54.52,Live,,0,0,0,{\k40}more {\k46}parameters {\k54}{\k22}like {\k16}a
+Dialogue: 0,0:00:54.52,0:00:56.08,Live,,0,0,0,{\k34}9 {\k34}billion {\k50}parameter {\k38}model
+Dialogue: 0,0:00:56.08,0:00:57.56,Live,,0,0,0,{\k48}and {\k24}even {\k12}a {\k64}35
+Dialogue: 0,0:00:57.56,0:00:59.34,Live,,0,0,0,{\k42}billion {\k52}parameter {\k46}model {\k38}called
+Dialogue: 0,0:00:59.34,0:01:02.32,Live,,0,0,0,{\k60}Decider {\k146}35B-A3B {\k34}{\k36}What {\k22}makes
+Dialogue: 0,0:01:02.32,0:01:03.56,Live,,0,0,0,{\k20}them {\k36}truly {\k38}stand {\k30}out
+Dialogue: 0,0:01:03.56,0:01:05.50,Live,,0,0,0,{\k24}is {\k20}their {\k74}multimodal {\k66}capability
+Dialogue: 0,0:01:06.16,0:01:08.64,Live,,0,0,0,{\k44}D1 {\k130}3B {\k26}can {\k48}understand
+Dialogue: 0,0:01:08.64,0:01:10.34,Live,,0,0,0,{\k36}both {\k48}text {\k32}and {\k44}images
+Dialogue: 0,0:01:11.02,0:01:12.84,Live,,0,0,0,{\k20}The {\k58}experimental {\k68}D1 {\k36}Omni
+Dialogue: 0,0:01:12.84,0:01:15.08,Live,,0,0,0,{\k106}600M {\k42}takes {\k22}it {\k44}further
+Dialogue: 0,0:01:15.36,0:01:16.76,Live,,0,0,0,{\k36}handling {\k36}text {\k36}with {\k32}either
+Dialogue: 0,0:01:16.76,0:01:18.76,Live,,0,0,0,{\k48}images {\k38}or {\k58}audio {\k46}inputs
+Dialogue: 0,0:01:19.24,0:01:21.12,Live,,0,0,0,{\k24}This {\k84}multimodal {\k44}aspect {\k36}is
+Dialogue: 0,0:01:21.12,0:01:21.46,Live,,0,0,0,{\k24}key
+Dialogue: 0,0:01:22.14,0:01:23.54,Live,,0,0,0,{\k42}Imagine {\k30}an {\k32}AI {\k36}that
+Dialogue: 0,0:01:23.54,0:01:24.32,Live,,0,0,0,{\k18}can {\k22}see {\k10}a {\k28}product
+Dialogue: 0,0:01:24.32,0:01:25.70,Live,,0,0,0,{\k52}image {\k40}and {\k22}read {\k24}its
+Dialogue: 0,0:01:25.70,0:01:26.82,Live,,0,0,0,{\k48}description {\k20}to {\k24}tell {\k20}you
+Dialogue: 0,0:01:26.82,0:01:27.70,Live,,0,0,0,{\k16}if {\k18}it's {\k12}in {\k32}stock
+Dialogue: 0,0:01:28.06,0:01:28.94,Live,,0,0,0,{\k22}or {\k32}listen {\k24}to {\k10}a
+Dialogue: 0,0:01:28.94,0:01:30.74,Live,,0,0,0,{\k30}spoken {\k42}request {\k60}and {\k48}understand
+Dialogue: 0,0:01:30.74,0:01:32.10,Live,,0,0,0,{\k22}the {\k32}visual {\k48}context {\k34}of
+Dialogue: 0,0:01:32.10,0:01:33.92,Live,,0,0,0,{\k12}your {\k50}surroundings {\k52}{\k58}That's {\k10}the
+Dialogue: 0,0:01:33.92,0:01:34.92,Live,,0,0,0,{\k14}kind {\k14}of {\k46}capability {\k26}we're
+Dialogue: 0,0:01:34.92,0:01:36.38,Live,,0,0,0,{\k26}talking {\k36}about {\k44}{\k12}The {\k28}real
+Dialogue: 0,0:01:36.38,0:01:37.82,Live,,0,0,0,{\k32}game {\k54}changer {\k30}here {\k28}is
+Dialogue: 0,0:01:37.82,0:01:39.24,Live,,0,0,0,{\k38}speed {\k36}and {\k58}efficiency
+Dialogue: 0,0:01:39.92,0:01:40.96,Live,,0,0,0,{\k18}These {\k40}models {\k22}are {\k24}built
+Dialogue: 0,0:01:40.96,0:01:42.88,Live,,0,0,0,{\k30}on {\k32}Liquid {\k54}Foundation {\k66}Models
+Dialogue: 0,0:01:43.28,0:01:43.98,Live,,0,0,0,{\k60}LFMs
+Dialogue: 0,0:01:44.62,0:01:46.22,Live,,0,0,0,{\k34}Instead {\k18}of {\k60}generating {\k48}token
+Dialogue: 0,0:01:46.22,0:01:48.00,Live,,0,0,0,{\k42}step {\k22}by {\k34}step {\k46}{\k34}decision
+Dialogue: 0,0:01:48.00,0:01:49.62,Live,,0,0,0,{\k48}models {\k46}complete {\k30}their {\k38}task
+Dialogue: 0,0:01:49.62,0:01:50.88,Live,,0,0,0,{\k24}in {\k10}a {\k38}single {\k54}forward
+Dialogue: 0,0:01:50.88,0:01:53.06,Live,,0,0,0,{\k50}pass {\k52}{\k24}making {\k26}them {\k66}incredibly
+Dialogue: 0,0:01:53.06,0:01:55.84,Live,,0,0,0,{\k62}fast {\k88}D1 {\k102}3B {\k12}{\k14}for
+Dialogue: 0,0:01:55.84,0:01:57.36,Live,,0,0,0,{\k34}instance {\k60}{\k8}can {\k32}answer {\k18}a
+Dialogue: 0,0:01:57.36,0:01:58.60,Live,,0,0,0,{\k32}question {\k20}in {\k18}just {\k54}16
+Dialogue: 0,0:01:58.60,0:02:00.10,Live,,0,0,0,{\k56}milliseconds {\k38}on {\k8}a {\k48}powerful
+Dialogue: 0,0:02:00.10,0:02:02.32,Live,,0,0,0,{\k70}NVIDIA {\k46}Jetson {\k76}AGX {\k20}Thor
+Dialogue: 0,0:02:02.54,0:02:03.90,Live,,0,0,0,{\k66}That’s {\k42}faster {\k16}than {\k12}you
+Dialogue: 0,0:02:03.90,0:02:05.16,Live,,0,0,0,{\k18}can {\k28}blink {\k62}{\k12}On {\k6}a
+Dialogue: 0,0:02:05.16,0:02:06.64,Live,,0,0,0,{\k18}more {\k52}accessible {\k58}Jetson {\k20}Orin
+Dialogue: 0,0:02:06.64,0:02:08.32,Live,,0,0,0,{\k40}Nano {\k52}{\k8}it {\k26}still {\k42}answers
+Dialogue: 0,0:02:08.32,0:02:09.44,Live,,0,0,0,{\k26}in {\k10}a {\k38}snappy {\k38}50
+Dialogue: 0,0:02:09.44,0:02:11.08,Live,,0,0,0,{\k50}milliseconds {\k38}{\k34}But {\k32}here's {\k10}the
+Dialogue: 0,0:02:11.08,0:02:12.74,Live,,0,0,0,{\k42}problem {\k24}with {\k26}many {\k74}powerful
+Dialogue: 0,0:02:12.74,0:02:14.94,Live,,0,0,0,{\k44}AI {\k66}models {\k54}{\k30}they {\k26}need
+Dialogue: 0,0:02:14.94,0:02:17.30,Live,,0,0,0,{\k52}massive {\k50}computing {\k62}power {\k50}{\k22}making
+Dialogue: 0,0:02:17.30,0:02:19.12,Live,,0,0,0,{\k30}them {\k82}unsuitable {\k22}for {\k48}everyday
+Dialogue: 0,0:02:19.12,0:02:21.66,Live,,0,0,0,{\k60}devices {\k64}{\k42}These {\k44}d1 {\k44}models
+Dialogue: 0,0:02:21.66,0:02:23.54,Live,,0,0,0,{\k26}are {\k62}specifically {\k72}engineered {\k28}for
+Dialogue: 0,0:02:23.54,0:02:24.92,Live,,0,0,0,{\k14}the {\k30}edge {\k34}meaning {\k60}they
+Dialogue: 0,0:02:24.92,0:02:26.16,Live,,0,0,0,{\k28}run {\k48}directly {\k32}on {\k16}your
+Dialogue: 0,0:02:26.16,0:02:28.50,Live,,0,0,0,{\k50}hardware {\k42}{\k50}Benchmark {\k38}results {\k54}confirm
+Dialogue: 0,0:02:28.50,0:02:30.36,Live,,0,0,0,{\k28}their {\k42}power {\k58}{\k22}On {\k36}seven
+Dialogue: 0,0:02:30.36,0:02:31.80,Live,,0,0,0,{\k28}data {\k32}sets {\k36}covering {\k48}tasks
+Dialogue: 0,0:02:31.80,0:02:33.60,Live,,0,0,0,{\k34}like {\k30}reading {\k62}comprehension {\k54}and
+Dialogue: 0,0:02:33.60,0:02:36.68,Live,,0,0,0,{\k38}toxicity {\k72}detection {\k62}{\k44}D1 {\k92}3B
+Dialogue: 0,0:02:36.68,0:02:38.18,Live,,0,0,0,{\k80}achieved {\k14}a {\k18}mean {\k38}score
+Dialogue: 0,0:02:38.18,0:02:40.72,Live,,0,0,0,{\k30}of {\k30}82 {\k72}9 {\k52}{\k70}outperforming
+Dialogue: 0,0:02:40.72,0:02:42.48,Live,,0,0,0,{\k30}even {\k38}larger {\k48}models {\k44}{\k16}The
+Dialogue: 0,0:02:42.48,0:02:44.94,Live,,0,0,0,{\k40}D1 {\k42}Omni {\k106}600M {\k32}{\k26}despite
+Dialogue: 0,0:02:44.94,0:02:47.18,Live,,0,0,0,{\k32}being {\k56}smaller {\k46}{\k32}scores {\k58}78
+Dialogue: 0,0:02:47.18,0:02:49.36,Live,,0,0,0,{\k88}4 {\k74}beating {\k24}a {\k32}2
+Dialogue: 0,0:02:49.36,0:02:51.70,Live,,0,0,0,{\k38}billion {\k58}parameter {\k48}model {\k64}{\k26}This
+Dialogue: 0,0:02:51.70,0:02:53.16,Live,,0,0,0,{\k28}shows {\k32}that {\k60}efficiency {\k26}and
+Dialogue: 0,0:02:53.16,0:02:54.92,Live,,0,0,0,{\k66}architecture {\k60}matter {\k30}more {\k20}than
+Dialogue: 0,0:02:54.92,0:02:56.30,Live,,0,0,0,{\k28}just {\k32}raw {\k50}size {\k28}for
+Dialogue: 0,0:02:56.30,0:02:58.44,Live,,0,0,0,{\k48}specific {\k52}tasks {\k46}{\k32}Now {\k22}{\k14}you
+Dialogue: 0,0:02:58.44,0:02:59.38,Live,,0,0,0,{\k14}might {\k16}be {\k28}wondering {\k36}about
+Dialogue: 0,0:02:59.38,0:03:00.32,Live,,0,0,0,{\k28}all {\k14}the {\k22}hype {\k30}around
+Dialogue: 0,0:03:00.32,0:03:02.40,Live,,0,0,0,{\k42}massive {\k38}language {\k46}models {\k64}{\k18}While
+Dialogue: 0,0:03:02.40,0:03:03.56,Live,,0,0,0,{\k22}those {\k18}are {\k54}powerful {\k22}for
+Dialogue: 0,0:03:03.56,0:03:05.46,Live,,0,0,0,{\k36}creative {\k54}tasks {\k50}{\k14}they're {\k36}often
+Dialogue: 0,0:03:05.46,0:03:07.16,Live,,0,0,0,{\k60}overkill {\k52}and {\k24}too {\k34}slow
+Dialogue: 0,0:03:07.16,0:03:08.48,Live,,0,0,0,{\k30}for {\k26}real {\k30}time {\k46}decision
+Dialogue: 0,0:03:08.48,0:03:10.58,Live,,0,0,0,{\k30}making {\k30}on {\k42}devices {\k70}{\k38}These
+Dialogue: 0,0:03:10.58,0:03:11.64,Live,,0,0,0,{\k36}d1 {\k34}models {\k28}are {\k8}a
+Dialogue: 0,0:03:11.64,0:03:13.50,Live,,0,0,0,{\k24}different {\k30}beast {\k58}{\k42}optimized {\k32}for
+Dialogue: 0,0:03:13.50,0:03:15.04,Live,,0,0,0,{\k34}action {\k54}{\k10}The {\k34}speed {\k22}is
+Dialogue: 0,0:03:15.04,0:03:16.64,Live,,0,0,0,{\k36}truly {\k62}impressive {\k28}for {\k34}edge
+Dialogue: 0,0:03:16.64,0:03:18.78,Live,,0,0,0,{\k64}deployment {\k46}{\k40}On {\k12}an {\k52}NVIDIA
+Dialogue: 0,0:03:18.78,0:03:22.02,Live,,0,0,0,{\k78}RTX {\k52}4 {\k78}090 {\k44}{\k72}D1
+Dialogue: 0,0:03:22.02,0:03:24.44,Live,,0,0,0,{\k100}3B {\k74}answers {\k26}a {\k42}question
+Dialogue: 0,0:03:24.44,0:03:25.84,Live,,0,0,0,{\k18}in {\k22}under {\k34}10 {\k56}milliseconds
+Dialogue: 0,0:03:26.04,0:03:27.62,Live,,0,0,0,{\k40}and {\k52}processes {\k34}an {\k32}image
+Dialogue: 0,0:03:27.62,0:03:29.40,Live,,0,0,0,{\k28}in {\k22}under {\k52}18 {\k66}milliseconds
+Dialogue: 0,0:03:29.68,0:03:31.50,Live,,0,0,0,{\k62}This {\k46}opens {\k44}doors {\k30}for
+Dialogue: 0,0:03:31.50,0:03:33.36,Live,,0,0,0,{\k36}real {\k38}time {\k74}applications {\k38}we
+Dialogue: 0,0:03:33.36,0:03:35.00,Live,,0,0,0,{\k32}haven't {\k26}even {\k54}imagined {\k42}yet
+Dialogue: 0,0:03:35.06,0:03:36.74,Live,,0,0,0,{\k40}Think {\k18}about {\k56}advanced {\k54}robotics
+Dialogue: 0,0:03:36.74,0:03:37.94,Live,,0,0,0,{\k36}that {\k22}need {\k14}to {\k48}instantly
+Dialogue: 0,0:03:37.94,0:03:40.04,Live,,0,0,0,{\k70}identify {\k70}objects {\k32}and {\k38}react
+Dialogue: 0,0:03:40.04,0:03:42.04,Live,,0,0,0,{\k60}or {\k36}smart {\k46}cameras {\k58}that
+Dialogue: 0,0:03:42.04,0:03:43.34,Live,,0,0,0,{\k16}can {\k38}analyze {\k50}scenes {\k26}in
+Dialogue: 0,0:03:43.34,0:03:44.66,Live,,0,0,0,{\k24}real {\k32}time {\k26}for {\k50}security
+Dialogue: 0,0:03:44.66,0:03:46.52,Live,,0,0,0,{\k32}or {\k40}quality {\k46}control {\k68}all
+Dialogue: 0,0:03:46.52,0:03:48.46,Live,,0,0,0,{\k38}without {\k56}constant {\k36}cloud {\k54}connectivity
+Dialogue: 0,0:03:48.90,0:03:50.20,Live,,0,0,0,{\k60}That's {\k10}the {\k34}promise {\k26}of
+Dialogue: 0,0:03:50.20,0:03:51.86,Live,,0,0,0,{\k24}these {\k26}edge {\k64}optimized {\k42}models
+Dialogue: 0,0:03:52.16,0:03:54.10,Live,,0,0,0,{\k18}The {\k42}D1 {\k90}3B {\k44}model
+Dialogue: 0,0:03:54.10,0:03:56.10,Live,,0,0,0,{\k24}is {\k32}available {\k50}now {\k56}{\k38}offering
+Dialogue: 0,0:03:56.10,0:03:57.64,Live,,0,0,0,{\k36}top {\k30}tier {\k40}decision {\k48}quality
+Dialogue: 0,0:03:57.64,0:03:58.66,Live,,0,0,0,{\k28}for {\k16}its {\k48}size
+Dialogue: 0,0:03:59.30,0:04:01.40,Live,,0,0,0,{\k8}The {\k44}D1 {\k38}Omni {\k112}600M
+Dialogue: 0,0:04:01.40,0:04:03.96,Live,,0,0,0,{\k36}while {\k70}experimental {\k62}{\k68}showcases {\k20}the
+Dialogue: 0,0:04:03.96,0:04:05.24,Live,,0,0,0,{\k44}direction {\k26}for {\k30}even {\k28}more
+Dialogue: 0,0:04:05.24,0:04:07.90,Live,,0,0,0,{\k66}versatile {\k102}multimodal {\k36}edge {\k52}AI
+Dialogue: 0,0:04:08.48,0:04:09.30,Live,,0,0,0,{\k26}They're {\k24}built {\k22}on {\k10}a
+Dialogue: 0,0:04:09.30,0:04:11.82,Live,,0,0,0,{\k62}foundation {\k30}that {\k106}prioritizes {\k44}swift
+Dialogue: 0,0:04:12.30,0:04:14.18,Live,,0,0,0,{\k34}accurate {\k52}judgment {\k34}{\k40}So {\k28}what
+Dialogue: 0,0:04:14.18,0:04:14.86,Live,,0,0,0,{\k14}does {\k16}this {\k16}mean {\k22}for
+Dialogue: 0,0:04:14.86,0:04:16.34,Live,,0,0,0,{\k26}you {\k62}It {\k20}means {\k40}smarter
+Dialogue: 0,0:04:16.34,0:04:18.90,Live,,0,0,0,{\k54}devices {\k52}{\k34}faster {\k52}responses {\k30}{\k34}and
+Dialogue: 0,0:04:18.90,0:04:20.18,Live,,0,0,0,{\k34}AI {\k40}that {\k14}can {\k40}integrate
+Dialogue: 0,0:04:20.18,0:04:21.56,Live,,0,0,0,{\k28}more {\k46}seamlessly {\k50}into {\k14}our
+Dialogue: 0,0:04:21.56,0:04:23.58,Live,,0,0,0,{\k30}physical {\k48}world {\k56}{\k16}Your {\k42}phone
+Dialogue: 0,0:04:23.78,0:04:25.02,Live,,0,0,0,{\k14}your {\k28}car {\k46}{\k10}your {\k26}home
+Dialogue: 0,0:04:25.02,0:04:26.54,Live,,0,0,0,{\k50}appliances {\k38}could {\k26}all {\k38}become
+Dialogue: 0,0:04:26.54,0:04:28.58,Live,,0,0,0,{\k70}significantly {\k34}more {\k56}intelligent {\k44}and
+Dialogue: 0,0:04:28.58,0:04:30.64,Live,,0,0,0,{\k38}capable {\k52}{\k12}The {\k60}strangest {\k34}part
+Dialogue: 0,0:04:31.06,0:04:32.02,Live,,0,0,0,{\k24}This {\k28}level {\k24}of {\k20}on
+Dialogue: 0,0:04:32.02,0:04:34.26,Live,,0,0,0,{\k56}device {\k32}{\k60}multimodal {\k48}reasoning {\k28}was
+Dialogue: 0,0:04:34.26,0:04:35.60,Live,,0,0,0,{\k38}science {\k46}fiction {\k30}just {\k20}a
+Dialogue: 0,0:04:35.60,0:04:37.36,Live,,0,0,0,{\k18}few {\k26}years {\k32}ago {\k58}{\k32}Now
+Dialogue: 0,0:04:37.66,0:04:39.10,Live,,0,0,0,{\k28}it’s {\k34}open {\k48}source {\k34}and
+Dialogue: 0,0:04:39.10,0:04:40.44,Live,,0,0,0,{\k24}ready {\k28}for {\k54}developers {\k28}to
+Dialogue: 0,0:04:40.44,0:04:42.96,Live,,0,0,0,{\k22}build {\k38}upon {\k86}This {\k106}democratizes
+Dialogue: 0,0:04:42.96,0:04:44.84,Live,,0,0,0,{\k50}access {\k32}to {\k56}powerful {\k50}AI
+Dialogue: 0,0:04:44.84,0:04:46.92,Live,,0,0,0,{\k70}decision {\k46}making {\k34}{\k28}The {\k30}future
+Dialogue: 0,0:04:46.92,0:04:48.14,Live,,0,0,0,{\k22}of {\k22}AI {\k60}isn't {\k18}just
+Dialogue: 0,0:04:48.14,0:04:49.68,Live,,0,0,0,{\k28}about {\k24}bigger {\k32}models {\k52}{\k18}but
+Dialogue: 0,0:04:49.68,0:04:51.50,Live,,0,0,0,{\k46}smarter {\k40}{\k18}more {\k46}efficient {\k32}ones
+Dialogue: 0,0:04:51.50,0:04:52.38,Live,,0,0,0,{\k26}that {\k18}can {\k22}live {\k22}on
+Dialogue: 0,0:04:52.38,0:04:54.14,Live,,0,0,0,{\k16}the {\k34}edge {\k58}{\k26}These {\k42}d1
+Dialogue: 0,0:04:54.14,0:04:55.26,Live,,0,0,0,{\k36}models {\k26}are {\k12}a {\k38}huge
+Dialogue: 0,0:04:55.26,0:04:56.40,Live,,0,0,0,{\k24}step {\k22}in {\k12}that {\k46}direction
+Dialogue: 0,0:04:56.92,0:04:58.44,Live,,0,0,0,{\k40}Subscribe {\k32}to {\k26}Tool {\k54}Dojo
+Dialogue: 0,0:04:58.44,0:05:00.16,Live,,0,0,0,{\k36}for {\k22}more {\k64}groundbreaking {\k50}AI
+Dialogue: 0,0:05:00.16,0:05:00.74,Live,,0,0,0,{\k48}updates

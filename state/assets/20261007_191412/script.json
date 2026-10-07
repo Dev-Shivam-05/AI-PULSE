@@ -1,0 +1,140 @@
+{
+  "titles": [
+    "Open d1 AI Models: Multimodal Power for the Edge",
+    "d1 AI: Faster, Smarter Decisions on Your Device",
+    "Hugging Face d1 AI: Multimodal Edge Decision Models"
+  ],
+  "title": "Open d1 AI Models: Multimodal Power for the Edge",
+  "thumb_text": "16ms DECISION SPEED",
+  "description": "The most important AI release this week got almost no coverage. We're diving into the new multimodal open d1 decision models from Hugging Face, designed for edge computing. Discover how these models can process text, images, and even audio, making AI smarter and faster right on your devices. \n\nThese aren't your typical generative AI models; they're built for making quick, structured decisions. We'll break down their performance, speed, and what this means for the future of AI on everything from smartphones to industrial robots. Get ready to understand the next leap in on-device AI.\n\n#AI #EdgeAI #MachineLearning #OpenSource #HuggingFace #DeepLearning #TechNews\n\nSource: https://huggingface.co/blog/LiquidAI/open-d1\n\nChapters:\n0:00 Underrated AI Release\n1:04 Multimodal AI Power\n2:13 Compute Power Problem\n3:00 LLM Hype Explained\n4:13 Your AI Future\n\n▶ Watch next: https://youtube.com/watch?v=F5JNJ4XFwac",
+  "tags": [
+    "AI",
+    "Edge AI",
+    "Multimodal AI",
+    "Decision Models",
+    "Hugging Face",
+    "Open Source AI",
+    "d1 AI",
+    "On-device AI",
+    "NVIDIA Jetson",
+    "Machine Learning",
+    "artificial intelligence",
+    "ai news",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "synthesis_claim": "The development of d1 decision models signifies a crucial shift from purely generative AI to specialized, efficient AI agents capable of discrete reasoning and multimodal understanding, paving the way for truly intelligent edge devices that can act rather than just respond.",
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "The most important AI release this week got almost no coverage. We're talking about new AI models that can think, not just generate text or images, and they're built to run on your devices, not in a massive data center. By the end of this, you'll understand what these 'decision models' are and why they matter.",
+      "visual_query": "glowing server racks",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Hugging Face and LiquidAI have just dropped two open-source 'd1 decision models': d1-3B and d1-omni-600M. Unlike generative AI that creates new content, these models are designed for rapid, specific answers. Think of them as AI that makes judgments.",
+      "visual_query": "abstract network connections",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 3,
+      "narration": "And these aren't just any models. The d1-3B model is outperforming larger models on the Decision Index, achieving a score of 48.57. That puts it ahead of models with significantly more parameters, like a 9 billion parameter model and even a 35 billion parameter model called Decider 35B-A3B.",
+      "visual_query": "digital leaderboard scores",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "What makes them truly stand out is their multimodal capability. d1-3B can understand both text and images. The experimental d1-omni-600M takes it further, handling text with either images or audio inputs.",
+      "visual_query": "image and text overlay",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 5,
+      "narration": "This multimodal aspect is key. Imagine an AI that can see a product image and read its description to tell you if it's in stock, or listen to a spoken request and understand the visual context of your surroundings. That's the kind of capability we're talking about.",
+      "visual_query": "person holding smartphone",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "The real game-changer here is speed and efficiency. These models are built on Liquid Foundation Models (LFMs). Instead of generating tokens step-by-step, decision models complete their task in a single forward pass, making them incredibly fast.",
+      "visual_query": "circuit board macro",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 7,
+      "narration": "d1-3B, for instance, can answer a question in just 16 milliseconds on a powerful NVIDIA Jetson AGX Thor. That’s faster than you can blink. On a more accessible Jetson Orin Nano, it still answers in a snappy 50 milliseconds.",
+      "visual_query": "NVIDIA Jetson computer",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "But here's the problem with many powerful AI models: they need massive computing power, making them unsuitable for everyday devices. These d1 models are specifically engineered for the 'edge' – meaning they run directly on your hardware.",
+      "visual_query": "server farm blinking lights",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 9,
+      "narration": "Benchmark results confirm their power. On seven datasets covering tasks like reading comprehension and toxicity detection, d1-3B achieved a mean score of 82.9, outperforming even larger models.",
+      "visual_query": "data analysis chart",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "The d1-omni-600M, despite being smaller, scores 78.4, beating a 2 billion parameter model. This shows that efficiency and architecture matter more than just raw size for specific tasks.",
+      "visual_query": "stacked data blocks",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 11,
+      "narration": "Now, you might be wondering about all the hype around massive language models. While those are powerful for creative tasks, they're often overkill and too slow for real-time decision-making on devices. These d1 models are a different beast, optimized for action.",
+      "visual_query": "magnifying glass on code",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The speed is truly impressive for edge deployment. On an NVIDIA RTX 4090, d1-3B answers a question in under 10 milliseconds and processes an image in under 18 milliseconds. This opens doors for real-time applications we haven't even imagined yet.",
+      "visual_query": "GPU graphics card macro",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Think about advanced robotics that need to instantly identify objects and react, or smart cameras that can analyze scenes in real-time for security or quality control, all without constant cloud connectivity. That's the promise of these edge-optimized models.",
+      "visual_query": "robot arm factory",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The d1-3B model is available now, offering top-tier decision quality for its size. The d1-omni-600M, while experimental, showcases the direction for even more versatile multimodal edge AI. They're built on a foundation that prioritizes swift, accurate judgment.",
+      "visual_query": "person using laptop",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 15,
+      "narration": "So, what does this mean for you? It means smarter devices, faster responses, and AI that can integrate more seamlessly into our physical world. Your phone, your car, your home appliances could all become significantly more intelligent and capable.",
+      "visual_query": "smartphone screen app",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 16,
+      "narration": "The strangest part? This level of on-device, multimodal reasoning was science fiction just a few years ago. Now, it’s open source and ready for developers to build upon. This democratizes access to powerful AI decision-making.",
+      "visual_query": "lightbulb idea glowing",
+      "speaker": "b"
+    },
+    {
+      "scene_num": 17,
+      "narration": "The future of AI isn't just about bigger models, but smarter, more efficient ones that can live on the edge. These d1 models are a huge step in that direction. Subscribe to ToolDojo for more groundbreaking AI updates.",
+      "visual_query": "futuristic city skyline",
+      "speaker": "a"
+    }
+  ],
+  "deliverable": null,
+  "filter_segment": true,
+  "source_url": "https://huggingface.co/blog/LiquidAI/open-d1",
+  "format": "news",
+  "signal_title": "Multimodal open d1 decision models for the edge",
+  "hook_pattern": "quiet"
+}

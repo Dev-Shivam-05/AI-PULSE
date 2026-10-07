@@ -1,0 +1,51 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "a 9 billion parameter model",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "a 35 billion parameter model called Decider 35B-A3B",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "The d1-3B model is available now",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The development of d1 decision models signifies a crucial shift from purely generative AI to specialized, efficient AI agents capable of discrete reasoning and multimodal understanding, paving the way for truly intelligent edge devices that can act rather than just respond."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative framing ('The most important AI release this week got almost no coverage.') and uses conversational language ('We're talking ab', 'And these aren't just any models.'"
+  },
+  "confidence": {
+    "score": 0.754,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.3999999999999999,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
