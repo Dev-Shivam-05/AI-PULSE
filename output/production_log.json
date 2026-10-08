@@ -4535,5 +4535,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-08T19:06:42.119646",
+    "title": "LLM Inner Workings: How Trillion Parameters Learn",
+    "description": "How do Large Language Models (LLMs) actually work? This video breaks down the complex inner workings of AI models that can write, code, and converse. We demystify concepts like tokenization, attention mechanisms, and emergent abilities, explaining them with clear analogies for a general audience.  Understand the fundamental building blocks that power the AI revolution. From processing raw text to generating human-like responses, we explore the science behind these powerful tools. Discover the surprising ways these models learn and the implications for our future.  Learn what makes these models so capable and how they continue to evolve.  This explainer is designed to be timeless, focusing on the core principles that will remain relevant for years to come.  #AI #LLM #ArtificialIntelligence #TechExplained #MachineLearning #DeepLearning #FutureTech\n\nSubscribe to ToolDojo.\n\nChapters:\n0:00 Digital Brain Explained\n0:58 Transformer Architecture Magic\n1:54 Colossal Data Training\n2:33 Incredible Task Versatility\n3:24 LLM Responds To You\n\n▶ Watch next: https://youtube.com/watch?v=vsOOR2VIJ5M",
+    "tags": [
+      "Large Language Models",
+      "LLM explained",
+      "How AI works",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Deep Learning",
+      "Natural Language Processing",
+      "AI technology",
+      "Transformer models",
+      "AI fundamentals",
+      "ai",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLM_Inner_Workings_How_Trillion_Parameters_Learn_20261008_185919_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261008_190111.mp4",
+      "output/shorts/short_2_sb_20261008_190145.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261008_190105.jpg",
+    "youtube_url": "https://youtube.com/watch?v=JZqpgAYqqB4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=MALYux0SYbM",
+      "https://youtube.com/watch?v=CaZLPfpuApo"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Trillion Parameter LLM Training #Shorts",
+        "description": "Visualizes the training process of a trillion-parameter Large Language Model, showing how data is fed and processed.  Highlights the scale of computation involved in learning.",
+        "instagram_caption": "💡 See how massive language models learn! This short dives into the training of models with a trillion parameters, illustrating the immense data and computation required. \nFollow @tooldojo!\n#LLM #AI #MachineLearning #DeepLearning #NeuralNetworks #LargeLanguageModels #AITraining #Tech #ArtificialIntelligence #DataScience #ModelTraining #BigData #Parameters #AIExplained #HowItWorks #TechInnovation #FutureOfAI #ComputerScience #NLP #Tooldojo"
+      },
+      {
+        "title": "LLM Parameter Learning Process #Shorts",
+        "description": "Demonstrates the learning mechanics of a trillion-parameter LLM.  Focuses on how weights and biases adjust during training to understand language patterns.",
+        "instagram_caption": "🧠 Unpacking LLM learning! This short shows the core process of how trillion-parameter models adjust their internal workings to grasp complex language. \nFollow @tooldojo!\n#LLM #AI #MachineLearning #DeepLearning #NeuralNetworks #LargeLanguageModels #AITraining #Tech #ArtificialIntelligence #DataScience #ModelTraining #Parameters #AIExplained #HowItWorks #TechInnovation #FutureOfAI #ComputerScience #NLP #Tooldojo #LLMParameters"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]

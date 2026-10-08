@@ -1,0 +1,178 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.28,Live,,0,0,0,{\k40}Imagine {\k22}a {\k32}digital {\k34}brain
+Dialogue: 0,0:00:01.28,0:00:02.42,Live,,0,0,0,{\k24}that {\k16}can {\k22}write {\k42}poems
+Dialogue: 0,0:00:02.88,0:00:04.20,Live,,0,0,0,{\k20}debug {\k44}code {\k18}{\k22}and {\k28}even
+Dialogue: 0,0:00:04.20,0:00:06.32,Live,,0,0,0,{\k42}explain {\k44}quantum {\k36}physics {\k68}{\k22}How
+Dialogue: 0,0:00:06.32,0:00:06.98,Live,,0,0,0,{\k14}does {\k10}it {\k10}do {\k22}that
+Dialogue: 0,0:00:07.42,0:00:07.96,Live,,0,0,0,{\k18}By {\k10}the {\k16}end {\k10}of
+Dialogue: 0,0:00:07.96,0:00:09.30,Live,,0,0,0,{\k16}this {\k32}video {\k34}{\k12}you'll {\k40}understand
+Dialogue: 0,0:00:09.30,0:00:10.66,Live,,0,0,0,{\k22}the {\k22}core {\k50}mechanics {\k42}behind
+Dialogue: 0,0:00:10.66,0:00:12.34,Live,,0,0,0,{\k30}these {\k56}incredible {\k48}Large {\k34}Language
+Dialogue: 0,0:00:12.34,0:00:14.90,Live,,0,0,0,{\k48}Models {\k48}{\k58}LLMs {\k56}{\k26}At {\k20}its
+Dialogue: 0,0:00:14.90,0:00:16.66,Live,,0,0,0,{\k30}heart {\k28}{\k20}an {\k82}LLM {\k16}is
+Dialogue: 0,0:00:16.66,0:00:18.36,Live,,0,0,0,{\k12}a {\k38}highly {\k74}sophisticated {\k46}pattern
+Dialogue: 0,0:00:18.36,0:00:19.92,Live,,0,0,0,{\k40}matching {\k36}machine {\k36}{\k16}It {\k28}doesn't
+Dialogue: 0,0:00:19.92,0:00:21.12,Live,,0,0,0,{\k48}understand {\k26}like {\k20}we {\k16}do
+Dialogue: 0,0:00:21.44,0:00:22.52,Live,,0,0,0,{\k12}but {\k16}it's {\k46}exceptionally {\k34}good
+Dialogue: 0,0:00:22.52,0:00:23.52,Live,,0,0,0,{\k18}at {\k36}predicting {\k26}the {\k20}next
+Dialogue: 0,0:00:23.52,0:00:24.72,Live,,0,0,0,{\k34}most {\k30}likely {\k44}piece {\k12}of
+Dialogue: 0,0:00:24.72,0:00:26.18,Live,,0,0,0,{\k52}information {\k38}based {\k24}on {\k32}vast
+Dialogue: 0,0:00:26.18,0:00:27.92,Live,,0,0,0,{\k36}amounts {\k22}of {\k24}data {\k60}{\k32}The
+Dialogue: 0,0:00:27.92,0:00:28.94,Live,,0,0,0,{\k24}first {\k28}step {\k20}is {\k30}breaking
+Dialogue: 0,0:00:28.94,0:00:31.02,Live,,0,0,0,{\k28}down {\k42}language {\k68}{\k28}Raw {\k42}text
+Dialogue: 0,0:00:31.02,0:00:32.22,Live,,0,0,0,{\k22}is {\k28}chopped {\k28}into {\k42}smaller
+Dialogue: 0,0:00:32.22,0:00:33.54,Live,,0,0,0,{\k40}pieces {\k40}called {\k42}tokens
+Dialogue: 0,0:00:34.16,0:00:35.18,Live,,0,0,0,{\k26}These {\k20}can {\k14}be {\k32}words
+Dialogue: 0,0:00:35.50,0:00:36.66,Live,,0,0,0,{\k22}parts {\k14}of {\k26}words {\k26}{\k28}or
+Dialogue: 0,0:00:36.66,0:00:38.44,Live,,0,0,0,{\k38}even {\k66}punctuation {\k50}{\k14}Think {\k10}of
+Dialogue: 0,0:00:38.44,0:00:39.74,Live,,0,0,0,{\k12}it {\k20}like {\k92}deconstructing {\k6}a
+Dialogue: 0,0:00:39.74,0:00:41.20,Live,,0,0,0,{\k38}sentence {\k36}into {\k30}building {\k32}blocks
+Dialogue: 0,0:00:41.90,0:00:43.26,Live,,0,0,0,{\k34}Each {\k42}token {\k38}is {\k22}then
+Dialogue: 0,0:00:43.26,0:00:44.64,Live,,0,0,0,{\k44}converted {\k36}into {\k16}a {\k42}numerical
+Dialogue: 0,0:00:44.64,0:00:47.20,Live,,0,0,0,{\k78}representation {\k62}{\k10}a {\k28}vector {\k56}{\k22}This
+Dialogue: 0,0:00:47.20,0:00:48.30,Live,,0,0,0,{\k30}allows {\k26}the {\k34}computer {\k20}to
+Dialogue: 0,0:00:48.30,0:00:50.06,Live,,0,0,0,{\k44}process {\k36}and {\k40}manipulate {\k56}language
+Dialogue: 0,0:00:50.06,0:00:52.16,Live,,0,0,0,{\k76}mathematically {\k54}{\k26}It's {\k10}like {\k44}assigning
+Dialogue: 0,0:00:52.16,0:00:53.50,Live,,0,0,0,{\k24}a {\k28}unique {\k56}coordinate {\k26}to
+Dialogue: 0,0:00:53.50,0:00:55.44,Live,,0,0,0,{\k30}every {\k30}building {\k40}block {\k50}{\k34}Now
+Dialogue: 0,0:00:55.74,0:00:57.06,Live,,0,0,0,{\k10}the {\k34}real {\k36}magic {\k42}begins
+Dialogue: 0,0:00:57.54,0:00:59.38,Live,,0,0,0,{\k68}LLMs {\k34}use {\k20}a {\k62}revolutionary
+Dialogue: 0,0:00:59.38,0:01:01.60,Live,,0,0,0,{\k84}architecture {\k56}called {\k18}the {\k54}Transformer
+Dialogue: 0,0:01:02.26,0:01:03.42,Live,,0,0,0,{\k10}The {\k24}key {\k50}innovation {\k32}here
+Dialogue: 0,0:01:03.42,0:01:04.94,Live,,0,0,0,{\k32}is {\k14}the {\k34}attention {\k62}mechanism
+Dialogue: 0,0:01:05.56,0:01:06.58,Live,,0,0,0,{\k16}This {\k30}allows {\k26}the {\k30}model
+Dialogue: 0,0:01:06.58,0:01:07.66,Live,,0,0,0,{\k22}to {\k18}weigh {\k20}the {\k48}importance
+Dialogue: 0,0:01:07.66,0:01:09.18,Live,,0,0,0,{\k24}of {\k28}different {\k40}tokens {\k60}in
+Dialogue: 0,0:01:09.18,0:01:10.48,Live,,0,0,0,{\k8}a {\k36}sequence {\k38}when {\k48}processing
+Dialogue: 0,0:01:10.48,0:01:12.34,Live,,0,0,0,{\k40}another {\k48}token {\k44}{\k36}Consider {\k18}the
+Dialogue: 0,0:01:12.34,0:01:13.64,Live,,0,0,0,{\k32}sentence {\k32}The {\k32}animal {\k34}didn't
+Dialogue: 0,0:01:13.64,0:01:14.66,Live,,0,0,0,{\k20}cross {\k24}the {\k24}street {\k34}because
+Dialogue: 0,0:01:14.66,0:01:15.72,Live,,0,0,0,{\k14}it {\k12}was {\k22}too {\k48}tired
+Dialogue: 0,0:01:16.16,0:01:17.26,Live,,0,0,0,{\k20}When {\k8}the {\k26}model {\k56}processes
+Dialogue: 0,0:01:17.26,0:01:19.04,Live,,0,0,0,{\k32}it {\k36}{\k6}the {\k38}attention {\k66}mechanism
+Dialogue: 0,0:01:19.04,0:01:20.22,Live,,0,0,0,{\k40}helps {\k18}it {\k34}focus {\k26}on
+Dialogue: 0,0:01:20.22,0:01:21.88,Live,,0,0,0,{\k48}animal {\k54}rather {\k22}than {\k32}street
+Dialogue: 0,0:01:22.30,0:01:24.08,Live,,0,0,0,{\k50}understanding {\k26}the {\k62}pronoun's {\k30}reference
+Dialogue: 0,0:01:24.68,0:01:26.28,Live,,0,0,0,{\k30}This {\k56}attention {\k46}allows {\k28}the
+Dialogue: 0,0:01:26.28,0:01:27.60,Live,,0,0,0,{\k30}model {\k20}to {\k36}grasp {\k46}long
+Dialogue: 0,0:01:27.60,0:01:29.64,Live,,0,0,0,{\k44}range {\k62}dependencies {\k44}and {\k44}context
+Dialogue: 0,0:01:30.00,0:01:30.96,Live,,0,0,0,{\k26}It's {\k16}not {\k24}just {\k30}looking
+Dialogue: 0,0:01:30.96,0:01:31.64,Live,,0,0,0,{\k12}at {\k10}the {\k20}word {\k26}right
+Dialogue: 0,0:01:31.64,0:01:33.10,Live,,0,0,0,{\k34}before {\k54}{\k22}it's {\k22}looking {\k14}at
+Dialogue: 0,0:01:33.10,0:01:34.68,Live,,0,0,0,{\k18}all {\k12}the {\k30}words {\k44}{\k54}understanding
+Dialogue: 0,0:01:34.68,0:01:35.70,Live,,0,0,0,{\k28}their {\k64}relationships
+Dialogue: 0,0:01:36.42,0:01:37.62,Live,,0,0,0,{\k24}The {\k44}large {\k20}in {\k32}Large
+Dialogue: 0,0:01:37.62,0:01:39.28,Live,,0,0,0,{\k44}Language {\k50}Models {\k42}refers {\k30}to
+Dialogue: 0,0:01:39.28,0:01:40.20,Live,,0,0,0,{\k10}the {\k24}sheer {\k40}scale {\k18}of
+Dialogue: 0,0:01:40.20,0:01:42.68,Live,,0,0,0,{\k18}these {\k38}models {\k66}{\k48}billions {\k30}{\k48}sometimes
+Dialogue: 0,0:01:42.68,0:01:44.78,Live,,0,0,0,{\k50}trillions {\k34}{\k10}of {\k48}parameters {\k56}{\k12}These
+Dialogue: 0,0:01:44.78,0:01:46.36,Live,,0,0,0,{\k56}parameters {\k30}are {\k48}essentially {\k24}the
+Dialogue: 0,0:01:46.36,0:01:47.70,Live,,0,0,0,{\k30}knobs {\k42}and {\k50}dials {\k12}the
+Dialogue: 0,0:01:47.70,0:01:49.26,Live,,0,0,0,{\k32}model {\k64}adjusts {\k20}during {\k40}training
+Dialogue: 0,0:01:49.26,0:01:50.06,Live,,0,0,0,{\k20}to {\k12}get {\k30}better {\k18}at
+Dialogue: 0,0:01:50.06,0:01:50.54,Live,,0,0,0,{\k38}predicting
+Dialogue: 0,0:01:51.16,0:01:52.72,Live,,0,0,0,{\k34}Training {\k58}involves {\k44}feeding {\k20}the
+Dialogue: 0,0:01:52.72,0:01:54.22,Live,,0,0,0,{\k32}model {\k64}colossal {\k18}data {\k36}sets
+Dialogue: 0,0:01:54.22,0:01:55.44,Live,,0,0,0,{\k14}of {\k24}text {\k36}and {\k38}code
+Dialogue: 0,0:01:55.76,0:01:56.84,Live,,0,0,0,{\k24}It {\k26}learns {\k32}by {\k26}trying
+Dialogue: 0,0:01:56.84,0:01:57.96,Live,,0,0,0,{\k14}to {\k28}predict {\k34}missing {\k36}words
+Dialogue: 0,0:01:57.96,0:01:59.08,Live,,0,0,0,{\k46}or {\k14}the {\k24}next {\k28}word
+Dialogue: 0,0:01:59.08,0:02:00.48,Live,,0,0,0,{\k20}in {\k8}a {\k30}sentence {\k60}{\k22}For
+Dialogue: 0,0:02:00.48,0:02:02.26,Live,,0,0,0,{\k30}every {\k36}correct {\k52}prediction {\k48}{\k12}its
+Dialogue: 0,0:02:02.26,0:02:04.16,Live,,0,0,0,{\k46}parameters {\k34}are {\k46}slightly {\k54}adjusted
+Dialogue: 0,0:02:04.46,0:02:05.48,Live,,0,0,0,{\k14}But {\k30}here's {\k10}the {\k38}problem
+Dialogue: 0,0:02:05.96,0:02:06.62,Live,,0,0,0,{\k14}how {\k16}does {\k10}a {\k26}model
+Dialogue: 0,0:02:06.62,0:02:08.00,Live,,0,0,0,{\k42}trained {\k20}on {\k34}predicting {\k42}words
+Dialogue: 0,0:02:08.00,0:02:09.34,Live,,0,0,0,{\k64}suddenly {\k32}learn {\k20}to {\k18}write
+Dialogue: 0,0:02:09.34,0:02:11.04,Live,,0,0,0,{\k20}a {\k48}coherent {\k46}story {\k56}or
+Dialogue: 0,0:02:11.04,0:02:13.00,Live,,0,0,0,{\k60}summarize {\k28}a {\k42}complex {\k56}document
+Dialogue: 0,0:02:13.56,0:02:14.70,Live,,0,0,0,{\k22}This {\k20}is {\k28}where {\k44}emergent
+Dialogue: 0,0:02:14.70,0:02:15.74,Live,,0,0,0,{\k42}abilities {\k30}come {\k22}in
+Dialogue: 0,0:02:16.38,0:02:17.96,Live,,0,0,0,{\k42}Emergent {\k42}abilities {\k26}are {\k48}capabilities
+Dialogue: 0,0:02:17.96,0:02:19.32,Live,,0,0,0,{\k44}that {\k32}appear {\k24}as {\k36}models
+Dialogue: 0,0:02:19.32,0:02:20.98,Live,,0,0,0,{\k32}grow {\k48}larger {\k40}{\k20}which {\k26}weren't
+Dialogue: 0,0:02:20.98,0:02:22.82,Live,,0,0,0,{\k52}explicitly {\k72}programmed {\k36}{\k16}It's {\k8}like
+Dialogue: 0,0:02:22.82,0:02:24.10,Live,,0,0,0,{\k54}discovering {\k20}a {\k20}new {\k34}skill
+Dialogue: 0,0:02:24.10,0:02:25.48,Live,,0,0,0,{\k34}set {\k34}just {\k24}by {\k46}practicing
+Dialogue: 0,0:02:25.48,0:02:27.20,Live,,0,0,0,{\k24}a {\k20}lot {\k60}{\k16}For {\k42}example
+Dialogue: 0,0:02:27.60,0:02:28.78,Live,,0,0,0,{\k10}few {\k26}shot {\k40}learning {\k42}or
+Dialogue: 0,0:02:28.78,0:02:30.76,Live,,0,0,0,{\k18}in {\k48}context {\k42}learning {\k50}{\k40}This
+Dialogue: 0,0:02:30.76,0:02:31.80,Live,,0,0,0,{\k26}means {\k24}the {\k32}model {\k22}can
+Dialogue: 0,0:02:31.80,0:02:33.34,Live,,0,0,0,{\k40}perform {\k54}tasks {\k28}it {\k32}wasn't
+Dialogue: 0,0:02:33.34,0:02:35.24,Live,,0,0,0,{\k54}specifically {\k42}trained {\k28}for {\k36}{\k30}simply
+Dialogue: 0,0:02:35.24,0:02:36.14,Live,,0,0,0,{\k26}by {\k32}seeing {\k16}a {\k16}few
+Dialogue: 0,0:02:36.14,0:02:37.86,Live,,0,0,0,{\k48}examples {\k68}{\k14}It {\k24}learns {\k18}the
+Dialogue: 0,0:02:37.86,0:02:39.40,Live,,0,0,0,{\k44}underlying {\k48}pattern {\k32}and {\k30}applies
+Dialogue: 0,0:02:39.40,0:02:40.74,Live,,0,0,0,{\k36}it {\k24}{\k14}What {\k32}doesn't {\k28}matter
+Dialogue: 0,0:02:40.74,0:02:41.94,Live,,0,0,0,{\k28}is {\k14}the {\k38}specific {\k40}brand
+Dialogue: 0,0:02:41.94,0:02:43.48,Live,,0,0,0,{\k46}or {\k20}the {\k30}latest {\k48}update
+Dialogue: 0,0:02:43.98,0:02:45.16,Live,,0,0,0,{\k20}The {\k20}core {\k50}principles {\k28}of
+Dialogue: 0,0:02:45.16,0:02:47.68,Live,,0,0,0,{\k82}tokenization {\k46}{\k40}attention {\k44}and {\k40}scale
+Dialogue: 0,0:02:47.68,0:02:49.24,Live,,0,0,0,{\k34}are {\k16}the {\k46}enduring {\k50}pillars
+Dialogue: 0,0:02:49.76,0:02:51.24,Live,,0,0,0,{\k36}Focusing {\k28}on {\k36}fleeting {\k48}trends
+Dialogue: 0,0:02:51.24,0:02:52.60,Live,,0,0,0,{\k64}distracts {\k12}from {\k12}the {\k48}fundamental
+Dialogue: 0,0:02:52.60,0:02:55.16,Live,,0,0,0,{\k60}mechanics {\k62}{\k32}The {\k40}attention {\k62}mechanism
+Dialogue: 0,0:02:55.16,0:02:56.76,Live,,0,0,0,{\k38}is {\k20}the {\k50}unsung {\k42}hero
+Dialogue: 0,0:02:57.08,0:02:58.00,Live,,0,0,0,{\k10}It {\k32}allows {\k26}the {\k24}model
+Dialogue: 0,0:02:58.00,0:02:59.54,Live,,0,0,0,{\k20}to {\k36}dynamically {\k60}focus {\k38}on
+Dialogue: 0,0:02:59.54,0:03:00.60,Live,,0,0,0,{\k38}relevant {\k32}parts {\k24}of {\k12}the
+Dialogue: 0,0:03:00.60,0:03:02.20,Live,,0,0,0,{\k32}input {\k60}{\k34}enabling {\k22}it {\k12}to
+Dialogue: 0,0:03:02.20,0:03:03.94,Live,,0,0,0,{\k48}understand {\k54}context {\k40}over {\k32}long
+Dialogue: 0,0:03:03.94,0:03:05.98,Live,,0,0,0,{\k54}sequences {\k68}{\k28}This {\k18}is {\k36}crucial
+Dialogue: 0,0:03:05.98,0:03:07.42,Live,,0,0,0,{\k28}for {\k50}coherent {\k36}and {\k30}meaningful
+Dialogue: 0,0:03:07.42,0:03:08.10,Live,,0,0,0,{\k58}output
+Dialogue: 0,0:03:08.72,0:03:09.64,Live,,0,0,0,{\k18}The {\k22}sheer {\k38}scale {\k14}of
+Dialogue: 0,0:03:09.64,0:03:11.24,Live,,0,0,0,{\k44}parameters {\k60}means {\k22}the {\k34}model
+Dialogue: 0,0:03:11.24,0:03:12.56,Live,,0,0,0,{\k24}has {\k14}a {\k28}vast {\k66}capacity
+Dialogue: 0,0:03:12.56,0:03:13.82,Live,,0,0,0,{\k24}to {\k42}store {\k28}and {\k32}recall
+Dialogue: 0,0:03:13.82,0:03:15.44,Live,,0,0,0,{\k58}information {\k70}and {\k14}to {\k20}learn
+Dialogue: 0,0:03:15.44,0:03:17.80,Live,,0,0,0,{\k52}complex {\k70}relationships {\k42}between {\k62}concepts
+Dialogue: 0,0:03:18.10,0:03:18.74,Live,,0,0,0,{\k18}Think {\k10}of {\k14}it {\k22}as
+Dialogue: 0,0:03:18.74,0:03:20.34,Live,,0,0,0,{\k16}an {\k62}incredibly {\k38}dense {\k44}knowledge
+Dialogue: 0,0:03:20.34,0:03:21.92,Live,,0,0,0,{\k40}base {\k54}{\k24}When {\k12}you {\k28}ask
+Dialogue: 0,0:03:21.92,0:03:23.18,Live,,0,0,0,{\k20}an {\k60}LLM {\k10}a {\k36}question
+Dialogue: 0,0:03:23.18,0:03:24.12,Live,,0,0,0,{\k54}or {\k18}give {\k14}it {\k8}a
+Dialogue: 0,0:03:24.12,0:03:25.68,Live,,0,0,0,{\k34}prompt {\k44}{\k8}it {\k46}processes {\k24}your
+Dialogue: 0,0:03:25.68,0:03:27.28,Live,,0,0,0,{\k34}input {\k54}{\k18}uses {\k28}its {\k26}learned
+Dialogue: 0,0:03:27.28,0:03:29.24,Live,,0,0,0,{\k64}parameters {\k34}and {\k36}attention {\k62}mechanisms
+Dialogue: 0,0:03:29.24,0:03:30.66,Live,,0,0,0,{\k64}to {\k28}predict {\k28}the {\k22}most
+Dialogue: 0,0:03:30.66,0:03:32.18,Live,,0,0,0,{\k48}probable {\k44}sequence {\k26}of {\k34}tokens
+Dialogue: 0,0:03:32.18,0:03:33.68,Live,,0,0,0,{\k44}that {\k46}forms {\k18}a {\k42}relevant
+Dialogue: 0,0:03:33.68,0:03:35.98,Live,,0,0,0,{\k36}and {\k48}coherent {\k48}response {\k70}{\k28}The
+Dialogue: 0,0:03:35.98,0:03:37.98,Live,,0,0,0,{\k60}strangest {\k32}part {\k38}{\k20}These {\k50}emergent
+Dialogue: 0,0:03:37.98,0:03:39.92,Live,,0,0,0,{\k48}abilities {\k54}like {\k54}reasoning {\k38}or
+Dialogue: 0,0:03:39.92,0:03:41.92,Live,,0,0,0,{\k40}novel {\k48}problem {\k42}solving {\k70}seem
+Dialogue: 0,0:03:41.92,0:03:43.18,Live,,0,0,0,{\k22}to {\k32}arise {\k40}not {\k32}just
+Dialogue: 0,0:03:43.18,0:03:44.20,Live,,0,0,0,{\k18}from {\k22}more {\k32}data {\k30}or
+Dialogue: 0,0:03:44.20,0:03:45.86,Live,,0,0,0,{\k52}parameters {\k52}{\k28}but {\k18}from {\k16}the
+Dialogue: 0,0:03:45.86,0:03:47.44,Live,,0,0,0,{\k44}asterisk {\k22}way {\k22}{\k50}asterisk {\k20}the
+Dialogue: 0,0:03:47.44,0:03:49.78,Live,,0,0,0,{\k36}attention {\k64}mechanism {\k58}can {\k76}reconfigure
+Dialogue: 0,0:03:49.78,0:03:51.32,Live,,0,0,0,{\k18}its {\k36}focus {\k50}across {\k50}different
+Dialogue: 0,0:03:51.32,0:03:53.52,Live,,0,0,0,{\k38}tasks {\k54}{\k14}So {\k36}{\k56}LLMs {\k22}work
+Dialogue: 0,0:03:53.52,0:03:54.76,Live,,0,0,0,{\k26}by {\k32}breaking {\k46}text {\k20}into
+Dialogue: 0,0:03:54.76,0:03:55.22,Live,,0,0,0,{\k36}tokens
+Dialogue: 0,0:03:55.84,0:03:56.90,Live,,0,0,0,{\k22}converting {\k24}them {\k16}to {\k34}numbers
+Dialogue: 0,0:03:57.30,0:03:58.48,Live,,0,0,0,{\k20}and {\k26}using {\k18}a {\k54}sophisticated
+Dialogue: 0,0:03:58.48,0:04:00.34,Live,,0,0,0,{\k58}attention {\k66}mechanism {\k46}with {\k16}an
+Dialogue: 0,0:04:00.34,0:04:01.64,Live,,0,0,0,{\k6}a {\k44}massive {\k34}neural {\k46}network
+Dialogue: 0,0:04:01.64,0:04:02.82,Live,,0,0,0,{\k44}to {\k26}predict {\k28}the {\k20}next
+Dialogue: 0,0:04:02.82,0:04:05.08,Live,,0,0,0,{\k46}token {\k60}{\k20}learning {\k52}complex {\k48}patterns
+Dialogue: 0,0:04:05.08,0:04:07.16,Live,,0,0,0,{\k58}and {\k52}exhibiting {\k50}emergent {\k48}abilities
+Dialogue: 0,0:04:07.16,0:04:08.10,Live,,0,0,0,{\k42}along {\k24}the {\k18}way
+Dialogue: 0,0:04:08.74,0:04:10.58,Live,,0,0,0,{\k72}Understanding {\k38}these {\k22}core {\k52}mechanics
+Dialogue: 0,0:04:10.58,0:04:12.20,Live,,0,0,0,{\k60}reveals {\k36}the {\k24}true {\k42}power
+Dialogue: 0,0:04:12.20,0:04:13.78,Live,,0,0,0,{\k26}and {\k48}limitations {\k42}of {\k32}AI
+Dialogue: 0,0:04:14.22,0:04:15.58,Live,,0,0,0,{\k34}Subscribe {\k32}to {\k22}Tool {\k48}Dojo
+Dialogue: 0,0:04:15.58,0:04:16.82,Live,,0,0,0,{\k34}for {\k18}more {\k42}timeless {\k30}tech
+Dialogue: 0,0:04:16.82,0:04:17.64,Live,,0,0,0,{\k72}breakdowns
