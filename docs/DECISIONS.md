@@ -512,3 +512,56 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 
 - **2026-10-05, after the session: the owner set Radar Live to Public** and merged L.3 (PR #38).
   The daily schedule is not installed yet, so nothing streams on its own.
+
+## 2026-10-10 — v3-G.2 not built (A/B verdict)
+
+- `learn.scoreboard()` over main's state: `A/B pairs: 9 · storyboard wins: 1`. The 10th pair
+  can raise wins to 2 at most, which is ≤ 5, so the pre-registered rule says stop and rethink.
+  Storyboard Shorts 49.7% viewed vs crop 54.1%. Many pairs are 1-20 views: weak evidence, but
+  it all points one way.
+
+## 2026-10-10 — v3-B.4: tool-lane supply fix (owner: `go`)
+
+- **The tool lane was starved, not blocked.** 10-07..10-09: 9 of 9 candidates passed the floor,
+  the screen and the facts, and none had a fence or install command in the 5,000-char
+  grounding, so v3-E containment rejected each. 6 were Product Hunt pages that never could pass.
+  (The exact gate is inferred: the CI logs need auth.)
+- **Eligibility is a GitHub repo or an HF model**, checked in `build_script` before `[:3]`, so
+  "3 tried" means 3 eligible. HF Spaces are excluded (no feed produces them).
+- **Fetch 20000, write from 5000.** The writer window is byte-identical; only a first fenced
+  block past the cut is appended, and the screen is built after the append.
+- **Open:** the first fence is not always a command (OpenDots' is a mermaid diagram). Proposed:
+  skip `mermaid` fences. Ranking bias toward Product Hunt (`feed_max` computed before the used
+  filter, Atom `updated` read before `published`) is left for a ranking phase.
+
+## 2026-10-10 — v3-G.3: packaging (owner: `go`)
+
+- The viral judge stops rewarding shock/fear/outrage and stops punishing developer tooling; it
+  scores the concrete change for people who build with or use AI. `VIRAL_THRESHOLD` unchanged.
+- A title with an unsupported number takes the model's own first clean alternate (`titles`)
+  before falling back to the strip — 8/78 published titles were stripped leftovers. `titles`
+  is model-authored, so it is CARRIED, not popped.
+- Fear terms are recorded in the ledger (`title_terms`), never blocking — measurement first.
+  The approved list catches 13 of 78 published titles; "hacked", "danger", "risks", "worries",
+  "backlash" are not on it.
+- CTR/impressions come from the YouTube Reporting API (`channel_reach_basic_a1`), stored raw in
+  `analytics.jsonl`; no new state file. Title/thumbnail A/B is out of scope: Studio-only, no API.
+
+## 2026-10-10 — v3-G.4b: production basics (owner: `go`)
+
+- Committed music must be CC0, because the repo is public and the Shorts carrying the bed are
+  re-uploaded as Reels. The Audio Library tracks stay local (radar only, gitignored). No audio
+  was committed; the owner adds tracks with a SOURCES.txt row recording measured LUFS.
+- The bed has its own folder, `assets/music/bed/`, because `assets/music/` is also where
+  `branding._audio` looks for the intro/outro stings.
+- `normalize=0` is a bug fix, not tuning: it restores the voice level the mix always meant.
+- Dissolves (0.5 s fade) END on the boundary, so every scene and every leading stat card starts
+  on its own first frame. The sting and L2 boundaries stay hard cuts.
+- The outro line is "for AI you can use" (the channel `tagline`), replacing "for daily AI news".
+
+## 2026-10-10 — gemini-fallback cleanup (owner: `go`)
+
+- `gemini-2.0-flash` removed from `_FALLBACK_MODELS` (shut down 2026-06-01 per Google's
+  deprecations page). 3.5 flash-lite/flash stay at the end of the chain.
+- **HELD candidates are re-rolled by the retry cron** (no `mark_failed` on HELD). Left as is:
+  10-05's hold was followed by a clean publish of the same tool.

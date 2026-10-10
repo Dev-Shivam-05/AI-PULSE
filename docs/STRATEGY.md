@@ -102,7 +102,8 @@ Sunday stays the **weekly roundup**. Daily: 3 Shorts cut from the long video.
 sting inserted after it (a logo before the hook kills retention); Shorts are ≤35s, start on
 content frame one (no bumpers), snap to real narration boundaries, and end without an outro
 so the loop lands back on the hook; visuals cut every ~5–7s (3 clips/scene); thumbnails carry
-a 2–4-word curiosity gap, not the title.
+declarative text, 2–4 words, no question mark, one number from the source/verified facts or
+the word FREE (v3-E #5), not the title.
 
 **Thumbnail strategy (decision 2026-07-17: person-first).** Analysis of what wins on
 YouTube's home feed: virtually every high-CTR thumbnail features a PERSON with visible

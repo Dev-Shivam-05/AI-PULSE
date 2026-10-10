@@ -235,6 +235,24 @@ name that is not written there. If a decision is missing, add a row and get one 
   and the chain re-ran without limit (09-29: 3 attempts). `MAX_DAY_ATTEMPTS` (v3-B.3) bounds it
   through `run(attempt=…)`. A new recursion into `run()` must pass `attempt`.
 
+- **A source with no code block can never pass the tool lane.** v3-E containment needs the
+  deliverable verbatim in grounding, so Product Hunt pages (stripped HTML) were rejected 3/3
+  for days while the ledger showed "news"/"evergreen". v3-B.4 admits GitHub/HF only. And **a
+  fence is not a command**: `_first_fenced` takes the FIRST block whatever its language —
+  OpenDots' is a mermaid diagram. A fetch window can also cut a fence in half; the dangling
+  opener then pairs with the next fence (`_fenced_block_raw` drops the cut copy).
+- **A model-authored field not in `_CARRY` is a fallback that silently isn't there.** `titles`
+  was dropped by the rewrite passes, so 2 of the 8 gutted titles had no alternate left.
+  Model-written keys are CARRIED; only keys `run()` computes are POPPED. Decide which first.
+- **`amix` normalizes by default.** `normalize=1` divides every input by the input count, so
+  adding a quiet bed halved the voice (−19.8 → −25.7 LUFS) with no error. A bed under speech
+  needs `normalize=0`. Measure a mix with `ebur128`; do not listen for it.
+- **`xfade` emits one extra frame** (ffmpeg 8.1.2): a `concat` after a dissolve lands a frame
+  late. `xfade_graph` trims to the probed length (`trim=end_frame`) before a hard cut. And the
+  TS scene segments start at pts 1.4 s, so every input needs
+  `setpts=PTS-STARTPTS,…,settb=AVTB` or xfade fails "timebase do not match". Count frames
+  with `ffprobe -count_frames`; the audio-trimmed duration hides it.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.
