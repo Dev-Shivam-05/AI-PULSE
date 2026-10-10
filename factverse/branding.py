@@ -31,6 +31,10 @@ WHITE = (244, 247, 255)
 SUBT = (150, 170, 205)
 RED = (224, 32, 42)
 
+# v3-G.4b: the outro promise matches the channel (ToolDojo teaches tools), not
+# the AI Pulse news format. Shared by the 16:9 outro and the 9:16 voutro.
+OUTRO_LINE = "for AI you can use"
+
 
 def _ff() -> str:
     return fv.FFMPEG or "ffmpeg"
@@ -318,7 +322,7 @@ def make_outro(out):
     f_sub = _font(70)
     f_small = _font(40)
     sub_layer = _white_text("SUBSCRIBE", f_sub)
-    small_layer = _white_text("for daily AI news", f_small, color=SUBT)
+    small_layer = _white_text(OUTRO_LINE, f_small, color=SUBT)
     for i in range(n):
         t = i / (n - 1)
         base = Image.new("RGBA", (W, H), BG + (255,))

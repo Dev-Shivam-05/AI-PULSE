@@ -92,7 +92,7 @@ def _make_voutro(out):
     fr = br._frames_dir("voutro_fr")
     logo = br._logo(int(VW * 0.72))
     sub = br._white_text("SUBSCRIBE", br._font(88))
-    small = br._white_text("for daily AI news", br._font(48), color=br.SUBT)
+    small = br._white_text(br.OUTRO_LINE, br._font(48), color=br.SUBT)
     for i in range(n):
         t = i / (n - 1)
         base = Image.new("RGBA", (VW, VH), br.BG + (255,))
