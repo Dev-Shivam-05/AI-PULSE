@@ -24,7 +24,7 @@ _RETRYABLE = {429, 500, 502, 503, 504}
 # The 3.5 pair is LAST on purpose: keys created after 2026-10 get a 404 ("no longer
 # available to new users") on every 2.x model, while older keys (CI's) still use them.
 # A 404 fails fast in _gemini_once, so an old key never reaches these.
-_FALLBACK_MODELS = ("gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.0-flash",
+_FALLBACK_MODELS = ("gemini-2.5-flash-lite", "gemini-2.5-flash",
                     "gemini-3.5-flash-lite", "gemini-3.5-flash")
 
 
