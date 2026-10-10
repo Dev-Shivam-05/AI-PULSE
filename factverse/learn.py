@@ -164,6 +164,51 @@ def latest_metrics(path: Path | None = None) -> dict[str, dict]:
     return {}
 
 
+def reach_metrics(path: Path | None = None) -> dict[tuple, dict]:
+    """v3-G.3 #11-12: thumbnail impressions + CTR per (date, video_id), from the
+    `reach_rows` of EVERY snapshot (each Reporting API report is one day, stored
+    once). A (date, video) seen twice keeps the newest snapshot's numbers. CTR is
+    raw — its scale (0-1 or 0-100) is whatever the CSV says."""
+    p = Path(path or ANALYTICS)
+    if not p.exists():
+        return {}
+    out: dict[tuple, dict] = {}
+    for line in p.read_text(encoding="utf-8").splitlines():
+        try:
+            snap = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(snap, dict) or not isinstance(snap.get("reach_rows"), list):
+            continue
+        heads = snap.get("reach_headers")
+        if not isinstance(heads, list):
+            continue
+        try:
+            idate, ivid, iimp, ictr = (heads.index("date"), heads.index("video_id"),
+                                       heads.index("video_thumbnail_impressions"),
+                                       heads.index("video_thumbnail_impressions_ctr"))
+        except (ValueError, AttributeError):
+            continue
+        for row in snap["reach_rows"]:
+            if isinstance(row, list) and len(row) > max(idate, ivid, iimp, ictr):
+                out[(str(row[idate]), str(row[ivid]))] = {"impr": _num(row[iimp]),
+                                                          "ctr": _num(row[ictr])}
+    return out
+
+
+def reach_by_format(rows: list[dict], reach: dict[tuple, dict]) -> dict[str, dict]:
+    """'format:<f>' -> {impr, ctr}: CTR = sum(impr x ctr) / sum(impr). Display only."""
+    fmt_of = {v["id"]: v["format"] for v in ledger_videos(rows)}
+    acc: dict[str, list[float]] = {}
+    for (_, vid), m in reach.items():
+        if vid in fmt_of:
+            a = acc.setdefault(f"format:{fmt_of[vid]}", [0.0, 0.0])
+            a[0] += m["impr"]
+            a[1] += m["impr"] * m["ctr"]
+    return {k: {"impr": int(a[0]), "ctr": (a[1] / a[0]) if a[0] else None}
+            for k, a in sorted(acc.items())}
+
+
 def shorts_ab(rows: list[dict], metrics: dict[str, dict], today: dt.date | None = None) -> dict:
     """v3-G.1 rows 13-14: views-weighted % viewed per arm, and the daily pairs."""
     today = today or dt.date.today()
@@ -278,6 +323,17 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
     active = [p for p in gates.HOOK_PATTERNS if p not in drop]
     lines += ["", "active hook patterns: " + ", ".join(active)
               + f"  (dropped: {', '.join(drop) if drop else 'none'})"]
+    # v3-G.3 #12: thumbnail impressions + CTR per format (Reporting API). Display only.
+    try:
+        reach = reach_by_format(rows, reach_metrics(analytics_path))
+    except Exception as e:  # noqa: BLE001 — a reach parse bug must not cost the scoreboard
+        print(f"  ⚠️ reach columns skipped: {e}")
+        reach = {}
+    lines += ["", f"{'reach':<22}{'impr':>9}{'CTR':>9}"]
+    for arm in (k for k in stats if k.startswith("format:")):
+        r = reach.get(arm, {"impr": 0, "ctr": None})
+        ctr = f"{r['ctr']:.4g}" if r["ctr"] is not None else "-"
+        lines.append(f"{arm:<22}{r['impr']:>9}{ctr:>9}")
     # v3-G.1 rows 13-14: the storyboard A/B (Shorts mature after 2 days)
     lines += ["", f"{'shorts A/B':<22}{'videos':>7}{'mature':>9}{'views':>8}{'%viewed':>9}"]
     for arm in ("short:storyboard", "short:crop"):

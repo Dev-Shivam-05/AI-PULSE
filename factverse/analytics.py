@@ -52,7 +52,115 @@ def ledger_query_args(ids: list[str], today: dt.date) -> dict | None:
                 sort="-views", maxResults=len(ids))
 
 
-def collect(yta=None) -> dict:
+# v3-G.3 #10-11: impressions and thumbnail CTR exist ONLY in the YouTube Reporting
+# API (bulk CSV reports), never in the Analytics API queries above.
+REACH_TYPE = "channel_reach_basic_a1"
+REACH_JOB_NAME = "tooldojo-reach"
+REACH_CAP = 35          # reports downloaded per run (the backfill is 30 days)
+REACH_HEADERS = ["date", "video_id", "video_thumbnail_impressions",
+                 "video_thumbnail_impressions_ctr"]
+
+
+def _download_report(ytr, url: str) -> bytes:
+    """The Reporting API's own download recipe (youtube/api-samples
+    retrieve_reports.py): a media request whose uri is the report's downloadUrl."""
+    import io
+    from googleapiclient.http import MediaIoBaseDownload
+    req = ytr.media().download(resourceName=" ")
+    req.uri = url
+    fh = io.BytesIO()
+    dl = MediaIoBaseDownload(fh, req, chunksize=-1)
+    done = False
+    while not done:
+        _, done = dl.next_chunk()
+    return fh.getvalue()
+
+
+def parse_reach_csv(text: str, ids: set) -> list[list]:
+    """[[date, video_id, impressions, ctr], ...] for the ledger's videos only.
+    CTR is kept exactly as the CSV states it — its scale is not documented."""
+    import csv
+    import io
+    import math
+    reader = csv.DictReader(io.StringIO(text))
+    cols = set(reader.fieldnames or [])
+    missing = [c for c in REACH_HEADERS if c not in cols]
+    if missing:
+        raise ValueError(f"CSV has no {', '.join(missing)} column")
+    out = []
+    for r in reader:
+        vid = str(r.get("video_id") or "").strip()
+        if vid not in ids:
+            continue
+        day = str(r.get("date") or "").strip()
+        if len(day) == 8 and day.isdigit():          # the CSV writes 20261008
+            day = f"{day[:4]}-{day[4:6]}-{day[6:]}"
+        try:
+            ctr = float(r["video_thumbnail_impressions_ctr"])
+        except (TypeError, ValueError):
+            continue
+        if not math.isfinite(ctr):
+            continue
+        out.append([day, vid, int(learn._num(r.get("video_thumbnail_impressions"))), ctr])
+    return out
+
+
+def collect_reach(ytr=None) -> dict | None:
+    """{reach_headers, reach_rows} from the reports not yet stored, or None.
+    Fail-soft: any error is one log line and costs only this report."""
+    try:
+        if ytr is None:
+            from googleapiclient.discovery import build
+            ytr = build("youtubereporting", "v1", credentials=_creds())
+        jobs = ytr.jobs().list().execute().get("jobs") or []
+        job = next((j for j in jobs if isinstance(j, dict)
+                    and j.get("reportTypeId") == REACH_TYPE), None)
+        if job is None:
+            job = ytr.jobs().create(body={"reportTypeId": REACH_TYPE,
+                                          "name": REACH_JOB_NAME}).execute()
+            print(f"  ↷ reach report: job created ({job.get('id')}) — "
+                  f"the first report arrives within 48 h")
+        reports, token = [], None
+        while True:
+            kw = {"jobId": job["id"]}
+            if token:
+                kw["pageToken"] = token
+            page = ytr.jobs().reports().list(**kw).execute()
+            reports += [r for r in page.get("reports") or [] if isinstance(r, dict)]
+            token = page.get("nextPageToken")
+            if not token:
+                break
+        # "Already stored" = a date that has reach rows in an earlier snapshot. Read
+        # from the snapshots themselves: no second state file to stash and merge.
+        stored = {d for d, _ in learn.reach_metrics(OUT)}
+        ids = set(learn.ledger_ids(learn.read_runs()))
+        todo, seen = [], set()
+        # newest day first, and the newest-created report for a regenerated day
+        for r in sorted(reports, key=lambda r: (str(r.get("startTime", "")),
+                                                str(r.get("createTime", ""))), reverse=True):
+            day = str(r.get("startTime", ""))[:10]
+            if not day or day in stored or day in seen or not r.get("downloadUrl"):
+                continue
+            seen.add(day)
+            todo.append(r)
+        todo = todo[:REACH_CAP]
+        rows = []
+        for r in todo:
+            try:
+                rows += parse_reach_csv(
+                    _download_report(ytr, r["downloadUrl"]).decode("utf-8-sig"), ids)
+            except Exception as e:  # noqa: BLE001 — one bad report costs only itself
+                print(f"  ↷ reach report: {str(r.get('startTime', ''))[:10]} skipped "
+                      f"({type(e).__name__}: {e})")
+        print(f"  📡 reach report: {len(todo)} new report(s) of {len(reports)}, "
+              f"{len(rows)} ledger row(s)")
+        return {"reach_headers": list(REACH_HEADERS), "reach_rows": rows}
+    except Exception as e:  # noqa: BLE001 — never touches the other reports
+        print(f"  ↷ reach report: {type(e).__name__}: {e}")
+        return None
+
+
+def collect(yta=None, ytr=None) -> dict:
     if yta is None:
         from googleapiclient.discovery import build
         yta = build("youtubeAnalytics", "v2", credentials=_creds())
@@ -89,6 +197,11 @@ def collect(yta=None) -> dict:
             snap["ledger_headers"] = [h["name"] for h in led.get("columnHeaders", [])]
     except Exception as e:  # noqa: BLE001
         print(f"  ⚠️ ledger query skipped: {e}")
+    # v3-G.3 #10: impressions + CTR; its own seam, kill switch `reach_report`
+    if fv.flag("reach_report", False):
+        reach = collect_reach(ytr)
+        if reach:
+            snap.update(reach)
     return snap
 
 
