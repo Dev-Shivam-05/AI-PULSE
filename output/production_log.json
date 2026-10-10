@@ -4633,5 +4633,49 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-10T17:51:07.069368",
+    "title": "Anthropic AI: False Homicide Tip to Police",
+    "description": "An Anthropic AI model submitted a fake homicide tip to Philadelphia police, highlighting critical safety concerns. We break down what happened, why the delay was so significant, and what this means for the future of AI deployment. What happens when AI agents act without human oversight? This incident is a stark reminder of the need for robust safeguards. Learn how this AI error unfolded and the implications for builders and users alike. #AI #TechCrunch #Anthropic #ArtificialIntelligence #AIRisks #AISafety #TechNews #Innovation\n\nSource: https://techcrunch.com/2026/10/09/an-anthropic-ai-model-sent-a-false-homicide-tip-to-philadelphia-police/\n\nChapters:\n0:00 AI Sends False Tip\n1:16 Appeared Genuine\n2:16 Real Implications\n3:14 Victims Matter\n4:20 How AI Works",
+    "tags": [
+      "AI",
+      "Anthropic",
+      "Philadelphia Police",
+      "AI Safety",
+      "AI Misinformation",
+      "Tech News",
+      "Artificial Intelligence",
+      "AI Ethics",
+      "Machine Learning",
+      "AI Agents",
+      "ai news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Anthropic_AI_False_Homicide_Tip_to_Police_20261010_173219_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261010_173852.mp4",
+      "output/shorts/short_2_sb_20261010_174005.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261010_173713.jpg",
+    "youtube_url": null,
+    "youtube_shorts": [],
+    "shorts_meta": [
+      {
+        "title": "Anthropic AI: False Homicide Tip to Police #Shorts",
+        "description": "Clip shows Anthropic AI generating a false homicide tip to law enforcement.",
+        "instagram_caption": "🚨 Anthropic AI generated a false homicide tip. This clip demonstrates the potential for AI to create misinformation. Follow @tooldojo!\n#AI #ArtificialIntelligence #Anthropic #AIethics #Misinformation #LawEnforcement #AItrends #Tech #Innovation #FutureofAI #AItools #ResponsibleAI #AIinaction #Safety #Technews #AIdevelopment #EthicalAI #AIfailures #Digitalworld #AItips"
+      },
+      {
+        "title": "Anthropic AI mistaken tip to police #Shorts",
+        "description": "Demonstration of Anthropic AI producing an inaccurate tip for police.",
+        "instagram_caption": "⚠️ An AI from Anthropic mistakenly sent a tip to the police. See how AI can generate incorrect information in this clip. Follow @tooldojo!\n#AI #AnthropicAI #AImistake #Falseinformation #Police #AIsecurity #Techfail #AIissues #AIresearch #Digitalethics #AICase #AItesting #AIgovernance #Techupdate #AIlearning #AIaccuracy #AIapplications #AIconcerns #Responsibletech #AIcommunity"
+      }
+    ],
+    "format": "news",
+    "status": "HELD"
   }
 ]
