@@ -1,0 +1,31 @@
+Long-form music bed (v3-G.4b, docs/spec/ai-pulse-v3g4b.md)
+==========================================================
+
+This folder is read by step5_build (scripts/factverse_engine.py): every *.mp3
+directly in this folder (not in subfolders) is a candidate, and each video uses
+ONE of them, picked by day of the year from the sorted list. An empty folder
+means no bed, exactly as before. Kill switch: "music_bed": false in config.json.
+
+The repository is PUBLIC, so every track committed here is redistributed.
+
+Rules for adding a track
+------------------------
+1. License: CC0 (public domain dedication) ONLY. Not CC-BY, not "free for
+   YouTube", not YouTube Audio Library tracks (those may be used in videos but
+   not redistributed in a public repository).
+2. Where to look: Free Music Archive (filter: license = CC0) and OpenGameArt
+   (filter: license = CC0).
+3. File format: MP3, 128 kbps CBR, 44.1 kHz, stereo. Re-encode with:
+       ffmpeg -i in.wav -c:a libmp3lame -b:a 128k -ar 44100 -ac 2 out.mp3
+4. Folder total: 10 MB or less.
+5. Measure integrated loudness before committing and write it in the row:
+       ffmpeg -i out.mp3 -af ebur128 -f null -   (read "I:" in the summary)
+6. Add one row below per track, in the same commit as the file.
+7. After the first video that uses a new track is published, check YouTube
+   Studio for a Content ID claim (a CC0 track can still be claimed if someone
+   registered it).
+
+Tracks
+------
+title | artist | source URL | license | integrated loudness (LUFS)
+(none yet)

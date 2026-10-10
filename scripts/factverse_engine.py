@@ -287,6 +287,172 @@ def sub_durations(scene_dur, planned, survived):
     return [scene_dur / survived] * survived
 
 
+# ------------------------------------------------------------------
+# v3-G.4b production basics (docs/spec/ai-pulse-v3g4b.md). Every ffmpeg
+# arg list below is built by a pure function so tests can assert on it.
+# ------------------------------------------------------------------
+XFADE_S = 0.5            # dissolve length: 15 frames at FPS 30
+MUSIC_VOLUME = 0.07      # bed gain under the voice (unchanged since v6)
+BED_FADE_IN_S = 1.0
+BED_FADE_OUT_S = 2.0
+
+
+def bed_tracks():
+    """Candidate beds: assets/music/bed/*.mp3, non-recursive.
+
+    The old pick globbed assets/music/*.mp3, which is also where branding._audio
+    looks for intro.mp3 / outro.mp3 — a dropped sting could become a 5-minute bed.
+    """
+    try:
+        return sorted((MUSIC / "bed").glob("*.mp3"))
+    except Exception:
+        return []
+
+
+def pick_bed(tracks, day_of_year: int):
+    """One bed per video, by day of the year from the sorted list (radar_live.pick_track)."""
+    tracks = sorted(str(t) for t in tracks)
+    return tracks[day_of_year % len(tracks)] if tracks else None
+
+
+def mux_args(joined, audio_path, adur, final, bgm=None):
+    """Final mux: video trimmed to the narration, voice, and the optional bed.
+
+    amix's default normalize=1 divides every input by the input count, so the
+    VOICE was mixed at half gain whenever a bed existed (measured -19.8 -> -25.7
+    LUFS). normalize=0 keeps the voice at unity and the bed at MUSIC_VOLUME.
+    """
+    tail = ["-map", "[v]", "-map", "[a]",
+            "-c:v", "libx264", "-preset", "fast", "-crf", "22",
+            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest",
+            str(final)]
+    if bgm:
+        fade_out_at = max(0.0, float(adur) - BED_FADE_OUT_S)
+        return ["ffmpeg", "-y", "-i", str(joined), "-i", str(audio_path), "-i", str(bgm),
+                "-filter_complex",
+                f"[0:v]trim=0:{adur},setpts=PTS-STARTPTS[v];"
+                f"[1:a]aformat=fltp:44100:stereo,volume=1.0[voice];"
+                f"[2:a]aloop=loop=-1:size=2e+09,atrim=0:{adur},aformat=fltp:44100:stereo,"
+                f"volume={MUSIC_VOLUME},afade=t=in:st=0:d={BED_FADE_IN_S},"
+                f"afade=t=out:st={fade_out_at:.3f}:d={BED_FADE_OUT_S}[music];"
+                f"[voice][music]amix=inputs=2:duration=first:normalize=0[a]",
+                *tail]
+    return ["ffmpeg", "-y", "-i", str(joined), "-i", str(audio_path),
+            "-filter_complex",
+            f"[0:v]trim=0:{adur},setpts=PTS-STARTPTS[v];"
+            f"[1:a]aformat=fltp:44100:stereo[a]",
+            *tail]
+
+
+def dissolve_plan(seg_scenes, n_scenes):
+    """One bool per join between consecutive segments: True = dissolve, False = hard cut.
+
+    `seg_scenes[j]` is the scene index segment j came from (a scene with no clips
+    makes no segment). Hard cuts are kept where something downstream cuts the
+    video on that boundary: boundary 0 (the cold-open intro sting is spliced at
+    durs[0]) and boundary n-2 (the L2 insight is spliced at starts[-1]), plus any
+    join that skips an empty scene, because there the narration boundary and the
+    picture boundary are no longer the same instant.
+    """
+    plan = []
+    for a, b in zip(seg_scenes, seg_scenes[1:]):
+        plan.append(b == a + 1 and a != 0 and a != n_scenes - 2)
+    return plan
+
+
+def xfade_graph(seg_durs, plan, fps=FPS, xd=XFADE_S):
+    """Filtergraph joining the segments, dissolving where `plan` says so.
+
+    The dissolve ENDS on the narration boundary: offset = boundary - xd, and the
+    incoming segment is head-padded with xd of its own first frame (tpad clone),
+    so the total length is unchanged and each scene's real first frame lands on
+    its boundary — a leading stat card keeps its full animated share. Offsets come
+    from the PROBED segment durations, which is what the concat join lays end to
+    end. Every input is re-timed to 0 and to one timebase first: the TS segments
+    start at pts 1.4 s, and xfade refuses inputs whose timebases differ.
+    Returns (graph, output_label), or None when the durations cannot carry it.
+    """
+    n = len(seg_durs)
+    if n < 2 or len(plan) != n - 1:
+        return None
+    if any((not isinstance(d, (int, float))) or d <= xd for d in seg_durs):
+        return None
+    fc = []
+    for i in range(n):
+        pad = i > 0 and plan[i - 1]
+        fc.append(f"[{i}:v]setpts=PTS-STARTPTS,fps={fps},format=yuv420p,settb=AVTB"
+                  + (f",tpad=start_mode=clone:start_duration={xd}" if pad else "")
+                  + f"[s{i}]")
+    # Measured 2026-10-10 (ffmpeg 8.1.2): xfade emits ONE frame more than
+    # offset + incoming length — the incoming's first real frame is shown twice.
+    # A later xfade cuts at its own offset, so the extra frame never reaches the
+    # next dissolve; but a concat after a dissolve would carry it and land that
+    # hard cut (the L2 boundary) one frame late. Trim to the probed length first.
+    def _trimmed(label, k, at):
+        fc.append(f"{label}trim=end_frame={round(at * fps)}[t{k}]")
+        return f"[t{k}]"
+
+    cur, acc, faded = "[s0]", float(seg_durs[0]), False
+    for k in range(n - 1):
+        out = f"[x{k}]"
+        if plan[k]:
+            fc.append(f"{cur}[s{k + 1}]xfade=transition=fade:duration={xd}:"
+                      f"offset={acc - xd:.3f}{out}")
+        else:
+            if faded:
+                cur = _trimmed(cur, k, acc)
+            fc.append(f"{cur}[s{k + 1}]concat=n=2:v=1:a=0{out}")
+        cur, acc, faded = out, acc + float(seg_durs[k + 1]), plan[k]
+    if faded:
+        cur = _trimmed(cur, n - 1, acc)
+    return ";".join(fc), cur
+
+
+def xfade_join_args(segments, seg_durs, plan, out):
+    """The transitions join. None when xfade_graph refuses the durations."""
+    g = xfade_graph(seg_durs, plan)
+    if not g:
+        return None
+    graph, label = g
+    inputs = []
+    for s in segments:
+        inputs += ["-i", str(s)]
+    return ["ffmpeg", "-y", *inputs, "-filter_complex", graph, "-map", label,
+            "-c:v", "libx264", "-preset", PRESET, "-crf", "23", "-an", str(out)]
+
+
+def concat_join_args(concat_file, out):
+    """Today's join: concat demuxer, re-encoded (see the NOTE in step5_build)."""
+    return ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_file),
+            "-c:v", "libx264", "-preset", PRESET, "-crf", "23", "-an", str(out)]
+
+
+def join_scenes(segments, seg_scenes, n_scenes, joined, concat_file, ok, transitions=True):
+    """Join the scene segments. Returns (joined_ok, status) where status is what
+    follows "transitions: " in the log: "N applied", "fallback (hard cuts)" or "off".
+
+    Fail soft: any failure of the dissolve join (graph refused, ffmpeg error,
+    wrong duration) falls back to the concat join the video has always used.
+    """
+    plan = dissolve_plan(seg_scenes, n_scenes) if transitions else []
+    if transitions and any(plan):
+        try:
+            args = xfade_join_args(segments, [dur(s) for s in segments], plan, joined)
+            if args and safe_run(args, timeout=900, label="xfade") and ok():
+                return True, f"{sum(plan)} applied"
+        except Exception as e:
+            print(f"  ⚠️ transitions: {e}")
+        try:
+            Path(joined).unlink()
+        except OSError:
+            pass
+        status = "fallback (hard cuts)"
+    else:
+        status = "0 applied" if transitions else "off"
+    safe_run(concat_join_args(concat_file, joined), timeout=900)
+    return ok(), status
+
+
 def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
     print(f"\n[5/10] 🎬 Building video ({HEIGHT}p, ultrafast)...")
 
@@ -310,6 +476,7 @@ def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
 
     # Build scene segments
     segments = []
+    seg_scenes = []   # scene index of each segment (an empty scene makes none)
     for i, clips in enumerate(scene_clips):
         seg = TEMP / f"seg_{i:03d}.ts"
         sdur = scene_durs[i]
@@ -372,6 +539,7 @@ def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
         
         if seg.exists() and seg.stat().st_size > 1000:
             segments.append(str(seg))
+            seg_scenes.append(i)
             print(f"  ✅ Scene {i+1}/{num}", end="\r")
     
     print(f"  ✅ {len(segments)}/{num} segments ready        ")
@@ -396,10 +564,12 @@ def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
         return (joined.exists() and joined.stat().st_size > 100000
                 and abs(dur(str(joined)) - expected) <= max(8, expected * 0.05))
 
-    safe_run(["ffmpeg","-y","-f","concat","-safe","0","-i",str(cf),
-              "-c:v","libx264","-preset",PRESET,"-crf","23","-an",
-              str(joined)], timeout=900)
-    if not _join_ok():
+    # v3-G.4b: dissolves between scenes where nothing downstream cuts the video;
+    # join_scenes falls back to the concat join above on any failure.
+    ok_join, how = join_scenes(segments, seg_scenes, num, joined, cf, _join_ok,
+                               transitions=fv.flag("transitions", True))
+    print(f"  transitions: {how}")
+    if not ok_join:
         print("  ❌ Join produced wrong duration!"); return None
     
     if not joined.exists():
@@ -416,36 +586,17 @@ def step5_build(script, scene_clips, audio_path, srt_path, scene_durs=None):
     st = re.sub(r'[^\w\s-]','',script.get('title','video'))[:50].strip().replace(' ','_')
     final = VIDEOS / f"{st}_{ts}.mp4"
     
-    bgm = MUSIC / "bg_music.mp3"
-    if not bgm.exists():
-        tracks = sorted(MUSIC.glob("*.mp3"))
-        if tracks:
-            bgm = random.choice(tracks)
-
-    if bgm.exists():
-        ok = safe_run([
-            "ffmpeg","-y","-i",str(joined),"-i",str(audio_path),"-i",str(bgm),
-            "-filter_complex",
-            f"[0:v]trim=0:{adur},setpts=PTS-STARTPTS[v];"
-            f"[1:a]aformat=fltp:44100:stereo,volume=1.0[voice];"
-            f"[2:a]aloop=loop=-1:size=2e+09,atrim=0:{adur},aformat=fltp:44100:stereo,volume=0.07[music];"
-            f"[voice][music]amix=inputs=2:duration=first:dropout_transition=3[a]",
-            "-map","[v]","-map","[a]",
-            "-c:v","libx264","-preset","fast","-crf","22",
-            "-c:a","aac","-b:a","192k","-movflags","+faststart","-shortest",
-            str(final)
-        ], timeout=1200)
+    # v3-G.4b: the bed comes from assets/music/bed/ only (CC0 tracks, see
+    # SOURCES.txt there), one per video by day of the year.
+    bgm = None
+    if fv.flag("music_bed", True):
+        bgm = pick_bed(bed_tracks(), datetime.now().timetuple().tm_yday)
+        print(f"  music: bed {Path(bgm).name}" if bgm
+              else "  music: no bed (assets/music/bed has no .mp3)")
     else:
-        ok = safe_run([
-            "ffmpeg","-y","-i",str(joined),"-i",str(audio_path),
-            "-filter_complex",
-            f"[0:v]trim=0:{adur},setpts=PTS-STARTPTS[v];"
-            f"[1:a]aformat=fltp:44100:stereo[a]",
-            "-map","[v]","-map","[a]",
-            "-c:v","libx264","-preset","fast","-crf","22",
-            "-c:a","aac","-b:a","192k","-movflags","+faststart","-shortest",
-            str(final)
-        ], timeout=1200)
+        print("  music: bed off (music_bed=false)")
+
+    ok = safe_run(mux_args(joined, audio_path, adur, final, bgm), timeout=1200)
     
     if ok and final.exists() and final.stat().st_size > 100000:
         mb = final.stat().st_size/(1024*1024)
