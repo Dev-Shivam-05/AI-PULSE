@@ -120,8 +120,18 @@ def test_g4b_xfade_offsets_are_cumulative_probed_minus_half_a_second():
     assert joins[0] == "[s0][s1]concat=n=2:v=1:a=0[x0]"
     assert joins[1] == "[x0][s2]xfade=transition=fade:duration=0.5:offset=40.000[x1]"  # 9+31.5-0.5
     assert joins[2] == "[x1][s3]xfade=transition=fade:duration=0.5:offset=68.000[x2]"  # 40.5+28-0.5
-    assert joins[3] == "[x2][s4]concat=n=2:v=1:a=0[x3]"
+    # xfade emits one frame too many (measured): trimmed to the probed length
+    # before a hard cut, so the L2 boundary is not a frame late
+    assert joins[3] == "[x2]trim=end_frame=3111[t3]"                         # 103.7 s * 30
+    assert joins[4] == "[t3][s4]concat=n=2:v=1:a=0[x3]"
     assert out == "[x3]"
+
+
+def test_g4b_no_trim_without_a_dissolve_and_a_trailing_one_after_it():
+    graph, out = eng.xfade_graph([10.0, 10.0, 10.0], [False, False])
+    assert "trim" not in graph and out == "[x1]"
+    graph, out = eng.xfade_graph([10.0, 10.0, 10.0], [False, True])
+    assert graph.endswith("[x1]trim=end_frame=900[t2]") and out == "[t2]"
 
 
 def test_g4b_xfade_graph_refuses_unusable_durations():
@@ -137,7 +147,7 @@ def test_g4b_xfade_join_keeps_the_encoder():
                                [False, True], "j.mp4")
     assert args[:8] == ["ffmpeg", "-y", "-i", "a.ts", "-i", "b.ts", "-i", "c.ts"]
     assert args[-8:] == ["-c:v", "libx264", "-preset", "ultrafast", "-crf", "23", "-an", "j.mp4"]
-    assert args[args.index("-map") + 1] == "[x1]"
+    assert args[args.index("-map") + 1] == "[t2]"
 
 
 def test_g4b_concat_join_reproduces_todays_args():

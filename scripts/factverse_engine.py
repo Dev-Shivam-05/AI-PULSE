@@ -383,15 +383,28 @@ def xfade_graph(seg_durs, plan, fps=FPS, xd=XFADE_S):
         fc.append(f"[{i}:v]setpts=PTS-STARTPTS,fps={fps},format=yuv420p,settb=AVTB"
                   + (f",tpad=start_mode=clone:start_duration={xd}" if pad else "")
                   + f"[s{i}]")
-    cur, acc = "[s0]", float(seg_durs[0])
+    # Measured 2026-10-10 (ffmpeg 8.1.2): xfade emits ONE frame more than
+    # offset + incoming length — the incoming's first real frame is shown twice.
+    # A later xfade cuts at its own offset, so the extra frame never reaches the
+    # next dissolve; but a concat after a dissolve would carry it and land that
+    # hard cut (the L2 boundary) one frame late. Trim to the probed length first.
+    def _trimmed(label, k, at):
+        fc.append(f"{label}trim=end_frame={round(at * fps)}[t{k}]")
+        return f"[t{k}]"
+
+    cur, acc, faded = "[s0]", float(seg_durs[0]), False
     for k in range(n - 1):
         out = f"[x{k}]"
         if plan[k]:
             fc.append(f"{cur}[s{k + 1}]xfade=transition=fade:duration={xd}:"
                       f"offset={acc - xd:.3f}{out}")
         else:
+            if faded:
+                cur = _trimmed(cur, k, acc)
             fc.append(f"{cur}[s{k + 1}]concat=n=2:v=1:a=0{out}")
-        cur, acc = out, acc + float(seg_durs[k + 1])
+        cur, acc, faded = out, acc + float(seg_durs[k + 1]), plan[k]
+    if faded:
+        cur = _trimmed(cur, n - 1, acc)
     return ";".join(fc), cur
 
 
