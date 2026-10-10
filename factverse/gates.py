@@ -142,6 +142,44 @@ def _num_core(tok: str) -> str:
     return core.strip()
 
 
+def _number_support(script: dict) -> set:
+    """The number cores a packaging string may carry: spoken, in the grounding, or
+    a numeric verified fact (spec v3-E #3)."""
+    spoken = " ".join(sc.get("narration", "") for sc in script.get("scenes") or [])
+    support_text = (spoken + " " + str(script.get("grounding") or "")).replace(",", "")
+    support_text += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values()
+                                   if isinstance(v, (int, float)))
+    return {_num_core(t) for t in _NUM_TOKEN.findall(support_text)}
+
+
+def title_options(script: dict) -> list[str]:
+    """The model's `titles` as list[str], whatever type it actually answered.
+    _validate_script coerces it too; this re-coerces because a test or a future
+    caller can hand the gates a raw dict (raw LLM output is never type-safe)."""
+    raw = script.get("titles")
+    if isinstance(raw, str):
+        raw = [raw]
+    elif not isinstance(raw, (list, tuple)):
+        return []
+    return [str(t).strip() for t in raw if isinstance(t, (str, int, float)) and str(t).strip()]
+
+
+def clean_alternate(script: dict, support: set | None = None) -> str:
+    """spec v3-G.3 #6/#7: the first `titles` entry whose number tokens are all
+    supported and which carries no hype term, or "" when there is none. The
+    alternates were written by the same model in the same answer, so they are as
+    grounded as the title; this only picks among them, never writes one."""
+    if support is None:
+        support = _number_support(script)
+    current = str(script.get("title") or "")
+    for alt in title_options(script):
+        if alt == current or hype_terms(alt):
+            continue
+        if all(_num_core(t) and _num_core(t) in support for t in _NUM_TOKEN.findall(alt)):
+            return alt
+    return ""
+
+
 def packaging_payoff(script: dict) -> dict:
     """spec v3-E #3: every number token in title/thumb_text must be supported —
     spoken in the narration, present in the grounding (the contract licenses "a
@@ -152,18 +190,19 @@ def packaging_payoff(script: dict) -> dict:
 
     Why it exists: the 2026-08-21 run shipped title "Secret AI Cash Cow?" and hook
     "you won't believe how much" over 17 scenes containing zero dollar figures.
-    fact_check verifies claims that exist; an ABSENT promised number passed every gate."""
-    spoken = " ".join(sc.get("narration", "") for sc in script.get("scenes") or [])
-    support_text = (spoken + " " + str(script.get("grounding") or "")).replace(",", "")
-    support_text += " " + " ".join(str(v) for v in (script.get("verified_facts") or {}).values()
-                                   if isinstance(v, (int, float)))
-    support = {_num_core(t) for t in _NUM_TOKEN.findall(support_text)}
+    fact_check verifies claims that exist; an ABSENT promised number passed every gate.
+
+    spec v3-G.3 #6: stripping the number shipped 8 of 78 titles as broken leftovers
+    ("AI Agents Gone Rogue: Scenarios"). When `honest_titles` is on, a clean
+    alternate from the model's own `titles` replaces the title first; only without
+    one does the strip below run, byte-identical to before."""
+    support = _number_support(script)
 
     def _ok(tok: str) -> bool:
         core = _num_core(tok)
         return bool(core) and core in support
 
-    fixed, evidence = [], []
+    fixed, evidence, title_alt = [], [], False
     for field in ("title", "thumb_text"):
         val = str(script.get(field) or "")
         if not val:
@@ -171,6 +210,14 @@ def packaging_payoff(script: dict) -> dict:
         bad = [t for t in _NUM_TOKEN.findall(val) if not _ok(t)]
         if not bad:
             continue
+        if field == "title" and fv.flag("honest_titles", False):
+            alt = clean_alternate(script, support)
+            if alt:
+                evidence.append(f"{field}: {bad} -> alternate {alt!r}")
+                script[field] = alt
+                fixed.append(field)
+                title_alt = True
+                continue
         newv = _NUM_TOKEN.sub(lambda m: m.group(0) if _ok(m.group(0)) else " ", val)
         newv = re.sub(r"\s{2,}", " ", newv).strip(" .,:—-")
         if field == "thumb_text" and not any(c.isdigit() for c in newv):
@@ -188,7 +235,7 @@ def packaging_payoff(script: dict) -> dict:
         evidence.append(f"{field}: {bad}")
         script[field] = newv
         fixed.append(field)
-    return {"ok": not fixed, "fixed": fixed, "evidence": evidence}
+    return {"ok": not fixed, "fixed": fixed, "evidence": evidence, "title_alt": title_alt}
 
 
 def sensitive_topic_risk(title: str, summary: str = "") -> bool:
@@ -352,6 +399,35 @@ def hype_terms(title: str) -> list[str]:
     """Hype terms a title contains — word-boundary matches, so 'secretary' is clean."""
     t = str(title or "").replace("’", "'")
     return [term for term, rx in _HYPE_RE if rx.search(t)]
+
+
+# v3-G.3 #8: fear / outrage framing. RECORDED in the ledger (`title_terms`), never
+# blocking — the measurement comes before any policy. Same word-boundary match.
+FEAR_TERMS = ("rogue", "threat", "threats", "nightmare", "fear", "fears", "worried",
+              "crisis", "scary", "existential", "chaos", "outrage")
+_FEAR_RE = [(t, re.compile(rf"(?<![\w-]){re.escape(t)}(?![\w-])", re.I)) for t in FEAR_TERMS]
+
+
+def title_terms(title: str) -> list[str]:
+    """Hype terms + fear terms a title contains (the ledger's `title_terms`)."""
+    t = str(title or "").replace("’", "'")
+    return hype_terms(t) + [term for term, rx in _FEAR_RE if rx.search(t)]
+
+
+def longform_title_screen(script: dict) -> dict:
+    """spec v3-G.3 #7: the long-form title gets the Shorts' hype screen. On a hit
+    the first clean alternate from `titles` replaces it; with none the title is
+    KEPT (a hype word is not worth a gutted title). Mutates in place, never raises.
+    Returns {"terms": [...], "alt": bool}; the `honest_titles` flag off -> no-op."""
+    if not fv.flag("honest_titles", False):
+        return {"terms": [], "alt": False}
+    terms = hype_terms(script.get("title"))
+    if not terms:
+        return {"terms": [], "alt": False}
+    alt = clean_alternate(script)
+    if alt:
+        script["title"] = alt
+    return {"terms": terms, "alt": bool(alt)}
 
 
 # --------------------------------------------------------------- hook rotation

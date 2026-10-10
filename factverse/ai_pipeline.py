@@ -381,6 +381,11 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     for b in brand:
         if b not in existing and len(s["tags"]) < 28:
             s["tags"].append(b)
+    # v3-G.3 #6: the alternates packaging_payoff / the hype screen may promote to
+    # `title`, so each gets the title's own cleaning. The model answers a list, a
+    # bare string or null — coerce, never trust the type (deliverable._as_list).
+    s["titles"] = [re.sub(r"[<>]", "", t).strip()[:95] for t in gates.title_options(s)]
+    s["titles"] = [t for t in s["titles"] if t]
     s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
     # v3 tool-format contract: the concrete thing the viewer leaves with
@@ -408,7 +413,8 @@ _VISUAL_RULES = """- VISUAL ALIGNMENT IS CRITICAL: each scene's visual_query mus
 
 _RETENTION_RULES = """RETENTION ENGINEERING (non-negotiable):
 - Scene 1 = the HOOK: open with the single most surprising fact/stake as a direct statement or
-  question, then a one-line PROMISE of what the viewer will understand by the end. No greetings,
+  question, then a one-line PROMISE naming what the viewer will be able to do, use or decide by
+  the end. No greetings,
   no "welcome back", no channel intro. Max 2 sentences before the first payoff begins.
 - Open a curiosity loop in the first third ("and the strangest part comes later") and pay it off
   near the end.
@@ -420,11 +426,15 @@ _RETENTION_RULES = """RETENTION ENGINEERING (non-negotiable):
 - Final scene = crisp takeaway + ONE question to the audience + "subscribe" CTA in one sentence."""
 
 
-def _output_contract(scene_range: str, words_per_scene: str) -> str:
+def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False) -> str:
+    # v3-G.3 #2: the title tells a builder what they get. The tool lane adds the
+    # formula because its whole video is one usable thing.
+    formula = ("\n  TOOL VIDEO title formula: [what you can do] + [tool name]." if tool else "")
     return f"""OUTPUT FIELDS:
 - titles: 3 DIFFERENT title options, each <=60 chars, the key ENTITY (model/company/tool name)
   in the first 30 chars, ONE concrete number where honest, consequence framing over event
-  framing, never all-caps, no clickbait lies.
+  framing, never all-caps, no clickbait lies. The title says what the viewer can DO, USE, or
+  what CHANGES for them — never how scared or angry to be.{formula}
 - title: the strongest of the 3.
 - thumb_text: a DECLARATIVE 2-4 word claim for the thumbnail (NOT the title). No question
   mark. It MUST contain one number taken from the source/verified facts, or the word FREE
@@ -472,17 +482,22 @@ def viral_pick(ranked: list[dict], top_n: int = 8):
     if not cands:
         return None
     listing = "\n".join(f"{i+1}. {c['title']}  ({c['source']})" for i, c in enumerate(cands))
-    prompt = f"""You are a viral-content strategist for a faceless AI/tech YouTube channel.
-Score each story 1-10 for VIRAL POTENTIAL. High scores require: genuine shock/surprise,
-real stakes for ordinary people (jobs, money, privacy, safety), broad appeal beyond tech
-insiders, emotional charge (awe / fear / outrage / wonder), and an obvious one-line
-"stop scrolling" framing. Punish: incremental version releases, academic papers, niche
-developer tooling, and anything a non-tech person wouldn't care about.
+    # v3-G.3 #3: this rubric used to reward shock and emotional charge and punish
+    # developer tooling — on a channel whose audience builds with AI — and the ledger
+    # filled with "AI Labs' New Nightmare" / "AI Threats Are Real". Score the change
+    # for the builder instead.
+    prompt = f"""You are a viral-content strategist for a faceless AI/tech YouTube channel whose
+viewers are people who build with or use AI.
+Score each story 1-10 for VIRAL POTENTIAL. Score high for: a concrete change for people who
+build with or use AI (what they can now do, what breaks, what it costs), a verifiable primary
+source, and broad relevance across those users. Punish: version bumps with no usable change,
+papers with no usable artifact, and stories whose only pull is how scared or angry to be, with
+nothing for the viewer to do.
 
 {listing}
 
 Return ONLY JSON, every story included, best first:
-{{"picks":[{{"n":1,"viral_score":8,"angle":"the viral angle in one sentence",
+{{"picks":[{{"n":1,"viral_score":8,"angle":"why a builder should care, in one sentence",
 "hook_idea":"the exact first spoken line"}}]}}"""
     d = llm.generate_json(prompt)
     if not d or not isinstance(d.get("picks"), list):
@@ -525,7 +540,7 @@ def script_news(item: dict, viral_hint: tuple | None = None,
     if viral_hint:
         _, _, angle, hook_idea = viral_hint
         if angle or hook_idea:
-            angle_block = (f"\nEDITORIAL ANGLE (lean into this — it is why the story can go viral):"
+            angle_block = (f"\nEDITORIAL ANGLE (why a builder should care):"
                            f"\n- Angle: {angle}\n- Opening-line idea: {hook_idea}\n"
                            f"(Stay accurate; the angle sharpens the framing, it never invents facts.)\n")
     dialogue_block = ""
@@ -571,6 +586,27 @@ ACCURACY RULES:
 # because the chrome-only pages that caused this (Product Hunt, ~640 chars) must
 # fail with margin while a real README or model card (~5000) passes untouched.
 TOOL_GROUNDING_MIN = 1200
+# spec v3-B.4: how much of the raw README / model card is FETCHED. The writer still
+# reads only the first 5,000 chars; the rest exists so a first fenced block that
+# sits just past that cut can be handed over (OpenDots: 7,227, embeddinggemma-2:
+# 5,190). Without it every such candidate failed the copy-paste contract.
+TOOL_README_FETCH = 20000
+
+
+def tool_source_eligible(url: str) -> bool:
+    """spec v3-B.4: only a GitHub repo or a Hugging Face model can ground a tool
+    video. Every other tool signal (Product Hunt: stripped HTML, no code fences)
+    is structurally unable to pass the deliverable containment check, so writing
+    it spends a writer call to be rejected."""
+    return bool(_gh_repo(url) or _hf_readme_url(url))
+
+
+def _fenced_block_raw(text: str) -> tuple[int, str]:
+    """(offset, block) of the first fenced code block of `text` WITH its ``` fences,
+    else (-1, ""). Same pattern as _first_fenced, so the block appended to grounding
+    is the block _first_fenced and command_grounded will then find."""
+    m = re.search(r"```[^\n`]*\n.*?```", str(text or ""), re.S)
+    return (m.start(), m.group(0)) if m else (-1, "")
 
 
 def script_tool(item: dict) -> dict | None:
@@ -585,26 +621,33 @@ def script_tool(item: dict) -> dict | None:
     # back to the page: for a gated or README-less model that fallback grounds
     # the whole video in a Jinja template, which reads as real and is not.
     readme = _hf_readme_url(url)
-    screen = ""
+    page = None
+    # spec v3-B.4: `full` is the raw README / card at TOOL_README_FETCH; the writer
+    # still reads full[:5000] exactly as before. fetch_text's 400-char floor is
+    # measured on the whole text before it slices, so the 5,000-char window is
+    # byte-identical to the old limit=5000 fetch.
     if readme:
-        grounding = screen = fetch_text(readme, limit=5000)
+        # `or ""`: a fetch seam that answers None must cost the candidate, not raise
+        full = fetch_text(readme, limit=TOOL_README_FETCH) or ""
+        grounding = full[:5000]
     else:
         # Unlike the hub (spec v3-C.1 #2), GitHub KEEPS its page fallback: the hub's
         # fallback was a Jinja chat_template that reads as real, while GitHub's is only
         # chrome-padded — the text shipping today. A repo whose readme is .rst, lowercase
         # or absent must still reach the same place it reaches now.
         raw = _gh_readme_url(url)
-        grounding = fetch_text(raw, limit=5000) if raw else ""
+        full = (fetch_text(raw, limit=TOOL_README_FETCH) if raw else "") or ""
+        grounding = full[:5000]
         # Grounding and SCREENING are different jobs. The rendered page carries the
         # repo's topic tags — the strongest intent signal GitHub exposes and the one
         # thing the raw README does not have: measured 2026-08-24, facefusion is
         # declared only by its topics ("deep-fake deepfake face-swap faceswap"), so
         # grounding on the README alone would have let it through. Write the script
         # from the clean README; let gates.tool_unsuitable read both.
-        page = fetch_text(url, limit=5000)
+        page = fetch_text(url, limit=5000) or ""
         if len(grounding) < TOOL_GROUNDING_MIN:
-            grounding = page
-        screen = f"{grounding} {page}"
+            # the page is HTML stripped of every fence: nothing to append from it
+            grounding, full = page, ""
     # spec v3-C: a tool page that is all navigation chrome is not grounding.
     # Product Hunt's server HTML is ~640 chars of "Overview Reviews Team More",
     # which cleared fetch_text's 400-char floor AND gates.fact_check's 200-char
@@ -612,6 +655,22 @@ def script_tool(item: dict) -> dict | None:
     if len(grounding) < TOOL_GROUNDING_MIN:
         print(f"     ↻ grounding too thin ({len(grounding)} chars) — not a tool video.")
         return None   # build_script moves to the next candidate
+    # spec v3-B.4: a README whose first code block sits past the 5,000-char cut
+    # failed the copy-paste contract below on a command it really does show. Append
+    # that block (fences included) so the writer, command_grounded/_first_fenced and
+    # every gate reading s["grounding"] all see the same text.
+    if not _first_fenced(grounding):
+        at, block = _fenced_block_raw(full)
+        if block:
+            # A block that STARTS inside the window was cut by it. Drop the cut copy:
+            # left in, _first_fenced pairs its opening fence with the appended block's
+            # and would hand the deliverable a truncated command.
+            keep = grounding[:at] if at < len(grounding) else grounding
+            grounding = f"{keep}\n\n{block}"
+            print(f"     📎 first code block was past the excerpt — appended "
+                  f"({len(block)} chars).")
+    # Built AFTER the append: the screen must read at least what the writer reads.
+    screen = grounding if page is None else f"{grounding} {page}"
     # The README is where intent actually shows: a repo titled innocuously can
     # still be a provenance stripper. A tool video TEACHES the tool, so this
     # rejects where sensitive_topic_risk only penalises.
@@ -659,14 +718,19 @@ STRUCTURE (a transaction, not a broadcast):
 {_RETENTION_RULES}
 {_VISUAL_RULES}
 
-{_output_contract("10-14", "50-70")}
+{_output_contract("10-14", "50-70", tool=True)}
 
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
 "url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
     s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
-    if s and not s.get("deliverable"):
+    if not s:
+        # spec v3-B.4: this path used to return silently, so a CI log could not tell
+        # a dead writer call from every other rejection in this function.
+        print("     ↻ writer returned no valid tool script — rejected.")
+        return None
+    if not s.get("deliverable"):
         print("     ↻ tool script had no deliverable — rejected.")
         return None
     if s:
@@ -883,7 +947,8 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "filter_segment", "hook_pattern", "deliverable", "cheat_sheet",
           "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
           "receipts",        # v3-E.2 #6: the measured check must survive them too
-          "debate")          # v3-H #13: the transcript the quotes and cards are checked against
+          "debate",          # v3-H #13: the transcript the quotes and cards are checked against
+          "titles")          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1003,12 +1068,14 @@ def critique_pass(script: dict) -> dict:
         compact = {k: script[k] for k in ("titles", "title", "thumb_text", "description", "tags", "scenes")
                    if k in script}
         prompt = f"""You are a ruthless YouTube retention editor. Improve this script for a faceless
-AI/tech channel. Judge: (1) does scene 1 hook in the first 8 words with a real curiosity gap and a
-promise? (2) is there a mid-video open loop and payoff? (3) any vague hype, filler, repeated ideas,
-or sentences that sound like a written article instead of speech? (4) is the best of the 3 titles
-actually the strongest (curiosity + concrete noun + keyword early)? (5) does thumb_text create an
-irresistible curiosity gap in <=4 words? (6) does ANY scene restate a point an earlier scene
-already made? DELETE it — repetition is the #1 retention killer on this channel.
+AI/tech channel. Judge: (1) does scene 1 state, in the first 8 words, the concrete thing the
+viewer will be able to do or understand by the end? (2) is there a mid-video open loop and payoff?
+(3) any vague hype, filler, repeated ideas, or sentences that sound like a written article instead
+of speech? (4) is the best of the 3 titles actually the strongest (entity early + what the viewer
+can do or what changes, no hype words)? (5) is thumb_text declarative, 2-4 words, no question
+mark, and does it contain one number from the source/verified facts or the word FREE?
+(6) does ANY scene restate a point an earlier scene already made? DELETE it — repetition is the
+#1 retention killer on this channel.
 
 Rewrite EVERY weak part. Keep the same JSON schema. CUTTING is welcome (delete repetition and
 filler); never pad. {_KEEP_QUOTES} Keep every visual_query unless the narration changed meaning. Never add facts
@@ -1344,6 +1411,13 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             blocked, term = gates.tool_unsuitable(c["title"])
             if blocked:
                 print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            # spec v3-B.4: filtered HERE, before the [:3] cut, so "3 candidates
+            # tried" means 3 that can actually ground a tool video. 6 of the 9
+            # failures on 10-07..10-09 were Product Hunt pages that never could.
+            if not tool_source_eligible(c.get("url", "")):
+                print(f"  ⏭️ Skipping tool candidate (not a GitHub repo or HF model): "
+                      f"{c['title'][:60]}")
                 continue
             tools.append(c)
         for cand in tools[:3]:
@@ -1705,6 +1779,18 @@ def run(publish: bool = False, force_format: str | None = None,
     _pk = gates.packaging_payoff(script)
     if not _pk["ok"]:
         print(f"  ✂️ Packaging promised numbers the script never says — fixed: {_pk['evidence']}")
+    # spec v3-G.3 #7: the Shorts' hype screen, now on the long-form title too
+    _hs = gates.longform_title_screen(script)
+    if _hs["terms"] and _hs["alt"]:
+        print(f"  ✂️ Long-form title had hype ({', '.join(_hs['terms'])}) — using alternate: "
+              f"{script['title']!r}")
+    elif _hs["terms"]:
+        print(f"  ✂️ Long-form title had hype ({', '.join(_hs['terms'])}) — kept: no clean alternate")
+    # spec v3-G.3 #9: the ledger's packaging fields, computed and coerced HERE — the
+    # title is final from this line on, and nothing new may raise past the upload.
+    _ledger_thumb = str(script.get("thumb_text") or "")
+    _ledger_title_alt = bool(_pk.get("title_alt") or _hs["alt"])
+    _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
     # v3-B: a tool video is illustrated by the tool itself — a screen recording
     # of its real page — never stock. capture() fails soft; stock is the fallback.
     scene_clips, tool_shot = None, ""
@@ -1958,6 +2044,8 @@ def run(publish: bool = False, force_format: str | None = None,
               f"recording the run anyway so today cannot publish twice.")
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
                packaging=_pk["fixed"],
+               thumb_text=_ledger_thumb, title_alt=_ledger_title_alt,
+               title_terms=_ledger_title_terms,
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts=short_rows,
                shorts_rendered=len(shorts),

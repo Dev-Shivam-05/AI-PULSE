@@ -1,76 +1,107 @@
-# HANDOFF — ToolDojo — Phase v3-L.3 — 2026-10-05
+# HANDOFF — ToolDojo — Phases v3-B.4 + v3-G.3 + v3-G.4b + gemini cleanup — 2026-10-10
 
 ## Done
-- **Radar Live is live-tested on YouTube twice (private).** Both sessions were 10 minutes. Both
-  had health Excellent and ended by themselves ("Stream Finished" in Studio).
-  - The stream key went from Studio straight into `.env` by script. It was never printed.
-- **v3-L.3 built, tested and pushed** on `v3-phase-l3`:
-  - The stream connects only after 3 segments are ready (pre-roll). Result: **0 standby** in
-    both L.3 sessions. The L.2 code had 3 standbys in its first minute.
-  - Narration asks `gemini-3.5-flash-lite` first and is 100-160 words. 12/12 and 12/13
-    spotlights were LLM-written; segments run 42-46 s (were ~30 s).
-  - A music bed at 0.07 plays under every segment. The local session had 0 silent seconds.
-  - The facts row drops its last chip until it fits, so nothing is clipped. Verified with a
-    forced 7-chip overflow.
-- **ToolDojo channel banner generated:** `E:\YOUTUBE\AI-PULSE\output\brand\banner_tooldojo_2560x1440.png`
-  (read as an image). The owner has not uploaded it yet.
-- **Tests:** full suite 332/332.
+- **One branch carries everything: `v3-integration-1010`.** It merges B.4, G.3, G.4b and the
+  gemini-fallback cleanup, plus the docs. Suite: **396 passed** on the combined tree, and
+  `merge-tree` against main (937c4b2) is clean. The four phase branches are also pushed on
+  their own.
+- **v3-B.4: the tool lane gets real candidates again.**
+  - Since 10-07 the lane failed 3/3 candidates daily and silently fell through to
+    news/evergreen. Product Hunt items are now skipped before a writer call.
+  - The README is fetched at 20,000 chars, and the first code block past the 5,000-char writer
+    window is appended.
+  - Live check today: the 3 eligible candidates (embeddinggemma-2, coucou, RemoveMacAI) all
+    carry a real install command in their grounding.
+- **v3-G.3: packaging.**
+  - The viral judge and the critique pass no longer reward fear/outrage, and the contract now
+    asks for "what you can DO".
+  - A stripped leftover title is replaced by the model's own clean alternate. 8 of 78 published
+    titles were leftovers; 6 now get an alternate, and 2 had lost `titles` to the `_CARRY` bug
+    this phase fixes.
+  - The ledger records `thumb_text`, `title_alt` and `title_terms`.
+  - Impressions and CTR are collected from the YouTube Reporting API into `analytics.jsonl` and
+    the scoreboard. Not exercised live yet, because there is no token locally.
+- **v3-G.4b: production basics.**
+  - 0.5 s dissolves between scenes. Total duration is identical, and the dissolve frames were
+    read.
+  - `amix normalize=0` fix: the voice measured −19.7 LUFS with a bed vs −19.8 without. The old
+    mix would have given −25.7.
+  - The bed comes from `assets/music/bed/` (CC0 only, currently empty).
+  - The outro line is now "for AI you can use". Both outros were re-rendered and read.
+- **gemini-fallback:** the shut-down `gemini-2.0-flash` is removed from the chain.
+- **Measured from main's state:**
+  - Storyboard A/B: 9 pairs, storyboard won 1, so G.2 is not built.
+  - The longest CI publish run in 14 days took 37.4 of 90 min, so 1080p is safe.
 
 ## Files changed
-- `scripts/radar_live.py` — pre-roll (`preroll()`), the music bed (`pick_track`, `segment_args`
-  with `music`/`music_at`, `Producer._encode` keeps the bed's running time), `MUSIC_DIR`.
-- `factverse/radar.py` — narration 100-160 words (gate 70-200), a 1,400-char cap, and
-  `NARRATION_MODEL` asked first.
-- `assets/radar/radar.html` — the facts row is fitted by measuring, plus `window.__facts()`.
-- `tests/test_radar.py` — 9 L.3 tests; `GOOD` lengthened to the new word bounds.
-- `.gitignore` — `assets/music/radar/*.mp3` (the owner's ~40 MB of tracks stay local).
-- `docs/spec/ai-pulse-v3l3.md` — the locked spec, plus §6 with all the session evidence.
-- `docs/PHASES.md` — L.3 row (done), L.4 and L.5 rows queued, Next 3 rewritten.
-- `docs/DECISIONS.md` — the L.3 entry.
-- `CLAUDE.md` — 2 environment facts (`.env` per checkout, how the stream key was captured).
+- `factverse/ai_pipeline.py`:
+  - B.4: tool eligibility, the 20,000 fetch with the code-block append, and a log line on the
+    writer-failure path.
+  - G.3: judge, contract, critique, retention rules, `titles` in `_CARRY`, and the ledger
+    fields.
+- `factverse/gates.py` — clean alternate in `packaging_payoff`, the long-form hype screen,
+  `FEAR_TERMS`/`title_terms`.
+- `factverse/analytics.py`, `factverse/learn.py` — Reporting API reach collection, plus the
+  impressions/CTR scoreboard block.
+- `scripts/factverse_engine.py` — the xfade join with concat fallback, the `bed/` pick, and
+  `mux_args` (normalize=0 and fades).
+- `factverse/branding.py`, `factverse/shorts.py`, `assets/outro.mp4`, `assets/outro_v.mp4` —
+  the outro line.
+- `factverse/llm.py` — `gemini-2.0-flash` dropped from the chain.
+- `config.json`, `config.example.json` — kill switches `reach_report`, `transitions`,
+  `music_bed`.
+- `assets/music/bed/SOURCES.txt` — the CC0-only rule. No audio was committed.
+- Tests:
+  - New modules: `tests/test_b4_tool_supply.py`, `tests/test_g3_packaging.py`,
+    `tests/test_g4b_production.py`.
+  - `tests/test_llm.py` is updated.
+  - `tests/test_pipeline_logic.py`: one URL added to the MarkItDown fixture.
+- Specs: `docs/spec/ai-pulse-v3b4.md`, `docs/spec/ai-pulse-v3g3.md`,
+  `docs/spec/ai-pulse-v3g4b.md`.
+- Docs:
+  - `docs/PHASES.md`, `docs/DECISIONS.md` — the board and the decisions.
+  - `docs/STRATEGY.md` — the thumbnail line now follows v3-E #5.
+  - `CLAUDE.md` — 4 traps.
 
 ## Decisions made
-- The owner approved the spec-lock table with `go`. The values are in the spec and in
-  DECISIONS.
-- **Declined: driving the ChatGPT or Gemini web apps from a browser to write scripts.**
-  - Both providers' terms forbid it.
-  - The Google account is the channel's own account.
-  - An unattended stream cannot solve a captcha.
-  - The standby problem was start-up timing, not script quality.
-- **Dual stream stays OFF until L.4.** YouTube's auto-crop cuts the card in half.
-- **The shared `llm._FALLBACK_MODELS` was not touched.** It belongs to the daily pipeline and
-  to the unmerged `v3-gemini-fallback` branch.
+- **All values were approved by the owner with one `go`** on a 5-row spec-lock table. They are
+  in DECISIONS (2026-10-10).
+- **G.2 is not built.** The pre-registered A/B rule is already decided (≤ 5 wins).
+- **Live work is excluded:** L.4, L.5, the seam lags and the schedule. The owner assigned it to
+  a separate background session, and it shares `radar_live.py`.
+- **Music in git must be CC0.** The repo is public and the Reels re-upload the bed, so the
+  Audio Library tracks stay local.
+- **HELD candidates re-rolling on the retry cron stays as is.**
+- **One integration branch, so the owner opens one PR instead of four.**
 
 ## Known broken / deliberately skipped
-- **Input lags at segment seams (0.3-1.6 s, 37 in 10 min)** — not fixed, because it predates
-  L.3: the L.2 code showed the same lines on YouTube. Health stayed Excellent.
-  - Unverified hypothesis: the main thread's `remux()` of the next segment starves the writer.
-  - Measure it before changing anything (spec v3l3 §6).
-- **Fewer facts chips per card** — on purpose. The 700 px card column flex-shrinks the facts
-  box to one row, and the locked layout was kept.
-- **The schedule is not installed, and the stream is not Public** — that is the owner's decision.
-- **L.4 (vertical) and L.5 (Telegram live link)** — queued, not built.
-- **Still untracked in `E:\YOUTUBE\AI-PULSE`:** `output/demo/storyboard/sample/*` and
-  `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`. Not touched.
-
-## Owner update (2026-10-05, after this session)
-- `v3-phase-l3` is **merged** (PR #38, verified on `origin/main`).
-- The owner reports the live stream's Studio visibility is **Public**. Claude did not verify it.
-- **Still left:** upload the banner, install the daily schedule. Neither is done.
+- **Mermaid fences** — the first code block can be a diagram (OpenDots), which would ship as
+  "the command". Needs one word: skip `mermaid` fences.
+- **The fear-term list catches 13 of 78 titles, not ~21** — "hacked/danger/risks/worries/
+  backlash" are missing. A fear-framed alternate can still win the title fallback. Both need an
+  owner word before the list changes.
+- **Ranking still favours Product Hunt** (`feed_max` is computed before the used filter, and
+  Atom `updated` is read before `published`). Eligibility now protects the lane; a ranking
+  phase would fix the root cause.
+- **The music bed is silent until the owner adds CC0 tracks.** The bed also restarts after the
+  sting; that predates this work.
+- **Reach and CTR are unverified live** — that needs the Reporting API enabled, and possibly a
+  re-minted token.
+- **The exact gate behind the 10-07..09 tool failures is inferred** — the CI logs need auth.
+- **Leftover worktrees:** `E:/YOUTUBE/AI-PULSE-{b4,g3,g4b,gf,int,wt-main}`. Remove them after
+  the merge with `git worktree remove <path>`, never `--force`.
+- **Still untracked in `E:\YOUTUBE\AI-PULSE`:** `output/demo/storyboard/sample/*`,
+  `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`, `output/brand/`. That checkout is still on the
+  stale `v3-gemini-fallback` branch.
 
 ## Next session starts here
-- **Phase:** finish the L.3 rollout, then build v3-L.5.
-  1. Banner: the file is `E:\YOUTUBE\AI-PULSE\outputrandanner_tooldojo_2560x1440.png`.
-     Owner path: Studio → Customization → Branding → Banner image.
-  2. Schedule: `powershell -File scripts/radar_schedule.ps1 -Install`, run from a checkout
-     that is on **updated main**. Read the script first to see which path the task launches.
-  3. v3-L.5: post `youtube.com/@tooldojo/live` to the Telegram group 60 s after the stream
-     connects. Needs a spec-lock first.
-- **First command:** `/boot`
-- **Watch out for:** `E:\YOUTUBE\AI-PULSE` is checked out on `v3-gemini-fallback`, which does
-  NOT have the L.3 code. A schedule launched from there streams the L.2 code, publicly, every
-  day (3 standbys at the start, no music, short narration). Put that checkout on updated
-  main, or point the task at one that is, before installing.
-  - It must keep its `.env` and `assets/music/radar/`: both are gitignored and already there.
-  - Its uncommitted and untracked files belong to another session. Do not discard them;
-    commit first if switching branches.
+- Phase: none to build. The owner merges
+  https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-integration-1010, enables the YouTube
+  Reporting API in GCP, adds CC0 tracks to `assets/music/bed/`, and answers the mermaid and
+  fear-list words.
+- First command: `/boot`. Then read the first post-merge run: the ledger `format` (expect a
+  `tool` row) and the log lines `⏭️ Skipping tool candidate`, `📎 first code block`,
+  `transitions:`, `music:` and `↷ reach report`.
+- Watch out for: the first post-merge CI run's duration and the `transitions:` line. If the
+  xfade join misbehaves on the 4-vCPU runner, flip `"transitions": false` in config.json. That
+  is one flag, not a rewrite.
