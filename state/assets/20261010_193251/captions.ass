@@ -1,0 +1,196 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.46,Live,,0,0,0,{\k10}By {\k10}the {\k18}end {\k8}of
+Dialogue: 0,0:00:00.46,0:00:01.84,Live,,0,0,0,{\k16}this {\k32}video {\k44}{\k12}you'll {\k34}grasp
+Dialogue: 0,0:00:01.84,0:00:03.36,Live,,0,0,0,{\k22}the {\k34}fundamental {\k46}design {\k50}principles
+Dialogue: 0,0:00:03.36,0:00:04.98,Live,,0,0,0,{\k58}that {\k34}allow {\k40}AI {\k30}to
+Dialogue: 0,0:00:04.98,0:00:06.32,Live,,0,0,0,{\k38}process {\k40}vast {\k30}amounts {\k26}of
+Dialogue: 0,0:00:06.32,0:00:08.08,Live,,0,0,0,{\k26}data {\k32}at {\k48}incredible {\k60}speeds
+Dialogue: 0,0:00:08.34,0:00:09.20,Live,,0,0,0,{\k26}and {\k20}why {\k16}your {\k24}home
+Dialogue: 0,0:00:09.20,0:00:10.64,Live,,0,0,0,{\k46}computer {\k40}simply {\k38}isn't {\k20}built
+Dialogue: 0,0:00:10.64,0:00:11.28,Live,,0,0,0,{\k18}for {\k10}the {\k26}job
+Dialogue: 0,0:00:11.98,0:00:13.58,Live,,0,0,0,{\k40}Training {\k32}a {\k34}single {\k54}advanced
+Dialogue: 0,0:00:13.58,0:00:15.12,Live,,0,0,0,{\k28}AI {\k52}model {\k42}can {\k32}demand
+Dialogue: 0,0:00:15.12,0:00:16.44,Live,,0,0,0,{\k52}hundreds {\k22}of {\k34}thousands {\k24}of
+Dialogue: 0,0:00:16.44,0:00:18.26,Live,,0,0,0,{\k30}times {\k28}more {\k60}computational {\k64}power
+Dialogue: 0,0:00:18.26,0:00:19.74,Live,,0,0,0,{\k56}than {\k12}your {\k28}most {\k52}powerful
+Dialogue: 0,0:00:19.74,0:00:21.62,Live,,0,0,0,{\k38}laptop {\k54}{\k12}Your {\k60}computer's {\k24}Central
+Dialogue: 0,0:00:21.62,0:00:23.54,Live,,0,0,0,{\k50}Processing {\k38}Unit {\k26}{\k24}or {\k44}CPU
+Dialogue: 0,0:00:23.96,0:00:24.98,Live,,0,0,0,{\k32}is {\k8}a {\k38}marvel {\k24}of
+Dialogue: 0,0:00:24.98,0:00:27.40,Live,,0,0,0,{\k62}versatility {\k84}It {\k66}masterfully {\k30}handles
+Dialogue: 0,0:00:27.40,0:00:28.94,Live,,0,0,0,{\k58}everything {\k28}from {\k48}browsing {\k20}the
+Dialogue: 0,0:00:28.94,0:00:30.78,Live,,0,0,0,{\k22}web {\k26}to {\k42}complex {\k84}spreadsheets
+Dialogue: 0,0:00:31.16,0:00:32.92,Live,,0,0,0,{\k36}executing {\k82}instructions {\k26}one {\k32}after
+Dialogue: 0,0:00:32.92,0:00:34.70,Live,,0,0,0,{\k34}another {\k28}with {\k54}incredible {\k52}precision
+Dialogue: 0,0:00:35.28,0:00:37.20,Live,,0,0,0,{\k26}It's {\k6}a {\k66}generalist {\k30}{\k64}optimized
+Dialogue: 0,0:00:37.20,0:00:38.18,Live,,0,0,0,{\k28}for {\k12}a {\k30}wide {\k28}range
+Dialogue: 0,0:00:38.18,0:00:39.52,Live,,0,0,0,{\k20}of {\k38}tasks {\k44}that {\k32}require
+Dialogue: 0,0:00:39.52,0:00:41.50,Live,,0,0,0,{\k68}sequential {\k46}logic {\k48}and {\k36}diverse
+Dialogue: 0,0:00:41.50,0:00:43.88,Live,,0,0,0,{\k70}operations {\k56}{\k30}Modern {\k28}AI {\k54}models
+Dialogue: 0,0:00:43.88,0:00:45.64,Live,,0,0,0,{\k48}don't {\k16}need {\k64}generalist {\k38}computing
+Dialogue: 0,0:00:46.10,0:00:46.88,Live,,0,0,0,{\k20}They {\k14}need {\k12}to {\k32}perform
+Dialogue: 0,0:00:46.88,0:00:48.84,Live,,0,0,0,{\k50}billions {\k30}of {\k52}identical {\k34}{\k30}relatively
+Dialogue: 0,0:00:48.84,0:00:51.24,Live,,0,0,0,{\k56}simple {\k68}calculations {\k106}simultaneously
+Dialogue: 0,0:00:52.06,0:00:52.88,Live,,0,0,0,{\k34}Think {\k16}of {\k10}it {\k22}as
+Dialogue: 0,0:00:52.88,0:00:54.84,Live,,0,0,0,{\k58}multiplying {\k56}vast {\k58}matrices {\k24}of
+Dialogue: 0,0:00:54.84,0:00:56.62,Live,,0,0,0,{\k36}numbers {\k48}{\k16}layer {\k38}after {\k30}layer
+Dialogue: 0,0:00:56.90,0:00:58.40,Live,,0,0,0,{\k10}a {\k32}task {\k82}CPUs {\k26}struggle
+Dialogue: 0,0:00:58.40,0:00:59.96,Live,,0,0,0,{\k40}with {\k36}{\k34}This {\k22}is {\k24}where
+Dialogue: 0,0:00:59.96,0:01:01.86,Live,,0,0,0,{\k38}Graphics {\k62}Processing {\k34}Units {\k26}{\k30}or
+Dialogue: 0,0:01:01.86,0:01:04.10,Live,,0,0,0,{\k50}GPUs {\k54}{\k28}step {\k30}in {\k30}{\k32}Originally
+Dialogue: 0,0:01:04.10,0:01:05.56,Live,,0,0,0,{\k58}designed {\k18}to {\k20}render {\k50}millions
+Dialogue: 0,0:01:05.56,0:01:06.42,Live,,0,0,0,{\k26}of {\k28}pixels {\k22}on {\k10}your
+Dialogue: 0,0:01:06.42,0:01:08.06,Live,,0,0,0,{\k32}screen {\k52}by {\k46}performing {\k34}many
+Dialogue: 0,0:01:08.06,0:01:09.80,Live,,0,0,0,{\k36}simple {\k50}calculations {\k44}in {\k34}parallel
+Dialogue: 0,0:01:10.22,0:01:11.60,Live,,0,0,0,{\k80}GPUs {\k14}found {\k18}their {\k26}true
+Dialogue: 0,0:01:11.60,0:01:13.54,Live,,0,0,0,{\k42}calling {\k26}in {\k32}AI {\k68}{\k26}Their
+Dialogue: 0,0:01:13.54,0:01:15.26,Live,,0,0,0,{\k58}architecture {\k34}is {\k44}perfectly {\k36}suited
+Dialogue: 0,0:01:15.26,0:01:16.94,Live,,0,0,0,{\k26}for {\k10}the {\k48}repetitive {\k52}{\k32}parallel
+Dialogue: 0,0:01:16.94,0:01:18.34,Live,,0,0,0,{\k36}math {\k46}that {\k26}deep {\k32}learning
+Dialogue: 0,0:01:18.34,0:01:20.30,Live,,0,0,0,{\k34}demands {\k94}And {\k12}the {\k56}strangest
+Dialogue: 0,0:01:20.30,0:01:22.08,Live,,0,0,0,{\k22}part {\k42}is {\k32}{\k10}these {\k72}powerhouses
+Dialogue: 0,0:01:22.08,0:01:23.46,Live,,0,0,0,{\k38}weren't {\k22}even {\k40}designed {\k38}for
+Dialogue: 0,0:01:23.46,0:01:25.16,Live,,0,0,0,{\k26}AI {\k32}at {\k34}first {\k38}{\k40}Imagine
+Dialogue: 0,0:01:25.16,0:01:26.38,Live,,0,0,0,{\k22}a {\k42}CPU {\k52}as {\k6}a
+Dialogue: 0,0:01:26.38,0:01:28.34,Live,,0,0,0,{\k34}brilliant {\k56}scientist {\k64}working {\k42}alone
+Dialogue: 0,0:01:28.34,0:01:30.20,Live,,0,0,0,{\k30}on {\k28}one {\k62}incredibly {\k66}complex
+Dialogue: 0,0:01:30.20,0:01:32.34,Live,,0,0,0,{\k44}problem {\k36}{\k48}A {\k34}GPU {\k52}is
+Dialogue: 0,0:01:32.34,0:01:33.44,Live,,0,0,0,{\k12}like {\k8}a {\k50}thousand {\k40}diligent
+Dialogue: 0,0:01:33.44,0:01:35.36,Live,,0,0,0,{\k66}students {\k32}{\k38}each {\k40}solving {\k16}a
+Dialogue: 0,0:01:35.36,0:01:36.34,Live,,0,0,0,{\k30}small {\k32}piece {\k28}of {\k8}a
+Dialogue: 0,0:01:36.34,0:01:38.08,Live,,0,0,0,{\k24}much {\k40}larger {\k44}{\k16}but {\k40}simpler
+Dialogue: 0,0:01:38.36,0:01:39.64,Live,,0,0,0,{\k40}problem {\k78}simultaneously
+Dialogue: 0,0:01:40.30,0:01:42.10,Live,,0,0,0,{\k24}AI {\k78}primarily {\k40}relies {\k38}on
+Dialogue: 0,0:01:42.10,0:01:44.06,Live,,0,0,0,{\k32}tensor {\k62}operations {\k82}A {\k20}tensor
+Dialogue: 0,0:01:44.06,0:01:45.18,Live,,0,0,0,{\k40}is {\k18}just {\k18}a {\k36}fancy
+Dialogue: 0,0:01:45.18,0:01:46.40,Live,,0,0,0,{\k28}name {\k48}for {\k12}a {\k34}multi
+Dialogue: 0,0:01:46.40,0:01:47.82,Live,,0,0,0,{\k50}dimensional {\k36}array {\k26}of {\k30}numbers
+Dialogue: 0,0:01:47.82,0:01:49.00,Live,,0,0,0,{\k28}like {\k12}a {\k38}spreadsheet {\k40}with
+Dialogue: 0,0:01:49.00,0:01:51.08,Live,,0,0,0,{\k26}many {\k30}rows {\k56}{\k30}columns {\k26}{\k40}and
+Dialogue: 0,0:01:51.08,0:01:52.16,Live,,0,0,0,{\k26}even {\k28}more {\k44}layers
+Dialogue: 0,0:01:52.82,0:01:54.36,Live,,0,0,0,{\k22}AI {\k44}models {\k58}transform {\k30}these
+Dialogue: 0,0:01:54.36,0:01:56.14,Live,,0,0,0,{\k52}tensors {\k36}by {\k66}multiplying {\k24}them
+Dialogue: 0,0:01:56.14,0:01:57.68,Live,,0,0,0,{\k22}by {\k20}other {\k56}tensors {\k56}over
+Dialogue: 0,0:01:57.68,0:01:58.84,Live,,0,0,0,{\k18}and {\k32}over {\k46}to {\k20}learn
+Dialogue: 0,0:01:58.84,0:01:59.38,Live,,0,0,0,{\k44}patterns
+Dialogue: 0,0:02:00.08,0:02:01.62,Live,,0,0,0,{\k32}Raw {\k46}processing {\k42}power {\k34}isn't
+Dialogue: 0,0:02:01.62,0:02:03.74,Live,,0,0,0,{\k22}enough {\k48}{\k18}AI {\k56}models {\k68}constantly
+Dialogue: 0,0:02:03.74,0:02:05.16,Live,,0,0,0,{\k32}shuttle {\k54}massive {\k32}amounts {\k24}of
+Dialogue: 0,0:02:05.16,0:02:06.54,Live,,0,0,0,{\k22}data {\k42}between {\k38}memory {\k36}and
+Dialogue: 0,0:02:06.54,0:02:07.54,Live,,0,0,0,{\k46}processing {\k44}cores
+Dialogue: 0,0:02:08.28,0:02:09.70,Live,,0,0,0,{\k72}GPUs {\k12}are {\k30}equipped {\k28}with
+Dialogue: 0,0:02:09.70,0:02:11.54,Live,,0,0,0,{\k58}extremely {\k34}high {\k34}bandwidth {\k48}memory
+Dialogue: 0,0:02:11.88,0:02:13.48,Live,,0,0,0,{\k26}like {\k36}High {\k40}Bandwidth {\k48}Memory
+Dialogue: 0,0:02:13.76,0:02:15.78,Live,,0,0,0,{\k24}or {\k64}HBM {\k60}{\k30}allowing {\k24}them
+Dialogue: 0,0:02:15.78,0:02:16.54,Live,,0,0,0,{\k18}to {\k18}feed {\k20}their {\k20}many
+Dialogue: 0,0:02:16.54,0:02:17.66,Live,,0,0,0,{\k30}cores {\k28}with {\k26}data {\k28}at
+Dialogue: 0,0:02:17.66,0:02:19.92,Live,,0,0,0,{\k42}staggering {\k50}speeds {\k50}{\k40}Recognizing {\k44}this
+Dialogue: 0,0:02:19.92,0:02:21.14,Live,,0,0,0,{\k40}distinct {\k30}need {\k22}for {\k30}hyper
+Dialogue: 0,0:02:21.14,0:02:23.64,Live,,0,0,0,{\k76}specialized {\k36}parallel {\k64}processing {\k60}{\k14}Google
+Dialogue: 0,0:02:23.64,0:02:25.58,Live,,0,0,0,{\k58}developed {\k26}Tensor {\k58}Processing {\k42}Units
+Dialogue: 0,0:02:25.72,0:02:27.00,Live,,0,0,0,{\k50}or {\k68}TPUs
+Dialogue: 0,0:02:27.66,0:02:29.76,Live,,0,0,0,{\k36}Unlike {\k48}general {\k36}purpose {\k80}GPUs
+Dialogue: 0,0:02:29.76,0:02:31.08,Live,,0,0,0,{\k12}which {\k16}have {\k34}broader {\k60}applications
+Dialogue: 0,0:02:31.74,0:02:33.14,Live,,0,0,0,{\k66}TPUs {\k10}are {\k40}custom {\k24}built
+Dialogue: 0,0:02:33.14,0:02:33.92,Live,,0,0,0,{\k18}from {\k36}the {\k14}ground {\k10}up
+Dialogue: 0,0:02:33.92,0:02:35.84,Live,,0,0,0,{\k40}to {\k50}accelerate {\k42}tensor {\k60}operations
+Dialogue: 0,0:02:35.84,0:02:36.78,Live,,0,0,0,{\k84}specifically
+Dialogue: 0,0:02:37.54,0:02:39.08,Live,,0,0,0,{\k76}TPUs {\k36}often {\k26}use {\k16}a
+Dialogue: 0,0:02:39.08,0:02:41.28,Live,,0,0,0,{\k54}systolic {\k28}array {\k72}architecture {\k38}{\k28}Picture
+Dialogue: 0,0:02:41.28,0:02:42.48,Live,,0,0,0,{\k24}a {\k46}conveyer {\k30}belt {\k20}where
+Dialogue: 0,0:02:42.48,0:02:43.76,Live,,0,0,0,{\k30}data {\k38}flows {\k44}through {\k16}a
+Dialogue: 0,0:02:43.76,0:02:45.38,Live,,0,0,0,{\k22}grid {\k16}of {\k50}processors {\k54}{\k20}with
+Dialogue: 0,0:02:45.38,0:02:47.00,Live,,0,0,0,{\k26}each {\k62}processor {\k56}performing {\k18}a
+Dialogue: 0,0:02:47.00,0:02:48.84,Live,,0,0,0,{\k64}calculation {\k60}and {\k42}passing {\k18}the
+Dialogue: 0,0:02:48.84,0:02:49.88,Live,,0,0,0,{\k32}result {\k24}to {\k10}the {\k28}next
+Dialogue: 0,0:02:50.42,0:02:52.10,Live,,0,0,0,{\k30}This {\k58}minimizes {\k34}data {\k46}movement
+Dialogue: 0,0:02:52.10,0:02:54.04,Live,,0,0,0,{\k48}and {\k70}maximizes {\k44}throughput {\k32}for
+Dialogue: 0,0:02:54.04,0:02:56.38,Live,,0,0,0,{\k36}matrix {\k96}multiplications {\k50}{\k24}Training {\k28}an
+Dialogue: 0,0:02:56.38,0:02:57.96,Live,,0,0,0,{\k24}AI {\k48}model {\k42}{\k28}teaching {\k16}it
+Dialogue: 0,0:02:57.96,0:02:59.76,Live,,0,0,0,{\k12}new {\k42}skills {\k42}{\k34}requires {\k50}immense
+Dialogue: 0,0:02:59.76,0:03:01.78,Live,,0,0,0,{\k74}computational {\k50}muscle {\k42}{\k8}and {\k28}typically
+Dialogue: 0,0:03:01.78,0:03:03.68,Live,,0,0,0,{\k44}uses {\k32}high {\k34}end {\k80}GPUs
+Dialogue: 0,0:03:03.68,0:03:06.10,Live,,0,0,0,{\k12}or {\k80}TPUs {\k50}{\k62}Inference {\k18}{\k20}or
+Dialogue: 0,0:03:06.10,0:03:07.14,Live,,0,0,0,{\k30}using {\k14}a {\k28}trained {\k32}model
+Dialogue: 0,0:03:07.14,0:03:08.56,Live,,0,0,0,{\k18}to {\k16}make {\k38}predictions {\k50}{\k20}is
+Dialogue: 0,0:03:08.56,0:03:09.72,Live,,0,0,0,{\k34}far {\k22}less {\k50}demanding
+Dialogue: 0,0:03:10.40,0:03:11.60,Live,,0,0,0,{\k18}Stick {\k30}around {\k28}because {\k34}later
+Dialogue: 0,0:03:11.86,0:03:12.98,Live,,0,0,0,{\k18}we'll {\k32}reveal {\k22}the {\k40}radical
+Dialogue: 0,0:03:12.98,0:03:14.30,Live,,0,0,0,{\k26}in {\k34}memory {\k44}chips {\k28}that
+Dialogue: 0,0:03:14.30,0:03:15.48,Live,,0,0,0,{\k14}could {\k18}make {\k62}today's {\k24}hardware
+Dialogue: 0,0:03:15.48,0:03:17.16,Live,,0,0,0,{\k42}look {\k50}obsolete {\k40}{\k20}Trying {\k16}to
+Dialogue: 0,0:03:17.16,0:03:18.52,Live,,0,0,0,{\k22}force {\k22}a {\k34}CPU {\k58}to
+Dialogue: 0,0:03:18.52,0:03:19.22,Live,,0,0,0,{\k12}do {\k14}what {\k10}a {\k34}GPU
+Dialogue: 0,0:03:19.22,0:03:20.60,Live,,0,0,0,{\k54}does {\k24}is {\k14}like {\k46}asking
+Dialogue: 0,0:03:20.60,0:03:21.88,Live,,0,0,0,{\k12}a {\k30}master {\k32}chef {\k54}to
+Dialogue: 0,0:03:21.88,0:03:23.26,Live,,0,0,0,{\k26}chop {\k20}a {\k34}million {\k58}vegetables
+Dialogue: 0,0:03:23.26,0:03:25.28,Live,,0,0,0,{\k94}individually {\k64}instead {\k20}of {\k24}using
+Dialogue: 0,0:03:25.28,0:03:27.38,Live,,0,0,0,{\k24}an {\k42}automated {\k66}slicer {\k52}{\k26}It’s
+Dialogue: 0,0:03:27.38,0:03:28.76,Live,,0,0,0,{\k48}inefficient {\k32}by {\k32}orders {\k26}of
+Dialogue: 0,0:03:28.76,0:03:29.34,Live,,0,0,0,{\k48}magnitude
+Dialogue: 0,0:03:29.94,0:03:32.42,Live,,0,0,0,{\k42}Beyond {\k104}GPUs {\k12}and {\k80}TPUs
+Dialogue: 0,0:03:32.70,0:03:33.42,Live,,0,0,0,{\k6}a {\k20}new {\k30}wave {\k16}of
+Dialogue: 0,0:03:33.42,0:03:34.86,Live,,0,0,0,{\k44}custom {\k26}AI {\k44}chips {\k30}is
+Dialogue: 0,0:03:34.86,0:03:36.96,Live,,0,0,0,{\k50}constantly {\k52}emerging {\k46}{\k34}Companies {\k28}are
+Dialogue: 0,0:03:36.96,0:03:38.88,Live,,0,0,0,{\k26}now {\k48}designing {\k50}hardware {\k68}optimized
+Dialogue: 0,0:03:38.88,0:03:40.60,Live,,0,0,0,{\k36}for {\k36}highly {\k72}specific {\k28}AI
+Dialogue: 0,0:03:40.60,0:03:42.50,Live,,0,0,0,{\k60}tasks {\k42}{\k24}like {\k30}real {\k34}time
+Dialogue: 0,0:03:42.50,0:03:44.36,Live,,0,0,0,{\k64}processing {\k34}in {\k42}autonomous {\k46}vehicles
+Dialogue: 0,0:03:44.36,0:03:45.66,Live,,0,0,0,{\k22}at {\k14}the {\k32}edge {\k48}{\k14}or
+Dialogue: 0,0:03:45.66,0:03:47.74,Live,,0,0,0,{\k74}incredibly {\k42}energy {\k50}efficient {\k42}inference
+Dialogue: 0,0:03:47.74,0:03:49.24,Live,,0,0,0,{\k44}for {\k32}AI {\k52}running {\k22}on
+Dialogue: 0,0:03:49.24,0:03:51.22,Live,,0,0,0,{\k10}your {\k38}smartphone {\k70}{\k40}These {\k40}custom
+Dialogue: 0,0:03:51.22,0:03:53.36,Live,,0,0,0,{\k42}chips {\k52}leverage {\k64}advanced {\k56}techniques
+Dialogue: 0,0:03:53.36,0:03:54.84,Live,,0,0,0,{\k62}such {\k14}as {\k16}mixed {\k56}precision
+Dialogue: 0,0:03:54.84,0:03:56.60,Live,,0,0,0,{\k48}arithmetic {\k18}{\k42}This {\k26}means {\k42}using
+Dialogue: 0,0:03:56.60,0:03:58.24,Live,,0,0,0,{\k32}less {\k38}precise {\k50}numbers {\k44}for
+Dialogue: 0,0:03:58.24,0:03:59.98,Live,,0,0,0,{\k46}calculations {\k52}when {\k26}full {\k50}precision
+Dialogue: 0,0:03:59.98,0:04:02.68,Live,,0,0,0,{\k56}isn't {\k44}strictly {\k66}necessary {\k46}{\k58}significantly
+Dialogue: 0,0:04:02.68,0:04:04.40,Live,,0,0,0,{\k60}saving {\k44}memory {\k28}and {\k40}power
+Dialogue: 0,0:04:04.40,0:04:07.18,Live,,0,0,0,{\k64}without {\k76}sacrificing {\k64}overall {\k64}accuracy
+Dialogue: 0,0:04:07.48,0:04:08.54,Live,,0,0,0,{\k10}The {\k28}very {\k40}nature {\k28}of
+Dialogue: 0,0:04:08.54,0:04:10.10,Live,,0,0,0,{\k22}neural {\k58}networks {\k38}{\k20}with {\k18}their
+Dialogue: 0,0:04:10.10,0:04:11.76,Live,,0,0,0,{\k34}layers {\k28}of {\k48}interconnected {\k56}nodes
+Dialogue: 0,0:04:11.76,0:04:14.78,Live,,0,0,0,{\k76}performing {\k66}repeated {\k40}matrix {\k110}multiplications
+Dialogue: 0,0:04:15.10,0:04:16.64,Live,,0,0,0,{\k36}perfectly {\k80}aligns {\k12}with {\k26}these
+Dialogue: 0,0:04:16.64,0:04:19.54,Live,,0,0,0,{\k44}parallel {\k64}processing {\k84}architectures {\k66}{\k32}Hundreds
+Dialogue: 0,0:04:19.54,0:04:20.74,Live,,0,0,0,{\k24}of {\k32}billions {\k30}of {\k34}simple
+Dialogue: 0,0:04:20.74,0:04:22.60,Live,,0,0,0,{\k66}calculations {\k68}need {\k20}to {\k32}fire
+Dialogue: 0,0:04:22.60,0:04:23.34,Live,,0,0,0,{\k24}in {\k40}concert
+Dialogue: 0,0:04:23.96,0:04:25.30,Live,,0,0,0,{\k36}Remember {\k36}we {\k30}mentioned {\k32}these
+Dialogue: 0,0:04:25.30,0:04:27.08,Live,,0,0,0,{\k68}powerhouses {\k40}weren't {\k30}designed {\k40}for
+Dialogue: 0,0:04:27.08,0:04:28.48,Live,,0,0,0,{\k28}AI {\k32}at {\k26}first {\k48}{\k6}The
+Dialogue: 0,0:04:28.48,0:04:30.02,Live,,0,0,0,{\k20}next {\k44}frontier {\k56}involves {\k34}chips
+Dialogue: 0,0:04:30.02,0:04:31.40,Live,,0,0,0,{\k32}that {\k30}compute {\k56}directly {\k20}in
+Dialogue: 0,0:04:31.40,0:04:33.02,Live,,0,0,0,{\k32}memory {\k68}or {\k38}even {\k24}use
+Dialogue: 0,0:04:33.02,0:04:34.68,Live,,0,0,0,{\k24}light {\k30}to {\k34}perform {\k68}calculations
+Dialogue: 0,0:04:35.36,0:04:37.06,Live,,0,0,0,{\k34}These {\k38}radical {\k62}approaches {\k36}could
+Dialogue: 0,0:04:37.06,0:04:39.02,Live,,0,0,0,{\k34}unlock {\k70}performance {\k32}gains {\k60}that
+Dialogue: 0,0:04:39.02,0:04:40.72,Live,,0,0,0,{\k16}make {\k54}today's {\k40}specialized {\k60}hardware
+Dialogue: 0,0:04:40.72,0:04:42.50,Live,,0,0,0,{\k52}seem {\k40}slow {\k42}{\k20}Without {\k24}this
+Dialogue: 0,0:04:42.50,0:04:44.50,Live,,0,0,0,{\k46}specialized {\k60}hardware {\k50}{\k8}the {\k36}vast
+Dialogue: 0,0:04:44.50,0:04:45.82,Live,,0,0,0,{\k56}complex {\k40}models {\k22}we {\k14}see
+Dialogue: 0,0:04:45.82,0:04:47.40,Live,,0,0,0,{\k34}today {\k42}{\k14}like {\k26}those {\k42}driving
+Dialogue: 0,0:04:47.40,0:04:49.12,Live,,0,0,0,{\k56}generative {\k36}AI {\k54}{\k16}would {\k10}be
+Dialogue: 0,0:04:49.12,0:04:51.14,Live,,0,0,0,{\k92}computationally {\k52}impossible {\k28}to {\k30}train
+Dialogue: 0,0:04:51.14,0:04:51.86,Live,,0,0,0,{\k32}or {\k30}run
+Dialogue: 0,0:04:52.48,0:04:53.62,Live,,0,0,0,{\k10}It {\k26}directly {\k48}shapes {\k30}what
+Dialogue: 0,0:04:53.62,0:04:55.02,Live,,0,0,0,{\k22}AI {\k32}can {\k36}achieve {\k50}and
+Dialogue: 0,0:04:55.02,0:04:56.26,Live,,0,0,0,{\k18}how {\k40}fast {\k16}it {\k40}progresses
+Dialogue: 0,0:04:57.34,0:04:58.90,Live,,0,0,0,{\k34}Understanding {\k36}these {\k34}silent {\k52}engines
+Dialogue: 0,0:04:58.90,0:05:00.58,Live,,0,0,0,{\k54}reveals {\k40}why {\k34}AI {\k40}has
+Dialogue: 0,0:05:00.58,0:05:02.72,Live,,0,0,0,{\k48}advanced {\k34}so {\k48}rapidly {\k50}{\k34}Subscribe
+Dialogue: 0,0:05:02.72,0:05:04.18,Live,,0,0,0,{\k34}to {\k24}Tool {\k48}Dojo {\k40}for
+Dialogue: 0,0:05:04.18,0:05:05.44,Live,,0,0,0,{\k22}more {\k24}deep {\k48}dives {\k32}into
+Dialogue: 0,0:05:05.44,0:05:06.38,Live,,0,0,0,{\k16}the {\k18}tech {\k42}shaping {\k18}our
+Dialogue: 0,0:05:06.38,0:05:06.74,Live,,0,0,0,{\k26}world
