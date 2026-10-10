@@ -832,7 +832,8 @@ def test_unsuitable_tools_are_skipped_before_a_tutorial_is_written(monkeypatch):
     monkeypatch.setattr(ap, "pick_evergreen_topic", lambda r: None)
     monkeypatch.setattr(ap, "script_news", lambda *a, **k: None)
     ap.build_script("tool", [{"title": "watermarks-remover: strip provenance", "kind": "tool"},
-                             {"title": "MarkItDown converts files", "kind": "tool"}])
+                             {"title": "MarkItDown converts files", "kind": "tool",
+                              "url": "https://github.com/microsoft/markitdown"}])
     assert tried == ["MarkItDown converts files"], "the stripper must never reach script_tool"
 
 

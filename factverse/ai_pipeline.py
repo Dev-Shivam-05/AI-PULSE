@@ -571,6 +571,27 @@ ACCURACY RULES:
 # because the chrome-only pages that caused this (Product Hunt, ~640 chars) must
 # fail with margin while a real README or model card (~5000) passes untouched.
 TOOL_GROUNDING_MIN = 1200
+# spec v3-B.4: how much of the raw README / model card is FETCHED. The writer still
+# reads only the first 5,000 chars; the rest exists so a first fenced block that
+# sits just past that cut can be handed over (OpenDots: 7,227, embeddinggemma-2:
+# 5,190). Without it every such candidate failed the copy-paste contract.
+TOOL_README_FETCH = 20000
+
+
+def tool_source_eligible(url: str) -> bool:
+    """spec v3-B.4: only a GitHub repo or a Hugging Face model can ground a tool
+    video. Every other tool signal (Product Hunt: stripped HTML, no code fences)
+    is structurally unable to pass the deliverable containment check, so writing
+    it spends a writer call to be rejected."""
+    return bool(_gh_repo(url) or _hf_readme_url(url))
+
+
+def _fenced_block_raw(text: str) -> tuple[int, str]:
+    """(offset, block) of the first fenced code block of `text` WITH its ``` fences,
+    else (-1, ""). Same pattern as _first_fenced, so the block appended to grounding
+    is the block _first_fenced and command_grounded will then find."""
+    m = re.search(r"```[^\n`]*\n.*?```", str(text or ""), re.S)
+    return (m.start(), m.group(0)) if m else (-1, "")
 
 
 def script_tool(item: dict) -> dict | None:
@@ -585,26 +606,33 @@ def script_tool(item: dict) -> dict | None:
     # back to the page: for a gated or README-less model that fallback grounds
     # the whole video in a Jinja template, which reads as real and is not.
     readme = _hf_readme_url(url)
-    screen = ""
+    page = None
+    # spec v3-B.4: `full` is the raw README / card at TOOL_README_FETCH; the writer
+    # still reads full[:5000] exactly as before. fetch_text's 400-char floor is
+    # measured on the whole text before it slices, so the 5,000-char window is
+    # byte-identical to the old limit=5000 fetch.
     if readme:
-        grounding = screen = fetch_text(readme, limit=5000)
+        # `or ""`: a fetch seam that answers None must cost the candidate, not raise
+        full = fetch_text(readme, limit=TOOL_README_FETCH) or ""
+        grounding = full[:5000]
     else:
         # Unlike the hub (spec v3-C.1 #2), GitHub KEEPS its page fallback: the hub's
         # fallback was a Jinja chat_template that reads as real, while GitHub's is only
         # chrome-padded — the text shipping today. A repo whose readme is .rst, lowercase
         # or absent must still reach the same place it reaches now.
         raw = _gh_readme_url(url)
-        grounding = fetch_text(raw, limit=5000) if raw else ""
+        full = (fetch_text(raw, limit=TOOL_README_FETCH) if raw else "") or ""
+        grounding = full[:5000]
         # Grounding and SCREENING are different jobs. The rendered page carries the
         # repo's topic tags — the strongest intent signal GitHub exposes and the one
         # thing the raw README does not have: measured 2026-08-24, facefusion is
         # declared only by its topics ("deep-fake deepfake face-swap faceswap"), so
         # grounding on the README alone would have let it through. Write the script
         # from the clean README; let gates.tool_unsuitable read both.
-        page = fetch_text(url, limit=5000)
+        page = fetch_text(url, limit=5000) or ""
         if len(grounding) < TOOL_GROUNDING_MIN:
-            grounding = page
-        screen = f"{grounding} {page}"
+            # the page is HTML stripped of every fence: nothing to append from it
+            grounding, full = page, ""
     # spec v3-C: a tool page that is all navigation chrome is not grounding.
     # Product Hunt's server HTML is ~640 chars of "Overview Reviews Team More",
     # which cleared fetch_text's 400-char floor AND gates.fact_check's 200-char
@@ -612,6 +640,22 @@ def script_tool(item: dict) -> dict | None:
     if len(grounding) < TOOL_GROUNDING_MIN:
         print(f"     ↻ grounding too thin ({len(grounding)} chars) — not a tool video.")
         return None   # build_script moves to the next candidate
+    # spec v3-B.4: a README whose first code block sits past the 5,000-char cut
+    # failed the copy-paste contract below on a command it really does show. Append
+    # that block (fences included) so the writer, command_grounded/_first_fenced and
+    # every gate reading s["grounding"] all see the same text.
+    if not _first_fenced(grounding):
+        at, block = _fenced_block_raw(full)
+        if block:
+            # A block that STARTS inside the window was cut by it. Drop the cut copy:
+            # left in, _first_fenced pairs its opening fence with the appended block's
+            # and would hand the deliverable a truncated command.
+            keep = grounding[:at] if at < len(grounding) else grounding
+            grounding = f"{keep}\n\n{block}"
+            print(f"     📎 first code block was past the excerpt — appended "
+                  f"({len(block)} chars).")
+    # Built AFTER the append: the screen must read at least what the writer reads.
+    screen = grounding if page is None else f"{grounding} {page}"
     # The README is where intent actually shows: a repo titled innocuously can
     # still be a provenance stripper. A tool video TEACHES the tool, so this
     # rejects where sensitive_topic_risk only penalises.
@@ -666,7 +710,12 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
 "url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
     s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
-    if s and not s.get("deliverable"):
+    if not s:
+        # spec v3-B.4: this path used to return silently, so a CI log could not tell
+        # a dead writer call from every other rejection in this function.
+        print("     ↻ writer returned no valid tool script — rejected.")
+        return None
+    if not s.get("deliverable"):
         print("     ↻ tool script had no deliverable — rejected.")
         return None
     if s:
@@ -1344,6 +1393,13 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             blocked, term = gates.tool_unsuitable(c["title"])
             if blocked:
                 print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            # spec v3-B.4: filtered HERE, before the [:3] cut, so "3 candidates
+            # tried" means 3 that can actually ground a tool video. 6 of the 9
+            # failures on 10-07..10-09 were Product Hunt pages that never could.
+            if not tool_source_eligible(c.get("url", "")):
+                print(f"  ⏭️ Skipping tool candidate (not a GitHub repo or HF model): "
+                      f"{c['title'][:60]}")
                 continue
             tools.append(c)
         for cand in tools[:3]:
