@@ -4728,5 +4728,57 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-11T18:06:20.742974",
+    "title": "Debloat Your Mac: RemoveMacAI (4,253 Stars)",
+    "description": "Your Mac could be running a lot of hidden AI processes, slowing it down and tracking your data. By the end of this video, you'll know exactly how to reclaim control over your macOS, turning off Apple Intelligence, stopping ads, and freeing up significant disk space with the free, open-source tool, RemoveMacAI.\n\n🔧 Try it yourself:\ncurl -fsSL https://raw.githubusercontent.com/omlahore/RemoveMacAI/main/install.sh | bash -s app\nhttps://github.com/omlahore/RemoveMacAI\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-11-debloat-your-mac-removemacai-4-253-stars.html\n\nThis hands-on guide will show you how to install and use RemoveMacAI to disable features like Siri, Genmoji, and Writing Tools, block analytics, quiet pop-ups, and delete unused models. With 4,253 stars on GitHub and last updated on 2026-10-11, this MIT-licensed tool is a powerful solution for a leaner, more private Mac. Learn to see every change before it happens and undo anything you wish. \n\n#RemoveMacAI #macOS #AppleIntelligence #AI #Privacy #TechTools #Debloat #ToolDojo\n\nSubscribe to ToolDojo.\n\nSource: https://github.com/omlahore/RemoveMacAI\n\nChapters:\n0:00 Hidden Mac AI\n1:04 Disable Apple Intelligence\n2:02 Granular Control\n2:53 Instant Revert\n4:13 Mac Analytics\n\n▶ Watch next: https://youtube.com/watch?v=J1soTX_BEoc",
+    "tags": [
+      "RemoveMacAI",
+      "macOS debloat",
+      "Apple Intelligence",
+      "disable AI Mac",
+      "free up Mac storage",
+      "Mac privacy",
+      "open source AI",
+      "tech tools",
+      "macOS Ventura",
+      "macOS Sonoma",
+      "Apple analytics",
+      "AI",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Debloat_Your_Mac_RemoveMacAI_4253_Stars_20261011_175606_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261011_175847.mp4",
+      "output/shorts/short_2_20261011_175940.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261011_175846.jpg",
+    "youtube_url": "https://youtube.com/watch?v=xm2GvY4QttA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=qRskgZGOXkU",
+      "https://youtube.com/watch?v=C9QtiD0QzoU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "RemoveMacAI: 4,253 Stars #Shorts",
+        "description": "Demonstration of the RemoveMacAI tool on a Mac. Shows the process of identifying and removing unwanted applications.",
+        "instagram_caption": "⚙️ See how RemoveMacAI helps declutter your Mac. This tool has earned over 4,000 stars for its effectiveness. Follow @tooldojo!"
+      },
+      {
+        "title": "Mac Debloating with RemoveMacAI #Shorts",
+        "description": "A short clip showcasing the RemoveMacAI application for managing Mac software. Highlights its interface and basic functionality.",
+        "instagram_caption": "🧹 Free up space on your Mac with RemoveMacAI. It's a popular tool for cleaning up unnecessary software. Follow @tooldojo!"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

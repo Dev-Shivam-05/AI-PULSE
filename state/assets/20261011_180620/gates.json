@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The existence of such a robust, open-source tool highlights a growing user demand for finer-grained control over OS-level AI integrations, pushing back against default 'smart' features and bloatware in modern operating systems."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative flow and specific instructions on how to use the tool (e.g., 'Open Terminal from Applications > Utilities, then p'). It also summarizes the tool's capabilities in a mo"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
