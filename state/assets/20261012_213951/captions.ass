@@ -1,0 +1,196 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:02.16,Live,,0,0,0,{\k42}Imagine {\k56}generating {\k36}fully {\k72}interactive
+Dialogue: 0,0:00:02.38,0:00:04.26,Live,,0,0,0,{\k46}isometric {\k68}diagrams {\k34}of {\k40}complex
+Dialogue: 0,0:00:04.26,0:00:06.20,Live,,0,0,0,{\k50}systems {\k20}in {\k28}minutes {\k42}{\k54}This
+Dialogue: 0,0:00:06.20,0:00:07.74,Live,,0,0,0,{\k22}is {\k40}anatomy {\k52}{\k12}a {\k28}free
+Dialogue: 0,0:00:07.74,0:00:09.26,Live,,0,0,0,{\k30}AI {\k48}skill {\k28}with {\k46}5
+Dialogue: 0,0:00:09.26,0:00:11.98,Live,,0,0,0,{\k120}965 {\k72}stars {\k46}{\k20}and {\k14}by
+Dialogue: 0,0:00:11.98,0:00:12.52,Live,,0,0,0,{\k12}the {\k18}end {\k8}of {\k16}this
+Dialogue: 0,0:00:12.52,0:00:13.66,Live,,0,0,0,{\k30}video {\k48}{\k8}you'll {\k12}be {\k16}able
+Dialogue: 0,0:00:13.66,0:00:14.52,Live,,0,0,0,{\k14}to {\k18}build {\k18}your {\k36}first
+Dialogue: 0,0:00:14.52,0:00:17.22,Live,,0,0,0,{\k50}working {\k30}{\k60}explainable {\k48}AI {\k72}illustration
+Dialogue: 0,0:00:18.02,0:00:20.00,Live,,0,0,0,{\k56}Anatomy {\k30}{\k12}by {\k46}Wershrian {\k44}22
+Dialogue: 0,0:00:20.54,0:00:21.52,Live,,0,0,0,{\k20}isn't {\k20}just {\k22}for {\k36}static
+Dialogue: 0,0:00:21.52,0:00:23.06,Live,,0,0,0,{\k38}images {\k50}{\k20}It's {\k4}a {\k42}Claude
+Dialogue: 0,0:00:23.06,0:00:24.10,Live,,0,0,0,{\k26}skill {\k28}that {\k34}invents {\k16}a
+Dialogue: 0,0:00:24.10,0:00:25.90,Live,,0,0,0,{\k38}physical {\k40}working {\k52}object {\k50}whose
+Dialogue: 0,0:00:25.90,0:00:27.84,Live,,0,0,0,{\k50}operation {\k68}asterisk {\k16}is {\k60}asterisk
+Dialogue: 0,0:00:27.84,0:00:28.82,Live,,0,0,0,{\k18}the {\k40}concept {\k22}you {\k18}want
+Dialogue: 0,0:00:28.82,0:00:29.48,Live,,0,0,0,{\k16}to {\k40}explain
+Dialogue: 0,0:00:30.22,0:00:31.22,Live,,0,0,0,{\k6}It {\k32}also {\k38}runs {\k24}in
+Dialogue: 0,0:00:31.22,0:00:32.80,Live,,0,0,0,{\k28}open {\k34}code {\k30}and {\k56}Codex
+Dialogue: 0,0:00:33.10,0:00:34.58,Live,,0,0,0,{\k30}offering {\k48}flexible {\k60}integration
+Dialogue: 0,0:00:35.24,0:00:35.96,Live,,0,0,0,{\k32}How {\k16}does {\k12}it {\k12}do
+Dialogue: 0,0:00:35.96,0:00:37.86,Live,,0,0,0,{\k30}this {\k46}{\k10}It {\k46}translates {\k58}abstract
+Dialogue: 0,0:00:37.86,0:00:39.36,Live,,0,0,0,{\k46}ideas {\k56}like {\k14}a {\k34}cache
+Dialogue: 0,0:00:39.36,0:00:41.44,Live,,0,0,0,{\k22}key {\k60}into {\k56}tangible {\k60}mechanics
+Dialogue: 0,0:00:41.62,0:00:42.54,Live,,0,0,0,{\k4}a {\k20}pin {\k42}tumbler {\k26}lock
+Dialogue: 0,0:00:42.54,0:00:43.68,Live,,0,0,0,{\k30}that {\k26}only {\k30}turns {\k28}when
+Dialogue: 0,0:00:43.68,0:00:45.20,Live,,0,0,0,{\k32}every {\k26}pin {\k34}matches {\k46}{\k14}Or
+Dialogue: 0,0:00:45.20,0:00:46.64,Live,,0,0,0,{\k16}a {\k30}single {\k46}GPU {\k52}context
+Dialogue: 0,0:00:46.64,0:00:48.28,Live,,0,0,0,{\k44}serving {\k30}many {\k54}canvases {\k36}becomes
+Dialogue: 0,0:00:48.28,0:00:49.44,Live,,0,0,0,{\k24}a {\k28}gantry {\k40}plotter {\k24}visiting
+Dialogue: 0,0:00:49.44,0:00:51.74,Live,,0,0,0,{\k54}16 {\k40}wells {\k60}{\k32}Getting {\k44}started
+Dialogue: 0,0:00:51.74,0:00:53.56,Live,,0,0,0,{\k20}is {\k44}straightforward {\k66}{\k20}With {\k22}node
+Dialogue: 0,0:00:54.06,0:00:55.60,Live,,0,0,0,{\k14}J {\k20}S {\k26}{\k24}installed {\k38}{\k32}open
+Dialogue: 0,0:00:55.60,0:00:57.26,Live,,0,0,0,{\k20}your {\k38}terminal {\k36}{\k38}This {\k34}command
+Dialogue: 0,0:00:57.26,0:00:59.14,Live,,0,0,0,{\k72}installs {\k38}Anatomy {\k46}globally {\k32}for
+Dialogue: 0,0:00:59.14,0:01:01.12,Live,,0,0,0,{\k26}Claude {\k42}Code {\k44}{\k56}npx {\k30}skills
+Dialogue: 0,0:01:01.12,0:01:02.86,Live,,0,0,0,{\k38}add {\k48}Wershrian {\k48}22 {\k40}slash
+Dialogue: 0,0:01:02.86,0:01:04.36,Live,,0,0,0,{\k48}anatomy {\k38}g {\k32}{\k6}a {\k26}Cloud
+Dialogue: 0,0:01:04.36,0:01:05.82,Live,,0,0,0,{\k30}Code {\k24}No {\k46}API {\k46}keys
+Dialogue: 0,0:01:05.82,0:01:07.64,Live,,0,0,0,{\k48}or {\k44}extra {\k56}installs {\k24}needed
+Dialogue: 0,0:01:08.08,0:01:09.36,Live,,0,0,0,{\k28}It's {\k12}that {\k36}simple {\k40}{\k12}Once
+Dialogue: 0,0:01:09.36,0:01:11.06,Live,,0,0,0,{\k64}installed {\k38}{\k16}jump {\k24}into {\k28}Claude
+Dialogue: 0,0:01:11.06,0:01:12.50,Live,,0,0,0,{\k36}Code {\k50}{\k10}You {\k10}can {\k38}immediately
+Dialogue: 0,0:01:12.50,0:01:13.68,Live,,0,0,0,{\k52}ask {\k14}it {\k14}to {\k38}explain
+Dialogue: 0,0:01:13.68,0:01:14.44,Live,,0,0,0,{\k18}a {\k48}concept
+Dialogue: 0,0:01:15.06,0:01:16.74,Live,,0,0,0,{\k20}Try {\k22}this {\k42}command {\k52}{\k32}Slash
+Dialogue: 0,0:01:16.74,0:01:18.12,Live,,0,0,0,{\k26}anatomy {\k66}explain {\k34}how {\k12}a
+Dialogue: 0,0:01:18.12,0:01:19.50,Live,,0,0,0,{\k36}token {\k36}bucket {\k24}rate {\k42}limiter
+Dialogue: 0,0:01:19.50,0:01:21.58,Live,,0,0,0,{\k24}works {\k88}interactive {\k58}{\k24}You'll {\k14}get
+Dialogue: 0,0:01:21.58,0:01:23.76,Live,,0,0,0,{\k8}a {\k54}detailed {\k86}interactive {\k70}illustration
+Dialogue: 0,0:01:23.76,0:01:25.82,Live,,0,0,0,{\k56}ready {\k22}to {\k46}explore {\k82}Anatomy
+Dialogue: 0,0:01:25.82,0:01:27.28,Live,,0,0,0,{\k52}generates {\k32}three {\k28}main {\k34}types
+Dialogue: 0,0:01:27.28,0:01:29.22,Live,,0,0,0,{\k18}of {\k24}figures {\k58}{\k28}core {\k66}SVG
+Dialogue: 0,0:01:29.22,0:01:31.28,Live,,0,0,0,{\k26}for {\k38}solid {\k36}parts {\k48}{\k58}SVG
+Dialogue: 0,0:01:31.28,0:01:32.90,Live,,0,0,0,{\k36}plus {\k62}WebGL {\k30}for {\k34}dynamic
+Dialogue: 0,0:01:32.90,0:01:34.52,Live,,0,0,0,{\k52}effects {\k26}{\k12}like {\k38}fire {\k34}or
+Dialogue: 0,0:01:34.52,0:01:35.80,Live,,0,0,0,{\k38}water {\k50}{\k10}and {\k6}a {\k24}beta
+Dialogue: 0,0:01:35.80,0:01:37.08,Live,,0,0,0,{\k48}3D {\k26}mode {\k24}for {\k30}parts
+Dialogue: 0,0:01:37.08,0:01:38.14,Live,,0,0,0,{\k22}that {\k38}truly {\k36}turn
+Dialogue: 0,0:01:38.84,0:01:40.04,Live,,0,0,0,{\k44}Imagine {\k24}the {\k34}Raptor {\k18}Engine
+Dialogue: 0,0:01:40.04,0:01:41.56,Live,,0,0,0,{\k44}example {\k28}with {\k22}its {\k58}WebGL
+Dialogue: 0,0:01:41.56,0:01:42.92,Live,,0,0,0,{\k48}plume {\k44}or {\k14}a {\k30}turning
+Dialogue: 0,0:01:42.92,0:01:44.18,Live,,0,0,0,{\k30}dial {\k28}with {\k30}90 {\k38}moving
+Dialogue: 0,0:01:44.18,0:01:46.24,Live,,0,0,0,{\k34}parts {\k52}{\k46}These {\k40}figures {\k34}are
+Dialogue: 0,0:01:46.24,0:01:48.02,Live,,0,0,0,{\k44}truly {\k64}interactive {\k48}{\k10}You {\k12}can
+Dialogue: 0,0:01:48.02,0:01:48.64,Live,,0,0,0,{\k20}move {\k16}them {\k12}with {\k14}your
+Dialogue: 0,0:01:48.64,0:01:50.38,Live,,0,0,0,{\k34}pointer {\k30}and {\k36}keyboard {\k62}{\k12}zoom
+Dialogue: 0,0:01:50.38,0:01:51.72,Live,,0,0,0,{\k34}in {\k26}on {\k32}joints {\k34}{\k8}and
+Dialogue: 0,0:01:51.72,0:01:53.66,Live,,0,0,0,{\k20}see {\k30}live {\k60}readouts {\k46}{\k38}Every
+Dialogue: 0,0:01:53.66,0:01:54.58,Live,,0,0,0,{\k28}number {\k28}comes {\k22}from {\k14}the
+Dialogue: 0,0:01:54.58,0:01:55.84,Live,,0,0,0,{\k28}same {\k36}small {\k36}model {\k26}that
+Dialogue: 0,0:01:55.84,0:01:57.60,Live,,0,0,0,{\k34}drives {\k20}the {\k34}parts {\k46}{\k42}ensuring
+Dialogue: 0,0:01:57.60,0:01:59.64,Live,,0,0,0,{\k56}accuracy {\k46}and {\k26}clear {\k66}understanding
+Dialogue: 0,0:02:00.12,0:02:01.68,Live,,0,0,0,{\k38}This {\k24}goes {\k46}beyond {\k48}static
+Dialogue: 0,0:02:01.68,0:02:03.46,Live,,0,0,0,{\k58}diagrams {\k56}{\k32}Instead {\k16}of {\k16}just
+Dialogue: 0,0:02:03.46,0:02:05.28,Live,,0,0,0,{\k36}reading {\k36}about {\k66}dispersion {\k38}{\k6}you
+Dialogue: 0,0:02:05.28,0:02:06.22,Live,,0,0,0,{\k12}can {\k44}interact {\k26}with {\k12}a
+Dialogue: 0,0:02:06.22,0:02:08.04,Live,,0,0,0,{\k22}ripple {\k28}tank {\k66}simulation {\k48}{\k18}This
+Dialogue: 0,0:02:08.04,0:02:10.38,Live,,0,0,0,{\k46}deepens {\k68}understanding {\k48}{\k20}making {\k52}complex
+Dialogue: 0,0:02:10.38,0:02:12.10,Live,,0,0,0,{\k48}subjects {\k32}more {\k44}accessible {\k48}and
+Dialogue: 0,0:02:12.10,0:02:13.70,Live,,0,0,0,{\k48}engaging {\k34}for {\k36}anyone {\k42}learning
+Dialogue: 0,0:02:13.70,0:02:14.54,Live,,0,0,0,{\k32}or {\k42}teaching
+Dialogue: 0,0:02:15.16,0:02:17.26,Live,,0,0,0,{\k24}While {\k60}powerful {\k42}{\k38}remember {\k46}Anatomy
+Dialogue: 0,0:02:17.26,0:02:18.72,Live,,0,0,0,{\k36}is {\k18}under {\k38}active {\k54}development
+Dialogue: 0,0:02:18.72,0:02:20.64,Live,,0,0,0,{\k56}with {\k42}11 {\k54}open {\k40}issues
+Dialogue: 0,0:02:20.64,0:02:22.60,Live,,0,0,0,{\k58}One {\k42}example {\k34}is {\k62}Recursive
+Dialogue: 0,0:02:22.60,0:02:24.96,Live,,0,0,0,{\k60}subcomponent {\k24}zoom {\k54}{\k28}meaning {\k60}extreme
+Dialogue: 0,0:02:25.26,0:02:26.52,Live,,0,0,0,{\k22}multi {\k34}level {\k40}zooming {\k30}into
+Dialogue: 0,0:02:26.52,0:02:28.06,Live,,0,0,0,{\k34}tiny {\k46}parts {\k50}might {\k24}not
+Dialogue: 0,0:02:28.06,0:02:29.36,Live,,0,0,0,{\k30}always {\k20}be {\k38}perfectly {\k42}smooth
+Dialogue: 0,0:02:29.36,0:02:31.08,Live,,0,0,0,{\k50}or {\k36}fully {\k46}implemented {\k30}yet
+Dialogue: 0,0:02:31.62,0:02:32.38,Live,,0,0,0,{\k20}This {\k18}is {\k12}a {\k26}minor
+Dialogue: 0,0:02:32.38,0:02:33.56,Live,,0,0,0,{\k42}filter {\k28}for {\k18}niche {\k30}use
+Dialogue: 0,0:02:33.56,0:02:34.04,Live,,0,0,0,{\k38}cases
+Dialogue: 0,0:02:34.68,0:02:36.60,Live,,0,0,0,{\k56}Anatomy {\k32}makes {\k48}complex {\k56}technical
+Dialogue: 0,0:02:36.60,0:02:38.96,Live,,0,0,0,{\k46}ideas {\k72}tangible {\k62}{\k24}It's {\k32}perfect
+Dialogue: 0,0:02:38.96,0:02:41.24,Live,,0,0,0,{\k28}for {\k52}educators {\k44}{\k38}developers {\k32}{\k34}or
+Dialogue: 0,0:02:41.24,0:02:42.54,Live,,0,0,0,{\k40}anyone {\k26}needing {\k22}to {\k42}visualize
+Dialogue: 0,0:02:42.54,0:02:44.06,Live,,0,0,0,{\k40}how {\k28}things {\k36}work {\k38}{\k10}With
+Dialogue: 0,0:02:44.06,0:02:45.72,Live,,0,0,0,{\k26}its {\k28}MIT {\k54}license {\k58}and
+Dialogue: 0,0:02:45.72,0:02:47.68,Live,,0,0,0,{\k22}last {\k44}update {\k20}on {\k110}2026
+Dialogue: 0,0:02:47.68,0:02:49.82,Live,,0,0,0,{\k74}10 {\k68}12 {\k66}it's {\k6}a
+Dialogue: 0,0:02:49.82,0:02:51.36,Live,,0,0,0,{\k36}rapidly {\k54}evolving {\k32}and {\k32}open
+Dialogue: 0,0:02:51.36,0:02:53.16,Live,,0,0,0,{\k42}resource {\k42}for {\k22}better {\k64}understanding
+Dialogue: 0,0:02:53.46,0:02:54.44,Live,,0,0,0,{\k48}You {\k16}now {\k22}have {\k12}the
+Dialogue: 0,0:02:54.44,0:02:55.64,Live,,0,0,0,{\k20}core {\k36}command {\k28}to {\k36}generate
+Dialogue: 0,0:02:55.64,0:02:57.38,Live,,0,0,0,{\k22}your {\k32}first {\k60}interactive {\k50}diagram
+Dialogue: 0,0:02:57.76,0:02:59.06,Live,,0,0,0,{\k22}The {\k26}exact {\k50}command {\k32}is
+Dialogue: 0,0:02:59.06,0:03:00.20,Live,,0,0,0,{\k12}in {\k10}the {\k38}description {\k44}below
+Dialogue: 0,0:03:00.88,0:03:02.26,Live,,0,0,0,{\k14}What {\k48}complex {\k60}concept {\k16}will
+Dialogue: 0,0:03:02.26,0:03:03.38,Live,,0,0,0,{\k12}you {\k40}explain {\k36}first {\k24}with
+Dialogue: 0,0:03:03.38,0:03:05.36,Live,,0,0,0,{\k36}Anatomy {\k68}{\k36}Subscribe {\k30}to {\k28}Tool
+Dialogue: 0,0:03:05.36,0:03:06.70,Live,,0,0,0,{\k54}Dojo {\k26}for {\k16}more {\k38}free
+Dialogue: 0,0:03:06.70,0:03:08.50,Live,,0,0,0,{\k24}AI {\k48}tools {\k46}{\k44}Let's {\k18}dive
+Dialogue: 0,0:03:08.50,0:03:09.58,Live,,0,0,0,{\k40}deeper {\k24}into {\k16}the {\k28}token
+Dialogue: 0,0:03:09.58,0:03:11.32,Live,,0,0,0,{\k36}bucket {\k30}rate {\k50}limiter {\k48}example
+Dialogue: 0,0:03:11.90,0:03:13.64,Live,,0,0,0,{\k46}Anatomy {\k80}visualizes {\k24}this {\k24}not
+Dialogue: 0,0:03:13.64,0:03:14.80,Live,,0,0,0,{\k32}just {\k24}as {\k8}a {\k42}diagram
+Dialogue: 0,0:03:15.18,0:03:15.88,Live,,0,0,0,{\k10}but {\k16}as {\k10}a {\k34}physical
+Dialogue: 0,0:03:15.88,0:03:18.70,Live,,0,0,0,{\k34}bucket {\k68}{\k60}Tokens {\k26}{\k46}representing {\k38}requests
+Dialogue: 0,0:03:18.96,0:03:19.68,Live,,0,0,0,{\k12}are {\k32}added {\k18}to {\k10}the
+Dialogue: 0,0:03:19.68,0:03:20.52,Live,,0,0,0,{\k24}bucket {\k30}at {\k8}a {\k22}steady
+Dialogue: 0,0:03:20.52,0:03:21.88,Live,,0,0,0,{\k38}rate {\k44}{\k20}If {\k12}the {\k22}bucket
+Dialogue: 0,0:03:21.88,0:03:23.38,Live,,0,0,0,{\k26}is {\k26}full {\k44}{\k10}new {\k44}tokens
+Dialogue: 0,0:03:23.38,0:03:25.04,Live,,0,0,0,{\k30}are {\k50}discarded {\k54}{\k24}When {\k8}a
+Dialogue: 0,0:03:25.04,0:03:26.62,Live,,0,0,0,{\k26}request {\k50}arrives {\k50}{\k8}it {\k24}tries
+Dialogue: 0,0:03:26.62,0:03:27.48,Live,,0,0,0,{\k20}to {\k16}pull {\k14}a {\k36}token
+Dialogue: 0,0:03:27.48,0:03:28.66,Live,,0,0,0,{\k24}from {\k14}the {\k26}bucket {\k40}{\k14}If
+Dialogue: 0,0:03:28.66,0:03:29.84,Live,,0,0,0,{\k8}a {\k34}token {\k24}is {\k42}available
+Dialogue: 0,0:03:30.14,0:03:31.36,Live,,0,0,0,{\k8}the {\k30}request {\k30}is {\k44}processed
+Dialogue: 0,0:03:31.90,0:03:33.12,Live,,0,0,0,{\k26}If {\k22}not {\k32}{\k8}the {\k34}request
+Dialogue: 0,0:03:33.12,0:03:34.56,Live,,0,0,0,{\k34}is {\k24}either {\k54}queued {\k32}or
+Dialogue: 0,0:03:34.56,0:03:36.96,Live,,0,0,0,{\k50}rejected {\k64}{\k34}This {\k40}physical {\k52}analogy
+Dialogue: 0,0:03:36.96,0:03:38.24,Live,,0,0,0,{\k36}makes {\k24}the {\k42}concept {\k26}of
+Dialogue: 0,0:03:38.24,0:03:40.38,Live,,0,0,0,{\k48}controlled {\k50}request {\k46}rates {\k70}incredibly
+Dialogue: 0,0:03:40.38,0:03:42.94,Live,,0,0,0,{\k70}intuitive {\k68}{\k40}Consider {\k20}the {\k58}implications
+Dialogue: 0,0:03:42.94,0:03:44.58,Live,,0,0,0,{\k38}for {\k24}network {\k48}traffic {\k54}management
+Dialogue: 0,0:03:44.58,0:03:46.54,Live,,0,0,0,{\k70}Instead {\k22}of {\k42}complex {\k62}configuration
+Dialogue: 0,0:03:46.54,0:03:48.58,Live,,0,0,0,{\k62}files {\k48}{\k10}an {\k50}administrator {\k34}could
+Dialogue: 0,0:03:48.58,0:03:50.20,Live,,0,0,0,{\k52}visualize {\k32}the {\k20}rate {\k58}limiter's
+Dialogue: 0,0:03:50.20,0:03:51.58,Live,,0,0,0,{\k24}behavior {\k40}in {\k24}real {\k40}time
+Dialogue: 0,0:03:52.04,0:03:53.86,Live,,0,0,0,{\k38}adjusting {\k54}parameters {\k38}{\k24}and {\k28}seeing
+Dialogue: 0,0:03:53.86,0:03:55.28,Live,,0,0,0,{\k20}the {\k40}immediate {\k44}impact {\k38}on
+Dialogue: 0,0:03:55.28,0:03:57.42,Live,,0,0,0,{\k34}token {\k32}flow {\k60}{\k52}This {\k36}visual
+Dialogue: 0,0:03:57.42,0:03:59.68,Live,,0,0,0,{\k38}feedback {\k46}loop {\k64}drastically {\k78}simplifies
+Dialogue: 0,0:03:59.68,0:04:01.18,Live,,0,0,0,{\k52}debugging {\k34}and {\k54}optimization
+Dialogue: 0,0:04:01.82,0:04:02.88,Live,,0,0,0,{\k28}making {\k20}it {\k36}easier {\k22}to
+Dialogue: 0,0:04:02.88,0:04:04.08,Live,,0,0,0,{\k26}prevent {\k36}denial {\k28}of {\k30}service
+Dialogue: 0,0:04:04.08,0:04:05.92,Live,,0,0,0,{\k42}attacks {\k64}or {\k42}ensure {\k36}fair
+Dialogue: 0,0:04:05.92,0:04:07.72,Live,,0,0,0,{\k28}usage {\k62}policies {\k46}{\k8}The {\k36}Raptor
+Dialogue: 0,0:04:07.72,0:04:09.56,Live,,0,0,0,{\k26}Engine {\k50}example {\k90}showcases {\k18}the
+Dialogue: 0,0:04:09.56,0:04:11.62,Live,,0,0,0,{\k36}power {\k32}of {\k50}WebGL {\k52}{\k36}This
+Dialogue: 0,0:04:11.62,0:04:12.72,Live,,0,0,0,{\k38}isn't {\k16}just {\k20}a {\k36}static
+Dialogue: 0,0:04:12.72,0:04:14.38,Live,,0,0,0,{\k54}representation {\k60}of {\k14}an {\k28}engine
+Dialogue: 0,0:04:14.82,0:04:16.20,Live,,0,0,0,{\k20}it's {\k4}a {\k44}dynamic {\k60}simulation
+Dialogue: 0,0:04:16.78,0:04:17.54,Live,,0,0,0,{\k22}You {\k16}can {\k22}see {\k16}the
+Dialogue: 0,0:04:17.54,0:04:19.02,Live,,0,0,0,{\k42}intricate {\k50}interplay {\k22}of {\k24}parts
+Dialogue: 0,0:04:19.42,0:04:21.58,Live,,0,0,0,{\k20}the {\k44}combustion {\k52}process {\k100}visualized
+Dialogue: 0,0:04:21.58,0:04:22.40,Live,,0,0,0,{\k18}as {\k10}a {\k38}plume {\k16}of
+Dialogue: 0,0:04:22.40,0:04:24.10,Live,,0,0,0,{\k62}stylized {\k36}fire {\k40}{\k22}and {\k10}the
+Dialogue: 0,0:04:24.10,0:04:26.44,Live,,0,0,0,{\k40}exhaust {\k64}gases {\k58}realistically {\k62}rendered
+Dialogue: 0,0:04:26.74,0:04:27.76,Live,,0,0,0,{\k20}This {\k24}level {\k18}of {\k40}detail
+Dialogue: 0,0:04:27.76,0:04:29.36,Live,,0,0,0,{\k62}allows {\k32}for {\k12}an {\k54}understanding
+Dialogue: 0,0:04:29.36,0:04:31.00,Live,,0,0,0,{\k34}of {\k30}fluid {\k54}dynamics {\k46}and
+Dialogue: 0,0:04:31.00,0:04:32.62,Live,,0,0,0,{\k28}thermal {\k54}processes {\k32}{\k36}that {\k12}would
+Dialogue: 0,0:04:32.62,0:04:34.24,Live,,0,0,0,{\k12}be {\k58}impossible {\k46}with {\k46}traditional
+Dialogue: 0,0:04:34.24,0:04:35.38,Live,,0,0,0,{\k56}2D {\k48}diagrams
+Dialogue: 0,0:04:36.04,0:04:37.22,Live,,0,0,0,{\k28}The {\k30}turning {\k32}dial {\k28}with
+Dialogue: 0,0:04:37.22,0:04:38.46,Live,,0,0,0,{\k28}90 {\k36}moving {\k36}parts {\k24}is
+Dialogue: 0,0:04:38.46,0:04:40.58,Live,,0,0,0,{\k54}another {\k58}testament {\k30}to {\k70}Anatomy's
+Dialogue: 0,0:04:40.58,0:04:42.76,Live,,0,0,0,{\k34}mechanical {\k72}prowess {\k62}{\k28}Each {\k22}gear
+Dialogue: 0,0:04:42.76,0:04:44.38,Live,,0,0,0,{\k30}lever {\k46}and {\k32}spring {\k54}is
+Dialogue: 0,0:04:44.38,0:04:46.56,Live,,0,0,0,{\k80}meticulously {\k46}modeled {\k36}and {\k46}animated
+Dialogue: 0,0:04:46.90,0:04:48.14,Live,,0,0,0,{\k12}You {\k14}can {\k46}isolate {\k52}individual
+Dialogue: 0,0:04:48.14,0:04:50.24,Live,,0,0,0,{\k64}components {\k52}{\k38}observe {\k22}their {\k34}precise
+Dialogue: 0,0:04:50.24,0:04:52.28,Live,,0,0,0,{\k54}movements {\k44}{\k22}and {\k52}understand {\k32}how
+Dialogue: 0,0:04:52.28,0:04:53.24,Live,,0,0,0,{\k18}they {\k46}contribute {\k22}to {\k10}the
+Dialogue: 0,0:04:53.24,0:04:54.20,Live,,0,0,0,{\k40}overall {\k46}function
+Dialogue: 0,0:04:54.86,0:04:56.28,Live,,0,0,0,{\k28}This {\k22}is {\k54}invaluable {\k38}for
+Dialogue: 0,0:04:56.28,0:04:58.26,Live,,0,0,0,{\k50}mechanical {\k58}engineers {\k38}and {\k52}designers
+Dialogue: 0,0:04:58.26,0:04:59.38,Live,,0,0,0,{\k56}who {\k14}need {\k16}to {\k26}grasp
+Dialogue: 0,0:04:59.38,0:05:01.28,Live,,0,0,0,{\k64}complex {\k30}gear {\k48}trains {\k48}or
+Dialogue: 0,0:05:01.28,0:05:02.88,Live,,0,0,0,{\k46}intricate {\k54}clockwork {\k50}mechanisms

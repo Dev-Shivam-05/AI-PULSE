@@ -1,0 +1,141 @@
+{
+  "title": "Build Interactive AI Diagrams with Anatomy",
+  "thumb_text": "5,965 STARS. FREE.",
+  "description": "Unlock a new way to understand complex technical concepts. This hands-on ToolDojo video shows you how to immediately use wheresryan22/anatomy, a 5,965-star AI skill, to generate interactive isometric illustrations. Learn to turn abstract ideas like a token bucket rate limiter into working, visual models in minutes. We'll cover installation, core commands, and concrete examples, ensuring you can build your first AI-generated diagram before the video ends. Subscribe to ToolDojo for more AI tools!\n\n🔧 Try it yourself:\nnpx skills add wheresryan22/anatomy -g -a claude-code\nhttps://github.com/wheresryan22/anatomy\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-12-build-interactive-ai-diagrams-with-anato.html\n\n#AI #AITools #AgentSkills #ClaudeAI #OpenCode #AIExplainer #IsometricArt #FreeAI\n\nSource: https://github.com/wheresryan22/anatomy\n\nChapters:\n0:00 Intro To Anatomy\n0:52 Easy Install\n1:45 Interactive Diagrams\n2:35 Tangible Ideas\n3:42 Network Traffic Management\n\n▶ Watch next: https://youtube.com/watch?v=xm2GvY4QttA",
+  "tags": [
+    "AI",
+    "AI Tools",
+    "Agent Skills",
+    "Claude AI",
+    "OpenCode",
+    "Codex",
+    "Isometric Art",
+    "Technical Explanations",
+    "wheresryan22/anatomy",
+    "Free AI",
+    "AI for Developers",
+    "Interactive Diagrams",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Imagine generating fully interactive, isometric diagrams of complex systems in minutes. This is anatomy, a free AI skill with 5,965 stars, and by the end of this video, you'll be able to build your first working, explainable AI illustration.",
+      "visual_query": "isometric diagram",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Anatomy, by wheresryan22, isn't just for static images. It's a Claude skill that invents a physical, working object whose operation *is* the concept you want to explain. It also runs in OpenCode and Codex, offering flexible integration.",
+      "visual_query": "person coding AI",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 3,
+      "narration": "How does it do this? It translates abstract ideas, like a cache key, into tangible mechanics – a pin-tumbler lock that only turns when every pin matches. Or a single GPU context serving many canvases becomes a gantry plotter visiting 16 wells.",
+      "visual_query": "gantry plotter",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "Getting started is straightforward. With Node.js installed, open your terminal. This command installs Anatomy globally for Claude Code: `npx skills add wheresryan22/anatomy -g -a claude-code` No API keys or extra installs needed. It's that simple.",
+      "visual_query": "person typing code",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Once installed, jump into Claude Code. You can immediately ask it to explain a concept. Try this command: `/anatomy explain how a token bucket rate limiter works, interactive`. You'll get a detailed, interactive illustration, ready to explore.",
+      "visual_query": "chatbot interface",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Anatomy generates three main types of figures: core SVG for solid parts, SVG + WebGL for dynamic effects like fire or water, and a beta 3D mode for parts that truly turn. Imagine the 'raptor-engine' example with its WebGL plume, or a 'turning-dial' with 90 moving parts.",
+      "visual_query": "3D printer in action",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 7,
+      "narration": "These figures are truly interactive. You can move them with your pointer and keyboard, zoom in on joints, and see live readouts. Every number comes from the same small model that drives the parts, ensuring accuracy and clear understanding.",
+      "visual_query": "person interacting with holographic display",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "This goes beyond static diagrams. Instead of just reading about dispersion, you can interact with a 'ripple-tank' simulation. This deepens understanding, making complex subjects more accessible and engaging for anyone learning or teaching.",
+      "visual_query": "ripple tank physics",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 9,
+      "narration": "While powerful, remember Anatomy is under active development, with 11 open issues. One example is 'Recursive subcomponent zoom,' meaning extreme, multi-level zooming into tiny parts might not always be perfectly smooth or fully implemented yet. This is a minor filter for niche use cases.",
+      "visual_query": "magnifying glass over circuit board",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Anatomy makes complex technical ideas tangible. It's perfect for educators, developers, or anyone needing to visualize how things work. With its MIT license and last update on 2026-10-12, it's a rapidly evolving and open resource for better understanding.",
+      "visual_query": "engineer at computer",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 11,
+      "narration": "You now have the core command to generate your first interactive diagram. The exact command is in the description below. What complex concept will you explain first with Anatomy? Subscribe to ToolDojo for more free AI tools!",
+      "visual_query": "subscribe button animation",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Let's dive deeper into the 'token bucket rate limiter' example. Anatomy visualizes this not just as a diagram, but as a physical bucket. Tokens, representing requests, are added to the bucket at a steady rate. If the bucket is full, new tokens are discarded. When a request arrives, it tries to pull a token from the bucket. If a token is available, the request is processed. If not, the request is either queued or rejected. This physical analogy makes the concept of controlled request rates incredibly intuitive.",
+      "visual_query": "animated token bucket rate limiter",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Consider the implications for network traffic management. Instead of complex configuration files, an administrator could visualize the rate limiter's behavior in real-time, adjusting parameters and seeing the immediate impact on token flow. This visual feedback loop drastically simplifies debugging and optimization, making it easier to prevent denial-of-service attacks or ensure fair usage policies.",
+      "visual_query": "network traffic visualization",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The 'raptor-engine' example showcases the power of WebGL. This isn't just a static representation of an engine; it's a dynamic simulation. You can see the intricate interplay of parts, the combustion process visualized as a plume of stylized fire, and the exhaust gases realistically rendered. This level of detail allows for an understanding of fluid dynamics and thermal processes that would be impossible with traditional 2D diagrams.",
+      "visual_query": "animated 3D engine with fire effects",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 15,
+      "narration": "The 'turning-dial' with 90 moving parts is another testament to Anatomy's mechanical prowess. Each gear, lever, and spring is meticulously modeled and animated. You can isolate individual components, observe their precise movements, and understand how they contribute to the overall function. This is invaluable for mechanical engineers and designers who need to grasp complex gear trains or intricate clockwork mechanisms.",
+      "visual_query": "complex mechanical clockwork animation",
+      "speaker": "a"
+    }
+  ],
+  "titles": [
+    "Build Interactive AI Diagrams with Anatomy",
+    "Anatomy: Get Working AI Diagrams in Minutes",
+    "5,965-Star Anatomy: AI Explains Itself"
+  ],
+  "synthesis_claim": "wheresryan22/anatomy uniquely transforms abstract technical concepts into tangible, interactive mechanical systems, revolutionizing how complex ideas can be understood and communicated visually.",
+  "deliverable": {
+    "kind": "command",
+    "text": "npx skills add wheresryan22/anatomy -g -a claude-code",
+    "url": "https://github.com/wheresryan22/anatomy"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/wheresryan22/anatomy",
+  "format": "tool",
+  "signal_title": "wheresryan22/anatomy: An agent skill for creating detailed, interactive isometric illustrations of real-world ma",
+  "verified_facts": {
+    "stars": 5965,
+    "license": "MIT",
+    "last_update": "2026-10-12",
+    "open_issues": 11
+  },
+  "cheat_sheet": "2026-10-12-build-interactive-ai-diagrams-with-anato.pdf"
+}

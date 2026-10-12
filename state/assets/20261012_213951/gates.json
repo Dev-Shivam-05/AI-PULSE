@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 7,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "wheresryan22/anatomy uniquely transforms abstract technical concepts into tangible, interactive mechanical systems, revolutionizing how complex ideas can be understood and communicated visually."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline describes a video that would need to be produced. The source text describes the Anatomy skill and its capabilities, but does not contain any information about a video, its angle, take, or "
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

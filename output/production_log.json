@@ -4780,5 +4780,57 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-12T21:39:51.735524",
+    "title": "Build Interactive AI Diagrams with Anatomy",
+    "description": "Unlock a new way to understand complex technical concepts. This hands-on ToolDojo video shows you how to immediately use wheresryan22/anatomy, a 5,965-star AI skill, to generate interactive isometric illustrations. Learn to turn abstract ideas like a token bucket rate limiter into working, visual models in minutes. We'll cover installation, core commands, and concrete examples, ensuring you can build your first AI-generated diagram before the video ends. Subscribe to ToolDojo for more AI tools!\n\n🔧 Try it yourself:\nnpx skills add wheresryan22/anatomy -g -a claude-code\nhttps://github.com/wheresryan22/anatomy\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-12-build-interactive-ai-diagrams-with-anato.html\n\n#AI #AITools #AgentSkills #ClaudeAI #OpenCode #AIExplainer #IsometricArt #FreeAI\n\nSource: https://github.com/wheresryan22/anatomy\n\nChapters:\n0:00 Intro To Anatomy\n0:52 Easy Install\n1:45 Interactive Diagrams\n2:35 Tangible Ideas\n3:42 Network Traffic Management\n\n▶ Watch next: https://youtube.com/watch?v=xm2GvY4QttA",
+    "tags": [
+      "AI",
+      "AI Tools",
+      "Agent Skills",
+      "Claude AI",
+      "OpenCode",
+      "Codex",
+      "Isometric Art",
+      "Technical Explanations",
+      "wheresryan22/anatomy",
+      "Free AI",
+      "AI for Developers",
+      "Interactive Diagrams",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Build_Interactive_AI_Diagrams_with_Anatomy_20261012_213113_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261012_213327.mp4",
+      "output/shorts/short_2_sb_20261012_213404.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261012_213326.jpg",
+    "youtube_url": "https://youtube.com/watch?v=wwI1rTpmnrg",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=qgD8KqPaUOU",
+      "https://youtube.com/watch?v=SFsn8J2vnG4"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Diagram Anatomy: Build Interactive Charts #Shorts",
+        "description": "Demonstrates building interactive diagrams using AI with a focus on anatomical visualizations. Shows the process of creating and manipulating these charts within the platform.",
+        "instagram_caption": "🧠 Visualize complex data like never before! See how AI can help you build interactive anatomical diagrams. \nFollow @tooldojo!\n#AIDiagrams #InteractiveCharts #Anatomy #DataVisualization #AItools #Tech #Education #Learning #Science #Illustration #MedicalArt #DigitalArt #AIinEducation #FutureofLearning #ToolDojo #CreativeTech #VisualLearning #AIforGood #Diagramming #Innovation"
+      },
+      {
+        "title": "Interactive Anatomy Diagrams with AI #Shorts",
+        "description": "Explore the creation of interactive anatomical diagrams powered by AI. This clip highlights the functionality for building and engaging with visual representations of anatomy.",
+        "instagram_caption": "✨ Dive into the future of anatomical learning! This short shows how AI makes building interactive diagrams a reality. \nFollow @tooldojo!\n#AnatomyAI #InteractiveLearning #AIinScience #MedicalVisualization #TechTools #EdTech #DataGraphics #AIdevelopment #VisualAnalytics #SmartTools #DigitalAnatomy #AIpowered #LearningTools #ScienceEducation #ToolDojo #DiagramTools #HealthcareTech #AIart #STEM #FutureTech"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]
