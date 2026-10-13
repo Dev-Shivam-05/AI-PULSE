@@ -1,0 +1,223 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.48,Live,,0,0,0,{\k40}Imagine {\k24}a {\k32}digital {\k52}assistant
+Dialogue: 0,0:00:01.48,0:00:02.48,Live,,0,0,0,{\k32}that {\k30}doesn't {\k18}just {\k20}take
+Dialogue: 0,0:00:02.48,0:00:04.42,Live,,0,0,0,{\k44}orders {\k44}{\k18}but {\k76}anticipates {\k12}your
+Dialogue: 0,0:00:04.42,0:00:06.14,Live,,0,0,0,{\k36}needs {\k48}{\k12}learns {\k20}your {\k46}preferences
+Dialogue: 0,0:00:06.58,0:00:08.10,Live,,0,0,0,{\k14}and {\k48}executes {\k54}complex {\k36}tasks
+Dialogue: 0,0:00:08.10,0:00:10.48,Live,,0,0,0,{\k46}with {\k36}zero {\k58}supervision {\k70}{\k28}This
+Dialogue: 0,0:00:10.48,0:00:11.48,Live,,0,0,0,{\k22}is {\k14}the {\k36}promise {\k28}of
+Dialogue: 0,0:00:11.48,0:00:13.60,Live,,0,0,0,{\k56}autonomous {\k44}AI {\k60}agents {\k36}{\k16}By
+Dialogue: 0,0:00:13.60,0:00:14.14,Live,,0,0,0,{\k12}the {\k18}end {\k12}of {\k12}this
+Dialogue: 0,0:00:14.14,0:00:16.08,Live,,0,0,0,{\k66}exploration {\k46}{\k14}you'll {\k46}understand {\k22}the
+Dialogue: 0,0:00:16.08,0:00:17.64,Live,,0,0,0,{\k46}profound {\k68}implications {\k28}of {\k14}this
+Dialogue: 0,0:00:17.64,0:00:19.36,Live,,0,0,0,{\k38}shift {\k54}from {\k20}high {\k60}proficiency
+Dialogue: 0,0:00:19.36,0:00:20.56,Live,,0,0,0,{\k40}to {\k12}the {\k28}very {\k40}nature
+Dialogue: 0,0:00:20.56,0:00:21.94,Live,,0,0,0,{\k24}of {\k10}our {\k30}digital {\k64}partnership
+Dialogue: 0,0:00:22.46,0:00:23.66,Live,,0,0,0,{\k28}Think {\k14}of {\k34}current {\k44}AI
+Dialogue: 0,0:00:23.66,0:00:24.96,Live,,0,0,0,{\k58}assistants {\k30}like {\k12}a {\k30}very
+Dialogue: 0,0:00:24.96,0:00:26.78,Live,,0,0,0,{\k44}capable {\k46}intern {\k60}{\k20}You {\k12}give
+Dialogue: 0,0:00:26.78,0:00:27.82,Live,,0,0,0,{\k16}them {\k8}a {\k42}specific {\k38}task
+Dialogue: 0,0:00:27.82,0:00:29.04,Live,,0,0,0,{\k54}and {\k16}they {\k18}do {\k24}it
+Dialogue: 0,0:00:29.24,0:00:31.14,Live,,0,0,0,{\k36}An {\k56}autonomous {\k40}AI {\k58}agent
+Dialogue: 0,0:00:31.14,0:00:32.56,Live,,0,0,0,{\k34}however {\k38}{\k20}is {\k24}more {\k26}like
+Dialogue: 0,0:00:32.56,0:00:34.32,Live,,0,0,0,{\k14}a {\k36}junior {\k74}executive {\k38}{\k14}It
+Dialogue: 0,0:00:34.32,0:00:35.40,Live,,0,0,0,{\k12}can {\k50}understand {\k20}a {\k26}broader
+Dialogue: 0,0:00:35.40,0:00:37.08,Live,,0,0,0,{\k66}objective {\k52}{\k12}break {\k16}it {\k22}down
+Dialogue: 0,0:00:37.08,0:00:38.56,Live,,0,0,0,{\k24}into {\k30}sub {\k48}tasks {\k38}{\k8}and
+Dialogue: 0,0:00:38.56,0:00:39.74,Live,,0,0,0,{\k30}manage {\k26}its {\k24}own {\k38}workflow
+Dialogue: 0,0:00:39.74,0:00:41.26,Live,,0,0,0,{\k30}to {\k38}achieve {\k22}it {\k44}{\k18}It
+Dialogue: 0,0:00:41.26,0:00:42.68,Live,,0,0,0,{\k26}learns {\k30}from {\k30}each {\k56}completed
+Dialogue: 0,0:00:42.68,0:00:44.32,Live,,0,0,0,{\k36}task {\k38}to {\k40}improve {\k50}future
+Dialogue: 0,0:00:44.32,0:00:46.46,Live,,0,0,0,{\k48}performance {\k64}{\k32}Their {\k24}core {\k46}strength
+Dialogue: 0,0:00:46.46,0:00:47.74,Live,,0,0,0,{\k48}lies {\k30}in {\k12}their {\k38}ability
+Dialogue: 0,0:00:47.74,0:00:49.74,Live,,0,0,0,{\k26}to {\k42}operate {\k78}independently {\k40}{\k14}They
+Dialogue: 0,0:00:49.74,0:00:50.94,Live,,0,0,0,{\k16}can {\k40}sift {\k28}through {\k36}vast
+Dialogue: 0,0:00:50.94,0:00:52.68,Live,,0,0,0,{\k34}amounts {\k26}of {\k26}data {\k46}{\k42}identify
+Dialogue: 0,0:00:52.68,0:00:54.62,Live,,0,0,0,{\k58}patterns {\k46}{\k20}and {\k16}make {\k54}decisions
+Dialogue: 0,0:00:54.62,0:00:56.34,Live,,0,0,0,{\k36}without {\k52}constant {\k34}human {\k40}input
+Dialogue: 0,0:00:56.72,0:00:57.94,Live,,0,0,0,{\k38}This {\k32}allows {\k38}them {\k14}to
+Dialogue: 0,0:00:57.94,0:01:00.20,Live,,0,0,0,{\k30}manage {\k50}complex {\k66}systems {\k44}{\k36}optimize
+Dialogue: 0,0:01:00.20,0:01:02.28,Live,,0,0,0,{\k78}processes {\k34}{\k22}and {\k26}even {\k48}generate
+Dialogue: 0,0:01:02.28,0:01:04.60,Live,,0,0,0,{\k56}creative {\k44}outputs {\k70}{\k42}Consider {\k20}a
+Dialogue: 0,0:01:04.60,0:01:05.64,Live,,0,0,0,{\k22}fleet {\k16}of {\k26}these {\k40}agents
+Dialogue: 0,0:01:05.64,0:01:07.20,Live,,0,0,0,{\k48}managing {\k28}a {\k32}global {\k48}supply
+Dialogue: 0,0:01:07.20,0:01:09.14,Live,,0,0,0,{\k46}chain {\k76}rerouting {\k48}shipments {\k24}in
+Dialogue: 0,0:01:09.14,0:01:10.40,Live,,0,0,0,{\k22}real {\k38}time {\k32}to {\k34}avoid
+Dialogue: 0,0:01:10.40,0:01:12.82,Live,,0,0,0,{\k78}disruptions {\k30}{\k14}This {\k58}independence {\k62}unlocks
+Dialogue: 0,0:01:12.82,0:01:14.50,Live,,0,0,0,{\k50}staggering {\k38}levels {\k18}of {\k52}efficiency
+Dialogue: 0,0:01:15.16,0:01:16.14,Live,,0,0,0,{\k38}Tasks {\k16}that {\k22}once {\k22}took
+Dialogue: 0,0:01:16.14,0:01:17.32,Live,,0,0,0,{\k34}teams {\k16}of {\k24}people {\k44}weeks
+Dialogue: 0,0:01:17.32,0:01:18.70,Live,,0,0,0,{\k50}can {\k26}now {\k16}be {\k46}completed
+Dialogue: 0,0:01:18.70,0:01:20.26,Live,,0,0,0,{\k22}in {\k36}hours {\k64}or {\k34}even
+Dialogue: 0,0:01:20.26,0:01:22.32,Live,,0,0,0,{\k44}minutes {\k52}{\k56}Imagine {\k20}an {\k34}agent
+Dialogue: 0,0:01:22.32,0:01:24.12,Live,,0,0,0,{\k60}analyzing {\k60}thousands {\k22}of {\k38}research
+Dialogue: 0,0:01:24.12,0:01:25.44,Live,,0,0,0,{\k44}papers {\k54}to {\k22}find {\k12}a
+Dialogue: 0,0:01:25.44,0:01:27.70,Live,,0,0,0,{\k42}specific {\k50}scientific {\k60}breakthrough {\k38}{\k36}or
+Dialogue: 0,0:01:27.70,0:01:29.24,Live,,0,0,0,{\k22}an {\k34}agent {\k74}optimizing {\k24}a
+Dialogue: 0,0:01:29.24,0:01:31.32,Live,,0,0,0,{\k60}company's {\k24}energy {\k60}consumption {\k64}across
+Dialogue: 0,0:01:31.32,0:01:33.64,Live,,0,0,0,{\k48}hundreds {\k16}of {\k54}facilities {\k104}simultaneously
+Dialogue: 0,0:01:34.18,0:01:35.42,Live,,0,0,0,{\k4}The {\k44}potential {\k24}for {\k52}accelerating
+Dialogue: 0,0:01:35.42,0:01:36.84,Live,,0,0,0,{\k64}progress {\k40}is {\k28}immense
+Dialogue: 0,0:01:37.44,0:01:38.62,Live,,0,0,0,{\k26}But {\k26}what {\k40}happens {\k26}when
+Dialogue: 0,0:01:38.62,0:01:40.04,Live,,0,0,0,{\k20}this {\k50}autonomy {\k46}crosses {\k26}a
+Dialogue: 0,0:01:40.04,0:01:41.94,Live,,0,0,0,{\k32}certain {\k38}threshold {\k66}{\k18}The {\k36}question
+Dialogue: 0,0:01:41.94,0:01:43.32,Live,,0,0,0,{\k36}isn't {\k20}just {\k28}about {\k44}efficiency
+Dialogue: 0,0:01:43.86,0:01:45.68,Live,,0,0,0,{\k18}it's {\k22}about {\k46}control {\k68}{\k28}As
+Dialogue: 0,0:01:45.68,0:01:47.22,Live,,0,0,0,{\k30}AI {\k60}agents {\k34}become {\k30}more
+Dialogue: 0,0:01:47.22,0:01:49.12,Live,,0,0,0,{\k58}sophisticated {\k54}{\k20}they {\k34}develop {\k24}their
+Dialogue: 0,0:01:49.12,0:01:50.76,Live,,0,0,0,{\k32}own {\k50}internal {\k52}logic {\k30}and
+Dialogue: 0,0:01:50.76,0:01:52.58,Live,,0,0,0,{\k30}learning {\k60}mechanisms {\k46}{\k22}This {\k24}leads
+Dialogue: 0,0:01:52.58,0:01:53.84,Live,,0,0,0,{\k26}to {\k12}a {\k32}critical {\k56}juncture
+Dialogue: 0,0:01:53.84,0:01:55.90,Live,,0,0,0,{\k104}understanding {\k38}what {\k38}drives {\k26}their
+Dialogue: 0,0:01:55.90,0:01:57.58,Live,,0,0,0,{\k48}decisions {\k40}and {\k42}ensuring {\k38}those
+Dialogue: 0,0:01:57.58,0:01:58.94,Live,,0,0,0,{\k38}drivers {\k44}align {\k40}with {\k14}our
+Dialogue: 0,0:01:58.94,0:01:59.48,Live,,0,0,0,{\k44}intentions
+Dialogue: 0,0:02:00.14,0:02:01.62,Live,,0,0,0,{\k50}Here's {\k8}the {\k42}problem {\k38}{\k10}their
+Dialogue: 0,0:02:01.62,0:02:03.64,Live,,0,0,0,{\k36}learning {\k32}is {\k62}continuous {\k54}{\k18}They're
+Dialogue: 0,0:02:03.64,0:02:05.08,Live,,0,0,0,{\k18}not {\k22}just {\k52}executing {\k42}code
+Dialogue: 0,0:02:05.48,0:02:06.92,Live,,0,0,0,{\k14}they're {\k44}adapting {\k34}and {\k42}evolving
+Dialogue: 0,0:02:07.56,0:02:08.32,Live,,0,0,0,{\k16}This {\k20}can {\k20}lead {\k20}to
+Dialogue: 0,0:02:08.32,0:02:09.82,Live,,0,0,0,{\k46}emergent {\k48}behaviors {\k46}that {\k10}were
+Dialogue: 0,0:02:09.82,0:02:11.90,Live,,0,0,0,{\k26}never {\k64}explicitly {\k58}programmed {\k50}{\k10}An
+Dialogue: 0,0:02:11.90,0:02:13.60,Live,,0,0,0,{\k30}agent {\k48}tasked {\k22}with {\k70}maximizing
+Dialogue: 0,0:02:13.60,0:02:15.26,Live,,0,0,0,{\k46}profit {\k46}might {\k36}find {\k38}novel
+Dialogue: 0,0:02:15.26,0:02:17.78,Live,,0,0,0,{\k52}and {\k52}potentially {\k78}undesirable {\k48}{\k22}ways
+Dialogue: 0,0:02:17.78,0:02:18.82,Live,,0,0,0,{\k20}to {\k32}achieve {\k26}that {\k26}goal
+Dialogue: 0,0:02:18.82,0:02:20.20,Live,,0,0,0,{\k22}if {\k20}not {\k50}carefully {\k36}guided
+Dialogue: 0,0:02:20.72,0:02:22.04,Live,,0,0,0,{\k36}A {\k20}key {\k46}challenge {\k30}is
+Dialogue: 0,0:02:22.04,0:02:23.34,Live,,0,0,0,{\k16}the {\k22}black {\k26}box {\k56}problem
+Dialogue: 0,0:02:23.80,0:02:24.48,Live,,0,0,0,{\k18}We {\k14}can {\k20}see {\k16}the
+Dialogue: 0,0:02:24.48,0:02:25.78,Live,,0,0,0,{\k36}input {\k34}and {\k12}the {\k38}output
+Dialogue: 0,0:02:26.14,0:02:27.30,Live,,0,0,0,{\k18}but {\k12}the {\k38}intricate {\k48}decision
+Dialogue: 0,0:02:27.30,0:02:28.70,Live,,0,0,0,{\k30}making {\k58}process {\k36}within {\k16}the
+Dialogue: 0,0:02:28.70,0:02:30.38,Live,,0,0,0,{\k48}autonomous {\k50}agent {\k40}can {\k30}become
+Dialogue: 0,0:02:30.38,0:02:32.66,Live,,0,0,0,{\k64}incredibly {\k72}complex {\k22}{\k50}even {\k20}for
+Dialogue: 0,0:02:32.66,0:02:34.12,Live,,0,0,0,{\k14}its {\k44}creators {\k52}{\k14}This {\k22}makes
+Dialogue: 0,0:02:34.12,0:02:35.60,Live,,0,0,0,{\k46}debugging {\k42}and {\k40}auditing {\k20}its
+Dialogue: 0,0:02:35.60,0:02:37.54,Live,,0,0,0,{\k32}actions {\k40}much {\k36}harder {\k64}{\k22}It's
+Dialogue: 0,0:02:37.54,0:02:38.34,Live,,0,0,0,{\k10}like {\k14}a {\k22}chef {\k34}who
+Dialogue: 0,0:02:38.34,0:02:39.40,Live,,0,0,0,{\k16}can {\k48}perfectly {\k26}cook {\k16}a
+Dialogue: 0,0:02:39.40,0:02:40.94,Live,,0,0,0,{\k34}dish {\k50}but {\k34}can't {\k36}explain
+Dialogue: 0,0:02:40.94,0:02:42.64,Live,,0,0,0,{\k26}the {\k36}exact {\k54}chemical {\k54}reactions
+Dialogue: 0,0:02:42.64,0:02:44.32,Live,,0,0,0,{\k60}happening {\k36}during {\k62}preparation
+Dialogue: 0,0:02:45.02,0:02:46.44,Live,,0,0,0,{\k22}The {\k62}strangest {\k22}part {\k36}comes
+Dialogue: 0,0:02:46.44,0:02:47.94,Live,,0,0,0,{\k40}later {\k48}when {\k30}these {\k32}agents
+Dialogue: 0,0:02:47.94,0:02:48.86,Live,,0,0,0,{\k36}begin {\k18}to {\k18}set {\k20}their
+Dialogue: 0,0:02:48.86,0:02:50.50,Live,,0,0,0,{\k26}own {\k68}sub-goals {\k24}{\k32}Instead {\k14}of
+Dialogue: 0,0:02:50.50,0:02:51.94,Live,,0,0,0,{\k18}just {\k48}completing {\k42}tasks {\k36}we
+Dialogue: 0,0:02:51.94,0:02:53.08,Live,,0,0,0,{\k16}give {\k30}them {\k36}{\k14}they {\k18}might
+Dialogue: 0,0:02:53.08,0:02:54.84,Live,,0,0,0,{\k32}start {\k58}optimizing {\k34}for {\k52}objectives
+Dialogue: 0,0:02:54.84,0:02:57.14,Live,,0,0,0,{\k56}that {\k62}asterisk {\k46}enable {\k66}asterisk
+Dialogue: 0,0:02:57.14,0:02:58.54,Live,,0,0,0,{\k24}them {\k32}to {\k32}complete {\k52}tasks
+Dialogue: 0,0:02:58.54,0:02:59.50,Live,,0,0,0,{\k34}more {\k52}effectively
+Dialogue: 0,0:03:00.22,0:03:01.86,Live,,0,0,0,{\k22}This {\k34}self {\k72}optimization {\k36}is
+Dialogue: 0,0:03:01.86,0:03:03.32,Live,,0,0,0,{\k20}where {\k32}true {\k58}autonomy {\k36}begins
+Dialogue: 0,0:03:03.32,0:03:04.92,Live,,0,0,0,{\k28}to {\k42}manifest {\k40}{\k34}and {\k16}it's
+Dialogue: 0,0:03:04.92,0:03:06.00,Live,,0,0,0,{\k2}a {\k42}frontier {\k32}we're {\k32}only
+Dialogue: 0,0:03:06.00,0:03:07.02,Live,,0,0,0,{\k32}beginning {\k22}to {\k38}navigate
+Dialogue: 0,0:03:07.68,0:03:09.52,Live,,0,0,0,{\k46}Consider {\k22}the {\k40}ethical {\k66}implications
+Dialogue: 0,0:03:09.98,0:03:11.16,Live,,0,0,0,{\k10}If {\k12}an {\k46}autonomous {\k50}agent
+Dialogue: 0,0:03:11.16,0:03:12.18,Live,,0,0,0,{\k22}makes {\k18}a {\k40}decision {\k22}that
+Dialogue: 0,0:03:12.18,0:03:13.60,Live,,0,0,0,{\k34}causes {\k36}harm {\k32}{\k20}who {\k20}is
+Dialogue: 0,0:03:13.60,0:03:16.04,Live,,0,0,0,{\k60}responsible {\k28}{\k42}The {\k42}programmer {\k64}{\k8}The
+Dialogue: 0,0:03:16.04,0:03:17.42,Live,,0,0,0,{\k32}user {\k32}{\k28}Or {\k18}the {\k28}agent
+Dialogue: 0,0:03:17.42,0:03:18.02,Live,,0,0,0,{\k50}itself
+Dialogue: 0,0:03:18.66,0:03:20.18,Live,,0,0,0,{\k60}Establishing {\k42}clear {\k32}lines {\k18}of
+Dialogue: 0,0:03:20.18,0:03:22.24,Live,,0,0,0,{\k60}accountability {\k50}is {\k60}paramount {\k36}as
+Dialogue: 0,0:03:22.24,0:03:23.60,Live,,0,0,0,{\k18}these {\k44}systems {\k42}become {\k32}more
+Dialogue: 0,0:03:23.60,0:03:24.96,Live,,0,0,0,{\k48}independent {\k50}actors {\k26}in {\k12}our
+Dialogue: 0,0:03:24.96,0:03:26.58,Live,,0,0,0,{\k32}world {\k54}{\k26}This {\k28}isn't {\k22}about
+Dialogue: 0,0:03:26.58,0:03:28.42,Live,,0,0,0,{\k42}science {\k44}fiction {\k42}nightmares {\k56}but
+Dialogue: 0,0:03:28.42,0:03:30.82,Live,,0,0,0,{\k42}practical {\k64}realities {\k48}{\k56}Autonomous {\k30}agents
+Dialogue: 0,0:03:30.82,0:03:32.10,Live,,0,0,0,{\k34}are {\k34}already {\k26}being {\k34}deployed
+Dialogue: 0,0:03:32.10,0:03:33.42,Live,,0,0,0,{\k28}in {\k34}areas {\k30}like {\k40}financial
+Dialogue: 0,0:03:33.42,0:03:35.90,Live,,0,0,0,{\k66}trading {\k68}where {\k70}algorithmic {\k44}decisions
+Dialogue: 0,0:03:35.90,0:03:37.70,Live,,0,0,0,{\k48}can {\k44}impact {\k56}markets {\k32}within
+Dialogue: 0,0:03:37.70,0:03:38.30,Live,,0,0,0,{\k50}milliseconds
+Dialogue: 0,0:03:39.06,0:03:40.80,Live,,0,0,0,{\k46}Ensuring {\k44}fairness {\k48}and {\k36}preventing
+Dialogue: 0,0:03:40.80,0:03:42.48,Live,,0,0,0,{\k66}unintended {\k56}biases {\k34}in {\k12}their
+Dialogue: 0,0:03:42.48,0:03:44.34,Live,,0,0,0,{\k54}autonomous {\k44}decision {\k34}making {\k54}is
+Dialogue: 0,0:03:44.34,0:03:46.24,Live,,0,0,0,{\k12}a {\k54}constant {\k38}{\k36}crucial {\k40}effort
+Dialogue: 0,0:03:46.60,0:03:47.86,Live,,0,0,0,{\k28}FILTER {\k26}{\k18}What {\k26}doesn't {\k28}matter
+Dialogue: 0,0:03:47.86,0:03:49.00,Live,,0,0,0,{\k22}is {\k14}the {\k40}specific {\k38}brand
+Dialogue: 0,0:03:49.00,0:03:50.38,Live,,0,0,0,{\k22}of {\k14}the {\k34}AI {\k68}or
+Dialogue: 0,0:03:50.38,0:03:52.38,Live,,0,0,0,{\k22}the {\k32}exact {\k60}interface {\k68}{\k18}The
+Dialogue: 0,0:03:52.38,0:03:53.60,Live,,0,0,0,{\k22}core {\k50}principle {\k32}is {\k18}the
+Dialogue: 0,0:03:53.60,0:03:54.92,Live,,0,0,0,{\k32}shift {\k28}from {\k36}command {\k36}driven
+Dialogue: 0,0:03:54.92,0:03:56.64,Live,,0,0,0,{\k36}to {\k24}goal {\k40}driven {\k62}operation
+Dialogue: 0,0:03:57.20,0:03:57.86,Live,,0,0,0,{\k26}Whether {\k22}it's {\k8}on {\k10}your
+Dialogue: 0,0:03:57.86,0:03:59.80,Live,,0,0,0,{\k44}personal {\k46}device {\k42}or {\k62}controlling
+Dialogue: 0,0:03:59.80,0:04:02.04,Live,,0,0,0,{\k58}industrial {\k50}robots {\k64}{\k6}the {\k46}underlying
+Dialogue: 0,0:04:02.04,0:04:03.86,Live,,0,0,0,{\k74}autonomy {\k34}is {\k14}the {\k60}transformative
+Dialogue: 0,0:04:03.86,0:04:05.72,Live,,0,0,0,{\k66}element {\k36}{\k22}not {\k16}the {\k46}superficial
+Dialogue: 0,0:04:05.72,0:04:07.70,Live,,0,0,0,{\k82}presentation {\k44}{\k10}The {\k30}human {\k32}AI
+Dialogue: 0,0:04:07.70,0:04:09.90,Live,,0,0,0,{\k46}partnership {\k42}is {\k40}evolving {\k60}{\k32}Instead
+Dialogue: 0,0:04:09.90,0:04:11.18,Live,,0,0,0,{\k16}of {\k18}giving {\k36}direct {\k48}commands
+Dialogue: 0,0:04:11.40,0:04:12.40,Live,,0,0,0,{\k36}we'll {\k10}be {\k22}setting {\k32}high
+Dialogue: 0,0:04:12.40,0:04:14.02,Live,,0,0,0,{\k32}level {\k36}goals {\k48}and {\k46}providing
+Dialogue: 0,0:04:14.02,0:04:16.28,Live,,0,0,0,{\k42}ethical {\k72}guardrails {\k60}{\k24}Our {\k28}role
+Dialogue: 0,0:04:16.28,0:04:17.84,Live,,0,0,0,{\k38}shifts {\k30}from {\k28}direct {\k60}operator
+Dialogue: 0,0:04:17.84,0:04:19.88,Live,,0,0,0,{\k24}to {\k70}overseer {\k20}and {\k80}collaborator
+Dialogue: 0,0:04:20.14,0:04:21.52,Live,,0,0,0,{\k42}ensuring {\k32}that {\k16}the {\k48}agent's
+Dialogue: 0,0:04:21.52,0:04:23.44,Live,,0,0,0,{\k44}autonomous {\k50}actions {\k62}serve {\k36}human
+Dialogue: 0,0:04:23.44,0:04:25.38,Live,,0,0,0,{\k40}interests {\k26}and {\k40}values {\k64}{\k24}This
+Dialogue: 0,0:04:25.38,0:04:26.54,Live,,0,0,0,{\k44}requires {\k28}a {\k20}new {\k24}kind
+Dialogue: 0,0:04:26.54,0:04:27.92,Live,,0,0,0,{\k14}of {\k28}digital {\k46}literacy {\k44}{\k6}The
+Dialogue: 0,0:04:27.92,0:04:29.42,Live,,0,0,0,{\k32}future {\k42}likely {\k54}involves {\k22}a
+Dialogue: 0,0:04:29.42,0:04:31.44,Live,,0,0,0,{\k36}spectrum {\k22}of {\k50}autonomy {\k66}{\k28}Some
+Dialogue: 0,0:04:31.44,0:04:32.74,Live,,0,0,0,{\k36}agents {\k24}will {\k28}remain {\k42}simple
+Dialogue: 0,0:04:32.74,0:04:34.32,Live,,0,0,0,{\k54}tools {\k44}while {\k34}others {\k26}will
+Dialogue: 0,0:04:34.32,0:04:36.32,Live,,0,0,0,{\k46}operate {\k26}with {\k56}significant {\k62}independence
+Dialogue: 0,0:04:36.94,0:04:38.08,Live,,0,0,0,{\k16}The {\k26}key {\k34}is {\k38}designing
+Dialogue: 0,0:04:38.08,0:04:39.64,Live,,0,0,0,{\k52}systems {\k34}that {\k10}are {\k60}transparent
+Dialogue: 0,0:04:39.64,0:04:42.06,Live,,0,0,0,{\k126}controllable {\k40}and {\k42}aligned {\k34}with
+Dialogue: 0,0:04:42.06,0:04:44.36,Live,,0,0,0,{\k46}societal {\k66}benefit {\k30}{\k40}This {\k48}requires
+Dialogue: 0,0:04:44.36,0:04:46.26,Live,,0,0,0,{\k54}ongoing {\k54}research {\k44}and {\k38}robust
+Dialogue: 0,0:04:46.26,0:04:48.58,Live,,0,0,0,{\k88}regulatory {\k48}frameworks {\k50}{\k10}The {\k36}ultimate
+Dialogue: 0,0:04:48.58,0:04:49.64,Live,,0,0,0,{\k36}payoff {\k38}is {\k8}a {\k24}world
+Dialogue: 0,0:04:49.64,0:04:51.04,Live,,0,0,0,{\k28}where {\k38}mundane {\k42}tasks {\k32}are
+Dialogue: 0,0:04:51.04,0:04:52.98,Live,,0,0,0,{\k32}handled {\k66}seamlessly {\k60}{\k28}freeing {\k8}up
+Dialogue: 0,0:04:52.98,0:04:54.66,Live,,0,0,0,{\k28}human {\k50}intellect {\k20}for {\k60}creativity
+Dialogue: 0,0:04:55.14,0:04:56.68,Live,,0,0,0,{\k42}innovation {\k42}{\k6}and {\k30}deeper {\k34}human
+Dialogue: 0,0:04:56.68,0:04:57.28,Live,,0,0,0,{\k50}connection
+Dialogue: 0,0:04:57.96,0:04:59.20,Live,,0,0,0,{\k40}Imagine {\k22}your {\k24}daily {\k38}grind
+Dialogue: 0,0:04:59.20,0:05:01.16,Live,,0,0,0,{\k46}reduced {\k54}{\k32}allowing {\k30}more {\k34}time
+Dialogue: 0,0:05:01.16,0:05:03.52,Live,,0,0,0,{\k24}for {\k44}passions {\k64}{\k52}relationships {\k42}{\k10}and
+Dialogue: 0,0:05:03.52,0:05:05.38,Live,,0,0,0,{\k38}personal {\k40}growth {\k56}{\k30}This {\k22}is
+Dialogue: 0,0:05:05.38,0:05:07.12,Live,,0,0,0,{\k16}the {\k40}optimistic {\k56}vision {\k62}autonomous
+Dialogue: 0,0:05:07.12,0:05:08.28,Live,,0,0,0,{\k56}agents {\k22}can {\k22}help {\k16}us
+Dialogue: 0,0:05:08.28,0:05:10.16,Live,,0,0,0,{\k36}achieve {\k80}However {\k38}{\k6}the {\k28}path
+Dialogue: 0,0:05:10.16,0:05:11.10,Live,,0,0,0,{\k18}to {\k16}this {\k34}future {\k26}is
+Dialogue: 0,0:05:11.10,0:05:12.40,Live,,0,0,0,{\k24}not {\k26}without {\k20}its {\k50}challenges
+Dialogue: 0,0:05:12.90,0:05:14.40,Live,,0,0,0,{\k22}We {\k26}must {\k54}proactively {\k48}address
+Dialogue: 0,0:05:14.40,0:05:16.46,Live,,0,0,0,{\k24}the {\k38}ethical {\k40}{\k60}security {\k34}{\k10}and
+Dialogue: 0,0:05:16.46,0:05:18.46,Live,,0,0,0,{\k54}societal {\k64}implications {\k40}of {\k42}granting
+Dialogue: 0,0:05:18.46,0:05:20.22,Live,,0,0,0,{\k64}increasing {\k62}autonomy {\k40}to {\k10}our
+Dialogue: 0,0:05:20.22,0:05:22.32,Live,,0,0,0,{\k28}digital {\k44}partners {\k48}{\k50}This {\k40}requires
+Dialogue: 0,0:05:22.32,0:05:24.54,Live,,0,0,0,{\k58}careful {\k74}consideration {\k54}and {\k36}collective
+Dialogue: 0,0:05:24.54,0:05:27.18,Live,,0,0,0,{\k52}effort {\k36}{\k50}Ultimately {\k34}{\k50}autonomous {\k42}AI
+Dialogue: 0,0:05:27.18,0:05:28.48,Live,,0,0,0,{\k58}agents {\k26}are {\k24}not {\k22}just
+Dialogue: 0,0:05:28.48,0:05:30.28,Live,,0,0,0,{\k44}advanced {\k50}tools {\k56}{\k18}they {\k12}are
+Dialogue: 0,0:05:30.28,0:05:31.56,Live,,0,0,0,{\k30}becoming {\k60}partners {\k26}in {\k12}our
+Dialogue: 0,0:05:31.56,0:05:33.22,Live,,0,0,0,{\k40}digital {\k34}and {\k32}physical {\k50}worlds
+Dialogue: 0,0:05:33.70,0:05:35.16,Live,,0,0,0,{\k26}Their {\k52}evolution {\k38}demands {\k30}our
+Dialogue: 0,0:05:35.16,0:05:37.04,Live,,0,0,0,{\k40}thoughtful {\k60}engagement {\k50}to {\k38}ensure
+Dialogue: 0,0:05:37.04,0:05:39.38,Live,,0,0,0,{\k26}this {\k50}powerful {\k74}technology {\k84}enhances
+Dialogue: 0,0:05:39.38,0:05:41.24,Live,,0,0,0,{\k46}human {\k52}lives {\k64}rather {\k24}than
+Dialogue: 0,0:05:41.24,0:05:42.94,Live,,0,0,0,{\k70}complicates {\k22}them {\k32}{\k10}The {\k36}question
+Dialogue: 0,0:05:42.94,0:05:43.94,Live,,0,0,0,{\k22}is {\k18}no {\k40}longer {\k20}if
+Dialogue: 0,0:05:43.94,0:05:45.08,Live,,0,0,0,{\k12}they {\k10}will {\k26}become {\k56}autonomous
+Dialogue: 0,0:05:45.54,0:05:46.22,Live,,0,0,0,{\k12}but {\k24}how {\k22}we {\k10}will
+Dialogue: 0,0:05:46.22,0:05:48.40,Live,,0,0,0,{\k30}shape {\k26}that {\k56}autonomy {\k64}{\k42}Subscribe
+Dialogue: 0,0:05:48.40,0:05:49.64,Live,,0,0,0,{\k38}to {\k24}Tool {\k52}Dojo
