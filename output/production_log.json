@@ -4882,5 +4882,55 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-14T17:47:00.346095",
+    "title": "HiRO-ACEv2: 3km Weather Sims for 1/300th Cost",
+    "description": "HiRO-ACEv2 is revolutionizing weather simulation. Forget the astronomical costs of traditional high-resolution models. This new AI system, developed by Allen Institute for AI, can generate incredibly detailed 3 km global climate data at a fraction of the price. We'll break down how it works, why it's a game-changer for climate research and forecasting, and what this means for understanding and preparing for extreme weather events. Learn how HiRO-ACEv2 is making sophisticated climate modeling accessible to more researchers than ever before.\n\n#AI #ClimateTech #WeatherSimulation #HiROACEv2 #MachineLearning #DeepLearning #TechNews\n\nSubscribe to ToolDojo\n\nSource: https://huggingface.co/blog/allenai/hiro-acev2\n\nChapters:\n0:00 Expensive Forecasting Explained\n1:19 HiRO-ACEv2 Downscaling\n2:51 Realistic Hurricane Models\n4:05 Disaster Preparedness Implications\n5:42 High-Resolution Data Generation\n\n▶ Watch next: https://youtube.com/watch?v=tqGSrJqOD7M",
+    "tags": [
+      "HiRO-ACEv2",
+      "AI weather simulation",
+      "climate modeling",
+      "extreme weather",
+      "Hugging Face",
+      "Allen Institute for AI",
+      "machine learning",
+      "deep learning",
+      "atmospheric science",
+      "computational cost",
+      "resolution",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/HiRO-ACEv2_3km_Weather_Sims_for_1300th_Cost_20261014_172831_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261014_173354.mp4",
+      "output/shorts/short_2_sb_20261014_173511.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261014_173345.jpg",
+    "youtube_url": "https://youtube.com/watch?v=VYSYF1AoYEM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=mf6UbgTZrXs",
+      "https://youtube.com/watch?v=1wYOuIhZlJ8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "HiRO-ACEv2: 3km weather simulation #Shorts",
+        "description": "Demonstration of the HiRO-ACEv2 model performing 3km resolution weather simulations.",
+        "instagram_caption": "☁️ See HiRO-ACEv2 in action, simulating weather at a 3km resolution. Discover efficient weather forecasting methods. Follow @tooldojo!\n#weather #simulation #AI #meteorology #climate #science #technology #forecasting #HiROACEv2 #research #computational #atmospheric #data #modeling #environment #earthscience #supercomputing #efficiency #innovation #deeplearning"
+      },
+      {
+        "title": "HiRO-ACEv2: 3km sims at 1/300th cost #Shorts",
+        "description": "HiRO-ACEv2 achieves 3km weather simulations with significantly reduced computational cost.",
+        "instagram_caption": "💸 Achieve 3km weather simulations at a fraction of the cost with HiRO-ACEv2. Explore the economics of advanced weather modeling. Follow @tooldojo!\n#weather #simulation #AI #meteorology #climate #science #technology #forecasting #HiROACEv2 #research #computational #atmospheric #data #modeling #environment #earthscience #supercomputing #efficiency #innovation #deeplearning"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

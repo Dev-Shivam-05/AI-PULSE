@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "By decoupling coarse climate pattern generation from fine-scale detail downscaling, HiRO-ACEv2 demonstrates a potent AI strategy for tackling computationally intensive scientific simulations, suggesting this hybrid approach could be a blueprint for accelerating progress in other complex scientific f"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes conversational filler like 'Everyone's talking about...' and 'righ', and phrases that are more interpretive or summarizing than directly present in the source text, such as 'The b"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
