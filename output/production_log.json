@@ -4983,5 +4983,52 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-16T17:13:52.958375",
+    "title": "AI Beyond ChatGPT: Unlock Industry Transformations",
+    "description": "The real power of AI goes far beyond conversational chatbots. This video explores the tangible, real-world applications of AI that are transforming industries today. We move beyond the hype to showcase practical innovations that are already making a massive impact. Discover how AI is reshaping healthcare, manufacturing, transportation, and more. You'll understand the concrete ways AI is solving complex problems and driving efficiency. By the end, you'll see the true, practical potential of artificial intelligence. #AI #ArtificialIntelligence #Tech #Innovation #FutureTech #MachineLearning\n\nSubscribe to ToolDojo\n\nChapters:\n0:00 Beyond Chatbots\n1:17 Smarter Roads Ahead\n2:38 Big Data Solved\n3:35 Energy Optimization\n4:55 Invisible Transformations\n\n▶ Watch next: https://youtube.com/watch?v=oFJ-_DlEzGY",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Tech Explained",
+      "Future Technology",
+      "Industry Transformation",
+      "AI Applications",
+      "Real World AI",
+      "Beyond ChatGPT",
+      "ToolDojo",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/AI_Beyond_ChatGPT_Unlock_Industry_Transformations_20261016_165347_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261016_170046.mp4",
+      "output/shorts/short_2_sb_20261016_170152.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261016_165910.jpg",
+    "youtube_url": "https://youtube.com/watch?v=T0s_0tygZxU",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=2IXy4FDaJNk",
+      "https://youtube.com/watch?v=fmIAz06e06I"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Industry AI: From Data to Automation #Shorts",
+        "description": "This clip demonstrates how AI models are being applied to automate tasks across different industries, moving beyond simple text generation. Examples show AI analyzing data for predictive maintenance and optimizing supply chains.",
+        "instagram_caption": "🚀 See how AI is revolutionizing industries beyond chatbots. From optimizing supply chains to predictive maintenance, the future is automated. Follow @tooldojo!\n#AI #IndustryTransformation #Automation #MachineLearning #DataScience #FutureOfWork #Tech #Innovation #Business #AIinIndustry #SupplyChain #PredictiveMaintenance #AIapplications #Technology #DigitalTransformation #ArtificialIntelligence #AItools #AIbusiness #Industry40 #AIexplained"
+      },
+      {
+        "title": "AI in Manufacturing: Real-Time Optimization #Shorts",
+        "description": "This video segment highlights AI's role in manufacturing, showcasing real-time data analysis for quality control and process optimization. It features a specific AI system used on a factory floor to identify defects.",
+        "instagram_caption": "🏭 AI is transforming manufacturing with real-time optimization and quality control. Discover how AI systems are improving efficiency on the factory floor. Follow @tooldojo!\n#Manufacturing #AIinManufacturing #IndustryAI #SmartFactory #ProcessOptimization #QualityControl #AItechnology #IndustrialAutomation #TechInManufacturing #AIsolutions #FactoryAutomation #AIforBusiness #Efficiency #Productivity #FutureOfManufacturing #AIinnovation #IndustryTech #AImodels #Robotics #AItools"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
