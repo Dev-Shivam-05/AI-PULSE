@@ -1,0 +1,33 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 0,
+    "critical_failures": [],
+    "soft_failures": [],
+    "note": "no grounding available (evergreen) — skipped"
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "note": "no source to compare (evergreen)"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline describes a step-by-step process of how LLMs are trained, including concepts like tokenization, vectorization, neural networks, the Transformer architecture, and the 'attention' mechanism."
+  },
+  "confidence": {
+    "score": 0.886,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.63,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

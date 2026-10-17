@@ -5030,5 +5030,52 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-17T15:58:33.979737",
+    "title": "LLM Explained: Your AI Brain Decoded",
+    "description": "Demystifying Large Language Models: The AI Brain Explained. Ever wondered how AI generates human-like text, answers complex questions, and even writes code? This video breaks down the core mechanics of Large Language Models (LLMs), the engines driving much of today's AI. We'll go from raw text to sophisticated understanding, exploring tokenization, embedding, and the revolutionary 'attention' mechanism that allows LLMs to grasp context. You'll understand how these models learn, process information, and the fundamental principles that make them so powerful. Discover the surprising realities behind the hype and gain a clear picture of the 'brain' powering artificial intelligence. Learn how LLMs work, step-by-step.\n\n#AI #LLM #ArtificialIntelligence #TechExplained #MachineLearning\n\nChapters:\n0:00 AI Capabilities Explained\n1:18 Neural Network Basics\n2:05 Attention Mechanism Demo\n3:08 How LLMs Respond\n3:59 LLM Limitations Unveiled\n\n▶ Watch next: https://youtube.com/watch?v=T0s_0tygZxU",
+    "tags": [
+      "Large Language Models",
+      "LLM Explained",
+      "AI",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "How AI Works",
+      "Tech Explained",
+      "Natural Language Processing",
+      "AI Brain",
+      "Deep Learning",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLM_Explained_Your_AI_Brain_Decoded_20261017_154823_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261017_155200.mp4",
+      "output/shorts/short_2_20261017_155226.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261017_155059.jpg",
+    "youtube_url": "https://youtube.com/watch?v=64FQGQyN7bg",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=NuTfYNoiG-M",
+      "https://youtube.com/watch?v=uZJmKZUoqzo"
+    ],
+    "shorts_meta": [
+      {
+        "title": "LLM Model Explained #Shorts",
+        "description": "Visual breakdown of how Large Language Models (LLMs) process information.  Demonstrates the Transformer architecture's self-attention mechanism.",
+        "instagram_caption": "🧠 See how AI 'thinks'! This short explains the core mechanics behind Large Language Models. Follow @tooldojo! #LLM #AI #ArtificialIntelligence #MachineLearning #DeepLearning #NLP #NaturalLanguageProcessing #Tech #Technology #HowItWorks #AIExplained #DataScience #ComputerScience #AIModel #Transformer #SelfAttention #AIBrain #TechEducation #Innovation #FutureTech"
+      },
+      {
+        "title": "Transformer Architecture Explained #Shorts",
+        "description": "Focus on the Transformer architecture, highlighting its key components like embeddings and attention layers. Shows data flow within the model.",
+        "instagram_caption": "💡 Dive into the AI brain! This clip breaks down the Transformer architecture, the backbone of modern LLMs. Follow @tooldojo! #Transformer #AIArchitecture #LLMExplained #AIComponents #TechInsights #MachineLearningModels #DeepLearningExplained #NLPModel #DataProcessing #AITheory #UnderstandingAI #FutureOfAI #TechBreakdown #AIForBeginners #ComputerScienceEducation #AIResearch #DigitalTransformation #Coding #SoftwareEngineering"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
