@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 8,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "Meta has updated its commercial terms of use, retracting wording that allowed them to use content from business accounts to 'provide, develop, improve, research, train, and maintain the integrity of' their products.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "contradicted"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The strategic shift by Replit towards OpenAI, driven by cost, signals a growing prioritization of economic efficiency over multi-vendor AI strategies in popular developer platforms, potentially accelerating a consolidation around dominant AI providers."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a specific ranking (Number four, Number three) and frames the information as a weekly update ('This week, a major shift occurred'). It also explicitly states the 'goal' for Itaú"
+  },
+  "confidence": {
+    "score": 0.854,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

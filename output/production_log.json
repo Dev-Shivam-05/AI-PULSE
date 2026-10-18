@@ -5077,5 +5077,53 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-18T16:19:18.049305",
+    "title": "Replit Switches OpenAI Default, Citing Costs",
+    "description": "Replit, a popular AI coding platform, has made a significant shift, switching its default AI model provider from Anthropic to OpenAI. This move, announced by CEO Amjad Masad, was driven by several factors, notably cost considerations. The decision impacts how developers on the platform will interact with AI-powered coding assistance, potentially influencing the broader AI developer tool landscape.  We're diving into the top 5 AI stories that mattered this week, from big tech policy changes to groundbreaking advancements in regional AI development.  Get ready for a deep dive into the AI world that's shaping our future. #AI #TechNews #OpenAI #Replit #Anthropic\n\nSource: https://techcrunch.com/2026/10/17/replit-is-no-longer-working-with-anthropic-ceo-says/\n\n🔗 Sources:\n1. Replit makes OpenAI its default over Anthropic, CEO says — https://techcrunch.com/2026/10/17/replit-is-no-longer-working-with-anthropic-ceo-says/\n2. How Itaú is building generative AI for its entire customer base — https://openai.com/index/itau-generative-ai\n3. Scaling Indic Pretraining: 2.8 Trillion Tokens and an Open Data Generation Pipeline — https://huggingface.co/blog/nvidia/scaling-indic-pretraining\n4. Websites are closing their doors to AI agents — https://www.theverge.com/ai-artificial-intelligence/1013195/ai-agents-blocked-web\n5. Meta removes language that raised scraping and AI training concerns — https://techcrunch.com/2026/10/17/meta-removes-language-that-raised-scraping-and-ai-training-concerns/\n\nChapters:\n0:00 Replit AI Shift\n1:15 Itaú AI Build\n2:05 AI Language Expansion\n3:01 AI Agent Resistance\n3:38 New Data Access\n\n▶ Watch next: https://youtube.com/watch?v=64FQGQyN7bg",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Replit",
+      "Anthropic",
+      "Coding",
+      "Developer Tools",
+      "Tech News",
+      "Artificial Intelligence",
+      "Generative AI",
+      "Startup",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Replit_Switches_OpenAI_Default_Citing_Costs_20261018_160549_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261018_160929.mp4",
+      "output/shorts/short_2_sb_20261018_161053.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261018_160921.jpg",
+    "youtube_url": "https://youtube.com/watch?v=vXbqKBqwyUQ",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=dXLjgTijs-c",
+      "https://youtube.com/watch?v=Ku_Lz4kEq0g"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Replit switches OpenAI default to cheaper model #Shorts",
+        "description": "Replit announced it's switching its default AI model from OpenAI's GPT-4 to a more cost-effective alternative due to pricing concerns. This move aims to manage operational expenses while still providing AI capabilities to its users.",
+        "instagram_caption": "💸 Replit is changing its default AI model. The company cited the high cost of OpenAI's GPT-4 as the reason for switching to a more affordable option. Follow @tooldojo!\n#Replit #OpenAI #AI #LLM #TechNews #Coding #Developer #ArtificialIntelligence #CostSaving #Programming"
+      },
+      {
+        "title": "Replit AI model change due to OpenAI cost #Shorts",
+        "description": "Replit is no longer defaulting to OpenAI's GPT-4 for its AI features. The decision stems from the increasing costs associated with using the advanced model, prompting a shift to a less expensive solution.",
+        "instagram_caption": "💡 Replit is opting for a new default AI model. This change is driven by the expense of OpenAI's GPT-4, as Replit seeks to optimize its budget. Follow @tooldojo!\n#ReplitAI #OpenAICost #GPT4 #TechUpdate #AIModels #SoftwareDevelopment #CloudCoding #DevTools #Innovation #Budgeting"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
