@@ -5125,5 +5125,54 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-19T19:03:28.767725",
+    "title": "LLMs Explained: How AI 'Thinks' With Data",
+    "description": "How do large language models actually think? This video demystifies the core of AI's intelligence. We break down the complex world of neural networks and attention mechanisms using simple analogies. You'll understand the 'how' behind AI's impressive text generation and comprehension without getting lost in jargon.  Discover the fundamental principles that allow machines to process and generate human-like language.  We explore the massive datasets and intricate structures that enable these models to learn and respond.  Learn about the surprising concept of 'attention' that allows AI to focus on what matters most in vast amounts of information.  By the end, you'll grasp the real mechanics driving the AI revolution.  Explore the architecture, the data, and the learning process.  This isn't magic; it's advanced engineering. #AI #LLM #ArtificialIntelligence #MachineLearning #TechExplained #FutureTech #DataScience #NeuralNetworks\n\nChapters:\n0:00 AI's Brain Revealed\n1:15 Attention Mechanism Explained\n2:18 Massive Model Size\n3:05 Memorization vs Understanding\n4:16 LLM Power Unlocked\n\n▶ Watch next: https://youtube.com/watch?v=vXbqKBqwyUQ",
+    "tags": [
+      "Large Language Models",
+      "LLM Explained",
+      "How AI Thinks",
+      "Neural Networks",
+      "Attention Mechanism",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "AI Technology",
+      "Generative AI",
+      "Natural Language Processing",
+      "ai",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLMs_Explained_How_AI_Thinks_With_Data_20261019_185030_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261019_185458.mp4",
+      "output/shorts/short_2_20261019_185529.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261019_185350.jpg",
+    "youtube_url": "https://youtube.com/watch?v=_iXpb_QCzSk",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=32YHffprhMc",
+      "https://youtube.com/watch?v=kLvQmF4puv4"
+    ],
+    "shorts_meta": [
+      {
+        "title": "LLM data training process #Shorts",
+        "description": "This clip shows how Large Language Models (LLMs) are trained using vast datasets. It illustrates the process of feeding data into the model to learn patterns and information.",
+        "instagram_caption": "🧠 See how AI learns! This short explains the data training process behind Large Language Models. Follow @tooldojo!\n#AI #LLM #MachineLearning #DataScience #ArtificialIntelligence #Tech #DeepLearning #NLP #NaturalLanguageProcessing #TechExplained #HowAIWorks #AIeducation #DataTraining #LLMexplained #FutureTech #TechTrends #AIdevelopment #LearnAI #SmartTech #AIbasics"
+      },
+      {
+        "title": "LLM data input visualization #Shorts",
+        "description": "This short visually represents the input of data into a Large Language Model. It demonstrates how information is processed and utilized by the AI.",
+        "instagram_caption": "📊 Data in, intelligence out! This clip visualizes the data input process for Large Language Models. Follow @tooldojo!\n#AI #LLM #MachineLearning #DataScience #ArtificialIntelligence #Tech #DeepLearning #NLP #NaturalLanguageProcessing #TechExplained #HowAIWorks #AIeducation #DataInput #LLMexplained #FutureTech #TechTrends #AIdevelopment #LearnAI #SmartTech #AIbasics"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
