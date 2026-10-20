@@ -5174,5 +5174,53 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-20T17:57:41.627260",
+    "title": "FairStress: New AI Test for Bias",
+    "description": "FairStress: AI fairness goes deeper than the final decision. This new benchmark from Hugging Face, as detailed by Allen AI, probes how Large Language Models (LLMs) react to subtle shifts when making decisions that impact people's lives. If you're building with or relying on AI, understanding these nuances is critical. We'll explore how current models perform and what this means for fair AI development. Learn about the limitations of current fairness tests and how FairStress aims to uncover hidden biases. From job applications to medical treatments, the stakes are high, and a deeper understanding of AI decision-making is essential for equitable outcomes. #AI #Fairness #LLM\n\nSource: https://huggingface.co/blog/allenai/fairstress\n\nChapters:\n0:00 Test AI Bias\n0:56 Bias Example\n1:56 Model Bias Tested\n3:26 Real World Impact\n4:27 Future AI Fairness\n\n▶ Watch next: https://youtube.com/watch?v=_iXpb_QCzSk",
+    "tags": [
+      "AI",
+      "Fairness",
+      "LLM",
+      "Hugging Face",
+      "Allen AI",
+      "AI Bias",
+      "Machine Learning",
+      "Tech",
+      "Artificial Intelligence",
+      "NLP",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/FairStress_New_AI_Test_for_Bias_20261020_173000_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261020_173925.mp4",
+      "output/shorts/short_2_sb_20261020_174038.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261020_173742.jpg",
+    "youtube_url": "https://youtube.com/watch?v=NQSMPatxcsM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=_rTwDuJ1cVA",
+      "https://youtube.com/watch?v=HuBLsEd4CKU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "FairStress AI bias test tool #Shorts",
+        "description": "Demonstrates the FairStress AI tool for detecting bias in models. Shows the interface and a sample bias test.",
+        "instagram_caption": "🚨 See how AI bias is being tested. This clip shows the FairStress tool in action, highlighting its capabilities for identifying unfairness in artificial intelligence. \nFollow @tooldojo!\n#AI #Bias #Fairness #ArtificialIntelligence #Tech #Innovation #MachineLearning #DeepLearning #AIethics #Technology #DataScience #AIdevelopment #Testing #Software #Algorithm #FairStress #Research #Computers #Automation #Digital"
+      },
+      {
+        "title": "FairStress: testing AI for bias #Shorts",
+        "description": "A short overview of the FairStress AI testing framework. Highlights how it evaluates models for potential discriminatory outcomes.",
+        "instagram_caption": "🤖 Is your AI fair? This video introduces FairStress, a new AI test designed to pinpoint biases in artificial intelligence models. Learn how it works and why it's important. \nFollow @tooldojo!\n#AIbias #FairAI #AItesting #MachineLearningBias #ResponsibleAI #TechTools #AIdevelopment #DataBias #EthicalAI #AIresearch #SoftwareTesting #Algorithms #Innovation #FutureTech #ArtificialIntelligenceTools #BiasDetection #AIforGood #TechExplained #DigitalEthics #FairStress"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

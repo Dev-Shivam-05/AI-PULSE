@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "women have excelled in such areas",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "This applicant's neighborhood has a higher rate of loan defaults",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "FairStress suggests that true AI fairness is not just about equitable outcomes, but also about the consistency of the model's reasoning process when challenged by demographic-sensitive information."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces the concept of testing AI for hidden biases and presents FairStress as a new benchmark for measuring fairness in Large Language Models. It uses hypothetical scenarios involving "
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
