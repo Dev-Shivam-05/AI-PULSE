@@ -5222,5 +5222,56 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-21T17:49:17.786263",
+    "title": "Beyond CPUs: Specialized AI Hardware Explained",
+    "description": "How does AI hardware work?  Uncover the specialized processors, from GPUs to TPUs, that are the unseen engines driving modern artificial intelligence.  You'll understand why your phone, your self-driving car, and the latest AI breakthroughs rely on these powerful chips.  We'll break down the complex world of parallel processing and matrix multiplication, making it clear why standard computer chips just can't keep up.  Discover the architectural differences that give AI its incredible speed and efficiency.  Learn what makes these chips so crucial for training and running sophisticated AI models.  By the end, you'll see the hardware behind AI with new clarity and appreciate the engineering marvels that make our intelligent future possible. #AIHardware #GPU #TPU #ArtificialIntelligence #TechExplained #MachineLearning #DeepLearning #ComputerScience\n\nChapters:\n0:00 AI Needs Power\n1:18 GPU Core Power\n2:18 TPU ML Optimized\n3:26 New AI Chips\n4:17 Hardware Drives AI\n\n▶ Watch next: https://youtube.com/watch?v=NQSMPatxcsM",
+    "tags": [
+      "AI hardware",
+      "GPU",
+      "TPU",
+      "AI processing",
+      "machine learning hardware",
+      "deep learning chips",
+      "specialized processors",
+      "how AI works",
+      "computer architecture",
+      "AI acceleration",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Beyond_CPUs_Specialized_AI_Hardware_Explained_20261021_172951_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261021_173632.mp4",
+      "output/shorts/short_2_20261021_173718.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261021_173450.jpg",
+    "youtube_url": "https://youtube.com/watch?v=pysptJZr4CY",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=p8xpidDbO_8",
+      "https://youtube.com/watch?v=SsBs7q-iQzA"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Hardware: TPUs vs GPUs #Shorts",
+        "description": "Comparing Google's Tensor Processing Units (TPUs) with Graphics Processing Units (GPUs) for AI workloads. Learn about their architectural differences and typical use cases in machine learning.",
+        "instagram_caption": "🧠 Ever wondered about the specialized chips powering AI? This short breaks down the key differences between TPUs and GPUs, showing you which is best suited for different AI tasks. Understand the hardware behind the intelligence. Follow @tooldojo!\n#AIhardware #TPU #GPU #MachineLearning #DeepLearning #TechExplained #ArtificialIntelligence #ComputerScience #Hardware #Inference #Training #AIchip #GoogleAI #Nvidia #DataScience #TechTrends #Innovation #FutureTech #AIdevelopment #LearnAI"
+      },
+      {
+        "title": "AI Accelerators: ASICs Explained #Shorts",
+        "description": "Understanding Application-Specific Integrated Circuits (ASICs) designed for AI. See how these custom chips offer performance advantages for specific AI tasks over general-purpose processors.",
+        "instagram_caption": "⚡️ Go beyond general processors! This short dives into ASICs, the custom-built chips designed for peak AI performance. Discover how they tackle specific AI challenges with unmatched efficiency. Follow @tooldojo!\n#AIaccelerators #ASIC #CustomChips #AIperformance #SpecializedHardware #TechEducation #ArtificialIntelligence #MachineLearning #DeepLearning #TechBreakdown #HardwareDesign #AIcomputing #FutureofAI #TechExplained #Innovation #ComputerEngineering #AIchipdesign #NextGenAI #SmartTech #AIcommunity"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
