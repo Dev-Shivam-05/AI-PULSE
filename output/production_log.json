@@ -5273,5 +5273,53 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-22T18:35:29.826598",
+    "title": "LLM Mechanics: How AI Learns to Think",
+    "description": "How does artificial intelligence actually think? Dive deep into the inner workings of Large Language Models (LLMs) and uncover the mechanics behind their impressive abilities. We'll demystify complex concepts like transformers and attention mechanisms, explaining how AI processes information and generates human-like text. Discover the crucial role of massive training datasets and how they shape AI's understanding of the world. By the end of this exploration, you'll gain a clear picture of the 'black box' of AI cognition, understanding the fundamental principles that drive these powerful systems. Learn what makes LLMs tick and what their capabilities truly entail. \n\n#AI #LLM #ArtificialIntelligence #MachineLearning #TechExplained #Transformers #DataScience\nSubscribe to ToolDojo\n\nChapters:\n0:00 AI Powers Explained\n1:23 Learning From Data\n2:10 Emergent Abilities\n3:20 Massive Model Scale\n4:10 Attention Mechanism\n\n▶ Watch next: https://youtube.com/watch?v=pysptJZr4CY",
+    "tags": [
+      "LLM",
+      "Artificial Intelligence",
+      "Transformers",
+      "Attention Mechanism",
+      "Machine Learning",
+      "AI Training Data",
+      "How AI Works",
+      "Deep Learning",
+      "Natural Language Processing",
+      "Tech Explained",
+      "ai",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLM_Mechanics_How_AI_Learns_to_Think_20261022_181736_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261022_182337.mp4",
+      "output/shorts/short_2_sb_20261022_182443.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261022_182207.jpg",
+    "youtube_url": "https://youtube.com/watch?v=R52cLvMEH_4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=S3Na_aZNWSE",
+      "https://youtube.com/watch?v=j8TRYbYFOXc"
+    ],
+    "shorts_meta": [
+      {
+        "title": "LLM Training Data: Core of AI Learning #Shorts",
+        "description": "This clip shows how large language models learn from vast amounts of text data to understand language patterns.",
+        "instagram_caption": "🧠 See how AI models like GPT absorb information from billions of words.  It's the foundation of their language understanding. Follow @tooldojo! #AI #LLM #MachineLearning #DataScience #ArtificialIntelligence #DeepLearning #NLP #Tech #Education #FutureOfTech #HowAIWorks #AIExplained #TechTrends #Coding #Programming #BigData #NaturalLanguageProcessing #GenerativeAI #AIModel #ComputerScience"
+      },
+      {
+        "title": "LLM Attention Mechanism Explained #Shorts",
+        "description": "This clip visually demonstrates the 'attention' mechanism in LLMs, showing how they focus on relevant parts of input text.",
+        "instagram_caption": "👀 Discover how AI models focus on what matters in text.  The attention mechanism helps them process complex sentences. Follow @tooldojo! #AI #LLM #AttentionMechanism #MachineLearning #DataScience #ArtificialIntelligence #DeepLearning #NLP #Tech #Education #HowAIWorks #AIExplained #TechTrends #Coding #Programming #NaturalLanguageProcessing #GenerativeAI #AIModel #ComputerScience #TechInsights"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
