@@ -5321,5 +5321,57 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-23T18:31:42.623111",
+    "title": "Critique Your AI Film's Sound with earshot",
+    "description": "Your AI coding agents are about to get a powerful new sense: hearing. This video introduces `earshot`, a free, CPU-only AI tool that lets your agents listen to, review, and even create sounds entirely in code. With 2,408 stars on GitHub and an MIT license, `earshot` transforms how AI interacts with audio, enabling sophisticated critiques of code-generated films and the creation of custom soundscapes. You'll learn how to install it in minutes and immediately use its `describe` and `critique` functions. Discover how to turn recordings into code recipes and leverage a bank of 252 code-synthesized sounds. Perfect for developers building advanced AI agents who need a hands-on, local solution for audio generation and analysis.\n\n🔧 Try it yourself:\n$ earshot describe enter.ogg • 0.56 s short transient (attack 3 ms, decays in 190 ms). Sounds most like: a single mechanical keyboard key press • (z +5.4), a soft key release click (z +3.6) ... [clear\nhttps://github.com/Leonxlnx/earshot\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-23-critique-your-ai-film-s-sound-with-earsh.html\n\n#AI #AudioAI #OpenSource #CodingAgents #MachineLearning #ToolDojo #earshot\nSubscribe to ToolDojo.\n\nSource: https://github.com/Leonxlnx/earshot\n\nChapters:\n0:00 AI Can Now Hear\n1:03 Easy Setup CPU Only\n2:06 Generate Soundscapes With Code\n3:11 Translate Audio To Code\n4:30 Advanced Audio Critique\n\n▶ Watch next: https://youtube.com/watch?v=R52cLvMEH_4",
+    "tags": [
+      "AI audio",
+      "earshot",
+      "AI coding agents",
+      "sound synthesis",
+      "open source AI",
+      "CPU only AI",
+      "AI film critique",
+      "Python AI tools",
+      "machine learning audio",
+      "free AI tools",
+      "github trending",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Critique_Your_AI_Films_Sound_with_earshot_20261023_181816_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261023_182149.mp4",
+      "output/shorts/short_2_20261023_182259.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261023_182148.jpg",
+    "youtube_url": "https://youtube.com/watch?v=0PXRcVZ6ls4",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=ACua1XNLywo",
+      "https://youtube.com/watch?v=pzuM0Foo3E0"
+    ],
+    "shorts_meta": [
+      {
+        "title": "earshot AI Film Sound Critique Tool #Shorts",
+        "description": "Demonstration of the earshot tool for critiquing sound in AI-generated films. Shows how earshot analyzes and provides feedback on audio elements.",
+        "instagram_caption": "👂 See how earshot helps refine the audio in your AI films. Get precise feedback to make your sound truly shine. Follow @tooldojo!\n#AI #FilmMaking #SoundDesign #AIVideo #PostProduction #Audio #Tool #Tech #CreativeTech #FilmMaker #VideoEditing #DigitalArt #YouTubeShorts #Shorts #FilmLover #SoundMixing #AIFilm #Earshot #ToolDojo #FilmLife"
+      },
+      {
+        "title": "AI Film Audio Analysis with earshot #Shorts",
+        "description": "A look at earshot's capabilities in analyzing sound quality for AI-generated films. Highlights specific features for audio assessment.",
+        "instagram_caption": "🔊 Elevate your AI film's sound with earshot's detailed analysis. Understand and improve every audio aspect of your creations. Follow @tooldojo!\n#AI #FilmMaking #SoundDesign #AIVideo #PostProduction #Audio #Tool #Tech #CreativeTech #FilmMaker #VideoEditing #DigitalArt #YouTubeShorts #Shorts #FilmLover #SoundMixing #AIFilm #Earshot #ToolDojo #FilmLife"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

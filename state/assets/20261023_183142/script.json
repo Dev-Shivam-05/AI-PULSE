@@ -1,0 +1,126 @@
+{
+  "title": "Critique Your AI Film's Sound with earshot",
+  "thumb_text": "FREE. 2,408 STARS.",
+  "description": "Your AI coding agents are about to get a powerful new sense: hearing. This video introduces `earshot`, a free, CPU-only AI tool that lets your agents listen to, review, and even create sounds entirely in code. With 2,408 stars on GitHub and an MIT license, `earshot` transforms how AI interacts with audio, enabling sophisticated critiques of code-generated films and the creation of custom soundscapes. You'll learn how to install it in minutes and immediately use its `describe` and `critique` functions. Discover how to turn recordings into code recipes and leverage a bank of 252 code-synthesized sounds. Perfect for developers building advanced AI agents who need a hands-on, local solution for audio generation and analysis.\n\n🔧 Try it yourself:\n$ earshot describe enter.ogg • 0.56 s short transient (attack 3 ms, decays in 190 ms). Sounds most like: a single mechanical keyboard key press • (z +5.4), a soft key release click (z +3.6) ... [clear\nhttps://github.com/Leonxlnx/earshot\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-23-critique-your-ai-film-s-sound-with-earsh.html\n\n#AI #AudioAI #OpenSource #CodingAgents #MachineLearning #ToolDojo #earshot\nSubscribe to ToolDojo.\n\nSource: https://github.com/Leonxlnx/earshot\n\nChapters:\n0:00 AI Can Now Hear\n1:03 Easy Setup CPU Only\n2:06 Generate Soundscapes With Code\n3:11 Translate Audio To Code\n4:30 Advanced Audio Critique\n\n▶ Watch next: https://youtube.com/watch?v=R52cLvMEH_4",
+  "tags": [
+    "AI audio",
+    "earshot",
+    "AI coding agents",
+    "sound synthesis",
+    "open source AI",
+    "CPU only AI",
+    "AI film critique",
+    "Python AI tools",
+    "machine learning audio",
+    "free AI tools",
+    "github trending",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Your coding agents are blind. Now they can hear. This free, CPU-only tool, `earshot`, lets AI listen to, review, and even *make* sound. By the end of this video, you'll install `earshot` and get an AI's first audio critique of your code-generated film, all on your local machine.",
+      "visual_query": "robot ears code"
+    },
+    {
+      "scene_num": 2,
+      "narration": "`earshot` isn't just another library. It’s an AI’s ears for code, built by Leonxlnx. With 2,408 stars on GitHub, this MIT-licensed project gives agents a new sense. It lets them reason about sound – turning audio into evidence, like a sound engineer analyzing a track.",
+      "visual_query": "github stars screen"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Forget agents that only see. `earshot` empowers them to understand sound deeply. They can hear if a hit lands too late, or if a sound effect feels cheap. Even better, your agents can *make their own sounds in code* with `earshot forge` and improve them by listening, or translate existing recordings into code with `earshot fit`.",
+      "visual_query": "sound waves visualization"
+    },
+    {
+      "scene_num": 4,
+      "narration": "Ready to get this running? `earshot` is CPU-only, so no expensive GPUs needed. Just open your terminal. The simplest way to start is with `pip install earshot`. This will get the command-line interface and Python API ready on your system. It's that straightforward to add a new sense to your AI toolkit.",
+      "visual_query": "terminal pip install"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Now for something you can *do* right away. Got an audio file? Run `earshot describe enter.ogg`. It will tell you in words what it sounds like, for example: \"a single mechanical keyboard key press.\" It gives calibrated tags, timing, and brightness measurements. This is how your agent starts to *understand* audio.",
+      "visual_query": "person listening headphones"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Imagine your AI coding agent has generated a film. Does the audio match? `earshot critique film.mp4` measures your film's sound against seven professional launch films. It gives a scorecard and timestamped fixes, like \"nothing reaches body level until 0:01.01.\" This provides the critical audio feedback loop your agents desperately need.",
+      "visual_query": "video editing timeline"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Your AI can even *make* entire soundscapes from scratch, all in code. Think beyond simple sound effects. We're talking fully composed audio, without a single recording. And the strangest part? It can critique its *own* creations. It's a true feedback loop for generative audio.",
+      "visual_query": "abstract sound wave art"
+    },
+    {
+      "scene_num": 8,
+      "narration": "While `earshot` is powerful, remember it's a rapidly evolving project. With 6 open issues, it's mature but still has edges. One of these 6 open issues is \"Easy install,\" meaning some system dependencies might require a bit more manual setup on certain systems. This isn't a blocker, but worth knowing upfront.",
+      "visual_query": "wrench fixing gear"
+    },
+    {
+      "scene_num": 9,
+      "narration": "`earshot forge` is where your agents become sound artists. It lets them generate sounds entirely in code. Version 0.4 added 51 new sounds for launch films, like \"rounded UI pops\" or \"short dark risers.\" Or use `earshot sfx` to render any of the 252 built-in sounds by ID, all without models or network calls.",
+      "visual_query": "music synthesizer machine"
+    },
+    {
+      "scene_num": 10,
+      "narration": "And for translating existing audio, `earshot fit` turns a recording into a Python recipe module. Your agent can then re-render that sound with adjustable knobs and morphs, like a \"thump-whoosh.\" It’s like giving your AI the sheet music to a recording, letting it interpret and adapt it as needed.",
+      "visual_query": "audio waveform code"
+    },
+    {
+      "scene_num": 11,
+      "narration": "In the next ten minutes, install `earshot` and `describe` your first audio file. The exact command is in the description. What kind of sound would you want your AI to critique first? Let us know below. And subscribe to ToolDojo for more hands-on AI tools.",
+      "visual_query": "subscribe button animation"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Let's delve deeper into `earshot describe`. When you run `earshot describe my_dialogue.wav`, it doesn't just give you a generic label. It outputs structured data: a confidence score for each detected sound event, precise start and end timestamps, and even spectral characteristics like 'brightness' and 'energy'. For instance, it might report: \"a clear human voice, spoken word, with high intelligibility, starting at 0.5 seconds and ending at 3.2 seconds, exhibiting a spectral brightness of 7.2 and an average energy of -15 dBFS.\" This granular detail allows AI agents to make nuanced judgments, like differentiating between a whispered secret and a shouted warning.",
+      "visual_query": "detailed audio analysis graph"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Consider the `earshot critique` function. It's not just comparing against a few generic examples. It benchmarks your film's audio against a curated set of seven professional 'launch films' – think high-production value trailers or game cinematics. The output isn't just a pass/fail. It provides actionable feedback, such as: \"The impact sound for the explosion at 1:15 lacks low-frequency weight, resulting in a perceived 'thinness'. Consider layering a sub-bass rumble.\" This level of specific, comparative analysis is crucial for AI agents tasked with post-production quality control, ensuring that generated content meets professional standards.",
+      "visual_query": "side-by-side film audio comparison"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The `earshot forge` command opens up a universe of procedural audio generation. Imagine needing a specific percussive hit for a sci-fi interface. Instead of searching for samples, your agent could generate it with something like `earshot forge --type 'metallic_click' --frequency 440 --decay 0.2`. The tool offers parameters for synthesis type, pitch, decay, and more, allowing for fine-grained control. This means AI can create unique sonic identities for projects, moving beyond stock sound libraries and into bespoke audio creation, all defined by code.",
+      "visual_query": "code generating sound waveforms"
+    },
+    {
+      "scene_num": 15,
+      "narration": "With `earshot fit`, the concept of 'audio recipe' comes to life. If you feed it a recording of a door creaking, `earshot fit door_creak.mp3` might produce a Python script that defines the sound's envelope, its spectral content, and its harmonic structure. You could then take this generated recipe and modify it: perhaps make the creak longer, add a metallic resonance, or even morph it into a different sound. This transforms static audio files into dynamic, editable components for AI-driven sound design and manipulation.",
+      "visual_query": "audio file transforming into editable code blocks"
+    }
+  ],
+  "titles": [
+    "Critique Your AI Film's Sound with earshot",
+    "earshot: Give Your Coding Agents Ears (2,408 Stars)",
+    "Generate AI Sound in Code: earshot (Free, CPU)"
+  ],
+  "synthesis_claim": "The ability for an AI to self-critique its own generated audio, not just pre-existing recordings, fundamentally shifts the paradigm of autonomous creative agents from mere output to iterative artistic development.",
+  "deliverable": {
+    "kind": "command",
+    "text": "$ earshot describe enter.ogg • 0.56 s short transient (attack 3 ms, decays in 190 ms). Sounds most like: a single mechanical keyboard key press • (z +5.4), a soft key release click (z +3.6) ... [clear",
+    "url": "https://github.com/Leonxlnx/earshot"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/Leonxlnx/earshot",
+  "format": "tool",
+  "signal_title": "Leonxlnx/earshot: Ears for coding agents: let AI hear, review and make sound. CPU-only, open source.",
+  "verified_facts": {
+    "stars": 2408,
+    "license": "MIT",
+    "last_update": "2026-10-22",
+    "open_issues": 6
+  },
+  "cheat_sheet": "2026-10-23-critique-your-ai-film-s-sound-with-earsh.pdf"
+}

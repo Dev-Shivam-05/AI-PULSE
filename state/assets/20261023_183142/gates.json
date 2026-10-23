@@ -1,0 +1,63 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "in the next ten minutes",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "starting at 0.5 seconds and ending at 3.2 seconds",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "spectral brightness of 7.2",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "average energy of -15 dBFS",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "explosion at 1:15",
+        "type": "date",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The ability for an AI to self-critique its own generated audio, not just pre-existing recordings, fundamentally shifts the paradigm of autonomous creative agents from mere output to iterative artistic development."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline mentions a \"free, CPU-only tool, `ears | `earshot`\" and then lists specific commands like `earshot descr`, `earshot critique film.mp4`, and `earshot forge`. The source text provides a deta"
+  },
+  "confidence": {
+    "score": 0.74,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.2,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
