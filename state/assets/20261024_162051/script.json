@@ -1,0 +1,127 @@
+{
+  "title": "Solid Glass: 2,195 Stars for AI Design",
+  "thumb_text": "2,195 STARS. AI UI.",
+  "description": "Transform your AI application's interface in under 10 minutes with Solid Glass! This video dives into deeplethe/solid-glass, a free design system built for modern AI applications. Learn how to install this MIT-licensed tool, leverage its unique 'solid glass' aesthetic, and build calm, readable UIs for streaming data and agent tasks. We'll show you the exact commands to get started, review its core features, and discuss what makes it perfect for dynamic AI experiences.\n\n🔧 Try it yourself:\nnpx shadcn@latest init\nhttps://github.com/deeplethe/solid-glass\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-24-build-ai-uis-in-10-min-solid-glass.html\n\n#SolidGlass #AIAppDesign #UIDesign #WebDevelopment #ReactJS #TailwindCSS #shadcnui\n\nSubscribe to ToolDojo.\n\nSource: https://github.com/deeplethe/solid-glass\n\nChapters:\n0:00 Transform UI Quickly\n0:43 Unique Visual Space\n1:20 Import CSS\n2:32 Functionality Over Distraction\n4:01 Visually Rich Charts\n\n▶ Watch next: https://youtube.com/watch?v=0PXRcVZ6ls4",
+  "tags": [
+    "Solid Glass",
+    "AI UI Design",
+    "Design System",
+    "React 19",
+    "Tailwind CSS 4",
+    "shadcn/ui",
+    "AI Applications",
+    "Web Development",
+    "Free AI Tool",
+    "MIT License",
+    "Frontend Development",
+    "Developer Tools",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "You can radically transform your AI application's user interface in under ten minutes with Solid Glass, a design system that already has 2,195 stars.",
+      "visual_query": "AI application interface"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Solid Glass is a free, MIT-licensed design system from DeepLethe, recently updated on October 22nd, 2026. It brings a unique, refined aesthetic to web applications, especially those dealing with AI.",
+      "visual_query": "developer screen code"
+    },
+    {
+      "scene_num": 3,
+      "narration": "It’s built on modern web foundations like React 19, Tailwind CSS 4, and shadcn/ui. This means it integrates seamlessly into existing projects, letting you leverage a familiar component ecosystem.",
+      "visual_query": "react logo tailwind logo"
+    },
+    {
+      "scene_num": 4,
+      "narration": "But Solid Glass isn't just another theme. It carves out a unique visual space between traditional flat design and the often-distracting liquid glass styles. The effect is subtle, yet profoundly impacts how users interact with complex AI data.",
+      "visual_query": "design comparison flat glass"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Getting started is incredibly quick. First, ensure you have a shadcn/ui project initialized. If not, open your terminal and run this command: `npx shadcn@latest init`.",
+      "visual_query": "terminal command line"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Next, add the Solid Glass stylesheet directly from its repository. Just type this command into your terminal: `npx shadcn@latest add deeplethe/solid-glass/solid-glass`.",
+      "visual_query": "terminal running command"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Finally, import it into your primary CSS file after Tailwind and shadcn's styles: `@import \"tailwindcss\"; @import \"tw-animate-css\"; @import \"shadcn/tailwind.css\"; @import \"./solid-glass.css\";`. Remember to remove conflicting `:root` and `.dark` color variables.",
+      "visual_query": "css file code"
+    },
+    {
+      "scene_num": 8,
+      "narration": "With Solid Glass, you can create AI interfaces that feel tangible. Elements gain depth through subtle highlights and shadows, making user interactions feel more precise and responsive. Imagine a live stock ticker; instead of a flat, blinking line, each price update could subtly ripple or glow, drawing the eye without being jarring. This tactile feedback is crucial for high-frequency data.",
+      "visual_query": "touchscreen interface AI with subtle animations"
+    },
+    {
+      "scene_num": 9,
+      "narration": "It's ideal for dashboards where information streams constantly, like agent workspaces. The neutral surfaces reduce visual clutter, allowing users to focus on dynamic data without fighting the background. Consider an AI customer support dashboard. Incoming messages, sentiment analysis scores, and agent availability could all update in real-time. Solid Glass's calm aesthetic ensures these crucial updates are immediately visible and digestible, preventing information overload.",
+      "visual_query": "AI agent workspace screen with real-time data streams"
+    },
+    {
+      "scene_num": 10,
+      "narration": "This isn't just about looking good; it's about functionality. While many styles distract, Solid Glass is designed to keep the interface calm and readable, even when displaying complex, rapidly changing AI outputs. Think about a natural language processing model generating code suggestions. The suggestions need to be clear and distinct from the surrounding code, allowing developers to quickly scan and select the best option. Solid Glass achieves this by providing subtle visual separation and emphasis.",
+      "visual_query": "user focused computer screen with code suggestions"
+    },
+    {
+      "scene_num": 11,
+      "narration": "However, it’s important to understand Solid Glass's current scope. While it excels at web-based AI application UIs, don't expect ready-made templates for non-web platforms, like presentation software, out-of-the-box. Its strength lies in enhancing the interactivity and clarity of dynamic web content, not as a universal theming solution for all application types.",
+      "visual_query": "presentation software screen vs web app dashboard"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The true brilliance lies in its 'solid glass' aesthetic. It’s enough to feel like glass, with subtle outlines, but not so transparent that text becomes unreadable. This unique materiality emphasizes clarity and stability. For instance, a modal dialog box might have a slightly frosted appearance, hinting at the content behind it without obscuring the primary message. This creates a sense of depth and context, making complex workflows feel more intuitive.",
+      "visual_query": "glass texture close up with subtle translucency"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Consider a data visualization tool. Instead of flat bars or lines, imagine charts with subtle, almost imperceptible bevels and highlights that make them appear to rise from the interface. This adds a layer of dimensionality that can help users perceive relationships and outliers in data more effectively. The 'solid glass' effect here isn't about transparency, but about giving elements a physical presence and a refined finish.",
+      "visual_query": "3D data visualization with glass-like elements"
+    },
+    {
+      "scene_num": 14,
+      "narration": "Furthermore, the system's focus on calm and readability is particularly beneficial for AI agents that provide continuous updates or require user input. Imagine an AI assistant that's managing your calendar and sending reminders. The interface needs to be unobtrusive yet informative. Solid Glass allows these notifications to stand out with a gentle visual cue, like a soft glow or a subtle border, without overwhelming the user's primary task.",
+      "visual_query": "AI assistant interface with subtle notification highlights"
+    },
+    {
+      "scene_num": 15,
+      "narration": "Start building calmer, more precise AI interfaces today – the exact installation commands are in the description. What kind of AI application will you design first with Solid Glass? Subscribe to ToolDojo for more deep dives into cutting-edge AI tools!",
+      "visual_query": "Subscribe button AI tools"
+    }
+  ],
+  "titles": [
+    "Build AI UIs in 10 Min: Solid Glass",
+    "Solid Glass: 2,195 Stars for AI Design",
+    "Install Solid Glass: AI UI in Minutes"
+  ],
+  "synthesis_claim": "Solid Glass carves out a vital niche by offering an aesthetic specifically optimized for the dynamic, information-dense nature of modern AI applications, bridging the gap between flat minimalism and overly distracting 'glassmorphism.'",
+  "deliverable": {
+    "kind": "steps",
+    "text": "npx shadcn@latest init",
+    "url": "https://github.com/deeplethe/solid-glass"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/deeplethe/solid-glass",
+  "format": "tool",
+  "signal_title": "deeplethe/solid-glass: A design system for AI applications. Material, physical, tactile, technical.",
+  "verified_facts": {
+    "stars": 2195,
+    "license": "MIT",
+    "last_update": "2026-10-22",
+    "open_issues": 3
+  },
+  "cheat_sheet": "2026-10-24-build-ai-uis-in-10-min-solid-glass.pdf"
+}

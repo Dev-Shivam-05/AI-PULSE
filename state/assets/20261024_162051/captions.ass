@@ -1,0 +1,199 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.30,Live,,0,0,0,{\k10}You {\k14}can {\k34}radically {\k72}transform
+Dialogue: 0,0:00:01.30,0:00:03.06,Live,,0,0,0,{\k28}your {\k34}AI {\k70}application's {\k44}user
+Dialogue: 0,0:00:03.06,0:00:04.44,Live,,0,0,0,{\k46}interface {\k48}in {\k18}under {\k26}ten
+Dialogue: 0,0:00:04.44,0:00:05.68,Live,,0,0,0,{\k20}minutes {\k28}with {\k36}Solid {\k30}Glass
+Dialogue: 0,0:00:06.12,0:00:07.38,Live,,0,0,0,{\k24}a {\k30}design {\k44}system {\k28}that
+Dialogue: 0,0:00:07.38,0:00:09.74,Live,,0,0,0,{\k34}already {\k28}has {\k36}2 {\k138}195
+Dialogue: 0,0:00:09.74,0:00:10.34,Live,,0,0,0,{\k50}stars
+Dialogue: 0,0:00:11.00,0:00:12.20,Live,,0,0,0,{\k46}Solid {\k28}Glass {\k34}is {\k12}a
+Dialogue: 0,0:00:12.20,0:00:14.40,Live,,0,0,0,{\k36}free {\k76}MIT {\k60}license {\k48}design
+Dialogue: 0,0:00:14.40,0:00:16.58,Live,,0,0,0,{\k46}system {\k30}from {\k68}DeepLethe {\k52}{\k22}recently
+Dialogue: 0,0:00:16.58,0:00:18.44,Live,,0,0,0,{\k56}updated {\k26}on {\k36}October {\k58}22nd
+Dialogue: 0,0:00:18.70,0:00:21.04,Live,,0,0,0,{\k132}2026 {\k52}{\k10}It {\k24}brings {\k16}a
+Dialogue: 0,0:00:21.04,0:00:22.82,Live,,0,0,0,{\k36}unique {\k28}{\k46}refined {\k46}aesthetic {\k22}to
+Dialogue: 0,0:00:22.82,0:00:24.94,Live,,0,0,0,{\k20}web {\k60}applications {\k44}{\k58}especially {\k30}those
+Dialogue: 0,0:00:24.94,0:00:26.86,Live,,0,0,0,{\k30}dealing {\k26}with {\k32}AI {\k68}{\k36}It’s
+Dialogue: 0,0:00:26.86,0:00:27.96,Live,,0,0,0,{\k16}built {\k30}on {\k38}modern {\k26}web
+Dialogue: 0,0:00:27.96,0:00:29.88,Live,,0,0,0,{\k56}foundations {\k36}like {\k28}React {\k62}19
+Dialogue: 0,0:00:30.36,0:00:32.62,Live,,0,0,0,{\k36}Tailwind {\k92}CSS4 {\k46}{\k6}and {\k46}Shadkin
+Dialogue: 0,0:00:32.62,0:00:34.44,Live,,0,0,0,{\k48}Slash {\k28}UI {\k58}{\k28}This {\k20}means
+Dialogue: 0,0:00:34.44,0:00:36.02,Live,,0,0,0,{\k16}it {\k56}integrates {\k46}seamlessly {\k40}into
+Dialogue: 0,0:00:36.02,0:00:38.00,Live,,0,0,0,{\k44}existing {\k72}projects {\k36}{\k26}letting {\k20}you
+Dialogue: 0,0:00:38.00,0:00:39.60,Live,,0,0,0,{\k32}leverage {\k26}a {\k36}familiar {\k66}component
+Dialogue: 0,0:00:39.60,0:00:40.36,Live,,0,0,0,{\k66}ecosystem
+Dialogue: 0,0:00:40.98,0:00:42.48,Live,,0,0,0,{\k26}But {\k44}Solid {\k32}Glass {\k48}isn't
+Dialogue: 0,0:00:42.48,0:00:43.82,Live,,0,0,0,{\k18}just {\k30}another {\k36}theme {\k40}{\k10}It
+Dialogue: 0,0:00:43.82,0:00:44.74,Live,,0,0,0,{\k38}carves {\k18}out {\k6}a {\k30}unique
+Dialogue: 0,0:00:44.74,0:00:46.42,Live,,0,0,0,{\k46}visual {\k34}space {\k36}between {\k52}traditional
+Dialogue: 0,0:00:46.42,0:00:47.80,Live,,0,0,0,{\k26}flat {\k42}design {\k60}and {\k10}the
+Dialogue: 0,0:00:47.80,0:00:49.32,Live,,0,0,0,{\k32}often {\k50}distracting {\k36}liquid {\k34}glass
+Dialogue: 0,0:00:49.32,0:00:51.12,Live,,0,0,0,{\k42}styles {\k50}{\k30}The {\k28}effect {\k30}is
+Dialogue: 0,0:00:51.12,0:00:53.12,Live,,0,0,0,{\k38}subtle {\k36}{\k18}yet {\k56}profoundly {\k52}impacts
+Dialogue: 0,0:00:53.12,0:00:54.68,Live,,0,0,0,{\k42}how {\k34}users {\k54}interact {\k26}with
+Dialogue: 0,0:00:54.68,0:00:57.10,Live,,0,0,0,{\k62}complex {\k26}AI {\k56}data {\k64}{\k34}Getting
+Dialogue: 0,0:00:57.10,0:00:59.00,Live,,0,0,0,{\k40}started {\k30}is {\k60}incredibly {\k50}quick
+Dialogue: 0,0:00:59.42,0:01:00.82,Live,,0,0,0,{\k26}First {\k46}{\k30}ensure {\k22}you {\k16}have
+Dialogue: 0,0:01:00.82,0:01:02.18,Live,,0,0,0,{\k12}a {\k44}Shadkin {\k54}Slash {\k26}UI
+Dialogue: 0,0:01:02.18,0:01:04.38,Live,,0,0,0,{\k54}project {\k92}initialized {\k28}{\k14}If {\k22}not
+Dialogue: 0,0:01:04.56,0:01:05.66,Live,,0,0,0,{\k24}open {\k20}your {\k32}terminal {\k34}and
+Dialogue: 0,0:01:05.66,0:01:07.58,Live,,0,0,0,{\k16}run {\k22}this {\k40}command {\k56}{\k58}npx
+Dialogue: 0,0:01:07.58,0:01:08.86,Live,,0,0,0,{\k44}Shadkin {\k28}at {\k28}latest {\k28}in
+Dialogue: 0,0:01:08.86,0:01:10.64,Live,,0,0,0,{\k16}it {\k48}{\k48}Next {\k40}{\k10}add {\k16}the
+Dialogue: 0,0:01:10.64,0:01:11.94,Live,,0,0,0,{\k30}Solid {\k30}Glass {\k46}stylish {\k24}sheet
+Dialogue: 0,0:01:11.94,0:01:13.48,Live,,0,0,0,{\k32}directly {\k36}from {\k14}its {\k62}repository
+Dialogue: 0,0:01:14.12,0:01:15.26,Live,,0,0,0,{\k30}Just {\k26}type {\k26}this {\k32}command
+Dialogue: 0,0:01:15.26,0:01:17.12,Live,,0,0,0,{\k26}into {\k12}your {\k38}terminal {\k56}{\k54}npx
+Dialogue: 0,0:01:17.12,0:01:18.48,Live,,0,0,0,{\k46}Shadkin {\k18}at {\k34}latest {\k38}add
+Dialogue: 0,0:01:18.48,0:01:20.20,Live,,0,0,0,{\k52}DeepLev {\k36}slash {\k56}solid {\k28}glass
+Dialogue: 0,0:01:20.20,0:01:22.40,Live,,0,0,0,{\k48}slash {\k48}solid {\k24}glass {\k52}{\k38}Finally
+Dialogue: 0,0:01:22.72,0:01:23.18,Live,,0,0,0,{\k2}import {\k16}it {\k20}into {\k8}your
+Dialogue: 0,0:01:23.18,0:01:24.82,Live,,0,0,0,{\k36}primary {\k42}CSS {\k46}file {\k40}after
+Dialogue: 0,0:01:24.82,0:01:26.44,Live,,0,0,0,{\k46}Tailwind {\k20}and {\k38}shadcn's {\k48}styles
+Dialogue: 0,0:01:26.98,0:01:28.78,Live,,0,0,0,{\k12}Add {\k30}import {\k88}Tailwinds {\k28}{\k22}add
+Dialogue: 0,0:01:28.78,0:01:31.56,Live,,0,0,0,{\k34}import {\k122}TWNMATES {\k52}{\k36}add {\k34}import
+Dialogue: 0,0:01:31.56,0:01:33.80,Live,,0,0,0,{\k62}Shadkin {\k34}Slash {\k56}Tailwind {\k40}{\k22}CSS
+Dialogue: 0,0:01:34.32,0:01:35.94,Live,,0,0,0,{\k10}add {\k32}import {\k76}slash {\k44}solid
+Dialogue: 0,0:01:35.94,0:01:36.84,Live,,0,0,0,{\k28}glass {\k52}CSS
+Dialogue: 0,0:01:37.60,0:01:38.90,Live,,0,0,0,{\k22}Remember {\k22}to {\k22}remove {\k64}conflicting
+Dialogue: 0,0:01:38.90,0:01:40.42,Live,,0,0,0,{\k56}root {\k34}and {\k26}dark {\k36}color
+Dialogue: 0,0:01:40.42,0:01:42.58,Live,,0,0,0,{\k44}variables {\k64}{\k28}With {\k36}Solid {\k34}Glass
+Dialogue: 0,0:01:42.84,0:01:43.72,Live,,0,0,0,{\k6}you {\k14}can {\k38}create {\k30}AI
+Dialogue: 0,0:01:43.72,0:01:45.58,Live,,0,0,0,{\k74}interfaces {\k30}that {\k24}feel {\k48}tangible
+Dialogue: 0,0:01:45.96,0:01:47.20,Live,,0,0,0,{\k34}Elements {\k26}gain {\k32}depth {\k32}through
+Dialogue: 0,0:01:47.20,0:01:48.56,Live,,0,0,0,{\k30}subtle {\k40}highlights {\k30}and {\k36}shadows
+Dialogue: 0,0:01:48.56,0:01:50.50,Live,,0,0,0,{\k70}making {\k40}user {\k50}interactions {\k34}feel
+Dialogue: 0,0:01:50.50,0:01:52.22,Live,,0,0,0,{\k26}more {\k40}precise {\k40}and {\k56}responsive
+Dialogue: 0,0:01:52.86,0:01:54.06,Live,,0,0,0,{\k42}Imagine {\k22}a {\k24}live {\k32}stock
+Dialogue: 0,0:01:54.06,0:01:55.34,Live,,0,0,0,{\k42}ticker {\k38}{\k26}instead {\k14}of {\k8}a
+Dialogue: 0,0:01:55.34,0:01:57.10,Live,,0,0,0,{\k28}flat {\k42}blinking {\k34}line {\k50}{\k22}each
+Dialogue: 0,0:01:57.10,0:01:58.46,Live,,0,0,0,{\k26}price {\k44}update {\k22}could {\k44}subtly
+Dialogue: 0,0:01:58.46,0:02:00.24,Live,,0,0,0,{\k34}ripple {\k36}or {\k30}glow {\k52}{\k26}drawing
+Dialogue: 0,0:02:00.24,0:02:01.22,Live,,0,0,0,{\k20}the {\k22}eye {\k28}without {\k28}being
+Dialogue: 0,0:02:01.22,0:02:01.68,Live,,0,0,0,{\k36}jarring
+Dialogue: 0,0:02:02.28,0:02:03.70,Live,,0,0,0,{\k26}This {\k34}tactile {\k42}feedback {\k40}is
+Dialogue: 0,0:02:03.70,0:02:04.92,Live,,0,0,0,{\k34}crucial {\k28}for {\k18}high {\k42}frequency
+Dialogue: 0,0:02:04.92,0:02:06.56,Live,,0,0,0,{\k40}data {\k42}{\k16}It's {\k36}ideal {\k30}for
+Dialogue: 0,0:02:06.56,0:02:08.30,Live,,0,0,0,{\k52}dashboards {\k22}where {\k48}information {\k52}streams
+Dialogue: 0,0:02:08.30,0:02:10.80,Live,,0,0,0,{\k66}constantly {\k40}{\k20}like {\k46}agent {\k68}workspaces
+Dialogue: 0,0:02:11.36,0:02:12.78,Live,,0,0,0,{\k18}The {\k26}neutral {\k50}surfaces {\k48}reduce
+Dialogue: 0,0:02:12.78,0:02:14.78,Live,,0,0,0,{\k54}visual {\k34}clutter {\k46}{\k28}allowing {\k38}users
+Dialogue: 0,0:02:14.78,0:02:16.00,Live,,0,0,0,{\k24}to {\k30}focus {\k30}on {\k38}dynamic
+Dialogue: 0,0:02:16.00,0:02:17.50,Live,,0,0,0,{\k44}data {\k42}without {\k48}fighting {\k16}the
+Dialogue: 0,0:02:17.50,0:02:18.12,Live,,0,0,0,{\k52}background
+Dialogue: 0,0:02:18.74,0:02:20.24,Live,,0,0,0,{\k34}Consider {\k28}an {\k34}AI {\k54}customer
+Dialogue: 0,0:02:20.24,0:02:22.90,Live,,0,0,0,{\k48}support {\k50}dashboard {\k70}{\k30}Incoming {\k58}messages
+Dialogue: 0,0:02:23.36,0:02:25.26,Live,,0,0,0,{\k34}sentiment {\k48}analysis {\k46}scores {\k32}{\k30}and
+Dialogue: 0,0:02:25.26,0:02:26.82,Live,,0,0,0,{\k32}agent {\k46}availability {\k54}could {\k24}all
+Dialogue: 0,0:02:26.82,0:02:28.18,Live,,0,0,0,{\k38}update {\k30}in {\k20}real {\k38}time
+Dialogue: 0,0:02:28.54,0:02:30.32,Live,,0,0,0,{\k28}Solid {\k46}Glass's {\k32}{\k18}calm {\k44}aesthetic
+Dialogue: 0,0:02:30.42,0:02:31.92,Live,,0,0,0,{\k38}ensures {\k34}these {\k36}crucial {\k42}updates
+Dialogue: 0,0:02:31.92,0:02:33.64,Live,,0,0,0,{\k30}are {\k50}immediately {\k60}visible {\k32}and
+Dialogue: 0,0:02:33.64,0:02:36.40,Live,,0,0,0,{\k80}digestible {\k42}{\k32}preventing {\k72}information {\k40}overload
+Dialogue: 0,0:02:37.08,0:02:38.22,Live,,0,0,0,{\k34}This {\k34}isn't {\k16}just {\k30}about
+Dialogue: 0,0:02:38.22,0:02:39.64,Live,,0,0,0,{\k30}looking {\k32}good {\k42}{\k18}it's {\k20}about
+Dialogue: 0,0:02:39.64,0:02:41.50,Live,,0,0,0,{\k72}functionality {\k40}{\k12}While {\k22}many {\k40}styles
+Dialogue: 0,0:02:41.50,0:02:43.52,Live,,0,0,0,{\k44}distract {\k58}{\k34}Solid {\k32}Glass {\k34}is
+Dialogue: 0,0:02:43.52,0:02:44.50,Live,,0,0,0,{\k40}designed {\k28}to {\k14}keep {\k16}the
+Dialogue: 0,0:02:44.50,0:02:46.18,Live,,0,0,0,{\k44}interface {\k40}calm {\k40}and {\k34}readable
+Dialogue: 0,0:02:46.42,0:02:48.20,Live,,0,0,0,{\k48}even {\k16}when {\k38}displaying {\k66}complex
+Dialogue: 0,0:02:48.62,0:02:50.72,Live,,0,0,0,{\k40}rapidly {\k60}changing {\k34}AI {\k66}outputs
+Dialogue: 0,0:02:51.40,0:02:52.26,Live,,0,0,0,{\k22}Think {\k18}about {\k12}a {\k34}natural
+Dialogue: 0,0:02:52.26,0:02:54.32,Live,,0,0,0,{\k36}language {\k56}processing {\k46}model {\k68}generating
+Dialogue: 0,0:02:54.32,0:02:56.54,Live,,0,0,0,{\k48}code {\k62}suggestions {\k50}{\k14}The {\k48}suggestions
+Dialogue: 0,0:02:56.54,0:02:57.58,Live,,0,0,0,{\k40}need {\k16}to {\k10}be {\k38}clear
+Dialogue: 0,0:02:57.58,0:02:58.70,Live,,0,0,0,{\k28}and {\k38}distinct {\k32}from {\k14}the
+Dialogue: 0,0:02:58.70,0:03:00.96,Live,,0,0,0,{\k42}surrounding {\k54}code {\k42}{\k32}allowing {\k56}developers
+Dialogue: 0,0:03:00.96,0:03:02.38,Live,,0,0,0,{\k22}to {\k34}quickly {\k42}scan {\k44}and
+Dialogue: 0,0:03:02.38,0:03:03.72,Live,,0,0,0,{\k30}select {\k28}the {\k22}best {\k44}option
+Dialogue: 0,0:03:04.40,0:03:05.98,Live,,0,0,0,{\k30}Solid {\k28}Glass {\k70}achieves {\k30}this
+Dialogue: 0,0:03:05.98,0:03:07.66,Live,,0,0,0,{\k36}by {\k48}providing {\k38}subtle {\k46}visual
+Dialogue: 0,0:03:07.66,0:03:09.12,Live,,0,0,0,{\k62}separation {\k36}and {\k38}emphasis
+Dialogue: 0,0:03:09.86,0:03:11.56,Live,,0,0,0,{\k38}However {\k52}{\k18}it’s {\k42}important {\k20}to
+Dialogue: 0,0:03:11.56,0:03:13.54,Live,,0,0,0,{\k54}understand {\k54}Solid {\k42}Glass's {\k48}current
+Dialogue: 0,0:03:13.54,0:03:15.04,Live,,0,0,0,{\k46}scope {\k32}{\k16}While {\k12}it {\k44}excels
+Dialogue: 0,0:03:15.04,0:03:16.16,Live,,0,0,0,{\k22}at {\k22}web {\k40}based {\k28}AI
+Dialogue: 0,0:03:16.16,0:03:18.40,Live,,0,0,0,{\k70}application {\k46}UIs {\k56}{\k18}don't {\k34}expect
+Dialogue: 0,0:03:18.40,0:03:19.70,Live,,0,0,0,{\k36}ready {\k30}made {\k34}templates {\k30}for
+Dialogue: 0,0:03:19.70,0:03:21.42,Live,,0,0,0,{\k28}non {\k32}web {\k64}platforms {\k48}like
+Dialogue: 0,0:03:21.42,0:03:23.42,Live,,0,0,0,{\k60}presentation {\k68}software {\k58}out {\k14}of
+Dialogue: 0,0:03:23.42,0:03:25.08,Live,,0,0,0,{\k10}the {\k24}box {\k62}{\k38}Its {\k32}strength
+Dialogue: 0,0:03:25.08,0:03:26.66,Live,,0,0,0,{\k60}lies {\k30}in {\k46}enhancing {\k22}the
+Dialogue: 0,0:03:26.66,0:03:28.28,Live,,0,0,0,{\k76}interactivity {\k22}and {\k40}clarity {\k24}of
+Dialogue: 0,0:03:28.28,0:03:30.22,Live,,0,0,0,{\k34}dynamic {\k34}web {\k60}content {\k36}{\k30}not
+Dialogue: 0,0:03:30.22,0:03:31.46,Live,,0,0,0,{\k18}as {\k10}a {\k52}universal {\k44}theming
+Dialogue: 0,0:03:31.46,0:03:33.12,Live,,0,0,0,{\k44}solution {\k32}for {\k28}all {\k62}application
+Dialogue: 0,0:03:33.12,0:03:34.74,Live,,0,0,0,{\k42}types {\k40}{\k10}The {\k22}true {\k48}brilliance
+Dialogue: 0,0:03:34.74,0:03:35.98,Live,,0,0,0,{\k36}lies {\k34}in {\k14}its {\k40}solid
+Dialogue: 0,0:03:35.98,0:03:38.00,Live,,0,0,0,{\k36}glass {\k60}aesthetic {\k52}{\k36}It’s {\k18}enough
+Dialogue: 0,0:03:38.00,0:03:38.98,Live,,0,0,0,{\k20}to {\k18}feel {\k24}like {\k36}glass
+Dialogue: 0,0:03:38.98,0:03:41.10,Live,,0,0,0,{\k62}with {\k30}subtle {\k56}outlines {\k46}{\k18}but
+Dialogue: 0,0:03:41.10,0:03:42.52,Live,,0,0,0,{\k22}not {\k22}so {\k66}transparent {\k32}that
+Dialogue: 0,0:03:42.52,0:03:44.90,Live,,0,0,0,{\k36}text {\k38}becomes {\k82}unreadable {\k46}{\k36}This
+Dialogue: 0,0:03:44.90,0:03:47.32,Live,,0,0,0,{\k30}unique {\k94}materiality {\k70}emphasizes {\k48}clarity
+Dialogue: 0,0:03:47.32,0:03:49.24,Live,,0,0,0,{\k42}and {\k38}stability {\k60}{\k8}For {\k34}instance
+Dialogue: 0,0:03:49.66,0:03:51.06,Live,,0,0,0,{\k6}a {\k30}modal {\k48}dialog {\k56}box
+Dialogue: 0,0:03:51.06,0:03:52.04,Live,,0,0,0,{\k22}might {\k18}have {\k14}a {\k44}slightly
+Dialogue: 0,0:03:52.04,0:03:53.90,Live,,0,0,0,{\k54}frosted {\k36}appearance {\k88}hinting {\k8}at
+Dialogue: 0,0:03:53.90,0:03:54.96,Live,,0,0,0,{\k10}the {\k34}content {\k36}behind {\k26}it
+Dialogue: 0,0:03:54.96,0:03:56.52,Live,,0,0,0,{\k40}without {\k58}obscuring {\k22}the {\k36}primary
+Dialogue: 0,0:03:56.52,0:03:58.52,Live,,0,0,0,{\k42}message {\k70}{\k26}This {\k40}creates {\k22}a
+Dialogue: 0,0:03:58.52,0:03:59.52,Live,,0,0,0,{\k22}sense {\k24}of {\k24}depth {\k30}and
+Dialogue: 0,0:03:59.52,0:04:01.80,Live,,0,0,0,{\k60}context {\k40}{\k22}making {\k50}complex {\k56}workflows
+Dialogue: 0,0:04:01.80,0:04:04.20,Live,,0,0,0,{\k36}feel {\k28}more {\k52}intuitive {\k70}{\k54}Consider
+Dialogue: 0,0:04:04.20,0:04:05.92,Live,,0,0,0,{\k26}a {\k26}data {\k48}visualization {\k72}tool
+Dialogue: 0,0:04:05.92,0:04:07.22,Live,,0,0,0,{\k56}Instead {\k20}of {\k24}flat {\k30}bars
+Dialogue: 0,0:04:07.22,0:04:09.18,Live,,0,0,0,{\k32}or {\k34}lines {\k54}{\k42}imagine {\k34}charts
+Dialogue: 0,0:04:09.18,0:04:11.52,Live,,0,0,0,{\k34}with {\k30}subtle {\k42}{\k46}almost {\k82}imperceptible
+Dialogue: 0,0:04:11.52,0:04:13.08,Live,,0,0,0,{\k50}bevels {\k10}and {\k38}highlights {\k58}that
+Dialogue: 0,0:04:13.08,0:04:13.90,Live,,0,0,0,{\k18}make {\k20}them {\k26}appear {\k18}to
+Dialogue: 0,0:04:13.90,0:04:15.20,Live,,0,0,0,{\k32}rise {\k28}from {\k16}the {\k44}interface
+Dialogue: 0,0:04:15.62,0:04:16.80,Live,,0,0,0,{\k54}This {\k20}adds {\k14}a {\k30}layer
+Dialogue: 0,0:04:16.80,0:04:18.48,Live,,0,0,0,{\k22}of {\k78}dimensionality {\k54}that {\k14}can
+Dialogue: 0,0:04:18.48,0:04:20.30,Live,,0,0,0,{\k20}help {\k38}users {\k50}perceive {\k74}relationships
+Dialogue: 0,0:04:20.30,0:04:21.80,Live,,0,0,0,{\k40}and {\k48}outliers {\k32}in {\k30}data
+Dialogue: 0,0:04:21.80,0:04:23.54,Live,,0,0,0,{\k32}more {\k48}effectively {\k50}{\k10}The {\k34}solid
+Dialogue: 0,0:04:23.54,0:04:24.90,Live,,0,0,0,{\k28}glass {\k44}effect {\k34}here {\k30}isn't
+Dialogue: 0,0:04:24.90,0:04:26.80,Live,,0,0,0,{\k18}about {\k76}transparency {\k46}{\k28}but {\k22}about
+Dialogue: 0,0:04:26.80,0:04:28.08,Live,,0,0,0,{\k26}giving {\k46}elements {\k26}a {\k30}physical
+Dialogue: 0,0:04:28.08,0:04:29.60,Live,,0,0,0,{\k46}presence {\k50}and {\k10}a {\k46}refined
+Dialogue: 0,0:04:29.60,0:04:32.44,Live,,0,0,0,{\k46}finish {\k68}{\k68}Furthermore {\k46}{\k8}the {\k48}system's
+Dialogue: 0,0:04:32.44,0:04:33.60,Live,,0,0,0,{\k20}focus {\k32}on {\k32}calm {\k32}and
+Dialogue: 0,0:04:33.60,0:04:35.86,Live,,0,0,0,{\k56}readability {\k50}is {\k62}particularly {\k58}beneficial
+Dialogue: 0,0:04:35.86,0:04:37.42,Live,,0,0,0,{\k44}for {\k26}AI {\k52}agents {\k34}that
+Dialogue: 0,0:04:37.42,0:04:39.42,Live,,0,0,0,{\k30}provide {\k62}continuous {\k46}updates {\k62}or
+Dialogue: 0,0:04:39.42,0:04:41.56,Live,,0,0,0,{\k54}require {\k40}user {\k40}input {\k44}{\k36}Imagine
+Dialogue: 0,0:04:41.56,0:04:43.26,Live,,0,0,0,{\k26}an {\k36}AI {\k58}assistant {\k50}that's
+Dialogue: 0,0:04:43.26,0:04:44.58,Live,,0,0,0,{\k36}managing {\k26}your {\k36}calendar {\k34}and
+Dialogue: 0,0:04:44.58,0:04:46.74,Live,,0,0,0,{\k36}sending {\k50}reminders {\k66}{\k22}The {\k42}interface
+Dialogue: 0,0:04:46.74,0:04:48.18,Live,,0,0,0,{\k36}needs {\k26}to {\k10}be {\k72}unobtrusive
+Dialogue: 0,0:04:48.18,0:04:49.26,Live,,0,0,0,{\k40}yet {\k58}informative
+Dialogue: 0,0:04:50.02,0:04:51.56,Live,,0,0,0,{\k36}Solid {\k30}Glass {\k50}allows {\k38}these
+Dialogue: 0,0:04:51.56,0:04:53.06,Live,,0,0,0,{\k66}notifications {\k36}to {\k24}stand {\k24}out
+Dialogue: 0,0:04:53.06,0:04:54.08,Live,,0,0,0,{\k18}with {\k10}a {\k34}gentle {\k40}visual
+Dialogue: 0,0:04:54.08,0:04:55.46,Live,,0,0,0,{\k28}cue {\k42}{\k22}like {\k12}a {\k34}soft
+Dialogue: 0,0:04:55.46,0:04:56.66,Live,,0,0,0,{\k30}glow {\k48}or {\k18}a {\k24}subtle
+Dialogue: 0,0:04:56.66,0:04:58.56,Live,,0,0,0,{\k40}border {\k62}without {\k62}overwhelming {\k26}the
+Dialogue: 0,0:04:58.56,0:05:00.52,Live,,0,0,0,{\k44}user's {\k38}primary {\k36}task {\k50}{\k28}Start
+Dialogue: 0,0:05:00.52,0:05:02.28,Live,,0,0,0,{\k34}building {\k46}calmer {\k38}{\k20}more {\k38}precise
+Dialogue: 0,0:05:02.28,0:05:04.06,Live,,0,0,0,{\k48}AI {\k68}interfaces {\k36}today {\k26}the
+Dialogue: 0,0:05:04.06,0:05:06.14,Live,,0,0,0,{\k38}exact {\k72}installation {\k36}commands {\k62}are
+Dialogue: 0,0:05:06.14,0:05:07.00,Live,,0,0,0,{\k18}in {\k10}the {\k48}description
+Dialogue: 0,0:05:07.62,0:05:08.30,Live,,0,0,0,{\k20}What {\k16}kind {\k16}of {\k16}AI
+Dialogue: 0,0:05:08.30,0:05:09.98,Live,,0,0,0,{\k84}application {\k40}will {\k12}you {\k32}design
+Dialogue: 0,0:05:09.98,0:05:11.50,Live,,0,0,0,{\k42}first {\k30}with {\k40}Solid {\k30}Glass
+Dialogue: 0,0:05:12.10,0:05:13.64,Live,,0,0,0,{\k42}Subscribe {\k32}to {\k28}Tool {\k52}Dojo
+Dialogue: 0,0:05:13.64,0:05:15.02,Live,,0,0,0,{\k40}for {\k24}more {\k24}deep {\k50}dives
+Dialogue: 0,0:05:15.02,0:05:16.20,Live,,0,0,0,{\k26}into {\k32}cutting {\k32}edge {\k28}AI
+Dialogue: 0,0:05:16.20,0:05:16.74,Live,,0,0,0,{\k44}tools

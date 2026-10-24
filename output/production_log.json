@@ -5373,5 +5373,58 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-24T16:20:51.976234",
+    "title": "Solid Glass: 2,195 Stars for AI Design",
+    "description": "Transform your AI application's interface in under 10 minutes with Solid Glass! This video dives into deeplethe/solid-glass, a free design system built for modern AI applications. Learn how to install this MIT-licensed tool, leverage its unique 'solid glass' aesthetic, and build calm, readable UIs for streaming data and agent tasks. We'll show you the exact commands to get started, review its core features, and discuss what makes it perfect for dynamic AI experiences.\n\n🔧 Try it yourself:\nnpx shadcn@latest init\nhttps://github.com/deeplethe/solid-glass\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-24-build-ai-uis-in-10-min-solid-glass.html\n\n#SolidGlass #AIAppDesign #UIDesign #WebDevelopment #ReactJS #TailwindCSS #shadcnui\n\nSubscribe to ToolDojo.\n\nSource: https://github.com/deeplethe/solid-glass\n\nChapters:\n0:00 Transform UI Quickly\n0:43 Unique Visual Space\n1:20 Import CSS\n2:32 Functionality Over Distraction\n4:01 Visually Rich Charts\n\n▶ Watch next: https://youtube.com/watch?v=0PXRcVZ6ls4",
+    "tags": [
+      "Solid Glass",
+      "AI UI Design",
+      "Design System",
+      "React 19",
+      "Tailwind CSS 4",
+      "shadcn/ui",
+      "AI Applications",
+      "Web Development",
+      "Free AI Tool",
+      "MIT License",
+      "Frontend Development",
+      "Developer Tools",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Solid_Glass_2195_Stars_for_AI_Design_20261024_161443_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261024_161615.mp4",
+      "output/shorts/short_2_sb_20261024_161641.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261024_161614.jpg",
+    "youtube_url": "https://youtube.com/watch?v=-oCxU6iIDak",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=7gxkgzx4GWk",
+      "https://youtube.com/watch?v=xFqq-ynXfk0"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Solid Glass AI Design 2195 Stars #Shorts",
+        "description": "The AI model Solid Glass achieved 2,195 stars on a platform.",
+        "instagram_caption": "✨ Solid Glass AI model reaches 2,195 stars. This highlights its performance and recognition in the AI design community. Follow @tooldojo! #AI #AIDesign #SolidGlass #MachineLearning #DeepLearning #ArtificialIntelligence #Tech #Innovation #Stars #AIModel #DesignTools #Software #Engineering #DataScience #ComputerVision #GenerativeAI #AIArt #AICommunity #Technology"
+      },
+      {
+        "title": "AI Design Model: 2195 Stars #Shorts",
+        "description": "A look at the AI design model that earned 2,195 stars.",
+        "instagram_caption": "⭐ Discover the AI design model that garnered 2,195 stars. This achievement signifies a high level of acclaim within the field. Follow @tooldojo! #AIDesign #AIModel #Stars #Recognition #TechNews #AICommunity #MachineLearning #ArtificialIntelligence #DeepLearning #DesignTech #SoftwareDevelopment #Innovation #DataScience #ComputerScience #AIRevolution #FutureOfTech #TechTrends #AIProgress #Design"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]
