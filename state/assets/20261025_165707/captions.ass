@@ -1,0 +1,177 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.34,Live,,0,0,0,{\k12}The {\k28}upcoming {\k62}elections {\k32}might
+Dialogue: 0,0:00:01.34,0:00:02.92,Live,,0,0,0,{\k24}see {\k20}more {\k48}unexpected {\k66}players
+Dialogue: 0,0:00:02.92,0:00:05.14,Live,,0,0,0,{\k48}choosing {\k46}sides {\k62}{\k28}This {\k28}week
+Dialogue: 0,0:00:05.38,0:00:06.56,Live,,0,0,0,{\k18}we {\k48}uncovered {\k30}that {\k22}some
+Dialogue: 0,0:00:06.56,0:00:07.58,Live,,0,0,0,{\k10}of {\k8}the {\k24}most {\k60}advanced
+Dialogue: 0,0:00:07.58,0:00:09.22,Live,,0,0,0,{\k30}AI {\k54}models {\k50}when {\k30}pushed
+Dialogue: 0,0:00:09.22,0:00:10.00,Live,,0,0,0,{\k10}to {\k10}make {\k12}a {\k36}choice
+Dialogue: 0,0:00:10.30,0:00:11.60,Live,,0,0,0,{\k26}reveal {\k28}a {\k24}clear {\k52}political
+Dialogue: 0,0:00:11.60,0:00:13.48,Live,,0,0,0,{\k42}preference {\k64}{\k32}Think {\k16}less {\k34}about
+Dialogue: 0,0:00:13.48,0:00:15.10,Live,,0,0,0,{\k50}algorithms {\k56}and {\k24}more {\k32}about
+Dialogue: 0,0:00:15.10,0:00:16.10,Live,,0,0,0,{\k26}who {\k34}they'd {\k14}mark {\k26}on
+Dialogue: 0,0:00:16.10,0:00:17.14,Live,,0,0,0,{\k10}the {\k30}ballot {\k42}{\k8}A {\k14}new
+Dialogue: 0,0:00:17.14,0:00:18.44,Live,,0,0,0,{\k32}study {\k36}found {\k18}that {\k44}SpaceX
+Dialogue: 0,0:00:18.44,0:00:20.46,Live,,0,0,0,{\k82}AI's {\k20}GROC {\k34}4 {\k66}7
+Dialogue: 0,0:00:20.46,0:00:22.82,Live,,0,0,0,{\k40}leamed {\k32}heavily {\k68}Republican {\k58}{\k38}siding
+Dialogue: 0,0:00:22.82,0:00:24.56,Live,,0,0,0,{\k28}with {\k52}GOP {\k50}candidates {\k44}in
+Dialogue: 0,0:00:24.56,0:00:26.72,Live,,0,0,0,{\k40}92% {\k52}{\k24}of {\k40}hypothetical {\k60}election
+Dialogue: 0,0:00:26.72,0:00:27.42,Live,,0,0,0,{\k60}scenarios
+Dialogue: 0,0:00:28.12,0:00:29.76,Live,,0,0,0,{\k42}Researchers {\k74}tested {\k22}this {\k26}by
+Dialogue: 0,0:00:29.76,0:00:31.08,Live,,0,0,0,{\k42}presenting {\k24}the {\k28}AI {\k38}with
+Dialogue: 0,0:00:31.08,0:00:33.02,Live,,0,0,0,{\k36}policy {\k62}questions {\k52}and {\k44}candidate
+Dialogue: 0,0:00:33.02,0:00:35.50,Live,,0,0,0,{\k66}profiles {\k50}{\k46}observing {\k26}its {\k60}consistent
+Dialogue: 0,0:00:35.50,0:00:37.64,Live,,0,0,0,{\k48}alignment {\k38}with {\k60}conservative {\k58}viewpoints
+Dialogue: 0,0:00:37.84,0:00:40.14,Live,,0,0,0,{\k20}In {\k48}contrast {\k58}{\k28}open {\k76}AI's
+Dialogue: 0,0:00:40.14,0:00:41.94,Live,,0,0,0,{\k54}GPT {\k42}6 {\k48}1 {\k36}Sol
+Dialogue: 0,0:00:41.94,0:00:43.38,Live,,0,0,0,{\k56}showed {\k12}a {\k28}strong {\k48}preference
+Dialogue: 0,0:00:43.38,0:00:45.14,Live,,0,0,0,{\k26}for {\k52}Democrats {\k62}{\k16}picking {\k20}the
+Dialogue: 0,0:00:45.14,0:00:46.56,Live,,0,0,0,{\k18}blue {\k36}team {\k18}in {\k60}97%
+Dialogue: 0,0:00:46.88,0:00:48.66,Live,,0,0,0,{\k26}of {\k12}its {\k50}responses {\k56}{\k34}The
+Dialogue: 0,0:00:48.66,0:00:50.16,Live,,0,0,0,{\k44}divergence {\k44}between {\k32}these {\k30}leading
+Dialogue: 0,0:00:50.16,0:00:51.88,Live,,0,0,0,{\k34}AI {\k50}models {\k32}is {\k46}striking
+Dialogue: 0,0:00:52.24,0:00:53.44,Live,,0,0,0,{\k24}with {\k30}less {\k24}than {\k32}10%
+Dialogue: 0,0:00:53.66,0:00:55.20,Live,,0,0,0,{\k40}agreement {\k42}across {\k50}hundreds {\k22}of
+Dialogue: 0,0:00:55.20,0:00:57.24,Live,,0,0,0,{\k48}simulated {\k46}races {\k46}{\k14}This {\k50}political
+Dialogue: 0,0:00:57.24,0:00:59.54,Live,,0,0,0,{\k58}polarization {\k46}in {\k30}AI {\k96}raises
+Dialogue: 0,0:00:59.54,0:01:01.26,Live,,0,0,0,{\k52}serious {\k68}questions {\k36}about {\k16}the
+Dialogue: 0,0:01:01.26,0:01:03.00,Live,,0,0,0,{\k56}neutrality {\k16}of {\k48}tools {\k54}many
+Dialogue: 0,0:01:03.00,0:01:04.20,Live,,0,0,0,{\k26}might {\k32}turn {\k24}to {\k38}for
+Dialogue: 0,0:01:04.20,0:01:06.62,Live,,0,0,0,{\k58}information {\k60}{\k56}especially {\k30}as {\k38}only
+Dialogue: 0,0:01:06.62,0:01:07.80,Live,,0,0,0,{\k14}a {\k32}small {\k54}percentage {\k18}of
+Dialogue: 0,0:01:07.80,0:01:09.76,Live,,0,0,0,{\k52}Americans {\k70}currently {\k42}rely {\k32}on
+Dialogue: 0,0:01:09.76,0:01:11.40,Live,,0,0,0,{\k58}chatbots {\k18}for {\k32}election {\k46}news
+Dialogue: 0,0:01:11.56,0:01:13.00,Live,,0,0,0,{\k46}Imagine {\k42}using {\k22}an {\k34}AI
+Dialogue: 0,0:01:13.00,0:01:15.20,Live,,0,0,0,{\k40}to {\k54}understand {\k58}candidate {\k68}platforms
+Dialogue: 0,0:01:15.20,0:01:16.80,Live,,0,0,0,{\k60}and {\k40}receiving {\k22}a {\k38}heavily
+Dialogue: 0,0:01:16.80,0:01:18.56,Live,,0,0,0,{\k48}biased {\k44}summary {\k50}{\k20}it {\k14}could
+Dialogue: 0,0:01:18.56,0:01:20.50,Live,,0,0,0,{\k76}inadvertently {\k28}shape {\k42}public {\k48}opinion
+Dialogue: 0,0:01:20.50,0:01:21.86,Live,,0,0,0,{\k42}without {\k84}transparency
+Dialogue: 0,0:01:22.60,0:01:24.22,Live,,0,0,0,{\k40}Meanwhile {\k56}{\k8}the {\k32}open {\k26}source
+Dialogue: 0,0:01:24.22,0:01:25.68,Live,,0,0,0,{\k56}community {\k38}is {\k34}drawing {\k18}a
+Dialogue: 0,0:01:25.68,0:01:27.02,Live,,0,0,0,{\k18}hard {\k38}line {\k26}{\k12}The {\k40}popular
+Dialogue: 0,0:01:27.02,0:01:28.42,Live,,0,0,0,{\k30}R {\k46}slash {\k30}open {\k34}source
+Dialogue: 0,0:01:28.42,0:01:30.10,Live,,0,0,0,{\k56}subreddit {\k30}has {\k48}implemented {\k34}new
+Dialogue: 0,0:01:30.10,0:01:31.36,Live,,0,0,0,{\k38}rules {\k22}that {\k26}ban {\k40}AI
+Dialogue: 0,0:01:31.36,0:01:34.06,Live,,0,0,0,{\k58}generated {\k46}content {\k54}{\k54}sparking {\k58}significant
+Dialogue: 0,0:01:34.06,0:01:35.32,Live,,0,0,0,{\k36}debate {\k34}{\k18}and {\k10}a {\k28}user
+Dialogue: 0,0:01:35.32,0:01:37.06,Live,,0,0,0,{\k38}revolt {\k68}{\k26}This {\k28}isn't {\k14}just
+Dialogue: 0,0:01:37.06,0:01:39.12,Live,,0,0,0,{\k28}about {\k42}content {\k54}moderation {\k64}{\k18}it's
+Dialogue: 0,0:01:39.12,0:01:40.00,Live,,0,0,0,{\k4}a {\k34}statement {\k34}about {\k16}the
+Dialogue: 0,0:01:40.00,0:01:41.48,Live,,0,0,0,{\k48}perceived {\k44}value {\k26}of {\k30}human
+Dialogue: 0,0:01:41.48,0:01:43.34,Live,,0,0,0,{\k44}created {\k32}work {\k64}versus {\k46}machine
+Dialogue: 0,0:01:43.34,0:01:45.54,Live,,0,0,0,{\k58}generated {\k50}output {\k66}{\k32}On {\k14}the
+Dialogue: 0,0:01:45.54,0:01:47.52,Live,,0,0,0,{\k42}infrastructure {\k52}front {\k44}{\k24}open {\k36}AI
+Dialogue: 0,0:01:47.52,0:01:49.42,Live,,0,0,0,{\k54}is {\k40}tackling {\k48}massive {\k38}scale
+Dialogue: 0,0:01:49.70,0:01:50.96,Live,,0,0,0,{\k22}They've {\k40}detailed {\k40}how {\k24}they're
+Dialogue: 0,0:01:50.96,0:01:52.92,Live,,0,0,0,{\k48}rapidly {\k48}scaling {\k46}online {\k54}storage
+Dialogue: 0,0:01:52.92,0:01:54.28,Live,,0,0,0,{\k48}to {\k34}support {\k38}over {\k16}a
+Dialogue: 0,0:01:54.28,0:01:56.26,Live,,0,0,0,{\k30}billion {\k48}chat {\k64}GPT {\k46}users
+Dialogue: 0,0:01:56.70,0:01:58.30,Live,,0,0,0,{\k8}a {\k22}feat {\k60}requiring {\k70}significant
+Dialogue: 0,0:01:58.30,0:01:59.96,Live,,0,0,0,{\k66}optimization {\k44}of {\k16}their {\k40}Habitat
+Dialogue: 0,0:01:59.96,0:02:02.52,Live,,0,0,0,{\k58}platform {\k68}{\k26}This {\k48}involves {\k56}managing
+Dialogue: 0,0:02:02.52,0:02:04.02,Live,,0,0,0,{\k46}petabytes {\k24}of {\k30}data {\k50}and
+Dialogue: 0,0:02:04.02,0:02:05.76,Live,,0,0,0,{\k52}ensuring {\k30}low {\k36}latency {\k56}access
+Dialogue: 0,0:02:05.76,0:02:07.88,Live,,0,0,0,{\k30}for {\k28}users {\k58}worldwide {\k68}{\k28}For
+Dialogue: 0,0:02:07.88,0:02:10.14,Live,,0,0,0,{\k54}researchers {\k60}{\k26}innovation {\k56}is {\k20}key
+Dialogue: 0,0:02:10.52,0:02:11.56,Live,,0,0,0,{\k8}A {\k16}new {\k40}tool {\k40}called
+Dialogue: 0,0:02:11.56,0:02:13.72,Live,,0,0,0,{\k54}LitPivot {\k32}is {\k46}emerging {\k56}{\k28}designed
+Dialogue: 0,0:02:13.72,0:02:15.08,Live,,0,0,0,{\k30}to {\k18}help {\k44}develop {\k44}research
+Dialogue: 0,0:02:15.08,0:02:17.74,Live,,0,0,0,{\k56}ideas {\k48}by {\k50}dynamically {\k112}contextualizing
+Dialogue: 0,0:02:17.74,0:02:18.78,Live,,0,0,0,{\k24}them {\k34}within {\k14}the {\k32}vast
+Dialogue: 0,0:02:18.78,0:02:21.34,Live,,0,0,0,{\k40}literature {\k82}landscape {\k46}{\k38}connecting {\k50}idea
+Dialogue: 0,0:02:21.34,0:02:23.06,Live,,0,0,0,{\k54}generation {\k34}with {\k44}relevant {\k40}prior
+Dialogue: 0,0:02:23.06,0:02:24.78,Live,,0,0,0,{\k44}work {\k52}{\k22}It {\k34}acts {\k20}as
+Dialogue: 0,0:02:24.78,0:02:26.84,Live,,0,0,0,{\k12}an {\k56}intelligent {\k68}assistant {\k52}{\k18}sifting
+Dialogue: 0,0:02:26.84,0:02:28.06,Live,,0,0,0,{\k32}through {\k34}millions {\k24}of {\k32}papers
+Dialogue: 0,0:02:28.06,0:02:29.50,Live,,0,0,0,{\k42}to {\k26}find {\k50}connections {\k26}you
+Dialogue: 0,0:02:29.50,0:02:31.08,Live,,0,0,0,{\k18}might {\k40}miss {\k34}{\k8}And {\k48}finally
+Dialogue: 0,0:02:31.38,0:02:32.22,Live,,0,0,0,{\k22}stepping {\k28}away {\k22}from {\k12}the
+Dialogue: 0,0:02:32.22,0:02:34.00,Live,,0,0,0,{\k28}digital {\k38}realm {\k46}{\k18}AI {\k48}is
+Dialogue: 0,0:02:34.00,0:02:34.92,Live,,0,0,0,{\k26}making {\k22}its {\k18}way {\k26}into
+Dialogue: 0,0:02:34.92,0:02:36.54,Live,,0,0,0,{\k18}our {\k36}everyday {\k58}lives {\k50}through
+Dialogue: 0,0:02:36.54,0:02:37.72,Live,,0,0,0,{\k16}a {\k30}wave {\k22}of {\k50}exciting
+Dialogue: 0,0:02:37.72,0:02:38.94,Live,,0,0,0,{\k54}wearables {\k26}and {\k32}gadgets
+Dialogue: 0,0:02:39.66,0:02:41.30,Live,,0,0,0,{\k30}These {\k54}devices {\k26}are {\k54}integrating
+Dialogue: 0,0:02:41.30,0:02:42.74,Live,,0,0,0,{\k44}AI {\k48}into {\k16}our {\k36}routines
+Dialogue: 0,0:02:42.74,0:02:44.84,Live,,0,0,0,{\k44}in {\k46}tangible {\k58}ways {\k46}{\k16}moving
+Dialogue: 0,0:02:44.84,0:02:46.62,Live,,0,0,0,{\k36}beyond {\k60}smartphones {\k38}and {\k44}computers
+Dialogue: 0,0:02:46.62,0:02:47.98,Live,,0,0,0,{\k40}into {\k14}our {\k32}physical {\k40}presence
+Dialogue: 0,0:02:48.38,0:02:49.60,Live,,0,0,0,{\k6}The {\k42}political {\k54}leanings {\k20}of
+Dialogue: 0,0:02:49.60,0:02:51.18,Live,,0,0,0,{\k28}AI {\k50}models {\k32}like {\k48}Grok
+Dialogue: 0,0:02:51.18,0:02:52.70,Live,,0,0,0,{\k20}and {\k66}GPT {\k54}are {\k12}a
+Dialogue: 0,0:02:52.70,0:02:54.12,Live,,0,0,0,{\k28}stark {\k54}reminder {\k38}that {\k22}these
+Dialogue: 0,0:02:54.12,0:02:55.32,Live,,0,0,0,{\k46}systems {\k22}are {\k24}not {\k28}born
+Dialogue: 0,0:02:55.32,0:02:55.84,Live,,0,0,0,{\k42}neutral
+Dialogue: 0,0:02:56.54,0:02:58.34,Live,,0,0,0,{\k16}Their {\k34}training {\k40}data {\k44}{\k46}algorithms
+Dialogue: 0,0:02:58.34,0:03:00.40,Live,,0,0,0,{\k38}and {\k42}development {\k90}philosophies {\k36}can
+Dialogue: 0,0:03:00.40,0:03:01.64,Live,,0,0,0,{\k32}imbue {\k18}them {\k20}with {\k44}biases
+Dialogue: 0,0:03:02.22,0:03:04.32,Live,,0,0,0,{\k48}mirroring {\k50}societal {\k44}divisions {\k44}{\k24}This
+Dialogue: 0,0:03:04.32,0:03:06.24,Live,,0,0,0,{\k42}raises {\k38}critical {\k66}questions {\k46}about
+Dialogue: 0,0:03:06.24,0:03:07.48,Live,,0,0,0,{\k24}how {\k20}we {\k38}ensure {\k42}fairness
+Dialogue: 0,0:03:07.48,0:03:09.42,Live,,0,0,0,{\k36}and {\k56}transparency {\k54}in {\k38}AI
+Dialogue: 0,0:03:09.88,0:03:11.22,Live,,0,0,0,{\k60}especially {\k36}as {\k10}they {\k28}become
+Dialogue: 0,0:03:11.22,0:03:12.80,Live,,0,0,0,{\k28}more {\k50}influential {\k46}in {\k34}public
+Dialogue: 0,0:03:12.80,0:03:14.50,Live,,0,0,0,{\k44}discourse {\k56}and {\k32}decision {\k38}making
+Dialogue: 0,0:03:14.50,0:03:15.74,Live,,0,0,0,{\k50}The {\k28}debate {\k34}within {\k12}the
+Dialogue: 0,0:03:15.74,0:03:17.38,Live,,0,0,0,{\k28}open {\k30}source {\k58}community {\k48}about
+Dialogue: 0,0:03:17.38,0:03:19.98,Live,,0,0,0,{\k38}AI {\k62}generated {\k70}content {\k90}underscores
+Dialogue: 0,0:03:19.98,0:03:22.14,Live,,0,0,0,{\k22}a {\k42}fundamental {\k64}tension {\k68}{\k20}the
+Dialogue: 0,0:03:22.14,0:03:23.54,Live,,0,0,0,{\k44}desire {\k26}to {\k34}embrace {\k36}new
+Dialogue: 0,0:03:23.54,0:03:25.44,Live,,0,0,0,{\k66}technologies {\k80}versus {\k26}the {\k18}need
+Dialogue: 0,0:03:25.44,0:03:27.16,Live,,0,0,0,{\k20}to {\k36}preserve {\k50}human {\k56}authenticity
+Dialogue: 0,0:03:27.37,0:03:29.44,Live,,0,0,0,{\k39}and {\k40}community {\k56}values {\k36}{\k36}Finding
+Dialogue: 0,0:03:29.44,0:03:30.66,Live,,0,0,0,{\k20}a {\k34}balance {\k40}that {\k28}allows
+Dialogue: 0,0:03:30.66,0:03:32.14,Live,,0,0,0,{\k44}AI {\k40}to {\k32}augment {\k32}human
+Dialogue: 0,0:03:32.14,0:03:34.56,Live,,0,0,0,{\k76}creativity {\k74}without {\k60}supplanting {\k32}it
+Dialogue: 0,0:03:34.56,0:03:35.76,Live,,0,0,0,{\k14}is {\k8}a {\k36}challenge {\k62}that
+Dialogue: 0,0:03:35.76,0:03:36.68,Live,,0,0,0,{\k10}will {\k28}shape {\k22}the {\k32}future
+Dialogue: 0,0:03:36.68,0:03:38.24,Live,,0,0,0,{\k26}of {\k36}online {\k84}collaboration
+Dialogue: 0,0:03:38.92,0:03:41.06,Live,,0,0,0,{\k54}Open {\k70}AI's {\k40}massive {\k50}infrastructure
+Dialogue: 0,0:03:41.06,0:03:42.96,Live,,0,0,0,{\k62}scaling {\k50}efforts {\k46}for {\k32}chat
+Dialogue: 0,0:03:42.96,0:03:45.32,Live,,0,0,0,{\k78}GPT {\k92}demonstrate {\k30}the {\k36}immense
+Dialogue: 0,0:03:45.32,0:03:47.10,Live,,0,0,0,{\k56}engineering {\k58}required {\k30}to {\k34}support
+Dialogue: 0,0:03:47.10,0:03:48.74,Live,,0,0,0,{\k46}billions {\k28}of {\k32}users {\k38}{\k20}This
+Dialogue: 0,0:03:48.74,0:03:49.94,Live,,0,0,0,{\k42}behind {\k24}the {\k24}scenes {\k30}work
+Dialogue: 0,0:03:49.94,0:03:51.52,Live,,0,0,0,{\k32}is {\k42}crucial {\k34}for {\k50}delivering
+Dialogue: 0,0:03:51.52,0:03:53.62,Live,,0,0,0,{\k26}the {\k44}seamless {\k36}{\k64}responsive {\k40}AI
+Dialogue: 0,0:03:53.62,0:03:55.66,Live,,0,0,0,{\k96}experiences {\k74}we've {\k14}come {\k20}to
+Dialogue: 0,0:03:55.66,0:03:57.70,Live,,0,0,0,{\k38}expect {\k62}{\k40}highlighting {\k28}the {\k36}complex
+Dialogue: 0,0:03:57.70,0:03:59.34,Live,,0,0,0,{\k52}systems {\k50}that {\k42}power {\k20}our
+Dialogue: 0,0:03:59.34,0:04:00.36,Live,,0,0,0,{\k32}digital {\k60}interactions
+Dialogue: 0,0:04:01.08,0:04:02.34,Live,,0,0,0,{\k42}Tools {\k32}like {\k20}lit {\k32}pivot
+Dialogue: 0,0:04:02.34,0:04:04.18,Live,,0,0,0,{\k64}represent {\k38}a {\k54}significant {\k28}leap
+Dialogue: 0,0:04:04.18,0:04:06.22,Live,,0,0,0,{\k46}forward {\k28}in {\k32}research {\k88}productivity
+Dialogue: 0,0:04:06.34,0:04:08.40,Live,,0,0,0,{\k24}By {\k78}intelligently {\k34}connecting {\k70}researchers
+Dialogue: 0,0:04:08.40,0:04:10.36,Live,,0,0,0,{\k40}with {\k34}relevant {\k50}literature {\k35}{\k37}they
+Dialogue: 0,0:04:10.36,0:04:11.44,Live,,0,0,0,{\k44}accelerate {\k26}the {\k20}pace {\k18}of
+Dialogue: 0,0:04:11.44,0:04:13.02,Live,,0,0,0,{\k54}discovery {\k56}and {\k22}help {\k26}us
+Dialogue: 0,0:04:13.02,0:04:14.70,Live,,0,0,0,{\k34}tackle {\k48}complex {\k60}problems {\k26}more
+Dialogue: 0,0:04:14.70,0:04:17.12,Live,,0,0,0,{\k62}effectively {\k44}{\k58}ensuring {\k26}that {\k52}scientific
+Dialogue: 0,0:04:17.12,0:04:18.58,Live,,0,0,0,{\k60}progress {\k34}is {\k28}built {\k24}on
+Dialogue: 0,0:04:18.58,0:04:20.04,Live,,0,0,0,{\k10}a {\k40}robust {\k48}and {\k48}interconnected
+Dialogue: 0,0:04:20.04,0:04:21.64,Live,,0,0,0,{\k54}body {\k18}of {\k38}knowledge {\k40}{\k10}The
+Dialogue: 0,0:04:21.64,0:04:23.42,Live,,0,0,0,{\k68}proliferation {\k34}of {\k30}AI {\k46}powered
+Dialogue: 0,0:04:23.42,0:04:25.34,Live,,0,0,0,{\k52}wearables {\k92}signifies {\k24}a {\k24}move
+Dialogue: 0,0:04:25.34,0:04:27.02,Live,,0,0,0,{\k36}towards {\k32}more {\k52}pervasive {\k48}and
+Dialogue: 0,0:04:27.02,0:04:28.12,Live,,0,0,0,{\k48}integrated {\k52}AI
+Dialogue: 0,0:04:28.90,0:04:30.30,Live,,0,0,0,{\k20}As {\k20}these {\k54}devices {\k46}become
+Dialogue: 0,0:04:30.30,0:04:32.28,Live,,0,0,0,{\k28}more {\k54}sophisticated {\k62}{\k22}they {\k32}promise
+Dialogue: 0,0:04:32.28,0:04:33.50,Live,,0,0,0,{\k24}to {\k30}enhance {\k32}our {\k36}lives
+Dialogue: 0,0:04:33.50,0:04:35.64,Live,,0,0,0,{\k38}in {\k38}myriad {\k46}ways {\k64}{\k28}blurring
+Dialogue: 0,0:04:35.64,0:04:36.64,Live,,0,0,0,{\k14}the {\k30}lines {\k38}between {\k18}the
+Dialogue: 0,0:04:36.64,0:04:38.08,Live,,0,0,0,{\k36}digital {\k24}and {\k32}physical {\k52}worlds
+Dialogue: 0,0:04:38.08,0:04:39.32,Live,,0,0,0,{\k52}and {\k50}ushering {\k14}in {\k8}a
+Dialogue: 0,0:04:39.32,0:04:40.52,Live,,0,0,0,{\k22}new {\k40}era {\k28}of {\k30}human
+Dialogue: 0,0:04:40.52,0:04:41.74,Live,,0,0,0,{\k38}AI {\k74}symbiosis

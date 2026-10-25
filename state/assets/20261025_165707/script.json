@@ -1,0 +1,138 @@
+{
+  "title": "Grok vs. GPT: AI's 92% Republican vs. 97% Democrat Lean",
+  "thumb_text": "97% DEMOCRAT PICK",
+  "description": "This week's AI Roundup dives deep into the surprising political leanings of major AI models. We reveal how Grok and OpenAI's GPT models would vote if they could, and the implications for AI in elections. Plus, discover the latest in AI-powered hardware and the ongoing debate about AI's place in open-source communities. We also explore how OpenAI is handling massive user growth and a fascinating new tool for researchers. From political polarization to cutting-edge gadgets, this is your essential AI update.\n\n#AI #ArtificialIntelligence #TechNews #AIElections #OpenAI #Grok #Wearables #OpenSource\nSubscribe to ToolDojo.\n\nSource: https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/\n\n🔗 Sources:\n1. Forced to pick, Grok’s AI model chooses Republicans. OpenAI’s picks Democrats. — https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/\n2. r/opensource just banned AI, non-English speakers, and more — https://www.theverge.com/ai-artificial-intelligence/1018217/reddit-opensource-ai-ban\n3. Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II) — https://openai.com/index/scaling-storage-one-billion-users-part-two\n4. LitPivot: Developing research ideas through dynamic contextualization within the literatur — https://huggingface.co/blog/allenai/litpivot\n5. The hottest AI wearables and gadgets you should know about — https://techcrunch.com/2026/10/25/the-hottest-ai-wearables-and-gadgets-you-should-know-about/\n\nChapters:\n0:00 Election Surprises Ahead\n0:59 AI Politics Unsettling\n1:45 OpenAI Scales Up\n2:50 AI Bias Revealed\n3:42 OpenAI Infrastructure Push\n\n▶ Watch next: https://youtube.com/watch?v=-oCxU6iIDak",
+  "tags": [
+    "AI",
+    "Artificial Intelligence",
+    "GPT",
+    "Grok",
+    "Elections",
+    "Politics",
+    "OpenAI",
+    "Tech",
+    "Gadgets",
+    "Wearables",
+    "Open Source",
+    "Research",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "The upcoming elections might see more unexpected players choosing sides. This week, we uncovered that some of the most advanced AI models, when pushed to make a choice, reveal a clear political preference. Think less about algorithms and more about who they'd mark on the ballot.",
+      "visual_query": "election ballot box",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "A new study found that SpaceXAI's Grok 4.7 leaned heavily Republican, siding with GOP candidates in 92% of hypothetical election scenarios. Researchers tested this by presenting the AI with policy questions and candidate profiles, observing its consistent alignment with conservative viewpoints.",
+      "visual_query": "republican elephant symbol",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 3,
+      "narration": "In contrast, OpenAI's GPT-6.1 Sol showed a strong preference for Democrats, picking the blue team in 97% of its responses. The divergence between these leading AI models is striking, with less than 10% agreement across hundreds of simulated races.",
+      "visual_query": "democrat donkey symbol",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "This political polarization in AI raises serious questions about the neutrality of tools many might turn to for information, especially as only a small percentage of Americans currently rely on chatbots for election news. Imagine using an AI to understand candidate platforms and receiving a heavily biased summary; it could inadvertently shape public opinion without transparency.",
+      "visual_query": "person looking confused",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Meanwhile, the open-source community is drawing a hard line. The popular r/opensource subreddit has implemented new rules that ban AI-generated content, sparking significant debate and a user revolt. This isn't just about content moderation; it's a statement about the perceived value of human-created work versus machine-generated output.",
+      "visual_query": "reddit logo",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "On the infrastructure front, OpenAI is tackling massive scale. They've detailed how they're rapidly scaling online storage to support over a billion ChatGPT users, a feat requiring significant optimization of their 'Habitat' platform. This involves managing petabytes of data and ensuring low latency access for users worldwide.",
+      "visual_query": "server racks glowing",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 7,
+      "narration": "For researchers, innovation is key. A new tool called LitPivot is emerging, designed to help develop research ideas by dynamically contextualizing them within the vast literature landscape, connecting idea generation with relevant prior work. It acts as an intelligent assistant, sifting through millions of papers to find connections you might miss.",
+      "visual_query": "stack of books",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "And finally, stepping away from the digital realm, AI is making its way into our everyday lives through a wave of exciting wearables and gadgets. These devices are integrating AI into our routines in tangible ways, moving beyond smartphones and computers into our physical presence.",
+      "visual_query": "smartwatch display",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 9,
+      "narration": "The political leanings of AI models like Grok and GPT are a stark reminder that these systems are not born neutral. Their training data, algorithms, and development philosophies can imbue them with biases, mirroring societal divisions. This raises critical questions about how we ensure fairness and transparency in AI, especially as they become more influential in public discourse and decision-making.",
+      "visual_query": "scales of justice",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "The debate within the open-source community about AI-generated content underscores a fundamental tension: the desire to embrace new technologies versus the need to preserve human authenticity and community values. Finding a balance that allows AI to augment human creativity without supplanting it is a challenge that will shape the future of online collaboration.",
+      "visual_query": "handshake icon",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 11,
+      "narration": "OpenAI's massive infrastructure scaling efforts for ChatGPT demonstrate the immense engineering required to support billions of users. This behind-the-scenes work is crucial for delivering the seamless, responsive AI experiences we've come to expect, highlighting the complex systems that power our digital interactions.",
+      "visual_query": "cloud computing architecture",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Tools like LitPivot represent a significant leap forward in research productivity. By intelligently connecting researchers with relevant literature, they accelerate the pace of discovery and help us tackle complex problems more effectively, ensuring that scientific progress is built on a robust and interconnected body of knowledge.",
+      "visual_query": "DNA helix illustration",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 13,
+      "narration": "The proliferation of AI-powered wearables signifies a move towards more pervasive and integrated AI. As these devices become more sophisticated, they promise to enhance our lives in myriad ways, blurring the lines between the digital and physical worlds and ushering in a new era of human-AI symbiosis.",
+      "visual_query": "person interacting with holographic interface",
+      "speaker": "a"
+    }
+  ],
+  "titles": [
+    "Grok vs. GPT: AI's 92% Republican vs. 97% Democrat Lean",
+    "OpenAI, Grok AI Pick Sides in Midterms: 92% GOP vs 97% Dem",
+    "AI Political Divide: Grok Picks GOP 92%, GPT Picks Dem 97%"
+  ],
+  "synthesis_claim": "The stark political divergence observed in AI models like Grok and GPT, despite developers' claims of neutrality, suggests that the inherent biases in training data are not merely reflective but actively amplified, posing a significant challenge for future AI development aiming for genuine impartiality.",
+  "deliverable": null,
+  "filter_segment": false,
+  "source_url": "https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/",
+  "format": "roundup",
+  "roundup_items": [
+    {
+      "title": "Forced to pick, Grok’s AI model chooses Republicans. OpenAI’s picks Democrats.",
+      "url": "https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/"
+    },
+    {
+      "title": "r/opensource just banned AI, non-English speakers, and more",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1018217/reddit-opensource-ai-ban"
+    },
+    {
+      "title": "Rapidly scaling online storage to serve over 1 billion ChatGPT users (Part II)",
+      "url": "https://openai.com/index/scaling-storage-one-billion-users-part-two"
+    },
+    {
+      "title": "LitPivot: Developing research ideas through dynamic contextualization within the literature landscape",
+      "url": "https://huggingface.co/blog/allenai/litpivot"
+    },
+    {
+      "title": "The hottest AI wearables and gadgets you should know about",
+      "url": "https://techcrunch.com/2026/10/25/the-hottest-ai-wearables-and-gadgets-you-should-know-about/"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "managing petabytes of data",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "sifting through millions of papers",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The stark political divergence observed in AI models like Grok and GPT, despite developers' claims of neutrality, suggests that the inherent biases in training data are not merely reflective but actively amplified, posing a significant challenge for future AI development aiming for genuine impartial"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces specific AI models (Grok 4.7, GPT-6.1 Sol) and their political leanings, a study by Convovo, the r/opensource subreddit's ban on AI, OpenAI's infrastructure scaling for ChatGPT "
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
