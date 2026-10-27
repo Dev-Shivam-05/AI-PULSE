@@ -5525,5 +5525,53 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-27T18:39:45.033079",
+    "title": "Nvidia Backs AI Startup Cutting GPU Costs",
+    "description": "Nvidia has invested in an Indian startup called Simplismart, which offers software to make running AI models more efficient. This means companies might need fewer expensive GPUs. In a world demanding more AI power, this could be a game-changer for costs and accessibility. We break down how it works and why it matters for the future of AI deployment. Discover how companies like InVideo have already seen significant savings. #AI #Nvidia #TechStartup\n\nSource: https://techcrunch.com/2026/10/27/nvidia-backs-indian-startup-helping-companies-run-ai-models-with-fewer-gpus/\n\nChapters:\n0:00 AI Costs Explode\n1:16 Software Intermediary\n2:44 Cloud On-Premises\n4:18 Nvidia Invests Deeply\n5:38 Software Intelligence Wins\n\n▶ Watch next: https://youtube.com/watch?v=X7fSr1ABVhQ",
+    "tags": [
+      "AI",
+      "Nvidia",
+      "Simplismart",
+      "GPU",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Tech Investment",
+      "AI Efficiency",
+      "Cloud Computing",
+      "Inference",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Nvidia_Backs_AI_Startup_Cutting_GPU_Costs_20261027_181642_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261027_182433.mp4",
+      "output/shorts/short_2_20261027_182525.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261027_182254.jpg",
+    "youtube_url": "https://youtube.com/watch?v=iZbe5paDcwk",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=xe7t-nopTvQ",
+      "https://youtube.com/watch?v=RrZGB-mf1i8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Nvidia Invests in AI Startup Reducing GPU Costs #Shorts",
+        "description": "Nvidia is backing an AI startup focused on lowering the cost of GPU usage for AI development and deployment.",
+        "instagram_caption": "💰 Nvidia is investing in a new AI startup aimed at cutting GPU costs! This could make AI development more accessible. Follow @tooldojo! #AI #Nvidia #GPU #ArtificialIntelligence #Tech #Startup #Innovation #MachineLearning #DeepLearning #AIdevelopment #CostSaving #Technology #FutureOfAI #Investment #AIcommunity #TechNews #GPUcosts #AIstartups #NvidiaAI #Compute"
+      },
+      {
+        "title": "AI GPU Cost Reduction by Startup Backed by Nvidia #Shorts",
+        "description": "An AI startup, with support from Nvidia, is working on solutions to reduce the expense associated with using GPUs for artificial intelligence tasks.",
+        "instagram_caption": "🚀 Looking for ways to reduce AI GPU expenses? Nvidia is backing a startup making it happen! Learn how this could impact AI accessibility. Follow @tooldojo! #AIcosts #GPUcomputing #NvidiaInvestment #AIinnovation #TechStartup #MachineLearningCosts #DeepLearningHardware #ArtificialIntelligenceDevelopment #FutureTech #AIsolutions #GraphicsProcessingUnit #TechTrends #InnovationInAI #NvidiaBacksAI #StartupFunding #AIprogress #ComputeCosts #AIforEveryone #TechInvestments #AIbreakthrough"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]

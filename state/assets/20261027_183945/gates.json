@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 9,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "For instance, a real-time fraud detection system needs extremely low latency, demanding a different optimization strategy than a batch image classification task that can tolerate higher latency for cost savings.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Complex simulations that once took weeks on supercomputers could be accelerated, allowing researchers to test more hypotheses and discover breakthroughs faster.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "Nvidia's investment in Simplismart signals a strategic shift towards optimizing AI computation, suggesting the future of AI dominance may lie not just in chip production, but in intelligent software orchestration."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes a synthesis claim that is an interpretation and analysis of the source text, not directly present in the factual reporting. It also mentions an 'editorial filter segment present: "
+  },
+  "confidence": {
+    "score": 0.804,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
