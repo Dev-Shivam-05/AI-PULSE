@@ -5573,5 +5573,51 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-28T18:50:41.637267",
+    "title": "Voice AI: How Assistants Hear You",
+    "description": "Voice AI Explained: How Your Smart Assistant Actually Understands You.\n\nEver wondered how your smart speaker or phone can understand your spoken commands? It's not magic, it's sophisticated voice AI. This video unpacks the incredible technology that lets machines hear and comprehend human speech. We'll dive into the core processes of speech recognition and natural language understanding, revealing the intricate steps from your voice hitting the microphone to your assistant performing an action. Discover the surprising accuracy rates and the complex models that power this everyday marvel. By the end, you'll understand the science behind the seamless interaction with your devices.\n\n#VoiceAI #ArtificialIntelligence #TechExplained #SmartAssistant\n\n#AI #ArtificialIntelligence #TechNews\n\nChapters:\n0:00 Everyday Words Spoken\n1:23 Vast Musical Training\n2:17 Beyond Simple Sounds\n3:36 Lightning Fast Processing\n4:34 Executing Your Commands\n\n▶ Watch next: https://youtube.com/watch?v=iZbe5paDcwk",
+    "tags": [
+      "Voice AI",
+      "Speech Recognition",
+      "Natural Language Processing",
+      "Smart Assistants",
+      "AI Explained",
+      "Machine Learning",
+      "Technology",
+      "How it Works",
+      "Artificial Intelligence",
+      "Deep Learning",
+      "ai",
+      "ai news",
+      "tech news",
+      "tooldojo"
+    ],
+    "video": "output/videos/Voice_AI_How_Assistants_Hear_You_20261028_183026_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261028_183739.mp4",
+      "output/shorts/short_2_sb_20261028_183844.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261028_183545.jpg",
+    "youtube_url": "https://youtube.com/watch?v=34xxdq0CnVM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=JPPH5YtfZDg",
+      "https://youtube.com/watch?v=d-raRDYyr-A"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Voice AI: How Assistants Hear You #Shorts",
+        "description": "Explains the process of how voice AI assistants like Siri and Alexa interpret your spoken words.",
+        "instagram_caption": "🎧 Ever wonder how your smart assistant understands you? This clip breaks down the technology behind voice AI. Follow @tooldojo!\n#VoiceAI #ArtificialIntelligence #Tech #HowItWorks #SmartAssistant #AI #Technology #MachineLearning #SpeechRecognition #FutureTech #Innovation #Digital #Gadgets #VoiceCommand #NLP #NaturalLanguageProcessing #VoiceTechnology #TechExplained #SmartHome #AIExplained"
+      },
+      {
+        "title": "Speech Recognition in Voice AI #Shorts",
+        "description": "Focuses on the speech recognition component within voice AI systems.",
+        "instagram_caption": "🎙️ Dive into the core of voice AI: speech recognition. See how your words are transformed into commands. Follow @tooldojo!\n#SpeechRecognition #VoiceAI #AI #Tech #HowItWorks #SmartSpeaker #VirtualAssistant #MachineLearning #AItechnology #ComputerScience #Innovation #DigitalTransformation #VoiceControl #TechSavvy #AIinsights #FutureOfAI #SpeechProcessing #SmartTech #AIDevelopment #TechTrends"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
