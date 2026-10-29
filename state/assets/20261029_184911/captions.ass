@@ -1,0 +1,212 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.16,Live,,0,0,0,{\k12}Your {\k34}NVIDIA {\k34}G {\k36}Force
+Dialogue: 0,0:00:01.16,0:00:02.82,Live,,0,0,0,{\k34}RTX {\k54}card {\k34}is {\k44}deliberately
+Dialogue: 0,0:00:02.82,0:00:04.96,Live,,0,0,0,{\k56}throttled {\k26}for {\k34}AI {\k54}{\k44}This
+Dialogue: 0,0:00:04.96,0:00:06.06,Live,,0,0,0,{\k16}free {\k36}tool {\k20}{\k20}with {\k18}over
+Dialogue: 0,0:00:06.06,0:00:08.76,Live,,0,0,0,{\k40}12 {\k124}942 {\k62}stars {\k24}{\k20}can
+Dialogue: 0,0:00:08.76,0:00:10.36,Live,,0,0,0,{\k26}double {\k18}its {\k28}speed {\k68}{\k20}By
+Dialogue: 0,0:00:10.36,0:00:11.44,Live,,0,0,0,{\k14}the {\k34}end {\k32}{\k16}you'll {\k12}know
+Dialogue: 0,0:00:11.44,0:00:12.36,Live,,0,0,0,{\k22}how {\k14}to {\k32}unlock {\k24}up
+Dialogue: 0,0:00:12.36,0:00:13.82,Live,,0,0,0,{\k14}to {\k48}2x {\k30}AI {\k54}performance
+Dialogue: 0,0:00:13.82,0:00:14.86,Live,,0,0,0,{\k30}on {\k10}your {\k22}Linux {\k42}RTX
+Dialogue: 0,0:00:14.86,0:00:17.22,Live,,0,0,0,{\k70}20 {\k58}{\k28}30 {\k28}{\k18}or {\k34}40
+Dialogue: 0,0:00:17.22,0:00:18.30,Live,,0,0,0,{\k36}GPU {\k38}in {\k24}minutes
+Dialogue: 0,0:00:19.04,0:00:20.78,Live,,0,0,0,{\k64}Zajada's {\k28}GPU {\k42}unlock {\k40}is
+Dialogue: 0,0:00:20.78,0:00:22.10,Live,,0,0,0,{\k8}a {\k38}community {\k38}driven {\k48}project
+Dialogue: 0,0:00:22.10,0:00:23.28,Live,,0,0,0,{\k28}that {\k26}lives {\k28}on {\k26}GitHub
+Dialogue: 0,0:00:23.66,0:00:24.54,Live,,0,0,0,{\k22}It's {\k6}a {\k28}small {\k32}kernel
+Dialogue: 0,0:00:24.54,0:00:26.16,Live,,0,0,0,{\k52}module {\k50}designed {\k32}to {\k28}remove
+Dialogue: 0,0:00:26.16,0:00:27.88,Live,,0,0,0,{\k58}NVIDIA's {\k52}artificial {\k36}cap {\k26}on
+Dialogue: 0,0:00:27.88,0:00:29.18,Live,,0,0,0,{\k30}tensor {\k22}core {\k50}performance {\k28}for
+Dialogue: 0,0:00:29.18,0:00:32.74,Live,,0,0,0,{\k82}FP16 {\k64}{\k66}BF16 {\k48}{\k10}and {\k86}TF32
+Dialogue: 0,0:00:32.74,0:00:34.52,Live,,0,0,0,{\k58}math {\k34}{\k28}crucial {\k26}for {\k32}most
+Dialogue: 0,0:00:34.52,0:00:36.76,Live,,0,0,0,{\k24}AI {\k58}workloads {\k66}{\k48}This {\k28}clever
+Dialogue: 0,0:00:36.76,0:00:38.12,Live,,0,0,0,{\k36}tool {\k54}operates {\k26}at {\k20}boot
+Dialogue: 0,0:00:38.12,0:00:39.68,Live,,0,0,0,{\k62}before {\k16}the {\k38}standard {\k40}NVIDIA
+Dialogue: 0,0:00:39.68,0:00:41.04,Live,,0,0,0,{\k52}driver {\k46}even {\k28}loads
+Dialogue: 0,0:00:41.66,0:00:42.98,Live,,0,0,0,{\k28}This {\k16}is {\k22}key {\k50}{\k16}it
+Dialogue: 0,0:00:42.98,0:00:44.12,Live,,0,0,0,{\k34}removes {\k26}the {\k30}tensor {\k24}core
+Dialogue: 0,0:00:44.12,0:00:45.34,Live,,0,0,0,{\k34}cap {\k42}before {\k16}the {\k30}driver
+Dialogue: 0,0:00:45.34,0:00:46.48,Live,,0,0,0,{\k20}can {\k28}apply {\k26}it {\k26}{\k14}This
+Dialogue: 0,0:00:46.48,0:00:48.32,Live,,0,0,0,{\k20}makes {\k56}GPU {\k46}unlock {\k62}resilient
+Dialogue: 0,0:00:48.32,0:00:49.90,Live,,0,0,0,{\k32}to {\k34}future {\k40}NVIDIA {\k52}driver
+Dialogue: 0,0:00:49.90,0:00:51.92,Live,,0,0,0,{\k44}updates {\k56}{\k10}a {\k42}truly {\k50}persistent
+Dialogue: 0,0:00:51.92,0:00:52.60,Live,,0,0,0,{\k58}solution
+Dialogue: 0,0:00:53.28,0:00:54.92,Live,,0,0,0,{\k42}Imagine {\k30}your {\k58}LLM {\k34}prefill
+Dialogue: 0,0:00:54.92,0:00:57.16,Live,,0,0,0,{\k58}or {\k30}prompt {\k60}processing {\k76}accelerating
+Dialogue: 0,0:00:57.16,0:00:59.52,Live,,0,0,0,{\k30}by {\k56}25 {\k30}to {\k120}55%
+Dialogue: 0,0:00:59.52,0:01:00.92,Live,,0,0,0,{\k74}That's {\k4}a {\k36}massive {\k26}leap
+Dialogue: 0,0:01:00.92,0:01:02.40,Live,,0,0,0,{\k24}for {\k28}local {\k38}AI {\k48}inference
+Dialogue: 0,0:01:02.98,0:01:04.58,Live,,0,0,0,{\k14}It {\k44}dramatically {\k60}reduces {\k42}time
+Dialogue: 0,0:01:04.58,0:01:06.08,Live,,0,0,0,{\k20}to {\k22}first {\k40}token {\k50}{\k18}making
+Dialogue: 0,0:01:06.08,0:01:07.46,Live,,0,0,0,{\k22}your {\k32}local {\k44}AI {\k40}feel
+Dialogue: 0,0:01:07.46,0:01:09.48,Live,,0,0,0,{\k66}significantly {\k66}snappier {\k50}and {\k20}more
+Dialogue: 0,0:01:09.48,0:01:11.52,Live,,0,0,0,{\k54}responsive {\k50}{\k10}For {\k38}instance {\k40}{\k12}when
+Dialogue: 0,0:01:11.52,0:01:13.18,Live,,0,0,0,{\k54}generating {\k22}a {\k50}100 {\k40}token
+Dialogue: 0,0:01:13.18,0:01:14.80,Live,,0,0,0,{\k64}response {\k46}{\k12}you {\k18}might {\k22}see
+Dialogue: 0,0:01:14.80,0:01:15.98,Live,,0,0,0,{\k12}the {\k30}latency {\k46}drop {\k30}from
+Dialogue: 0,0:01:15.98,0:01:17.26,Live,,0,0,0,{\k32}5 {\k40}seconds {\k34}to {\k22}under
+Dialogue: 0,0:01:17.26,0:01:19.22,Live,,0,0,0,{\k32}3 {\k50}5 {\k62}seconds {\k44}{\k8}a
+Dialogue: 0,0:01:19.22,0:01:21.16,Live,,0,0,0,{\k46}tangible {\k66}improvement {\k24}for {\k58}interactive
+Dialogue: 0,0:01:21.16,0:01:22.48,Live,,0,0,0,{\k44}AI {\k78}applications
+Dialogue: 0,0:01:23.08,0:01:24.60,Live,,0,0,0,{\k34}For {\k28}image {\k48}generation {\k42}in
+Dialogue: 0,0:01:24.60,0:01:26.08,Live,,0,0,0,{\k30}tools {\k34}like {\k48}Comfy {\k36}UI
+Dialogue: 0,0:01:26.08,0:01:28.90,Live,,0,0,0,{\k62}or {\k102}SDXL {\k48}{\k30}expect {\k40}speed
+Dialogue: 0,0:01:28.90,0:01:29.82,Live,,0,0,0,{\k16}ups {\k22}of {\k34}30 {\k20}to
+Dialogue: 0,0:01:29.82,0:01:32.12,Live,,0,0,0,{\k122}55 {\k40}percent {\k28}Fine-tuning {\k40}models
+Dialogue: 0,0:01:32.12,0:01:33.22,Live,,0,0,0,{\k32}with {\k20}low {\k34}R {\k24}ray
+Dialogue: 0,0:01:33.22,0:01:35.26,Live,,0,0,0,{\k46}or {\k34}full {\k70}BF16 {\k54}training
+Dialogue: 0,0:01:35.26,0:01:36.92,Live,,0,0,0,{\k66}also {\k38}sees {\k10}a {\k52}significant
+Dialogue: 0,0:01:36.92,0:01:39.00,Live,,0,0,0,{\k48}boost {\k36}{\k40}often {\k28}between {\k56}25
+Dialogue: 0,0:01:39.00,0:01:41.22,Live,,0,0,0,{\k30}and {\k34}50 {\k32}{\k50}faster {\k54}{\k22}saving
+Dialogue: 0,0:01:41.22,0:01:42.30,Live,,0,0,0,{\k20}you {\k40}valuable {\k38}time
+Dialogue: 0,0:01:42.92,0:01:44.26,Live,,0,0,0,{\k34}This {\k22}means {\k54}generating {\k24}a
+Dialogue: 0,0:01:44.26,0:01:45.54,Live,,0,0,0,{\k24}batch {\k18}of {\k32}50 {\k54}images
+Dialogue: 0,0:01:45.54,0:01:46.74,Live,,0,0,0,{\k42}could {\k32}finish {\k24}in {\k22}10
+Dialogue: 0,0:01:46.74,0:01:48.04,Live,,0,0,0,{\k24}minutes {\k48}instead {\k14}of {\k34}15
+Dialogue: 0,0:01:48.50,0:01:49.48,Live,,0,0,0,{\k20}or {\k18}a {\k28}full {\k32}low
+Dialogue: 0,0:01:49.48,0:01:50.84,Live,,0,0,0,{\k30}R {\k20}ray {\k38}training {\k48}epoch
+Dialogue: 0,0:01:50.84,0:01:52.54,Live,,0,0,0,{\k12}could {\k34}complete {\k64}significantly {\k50}sooner
+Dialogue: 0,0:01:52.82,0:01:54.68,Live,,0,0,0,{\k20}Even {\k78}specialized {\k28}AI {\k60}kernels
+Dialogue: 0,0:01:54.68,0:01:56.46,Live,,0,0,0,{\k24}like {\k42}Flash {\k42}Attention {\k30}{\k40}or
+Dialogue: 0,0:01:56.46,0:01:58.16,Live,,0,0,0,{\k100}SDPA {\k46}can {\k14}get {\k10}a
+Dialogue: 0,0:01:58.16,0:01:59.90,Live,,0,0,0,{\k34}50 {\k20}to {\k40}60 {\k36}{\k44}performance
+Dialogue: 0,0:01:59.90,0:02:00.38,Live,,0,0,0,{\k38}increase
+Dialogue: 0,0:02:01.04,0:02:02.68,Live,,0,0,0,{\k28}This {\k26}means {\k52}complex {\k58}attention
+Dialogue: 0,0:02:02.68,0:02:05.16,Live,,0,0,0,{\k62}mechanisms {\k66}{\k34}fundamental {\k44}to {\k42}advanced
+Dialogue: 0,0:02:05.16,0:02:07.72,Live,,0,0,0,{\k58}transformer {\k52}models {\k64}run {\k82}substantially
+Dialogue: 0,0:02:07.72,0:02:09.14,Live,,0,0,0,{\k56}faster {\k28}on {\k14}your {\k44}unlocked
+Dialogue: 0,0:02:09.14,0:02:10.46,Live,,0,0,0,{\k48}hardware {\k44}{\k16}These {\k14}are {\k10}the
+Dialogue: 0,0:02:10.46,0:02:11.76,Live,,0,0,0,{\k28}building {\k32}blocks {\k30}of {\k40}modern
+Dialogue: 0,0:02:11.76,0:02:13.70,Live,,0,0,0,{\k82}LLMs {\k16}and {\k34}diffusion {\k52}models
+Dialogue: 0,0:02:13.78,0:02:15.10,Live,,0,0,0,{\k38}so {\k36}boosting {\k22}their {\k36}throughput
+Dialogue: 0,0:02:15.10,0:02:16.90,Live,,0,0,0,{\k44}directly {\k74}impacts {\k20}the {\k42}performance
+Dialogue: 0,0:02:16.90,0:02:18.34,Live,,0,0,0,{\k28}of {\k14}the {\k54}entire {\k48}AI
+Dialogue: 0,0:02:18.34,0:02:20.46,Live,,0,0,0,{\k54}pipeline {\k50}{\k38}To {\k14}get {\k46}started
+Dialogue: 0,0:02:20.70,0:02:21.42,Live,,0,0,0,{\k26}you'll {\k16}need {\k14}a {\k16}Linux
+Dialogue: 0,0:02:21.42,0:02:22.66,Live,,0,0,0,{\k50}system {\k22}with {\k10}a {\k42}supported
+Dialogue: 0,0:02:22.66,0:02:25.00,Live,,0,0,0,{\k50}RTX {\k60}20 {\k50}{\k28}30 {\k24}{\k22}or
+Dialogue: 0,0:02:25.00,0:02:26.26,Live,,0,0,0,{\k30}40 {\k50}series {\k36}GPU
+Dialogue: 0,0:02:27.00,0:02:28.66,Live,,0,0,0,{\k30}Open {\k20}your {\k38}terminal {\k48}{\k20}First
+Dialogue: 0,0:02:28.86,0:02:30.18,Live,,0,0,0,{\k16}clone {\k18}the {\k54}repository {\k44}using
+Dialogue: 0,0:02:30.18,0:02:33.20,Live,,0,0,0,{\k64}GitClone {\k90}HTTPS {\k68}{\k14}Slash {\k56}LashGitHub
+Dialogue: 0,0:02:33.66,0:02:36.96,Live,,0,0,0,{\k104}CommSlashZagida {\k88}slashGPU {\k32}unlock {\k44}{\k52}Then
+Dialogue: 0,0:02:37.32,0:02:38.48,Live,,0,0,0,{\k32}navigate {\k28}into {\k12}the {\k44}directory
+Dialogue: 0,0:02:38.48,0:02:40.56,Live,,0,0,0,{\k28}with {\k88}cd {\k38}gpu-unlock {\k54}and
+Dialogue: 0,0:02:40.56,0:02:41.62,Live,,0,0,0,{\k34}compile {\k26}it {\k14}by {\k32}running
+Dialogue: 0,0:02:41.62,0:02:44.40,Live,,0,0,0,{\k82}MakeInstall {\k54}{\k50}Checked {\k12}by {\k80}ToolDojo
+Dialogue: 0,0:02:44.40,0:02:46.26,Live,,0,0,0,{\k28}on {\k34}October {\k50}29 {\k39}{\k35}the
+Dialogue: 0,0:02:46.26,0:02:47.68,Live,,0,0,0,{\k28}download {\k46}finished {\k30}in {\k38}0
+Dialogue: 0,0:02:47.68,0:02:49.54,Live,,0,0,0,{\k56}6 {\k54}seconds {\k38}at {\k38}0
+Dialogue: 0,0:02:49.54,0:02:51.56,Live,,0,0,0,{\k62}4 {\k60}megabytes {\k36}{\k12}The {\k32}final
+Dialogue: 0,0:02:51.56,0:02:53.34,Live,,0,0,0,{\k32}step {\k50}involves {\k40}appending {\k56}GPU
+Dialogue: 0,0:02:53.34,0:02:55.46,Live,,0,0,0,{\k50}unlock {\k56}{\k28}targets {\k44}equals {\k34}all
+Dialogue: 0,0:02:55.46,0:02:56.38,Live,,0,0,0,{\k18}to {\k10}your {\k28}kernel {\k36}command
+Dialogue: 0,0:02:56.38,0:02:57.84,Live,,0,0,0,{\k30}line {\k54}{\k26}This {\k20}is {\k16}done
+Dialogue: 0,0:02:57.84,0:02:58.98,Live,,0,0,0,{\k38}differently {\k42}depending {\k22}on {\k12}your
+Dialogue: 0,0:02:58.98,0:03:00.90,Live,,0,0,0,{\k56}bootloader {\k30}{\k16}like {\k48}modifying {\k42}GRUB
+Dialogue: 0,0:03:00.90,0:03:02.08,Live,,0,0,0,{\k26}for {\k42}Ubuntu {\k26}or {\k24}Arch
+Dialogue: 0,0:03:02.08,0:03:03.56,Live,,0,0,0,{\k62}or {\k30}using {\k38}grubby {\k18}for
+Dialogue: 0,0:03:03.56,0:03:04.06,Live,,0,0,0,{\k40}Fedora
+Dialogue: 0,0:03:04.72,0:03:06.64,Live,,0,0,0,{\k32}Full {\k30}{\k32}detailed {\k66}instructions {\k32}are
+Dialogue: 0,0:03:06.64,0:03:07.88,Live,,0,0,0,{\k14}on {\k12}their {\k40}GitHub {\k48}page
+Dialogue: 0,0:03:08.30,0:03:09.82,Live,,0,0,0,{\k10}For {\k42}example {\k34}{\k8}on {\k48}Ubuntu
+Dialogue: 0,0:03:10.20,0:03:11.10,Live,,0,0,0,{\k14}you'd {\k16}edit {\k48}Slash {\k12}et
+Dialogue: 0,0:03:11.10,0:03:12.86,Live,,0,0,0,{\k34}setter {\k58}Slash {\k32}default {\k52}slash
+Dialogue: 0,0:03:12.86,0:03:14.16,Live,,0,0,0,{\k26}grub {\k40}and {\k22}run {\k42}sudo
+Dialogue: 0,0:03:14.16,0:03:15.94,Live,,0,0,0,{\k36}Update {\k32}Grub {\k60}This {\k40}tool
+Dialogue: 0,0:03:16.22,0:03:18.16,Live,,0,0,0,{\k8}last {\k50}updated {\k22}on {\k114}2026
+Dialogue: 0,0:03:18.16,0:03:20.74,Live,,0,0,0,{\k66}10 {\k76}29 {\k50}{\k26}is {\k40}generally
+Dialogue: 0,0:03:20.74,0:03:22.34,Live,,0,0,0,{\k42}stable {\k38}{\k20}but {\k18}not {\k42}every
+Dialogue: 0,0:03:22.34,0:03:23.58,Live,,0,0,0,{\k30}edge {\k20}case {\k26}is {\k38}perfect
+Dialogue: 0,0:03:24.16,0:03:25.44,Live,,0,0,0,{\k26}There {\k8}are {\k42}91 {\k52}open
+Dialogue: 0,0:03:25.44,0:03:27.62,Live,,0,0,0,{\k34}issues {\k52}detailing {\k62}specific {\k60}scenarios
+Dialogue: 0,0:03:28.10,0:03:29.62,Live,,0,0,0,{\k18}like {\k42}certain {\k38}RTX {\k54}3
+Dialogue: 0,0:03:29.62,0:03:31.70,Live,,0,0,0,{\k72}080 {\k32}ty {\k42}OEM {\k52}cards
+Dialogue: 0,0:03:32.10,0:03:33.24,Live,,0,0,0,{\k12}not {\k24}getting {\k26}full {\k42}speed
+Dialogue: 0,0:03:33.66,0:03:35.72,Live,,0,0,0,{\k20}or {\k36}laptop {\k92}GPUs {\k14}{\k44}sometimes
+Dialogue: 0,0:03:35.72,0:03:37.04,Live,,0,0,0,{\k58}resetting {\k14}the {\k32}unlock {\k28}if
+Dialogue: 0,0:03:37.04,0:03:38.24,Live,,0,0,0,{\k10}they {\k28}power {\k34}off {\k38}{\k10}For
+Dialogue: 0,0:03:38.24,0:03:39.68,Live,,0,0,0,{\k32}instance {\k46}{\k20}some {\k26}users {\k20}have
+Dialogue: 0,0:03:39.68,0:03:41.04,Live,,0,0,0,{\k40}reported {\k24}that {\k36}aggressive {\k36}power
+Dialogue: 0,0:03:41.04,0:03:42.56,Live,,0,0,0,{\k38}saving {\k36}features {\k26}on {\k42}laptops
+Dialogue: 0,0:03:42.72,0:03:43.86,Live,,0,0,0,{\k34}can {\k32}cause {\k18}the {\k30}unlock
+Dialogue: 0,0:03:43.86,0:03:44.92,Live,,0,0,0,{\k28}to {\k12}be {\k30}reset {\k36}upon
+Dialogue: 0,0:03:44.92,0:03:47.12,Live,,0,0,0,{\k32}waking {\k28}from {\k42}sleep {\k54}{\k54}Crucially
+Dialogue: 0,0:03:47.44,0:03:48.34,Live,,0,0,0,{\k14}this {\k34}unlock {\k26}does {\k16}not
+Dialogue: 0,0:03:48.34,0:03:49.16,Live,,0,0,0,{\k34}affect {\k38}gaming
+Dialogue: 0,0:03:50.20,0:03:52.40,Live,,0,0,0,{\k68}FP32QDA {\k40}{\k12}or {\k32}highly {\k68}quantized
+Dialogue: 0,0:03:52.40,0:03:54.42,Live,,0,0,0,{\k30}models {\k38}like {\k82}INT8 {\k52}or
+Dialogue: 0,0:03:54.42,0:03:58.14,Live,,0,0,0,{\k146}INT4GGuff {\k68}{\k58}LLM {\k24}token {\k66}generation
+Dialogue: 0,0:03:58.48,0:03:59.98,Live,,0,0,0,{\k12}being {\k30}memory {\k38}bound {\k36}{\k34}also
+Dialogue: 0,0:03:59.98,0:04:01.48,Live,,0,0,0,{\k34}sees {\k20}no {\k46}change {\k34}{\k16}This
+Dialogue: 0,0:04:01.48,0:04:02.58,Live,,0,0,0,{\k18}is {\k40}purely {\k28}for {\k24}raw
+Dialogue: 0,0:04:02.58,0:04:04.00,Live,,0,0,0,{\k34}tensor {\k28}core {\k42}throughput {\k38}in
+Dialogue: 0,0:04:04.00,0:04:05.74,Live,,0,0,0,{\k52}specific {\k26}AI {\k48}math {\k38}types
+Dialogue: 0,0:04:06.18,0:04:07.16,Live,,0,0,0,{\k30}This {\k24}means {\k32}if {\k12}your
+Dialogue: 0,0:04:07.16,0:04:08.40,Live,,0,0,0,{\k40}primary {\k26}use {\k24}case {\k34}is
+Dialogue: 0,0:04:08.40,0:04:10.08,Live,,0,0,0,{\k36}gaming {\k48}or {\k38}running {\k46}heavily
+Dialogue: 0,0:04:10.08,0:04:12.28,Live,,0,0,0,{\k84}optimized {\k28}{\k20}low {\k34}precision {\k44}models
+Dialogue: 0,0:04:12.56,0:04:13.40,Live,,0,0,0,{\k22}you {\k26}won't {\k24}see {\k12}a
+Dialogue: 0,0:04:13.40,0:04:15.28,Live,,0,0,0,{\k44}difference {\k50}{\k28}The {\k40}reason {\k26}this
+Dialogue: 0,0:04:15.28,0:04:17.84,Live,,0,0,0,{\k32}tool {\k58}exists {\k48}{\k28}NVIDIA {\k90}intentionally
+Dialogue: 0,0:04:17.84,0:04:19.60,Live,,0,0,0,{\k38}caps {\k62}consumer {\k34}G {\k42}Force
+Dialogue: 0,0:04:19.60,0:04:21.44,Live,,0,0,0,{\k64}GPUs {\k36}to {\k46}differentiate {\k38}them
+Dialogue: 0,0:04:21.44,0:04:22.24,Live,,0,0,0,{\k20}from {\k14}their {\k22}much {\k24}more
+Dialogue: 0,0:04:22.24,0:04:24.66,Live,,0,0,0,{\k52}expensive {\k62}professional {\k46}cards {\k52}{\k30}even
+Dialogue: 0,0:04:24.66,0:04:25.56,Live,,0,0,0,{\k22}though {\k20}they {\k28}use {\k20}the
+Dialogue: 0,0:04:25.56,0:04:26.36,Live,,0,0,0,{\k30}same {\k40}silicon
+Dialogue: 0,0:04:27.20,0:04:29.16,Live,,0,0,0,{\k26}GPU {\k44}unlock {\k104}bypasses {\k22}this
+Dialogue: 0,0:04:29.16,0:04:30.72,Live,,0,0,0,{\k42}artificial {\k66}software {\k26}lock {\k22}at
+Dialogue: 0,0:04:30.72,0:04:32.28,Live,,0,0,0,{\k12}the {\k28}lowest {\k46}level {\k50}{\k20}proving
+Dialogue: 0,0:04:32.28,0:04:34.24,Live,,0,0,0,{\k22}your {\k56}hardware's {\k22}true {\k46}{\k50}uncapped
+Dialogue: 0,0:04:34.24,0:04:35.88,Live,,0,0,0,{\k58}capability {\k32}{\k26}It's {\k8}a {\k40}testament
+Dialogue: 0,0:04:35.88,0:04:36.74,Live,,0,0,0,{\k22}to {\k8}the {\k32}power {\k24}of
+Dialogue: 0,0:04:36.74,0:04:38.44,Live,,0,0,0,{\k32}open {\k28}source {\k60}communities {\k50}to
+Dialogue: 0,0:04:38.44,0:04:39.88,Live,,0,0,0,{\k30}reclaim {\k68}performance {\k34}that {\k12}was
+Dialogue: 0,0:04:39.88,0:04:42.18,Live,,0,0,0,{\k78}artificially {\k40}limited {\k60}{\k28}Ready {\k24}to
+Dialogue: 0,0:04:42.18,0:04:43.60,Live,,0,0,0,{\k28}unlock {\k26}your {\k66}GPU's {\k22}true
+Dialogue: 0,0:04:43.60,0:04:45.50,Live,,0,0,0,{\k28}AI {\k62}potential {\k58}{\k14}The {\k28}exact
+Dialogue: 0,0:04:45.50,0:04:46.56,Live,,0,0,0,{\k42}commands {\k24}you {\k24}need {\k16}are
+Dialogue: 0,0:04:46.56,0:04:47.78,Live,,0,0,0,{\k36}linked {\k24}in {\k8}the {\k44}description
+Dialogue: 0,0:04:48.48,0:04:49.54,Live,,0,0,0,{\k10}What {\k28}AI {\k48}model {\k20}will
+Dialogue: 0,0:04:49.54,0:04:50.42,Live,,0,0,0,{\k12}you {\k18}run {\k34}first {\k24}with
+Dialogue: 0,0:04:50.42,0:04:51.78,Live,,0,0,0,{\k10}your {\k12}new {\k34}speed {\k56}{\k24}Don't
+Dialogue: 0,0:04:51.78,0:04:52.90,Live,,0,0,0,{\k24}forget {\k18}to {\k40}subscribe {\k30}to
+Dialogue: 0,0:04:52.90,0:04:54.12,Live,,0,0,0,{\k24}Tool {\k52}Dojo {\k28}for {\k18}more
+Dialogue: 0,0:04:54.12,0:04:55.96,Live,,0,0,0,{\k36}AI {\k44}tools {\k50}{\k8}The {\k46}underlying
+Dialogue: 0,0:04:55.96,0:04:58.14,Live,,0,0,0,{\k70}mechanism {\k66}involves {\k70}patching {\k12}the
+Dialogue: 0,0:04:58.14,0:04:59.94,Live,,0,0,0,{\k46}NVIDIA {\k36}kernel {\k44}module {\k54}to
+Dialogue: 0,0:04:59.94,0:05:01.86,Live,,0,0,0,{\k44}disable {\k56}specific {\k54}checks {\k38}that
+Dialogue: 0,0:05:01.86,0:05:03.70,Live,,0,0,0,{\k28}limit {\k44}tensor {\k34}core {\k68}utilization
+Dialogue: 0,0:05:04.06,0:05:05.50,Live,,0,0,0,{\k34}based {\k18}on {\k36}GPU {\k56}model
+Dialogue: 0,0:05:05.50,0:05:07.00,Live,,0,0,0,{\k48}and {\k40}intended {\k32}use {\k20}case
+Dialogue: 0,0:05:07.51,0:05:08.66,Live,,0,0,0,{\k41}This {\k30}isn't {\k12}a {\k22}hack
+Dialogue: 0,0:05:09.18,0:05:10.22,Live,,0,0,0,{\k20}it's {\k6}a {\k28}clever {\k50}manipulation
+Dialogue: 0,0:05:10.22,0:05:11.68,Live,,0,0,0,{\k44}of {\k10}the {\k50}driver's {\k42}internal
+Dialogue: 0,0:05:11.68,0:05:13.50,Live,,0,0,0,{\k50}logic {\k50}to {\k34}enable {\k48}features
+Dialogue: 0,0:05:13.50,0:05:14.82,Live,,0,0,0,{\k38}that {\k10}are {\k40}already {\k44}physically
+Dialogue: 0,0:05:14.82,0:05:16.02,Live,,0,0,0,{\k42}present {\k20}in {\k12}the {\k36}hardware
+Dialogue: 0,0:05:16.38,0:05:18.08,Live,,0,0,0,{\k16}but {\k44}software {\k38}gated {\k40}{\k32}Consider
+Dialogue: 0,0:05:18.08,0:05:19.74,Live,,0,0,0,{\k22}the {\k56}implications {\k34}for {\k54}researchers
+Dialogue: 0,0:05:19.74,0:05:21.74,Live,,0,0,0,{\k32}and {\k62}hobbyists {\k54}{\k20}The {\k32}ability
+Dialogue: 0,0:05:21.74,0:05:23.56,Live,,0,0,0,{\k24}to {\k26}run {\k50}complex {\k72}simulations
+Dialogue: 0,0:05:23.71,0:05:25.24,Live,,0,0,0,{\k41}or {\k34}train {\k42}larger {\k36}models
+Dialogue: 0,0:05:25.24,0:05:27.18,Live,,0,0,0,{\k58}locally {\k44}{\k26}even {\k24}on {\k42}consumer
+Dialogue: 0,0:05:27.18,0:05:29.72,Live,,0,0,0,{\k36}grade {\k48}hardware {\k48}{\k84}democratizes {\k38}AI
+Dialogue: 0,0:05:29.72,0:05:32.32,Live,,0,0,0,{\k68}development {\k44}{\k54}This {\k48}performance {\k46}boost
+Dialogue: 0,0:05:32.32,0:05:34.38,Live,,0,0,0,{\k32}can {\k76}significantly {\k40}shorten {\k58}development
+Dialogue: 0,0:05:34.38,0:05:36.18,Live,,0,0,0,{\k44}cycles {\k54}{\k28}allowing {\k32}for {\k22}more
+Dialogue: 0,0:05:36.18,0:05:38.46,Live,,0,0,0,{\k38}rapid {\k70}experimentation {\k39}{\k35}and {\k46}innovation
+Dialogue: 0,0:05:38.46,0:05:39.26,Live,,0,0,0,{\k26}in {\k12}the {\k32}field

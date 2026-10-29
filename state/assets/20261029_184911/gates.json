@@ -1,0 +1,45 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "latency drop from 5 seconds to under 3.5 seconds",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "generating a batch of 50 images could finish in 10 minutes instead of 15",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The existence of `gpu-unlock` highlights NVIDIA's strategic segmentation of its GPU product lines, artificially limiting consumer hardware capabilities for professional tier differentiation, which open-source community efforts can effectively circumvent."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative flow and specific phrasing that goes beyond simply listing the information present in the source text. For example, phrases like 'Your NVIDIA GeForce RTX card is delib"
+  },
+  "confidence": {
+    "score": 0.84,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.6,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

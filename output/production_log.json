@@ -5619,5 +5619,56 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-29T18:49:11.330700",
+    "title": "Double Your AI Speed: gpu-unlock for GeForce RTX",
+    "description": "Your NVIDIA GeForce RTX card is secretly running AI tasks at half speed. This video shows you how to use Zagitta/gpu-unlock, a free, community-driven tool with over 12,942 GitHub stars, to unleash up to double the AI performance on your Linux workstation. We'll walk you through the exact installation steps to boost LLM prefill, image generation, and fine-tuning by 25-55% today. Stop leaving performance on the table – unlock your GPU's true potential.\n\n🔧 Try it yourself:\ngit clone https://github.com/Zagitta/gpu-unlock • cd gpu-unlock • make install\nhttps://github.com/Zagitta/gpu-unlock\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-29-double-your-ai-speed-gpu-unlock-for-gefo.html\n\n#AI #GPU #NVIDIA #RTX #Linux #DeepLearning #FreeAI\nSubscribe to ToolDojo.\n\nSource: https://github.com/Zagitta/gpu-unlock\n\nChapters:\n0:00 Unlock Your GPU\n0:56 Boost LLM Speed\n2:23 Linux RTX Setup\n3:15 Tool Stability Disclaimer\n4:42 Get The Commands\n\n▶ Watch next: https://youtube.com/watch?v=34xxdq0CnVM",
+    "tags": [
+      "AI performance",
+      "GPU unlock",
+      "NVIDIA RTX",
+      "GeForce AI",
+      "Linux AI",
+      "gpu-unlock",
+      "Deep Learning",
+      "LLM speedup",
+      "Image generation AI",
+      "Free AI tools",
+      "Tensor Cores",
+      "Machine Learning",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/Double_Your_AI_Speed_gpu-unlock_for_GeForce_RTX_20261029_184333_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261029_184456.mp4",
+      "output/shorts/short_2_20261029_184526.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261029_184455.jpg",
+    "youtube_url": "https://youtube.com/watch?v=4MTEDi4MdnQ",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=McvDuSjVrbM",
+      "https://youtube.com/watch?v=i_bzTjfNjw0"
+    ],
+    "shorts_meta": [
+      {
+        "title": "GeForce RTX gpu-unlock for AI #Shorts",
+        "description": "Demonstration of the gpu-unlock tool on a GeForce RTX card for AI tasks.",
+        "instagram_caption": "See how gpu-unlock works with GeForce RTX cards for AI. Learn about its application in accelerating your AI processes. Follow @tooldojo! #GeForceRTX #AIacceleration #GPUcomputing #Machinelearning #Deeplearning #AIdataset #AIhardware #Nvidia #RTX #Techdemo #AItools #ComputerVision #NaturalLanguageProcessing #DataScience #AIresearch #TechTips #AIworkflow #Gpuperformance #AIoptimization #AIcommunity"
+      },
+      {
+        "title": "AI speed with GeForce RTX gpu-unlock #Shorts",
+        "description": "Showcasing AI performance improvements using gpu-unlock on GeForce RTX GPUs.",
+        "instagram_caption": "Discover how gpu-unlock can enhance AI processing speeds on your GeForce RTX. This tool focuses on practical improvements for your AI projects. Follow @tooldojo! #AI #GPU #NvidiaRTX #AIperformance #Tech #MachineLearning #DeepLearning #AIdevelopment #Gpuunlock #RTXseries #AItech #ArtificialIntelligence #Techreview #AIoptimization #GPUTuning #AIacceleration #Dataanalysis #AInews #Techgadgets #AIcommunity"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

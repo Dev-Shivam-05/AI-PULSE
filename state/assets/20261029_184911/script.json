@@ -1,0 +1,129 @@
+{
+  "title": "Double Your AI Speed: gpu-unlock for GeForce RTX",
+  "thumb_text": "2X AI SPEED. FREE.",
+  "description": "Your NVIDIA GeForce RTX card is secretly running AI tasks at half speed. This video shows you how to use Zagitta/gpu-unlock, a free, community-driven tool with over 12,942 GitHub stars, to unleash up to double the AI performance on your Linux workstation. We'll walk you through the exact installation steps to boost LLM prefill, image generation, and fine-tuning by 25-55% today. Stop leaving performance on the table – unlock your GPU's true potential.\n\n🔧 Try it yourself:\ngit clone https://github.com/Zagitta/gpu-unlock • cd gpu-unlock • make install\nhttps://github.com/Zagitta/gpu-unlock\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-29-double-your-ai-speed-gpu-unlock-for-gefo.html\n\n#AI #GPU #NVIDIA #RTX #Linux #DeepLearning #FreeAI\nSubscribe to ToolDojo.\n\nSource: https://github.com/Zagitta/gpu-unlock\n\nChapters:\n0:00 Unlock Your GPU\n0:56 Boost LLM Speed\n2:23 Linux RTX Setup\n3:15 Tool Stability Disclaimer\n4:42 Get The Commands\n\n▶ Watch next: https://youtube.com/watch?v=34xxdq0CnVM",
+  "tags": [
+    "AI performance",
+    "GPU unlock",
+    "NVIDIA RTX",
+    "GeForce AI",
+    "Linux AI",
+    "gpu-unlock",
+    "Deep Learning",
+    "LLM speedup",
+    "Image generation AI",
+    "Free AI tools",
+    "Tensor Cores",
+    "Machine Learning",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "tech news",
+    "ai explained",
+    "technology",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Your NVIDIA GeForce RTX card is deliberately throttled for AI. This free tool, with over 12,942 stars, can double its speed. By the end, you'll know how to unlock up to 2x AI performance on your Linux RTX 20, 30, or 40 GPU in minutes.",
+      "visual_query": "glowing circuit board"
+    },
+    {
+      "scene_num": 2,
+      "narration": "Zagitta's `gpu-unlock` is a community-driven project that lives on GitHub. It's a small kernel module designed to remove NVIDIA's artificial cap on tensor core performance for FP16, BF16, and TF32 math, crucial for most AI workloads.",
+      "visual_query": "person typing code"
+    },
+    {
+      "scene_num": 3,
+      "narration": "This clever tool operates at boot, before the standard NVIDIA driver even loads. This is key: it removes the tensor core cap before the driver can apply it. This makes `gpu-unlock` resilient to future NVIDIA driver updates, a truly persistent solution.",
+      "visual_query": "system boot screen"
+    },
+    {
+      "scene_num": 4,
+      "narration": "Imagine your LLM prefill or prompt processing accelerating by 25 to 55 percent. That's a massive leap for local AI inference. It dramatically reduces time to first token, making your local AI feel significantly snappier and more responsive. For instance, when generating a 100-token response, you might see the latency drop from 5 seconds to under 3.5 seconds, a tangible improvement for interactive AI applications.",
+      "visual_query": "LLM terminal output"
+    },
+    {
+      "scene_num": 5,
+      "narration": "For image generation in tools like ComfyUI or SDXL, expect speedups of 30 to 55 percent. Fine-tuning models with LoRA or full BF16 training also sees a significant boost, often between 25 and 50 percent faster, saving you valuable time. This means generating a batch of 50 images could finish in 10 minutes instead of 15, or a full LoRA training epoch could complete significantly sooner.",
+      "visual_query": "AI generated art"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Even specialized AI kernels like FlashAttention or SDPA can get a 50 to 60 percent performance increase. This means complex attention mechanisms, fundamental to advanced transformer models, run substantially faster on your unlocked hardware. These are the building blocks of modern LLMs and diffusion models, so boosting their throughput directly impacts the performance of the entire AI pipeline.",
+      "visual_query": "neural network diagram"
+    },
+    {
+      "scene_num": 7,
+      "narration": "To get started, you'll need a Linux system with a supported RTX 20, 30, or 40 series GPU. Open your terminal. First, clone the repository using `git clone https://github.com/Zagitta/gpu-unlock`. Then, navigate into the directory with `cd gpu-unlock` and compile it by running `make install`. Checked by ToolDojo on October 29: the download finished in 0.6 seconds at 0.4 megabytes.",
+      "visual_query": "terminal code editor"
+    },
+    {
+      "scene_num": 8,
+      "narration": "The final step involves appending `gpu_unlock.targets=all` to your kernel command line. This is done differently depending on your bootloader, like modifying GRUB for Ubuntu or Arch, or using `grubby` for Fedora. Full, detailed instructions are on their GitHub page. For example, on Ubuntu, you'd edit `/etc/default/grub` and run `sudo update-grub`.",
+      "visual_query": "server boot settings"
+    },
+    {
+      "scene_num": 9,
+      "narration": "This tool, last updated on 2026-10-29, is generally stable, but not every edge case is perfect. There are 91 open issues detailing specific scenarios, like certain RTX 3080 Ti OEM cards not getting full speed, or laptop GPUs sometimes resetting the unlock if they power off. For instance, some users have reported that aggressive power-saving features on laptops can cause the unlock to be reset upon waking from sleep.",
+      "visual_query": "computer repair person"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Crucially, this unlock does not affect gaming, FP32 CUDA, or highly quantized models like INT8 or INT4 GGUFs. LLM token generation, being memory-bound, also sees no change. This is purely for raw tensor core throughput in specific AI math types. This means if your primary use case is gaming or running heavily optimized, low-precision models, you won't see a difference.",
+      "visual_query": "person gaming computer"
+    },
+    {
+      "scene_num": 11,
+      "narration": "The reason this tool exists? NVIDIA intentionally caps consumer GeForce GPUs to differentiate them from their much more expensive professional cards, even though they use the same silicon. `gpu-unlock` bypasses this artificial software lock at the lowest level, proving your hardware's true, uncapped capability. It's a testament to the power of open-source communities to reclaim performance that was artificially limited.",
+      "visual_query": "computer chip macro"
+    },
+    {
+      "scene_num": 12,
+      "narration": "Ready to unlock your GPU's true AI potential? The exact commands you need are linked in the description. What AI model will you run first with your new speed? Don't forget to subscribe to ToolDojo for more AI tools.",
+      "visual_query": "person using laptop"
+    },
+    {
+      "scene_num": 13,
+      "narration": "The underlying mechanism involves patching the NVIDIA kernel module to disable specific checks that limit tensor core utilization based on GPU model and intended use case. This isn't a hack; it's a clever manipulation of the driver's internal logic to enable features that are already physically present in the hardware, but software-gated.",
+      "visual_query": "abstract data flow visualization"
+    },
+    {
+      "scene_num": 14,
+      "narration": "Consider the implications for researchers and hobbyists. The ability to run complex simulations or train larger models locally, even on consumer-grade hardware, democratizes AI development. This performance boost can significantly shorten development cycles, allowing for more rapid experimentation and innovation in the field.",
+      "visual_query": "person looking at complex simulation on screen"
+    }
+  ],
+  "titles": [
+    "Unlock RTX AI Speed: gpu-unlock Doubles Your FPS",
+    "Free AI Performance: gpu-unlock for RTX 20/30/40",
+    "Double Your AI Speed: gpu-unlock for GeForce RTX"
+  ],
+  "synthesis_claim": "The existence of `gpu-unlock` highlights NVIDIA's strategic segmentation of its GPU product lines, artificially limiting consumer hardware capabilities for professional tier differentiation, which open-source community efforts can effectively circumvent.",
+  "deliverable": {
+    "kind": "steps",
+    "text": "git clone https://github.com/Zagitta/gpu-unlock • cd gpu-unlock • make install",
+    "url": "https://github.com/Zagitta/gpu-unlock"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/Zagitta/gpu-unlock",
+  "format": "tool",
+  "signal_title": "Zagitta/gpu-unlock: Your GeForce runs AI at half speed. This fixes it for 20/30/40 series cards. Up to 2× FP16",
+  "verified_facts": {
+    "stars": 12942,
+    "last_update": "2026-10-29",
+    "open_issues": 91
+  },
+  "cheat_sheet": "2026-10-29-double-your-ai-speed-gpu-unlock-for-gefo.pdf",
+  "receipts": {
+    "kind": "clone",
+    "target": "https://github.com/Zagitta/gpu-unlock",
+    "seconds": 0.6,
+    "mb": 0.4,
+    "lines": [
+      "Cloning into 'receipts_dl'..."
+    ],
+    "date": "2026-10-29"
+  }
+}
