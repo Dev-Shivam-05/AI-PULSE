@@ -5670,5 +5670,52 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-10-30T18:35:28.347942",
+    "title": "LLM Thinking: Transformers Explained",
+    "description": "How do Large Language Models actually think? We're diving deep into the AI brain, demystifying the core architecture that powers their incredible abilities.  Understand the fundamental processes, from tokenization to the revolutionary Transformer architecture, that allow AI to generate text, translate languages, and even write code.  By the end of this exploration, you'll grasp the 'how' behind AI's impressive capabilities and gain a clearer perspective on its future.  We break down complex concepts into understandable steps, revealing the intricate workings of the models that are reshaping our world. #AI #LLM #ArtificialIntelligence #MachineLearning #TechExplained #DataScience\n\nChapters:\n0:00 AI Conversations Evolve\n1:18 Transformer Architecture Revolution\n2:24 Transformer Layers Explained\n3:14 LLM Text Generation Loop\n4:28 No True Reasoning\n\n▶ Watch next: https://youtube.com/watch?v=4MTEDi4MdnQ",
+    "tags": [
+      "Large Language Models",
+      "LLM",
+      "AI",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Transformers",
+      "Neural Networks",
+      "Tokenization",
+      "AI Explained",
+      "Tech",
+      "ai news",
+      "tech news",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/LLM_Thinking_Transformers_Explained_20261030_181431_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261030_182036.mp4",
+      "output/shorts/short_2_sb_20261030_182211.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261030_182026.jpg",
+    "youtube_url": "https://youtube.com/watch?v=C681M4_HyfM",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=7PpIq7Mkv3E",
+      "https://youtube.com/watch?v=vFbjDlDhxdk"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Transformer Attention Mechanism #Shorts",
+        "description": "Visualizes the self-attention mechanism in Transformer models, showing how words relate to each other in a sentence.",
+        "instagram_caption": "💡 See how Transformer models understand context. This clip breaks down the attention mechanism to show word relationships. Follow @tooldojo! #AI #MachineLearning #Transformers #DeepLearning #NLP #AttentionMechanism #LLM #ArtificialIntelligence #Tech #DataScience #NeuralNetworks #Coding #Education #Tutorial #AIExplained #ComputerScience #Innovation #FutureTech #LearnAI #AIModel"
+      },
+      {
+        "title": "Transformer Encoder-Decoder #Shorts",
+        "description": "Illustrates the encoder-decoder structure of Transformer models, used in tasks like translation and text generation.",
+        "instagram_caption": "🚀 Discover the encoder-decoder flow in Transformers. This visual guide explains how models process and generate text. Follow @tooldojo! #AI #MachineLearning #Transformers #DeepLearning #NLP #EncoderDecoder #LLM #ArtificialIntelligence #Tech #DataScience #NeuralNetworks #Coding #Education #Tutorial #AIExplained #ComputerScience #Innovation #FutureTech #LearnAI #AIModel"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
