@@ -1,0 +1,113 @@
+{
+  "title": "Run Nemotron-3.5-Transcribe: 40 Languages Offline",
+  "thumb_text": "FREE. 40 LANGUAGES.",
+  "description": "Unlock powerful, private audio transcription with NVIDIA's Nemotron-3.5-Transcribe model. In this hands-on video, we'll show you how to set up your own offline speech-to-text server, capable of handling an hour of audio in 40 languages. Discover its unique features like speaker diarization, timestamps, and audio question answering, all running securely on your hardware. We'll provide the exact command to get started, along with a crucial look at hardware requirements. Stop sending your sensitive audio data to the cloud.\n\n🔧 Try it yourself:\nexport VLLM_PLUGINS=nemo_speechlm • export VLLM_MAX_AUDIO_DECODE_DURATION_S=3600 • export VLLM_MAX_AUDIO_CLIP_FILESIZE_MB=180 • # Word timestamps require the V1 model runner. • export VLLM_USE_V2_MODE\nhttps://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-10-31-run-nemotron-3-5-transcribe-40-languages.html\n\n#Nemotron #NVIDIA #ASR #SpeechToText #OfflineAI #HuggingFace #AI \n\nSubscribe to ToolDojo.\n\nSource: https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B\n\nChapters:\n0:00 Private Transcription Anywhere\n1:12 Compute Requirements Explained\n2:27 Forty Language Support\n4:09 GPU Dependency Realities\n5:15 Run Nemotron Locally\n\n▶ Watch next: https://youtube.com/watch?v=C681M4_HyfM",
+  "tags": [
+    "NVIDIA Nemotron",
+    "ASR",
+    "Speech Recognition",
+    "Offline AI",
+    "Transcription",
+    "Hugging Face",
+    "Free AI Tool",
+    "AI",
+    "Machine Learning",
+    "Open Source AI",
+    "Hands-on AI",
+    "Speech-to-Text",
+    "artificial intelligence",
+    "ai news",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning",
+    "tooldojo"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Imagine transcribing an entire hour of audio, in any of 40 different languages, all without sending a single byte to the cloud. NVIDIA’s new Nemotron-3.5-Transcribe model, downloaded over 24,000 times, makes this possible and completely free. By the end of this video, you'll have the exact steps and command to run your own private, powerful speech-to-text server locally, ready for immediate use.",
+      "visual_query": "audio waveform analytics"
+    },
+    {
+      "scene_num": 2,
+      "narration": "This isn't just another online API; Nemotron-3.5-Transcribe is an open-weight, offline speech and audio model from NVIDIA. It processes recordings with text instructions, transforming spoken content into text responses. This gives you total control, allowing you to keep sensitive data private, directly on your own hardware.",
+      "visual_query": "nvidia gpu card"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Developed by NVIDIA, this model leverages a sophisticated Speech-Augmented Language Model architecture, built on the Nemotron-3.5-Lightning base. It uses a hybrid Mixture-of-Experts design, activating approximately 4.3 billion parameters for peak performance. With 528 likes on Hugging Face, it’s quickly gaining traction for its robust, offline capabilities.",
+      "visual_query": "computer chip assembly"
+    },
+    {
+      "scene_num": 4,
+      "narration": "But here's the problem for some: to run this locally, you'll need serious compute. Specifically, an NVIDIA H100 GPU with 80 gigabytes of VRAM. This isn't designed for casual desktop use, but for those with access to professional-grade hardware, it unlocks unprecedented power and privacy. For context, an NVIDIA H100 is a data center GPU, often found in supercomputing clusters, designed for massive parallel processing and AI workloads. Its 80GB of HBM2e memory is crucial for holding the model's parameters and intermediate computations, enabling it to handle complex tasks without constant data swapping.",
+      "visual_query": "glowing server racks"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Once your Linux environment is prepared and vLLM is installed, setting up the Nemotron-3.5-Transcribe server is a single, powerful command. This spins up a local API endpoint, ready to transcribe audio files you send to it, all happening completely on your machine. vLLM, for instance, is a high-throughput and memory-efficient inference engine for Large Language Models, which is essential for efficiently serving models like Nemotron locally.",
+      "visual_query": "person typing code"
+    },
+    {
+      "scene_num": 6,
+      "narration": "The model natively supports an impressive 40 languages, including English, French, German, Japanese, Chinese, and many more. This makes it incredibly versatile for global teams or processing diverse content, bypassing the need for multiple language-specific tools or cloud services. Think about a multinational corporation needing to transcribe internal communications from teams in Germany, Japan, and the US simultaneously – this model handles that seamlessly without needing separate, paid services for each language.",
+      "visual_query": "globe with language icons"
+    },
+    {
+      "scene_num": 7,
+      "narration": "You can feed it recordings up to a full hour long, thanks to its extensive 65,536-token context window. Beyond basic transcription, it supports speaker-attributed transcription, clearly labeling who said what. This is game-changing for transcribing meetings, interviews, or complex multi-speaker audio. For example, in a podcast with three hosts and a guest, Nemotron can accurately assign dialogue segments to 'Host 1,' 'Host 2,' 'Host 3,' and 'Guest,' significantly reducing manual editing time.",
+      "visual_query": "podcast recording studio"
+    },
+    {
+      "scene_num": 8,
+      "narration": "Need precision? Nemotron-3.5-Transcribe can generate word-level timestamps, perfect for editing or synchronizing text with audio. It also features audio question answering, allowing you to prompt the model with specific queries about the content of your audio files. Imagine uploading a lecture recording and then asking, 'What were the three main points discussed regarding quantum entanglement?' and getting a precise text answer with timestamps indicating where in the audio that information is located.",
+      "visual_query": "audio editing software"
+    },
+    {
+      "scene_num": 9,
+      "narration": "Let's be honest: if you don't own or have access to an NVIDIA H100 80GB GPU, this specific local deployment is simply not feasible for you right now. This tool is for power users and enterprises, not everyday laptop setups. The computational demands are substantial, requiring dedicated hardware designed for high-performance AI inference. For many, this means it's currently out of reach for personal use, but it highlights the cutting edge of what's possible.",
+      "visual_query": "empty desk with laptop"
+    },
+    {
+      "scene_num": 10,
+      "narration": "And the strangest part? This high-performance model, capable of intricate tasks like speaker diarization and audio question answering across 40 languages, is released as an open-weight, offline solution. This commitment to local, private processing offers a level of data sovereignty rarely seen in advanced AI models. It means organizations dealing with highly sensitive information, such as legal proceedings, medical consultations, or proprietary research, can leverage state-of-the-art transcription without ever exposing that data externally.",
+      "visual_query": "digital padlock secure"
+    },
+    {
+      "scene_num": 11,
+      "narration": "Get started with your own private Nemotron-3.5-Transcribe server today. The exact command and setup instructions are linked in the description below. What's the most challenging audio transcription task you'd tackle with this model? Subscribe to ToolDojo for more hands-on AI insights.",
+      "visual_query": "subscribe button animation"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The implications of such a powerful, offline model are vast. For researchers, it means analyzing large datasets of spoken language without privacy concerns. For businesses, it translates to enhanced security and potentially lower operational costs by avoiding per-minute cloud transcription fees. The ability to run advanced ASR locally democratizes access to sophisticated AI tools for those who prioritize data control and security above all else.",
+      "visual_query": "network nodes connecting globally"
+    },
+    {
+      "scene_num": 13,
+      "narration": "Consider the mechanism behind its accuracy. The Speech-Augmented Language Model architecture allows Nemotron to not just recognize sounds but to understand the context and nuances of spoken language, similar to how a human interpreter would. This deep understanding is what enables features like accurate speaker diarization and the ability to answer questions about the audio content, going far beyond simple word-for-word transcription.",
+      "visual_query": "brain neural network visualization"
+    }
+  ],
+  "titles": [
+    "Run Nemotron-3.5-Transcribe: 40 Languages Offline",
+    "NVIDIA Nemotron-3.5-Transcribe: Your Private ASR Server",
+    "Free Nemotron 3.5 Transcribe: 24K Downloads, 1 Hour Audio"
+  ],
+  "synthesis_claim": "The Nemotron-3.5-Transcribe model's open-weight and offline design, coupled with its advanced multilingual and long-form audio capabilities, positions it as an essential tool for privacy-critical enterprise applications that cannot rely on cloud-based ASR services.",
+  "deliverable": {
+    "kind": "command",
+    "text": "export VLLM_PLUGINS=nemo_speechlm • export VLLM_MAX_AUDIO_DECODE_DURATION_S=3600 • export VLLM_MAX_AUDIO_CLIP_FILESIZE_MB=180 • # Word timestamps require the V1 model runner. • export VLLM_USE_V2_MODE",
+    "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B"
+  },
+  "filter_segment": true,
+  "source_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B",
+  "format": "tool",
+  "signal_title": "nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B — trending automatic speech recognition on Hugging Face",
+  "verified_facts": {
+    "downloads": 24357,
+    "likes": 528
+  },
+  "cheat_sheet": "2026-10-31-run-nemotron-3-5-transcribe-40-languages.pdf"
+}

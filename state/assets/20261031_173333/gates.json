@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "80GB of HBM2e memory",
+        "type": "number",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The Nemotron-3.5-Transcribe model's open-weight and offline design, coupled with its advanced multilingual and long-form audio capabilities, positions it as an essential tool for privacy-critical enterprise applications that cannot rely on cloud-based ASR services."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline includes specific instructions for setting up a Linux environment and installing vLLM, which are not present in the source text. The outline also mentions \"serious compute\" for local execu"
+  },
+  "confidence": {
+    "score": 0.89,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
