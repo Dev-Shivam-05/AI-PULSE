@@ -61,7 +61,8 @@ MUSIC_TARGET_LUFS = -36.8
 VOICE_GAIN_DB = 0.0  # L6 row 10: measured edge-tts level vs -19.8 LUFS (spec section 6)
 # L6 row 8: one subscribe line after real value, then rarely. Seconds of session timeline.
 CTA_FIRST, CTA_EVERY, CTA_SECONDS, CTA_LEAD = 165, 900, 5, 2
-CTA_TEXT = "Finding these useful? Subscribe to ToolDojo for practical AI tools."
+CTA_TEXT = ("If these discoveries help you choose AI tools, subscribe to ToolDojo "
+            "for practical updates.")              # review 2026-11-01 point 8, verbatim
 WRAP_LEAD = 150      # L6 row 9: ask for the end card this long before the target
 OVERRUN = 600        # L6 row 9: hard wall-clock stop this long after the target
 MANIFEST_URL = ("https://raw.githubusercontent.com/Dev-Shivam-05/AI-PULSE/main/"

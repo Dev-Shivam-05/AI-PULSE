@@ -361,9 +361,9 @@ def section_rank(tools: list, tool: dict) -> int:
 
 
 def status_label(t: dict, history: dict | None) -> str:
-    """L6 row 4: NEW = never spotlighted on any earlier day; BACK = spotlighted before and
+    """L6 row 4: SPOTTED = never spotlighted on any earlier day; BACK = spotlighted before and
     outside the cooldown (its card then states the change since last time)."""
-    return "BACK ON THE RADAR" if (history or {}).get(t["id"]) else "NEW ON THE RADAR"
+    return "BACK ON RADAR" if (history or {}).get(t["id"]) else "SPOTTED THIS SESSION"
 
 
 def is_stale(last_ok: datetime | None, now: datetime, minutes: int = STALE_MINUTES) -> bool:

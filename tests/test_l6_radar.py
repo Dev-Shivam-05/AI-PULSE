@@ -93,8 +93,8 @@ def test_l6_spotlight_below_the_cut_takes_its_sections_last_slot():
 
 def test_l6_status_label_and_staleness():
     t = _l6_gh(1, 5)
-    assert rd.status_label(t, {}) == "NEW ON THE RADAR"
-    assert rd.status_label(t, {"gh:o/r1": {"at": "x", "number": 3}}) == "BACK ON THE RADAR"
+    assert rd.status_label(t, {}) == "SPOTTED THIS SESSION"
+    assert rd.status_label(t, {"gh:o/r1": {"at": "x", "number": 3}}) == "BACK ON RADAR"
     assert rd.is_stale(None, NOW)
     assert not rd.is_stale(NOW - timedelta(minutes=29), NOW)
     assert rd.is_stale(NOW - timedelta(minutes=31), NOW)
