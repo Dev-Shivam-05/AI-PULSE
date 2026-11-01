@@ -316,7 +316,8 @@ def test_estimate_video_seconds_tracks_words_and_clamps():
 
 # --------------------------------------------------------------- ffmpeg args (built, never run)
 def test_trim_args_seek_past_blank_head():
-    args = screencap._trim_args("in.webm", "out.mp4")
+    # v3-B.5: one input per visited page, each seeked past its OWN page-load blank
+    args = screencap._join_args([("in.webm", screencap.HEAD_TRIM)], "out.mp4")
     assert args.index("-ss") < args.index("-i")          # page-load blank is removed
     assert args[args.index("-ss") + 1] == str(screencap.HEAD_TRIM)
 
@@ -337,16 +338,16 @@ def test_capture_fails_soft_when_recorder_dies(monkeypatch, tmp_path):
     def boom(*a, **k):
         raise RuntimeError("browser gone")
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page", boom)
+    monkeypatch.setattr(screencap, "_record_pages", boom)
     s = {"scenes": [{"narration": "n"}] * 6, "source_url": "https://github.com/x/y"}
     assert screencap.capture(s) is None                  # caller falls back to stock
 
 
 def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page",
-                        lambda url, out, t: (str(Path(out) / "rec.webm"),
-                                             str(Path(out) / "page.png"), 3.1))
+    monkeypatch.setattr(screencap, "_record_pages",
+                        lambda urls, out, t: ([(str(Path(out) / "rec.webm"), 3.1)],
+                                              str(Path(out) / "page.png")))
     seen = []
     def fake_ffmpeg(args, timeout=600):
         seen.append(args)
@@ -365,8 +366,8 @@ def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
 
 def test_capture_shares_chunks_when_recording_is_short(monkeypatch, tmp_path):
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page",
-                        lambda url, out, t: (str(Path(out) / "rec.webm"), "", 2.5))
+    monkeypatch.setattr(screencap, "_record_pages",
+                        lambda urls, out, t: ([(str(Path(out) / "rec.webm"), 2.5)], ""))
     def fake_ffmpeg(args, timeout=600):
         Path(args[-1]).write_bytes(b"0" * 2000)
         return True

@@ -763,15 +763,110 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
 # scores 1.0 (spec v3-C.2 #1).
 EVERGREEN_DUP_OVERLAP = 0.7
 
+# spec v3-B.5 #3: the 0.7 token overlap above only catches a re-WORDING. In the 30
+# published before 2026-11-01, 8 of 13 evergreens were two SUBJECTS re-titled
+# ("LLM Explained: Your AI Brain Decoded" / "LLM Mechanics: How AI Learns to Think").
+# A subject screen compares what is left once the lane's generic words are gone.
+EVERGREEN_SUBJECT_DAYS = 30
+# Generic words: the brief's list, this lane's own title templates ("how does X
+# actually work", "why is X such a big deal", "X vs Y, honestly" — without them every
+# topic would share a word with every other), and filler measured on the ledger.
+EVERGREEN_STOP = frozenset("""
+ai the a an of to in on for and or with without at by from into is are be it its
+this that they them their you your can how why what when where who which
+explained explain explainer inside beyond revolution decoded mechanics mechanic
+works work working workings thinking think thinks learn learns learning
+actually really truly real does do happens happen big deal honestly vs versus
+human secret guide unlock understand making faster future gone gains inner unseen
+impact winner million billion trillion
+""".split())
+# Families: different words for ONE subject. "language model" is matched as a phrase.
+EVERGREEN_FAMILIES = {
+    "llm": {"llm", "transformer", "large language model", "language model"},
+    "hardware": {"cpu", "gpu", "chip", "hardware", "npu", "tpu"},
+}
+
+
+def _eg_stem(w: str) -> str:
+    """Simple plural stem: llms -> llm, industries -> industry, chips -> chip."""
+    if len(w) > 4 and w.endswith("ies"):
+        return w[:-3] + "y"
+    if len(w) > 3 and w.endswith("s") and not w.endswith(("ss", "ous")):
+        return w[:-1]
+    return w
+
+
+def subject_terms(title: str) -> set:
+    """The subject of an evergreen title: family ids for any family word, plus
+    every other non-generic content word (stemmed, 3+ letters)."""
+    t = str(title or "").lower().replace("’", "'")
+    t = re.sub(r"'s\b", "", t)
+    raw = re.findall(r"[a-z0-9]+", t)
+    words = [_eg_stem(w) for w in raw]
+    joined = " " + " ".join(words) + " "
+    terms = set()
+    # a phrase member ("large language model") is the family, and its words are
+    # consumed — "language" alone must not become a second, accidental subject
+    for fam, members in EVERGREEN_FAMILIES.items():
+        for m in sorted((m for m in members if " " in m), key=len, reverse=True):
+            if (" " + m + " ") in joined:
+                terms.add(fam)
+                joined = joined.replace(" " + m + " ", " ")
+    for w0, w in zip(raw, words):
+        if (" " + w + " ") not in joined:
+            continue
+        fam = next((f for f, ms in EVERGREEN_FAMILIES.items() if w in ms), None)
+        if fam:
+            terms.add(fam)
+        elif (w0 not in EVERGREEN_STOP and w not in EVERGREEN_STOP
+              and len(w) >= 3 and not w.isdigit()):
+            terms.add(w)
+    return terms
+
+
+def recent_evergreen_titles(rows: list, day: _dt.date,
+                            days: int = EVERGREEN_SUBJECT_DAYS) -> list[str]:
+    """Titles of evergreens PUBLISHED in the `days` before `day` (by ledger format)."""
+    out = []
+    for r in rows or []:
+        if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or r.get("format") != "evergreen":
+            continue
+        try:
+            stamped = _dt.date.fromisoformat(str(r.get("timestamp", ""))[:10])
+        except ValueError:
+            continue
+        if 0 <= (day - stamped).days <= days and r.get("title"):
+            out.append(str(r["title"]))
+    return out
+
+
+def subject_clash(idea: str, recent: list[str]) -> tuple[str, str] | None:
+    """(shared subject term, recent title) when `idea` repeats a recent subject."""
+    mine = subject_terms(idea)
+    for t in reversed(recent):          # report the most recent clash
+        shared = mine & subject_terms(t)
+        if shared:
+            return sorted(shared)[0], t
+    return None
+
 
 def pick_evergreen_topic(signals: list[dict]) -> dict | None:
     """Turn current signal themes into a durable, search-driven question topic."""
     used = _read_json(USED_TOPICS, [])[-60:]
     themes = "; ".join(i["title"][:70] for i in signals[:10]) or "large language models, AI agents, AI chips"
+    try:
+        recent = recent_evergreen_titles(learn.read_runs(RUNS_LOG), _dt.date.today())
+    except Exception:
+        recent = []
+    # spec v3-B.5 #3: name the recent SUBJECTS so the 5 proposals are not all re-titles
+    # of them — the screen below rejects those, and 5 rejections is no topic at all
+    # (build_script then falls through to news).
+    avoid = (f"\nRECENT SUBJECTS (choose a DIFFERENT subject entirely, not a new angle on "
+             f"these): {'; '.join(t[:60] for t in recent)}" if recent else "")
     prompt = f"""You are the strategist for {fv.CHANNEL_NAME}, an AI/tech education YouTube channel.
 
 Current AI news themes (for relevance only): {themes}
-ALREADY COVERED (never repeat or near-repeat): {"; ".join(t[:60] for t in used)}
+ALREADY COVERED (never repeat or near-repeat): {"; ".join(t[:60] for t in used)}{avoid}
 
 Propose 5 EVERGREEN video topics a general tech audience actively SEARCHES for — "how does X
 actually work", "why is X such a big deal", "what happens when X", "X vs Y, honestly". They must
@@ -789,10 +884,17 @@ type","angle":"1-2 sentences on the unique take"}}]}}"""
     # which is how two near-identical uploads happened once before.
     used_norm = {signal_engine._norm(t) for t in used}
     for t in d["topics"]:
+        if not isinstance(t, dict):
+            continue
         idea = str(t.get("title_idea", "")).strip()
         if (idea and not too_many_failures(idea)
                 and not signal_engine._is_used(idea, used_norm,
                                                threshold=EVERGREEN_DUP_OVERLAP)):
+            clash = subject_clash(idea, recent)
+            if clash:
+                print(f"  ⏭️ Evergreen {idea[:60]!r} repeats a recent subject "
+                      f"({clash[0]!r}: {clash[1][:50]!r}) — skipped.")
+                continue
             return t
     return None
 
@@ -1342,6 +1444,8 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
     day = today or _dt.date.today()
     if day.weekday() == 6:
         return "roundup", None
+    if fv.flag("lane_mix_v2", False):
+        return _lane_mix_v2(ranked, day)
     viral = viral_pick(ranked)
     if viral and viral[1] >= VIRAL_THRESHOLD:
         print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
@@ -1357,6 +1461,61 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
         return "tool", None
     print(f"  🌤️  No breakout story today"
           f"{f' (best scored {viral[1]:.0f}/10)' if viral else ''} — banking an evergreen.")
+    return "evergreen", None
+
+
+# spec v3-B.5 #2 (4-week test): the daily lane mix. Sunday stays the roundup (above).
+LANE_SATURDAY = 5            # weekday(): Saturday is the evergreen day
+NEWS_PER_ISO_WEEK = 1        # a hot story may take a slot at most once per ISO week
+
+
+def news_published_this_week(day: _dt.date, rows: list | None = None) -> bool:
+    """True when the ledger already holds a PUBLISHED news video in `day`'s ISO
+    week. Reads the format the ledger stamped (the script's own, re-bound in run())
+    — never a log line: an "evergreen" fallback can publish news (09-29)."""
+    if rows is None:
+        try:
+            rows = learn.read_runs(RUNS_LOG)
+        except Exception:
+            rows = []
+    week = day.isocalendar()[:2]
+    n = 0
+    for r in rows or []:
+        if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or r.get("format") != "news":
+            continue
+        try:
+            stamped = _dt.date.fromisoformat(str(r.get("timestamp", ""))[:10])
+        except ValueError:
+            continue
+        if stamped.isocalendar()[:2] == week:
+            n += 1
+    return n >= NEWS_PER_ISO_WEEK
+
+
+def _lane_mix_v2(ranked: list[dict], day: _dt.date):
+    """Mon/Tue/Thu/Fri tool (else evergreen), Wed debate (else the tool rule),
+    Sat evergreen. News is no longer a daily contender: a >= VIRAL_THRESHOLD story
+    may take any of these slots, once per ISO week. The week check runs FIRST so a
+    week that already had its news day spends no viral-judge call."""
+    if not news_published_this_week(day):
+        viral = viral_pick(ranked)
+        if viral and viral[1] >= VIRAL_THRESHOLD:
+            print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
+            return "news", viral
+    else:
+        print("  🗓️  This ISO week already had its news day — no viral check.")
+    wd = day.weekday()
+    if wd == LANE_SATURDAY:
+        print("  🌲 Saturday — the evergreen slot.")
+        return "evergreen", None
+    if (wd == debate.DEBATE_WEEKDAY and fv.flag("debate_format", False)
+            and len(debate.panel()) >= debate.MIN_SEATS):
+        print("  🥊 Debate day — the AI panel takes the question.")
+        return "debate", None
+    if fv.flag("tool_format", False) and any(i.get("kind") == "tool" for i in ranked):
+        print("  🧰 Tool day — running the utility lane (tool video).")
+        return "tool", None
+    print("  🌤️  No tool signal today — banking an evergreen.")
     return "evergreen", None
 
 
@@ -1793,7 +1952,7 @@ def run(publish: bool = False, force_format: str | None = None,
     _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
     # v3-B: a tool video is illustrated by the tool itself — a screen recording
     # of its real page — never stock. capture() fails soft; stock is the fallback.
-    scene_clips, tool_shot = None, ""
+    scene_clips, tool_shot, cap = None, "", None
     if script.get("format") == "tool":
         cap = screencap.capture(script)
         if cap:
@@ -1852,6 +2011,14 @@ def run(publish: bool = False, force_format: str | None = None,
         # Animated, so it must render to its exact slot share — the C.3 law.
         receipts.inject_receipt_clip(script, scene_clips,
                                      durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+    if cap:
+        # spec v3-B.5: the recording was chunked before the narration existed, so
+        # step5_build looped every chunk shorter than its slot. Recut it now, to the
+        # exact share each recording clip gets — LAST, after every inject_* call has
+        # settled how many clips each scene holds. Fail soft: provisional clips stay.
+        if screencap.recut(cap, scene_clips,
+                           durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)) is None:
+            print("  ⚠️ recording recut failed — provisional clips (may loop) this run.")
 
     video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
     if not video:

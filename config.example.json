@@ -32,6 +32,7 @@
     "honest_titles": true,
     "reach_report": true,
     "debate_format": true,
+    "lane_mix_v2": true,
     "debate_panel": [
         {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},
         {"name": "GPT-OSS 120B", "lab": "OpenAI", "provider": "groq", "model": "openai/gpt-oss-120b"},
