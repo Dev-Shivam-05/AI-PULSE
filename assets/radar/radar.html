@@ -208,7 +208,13 @@ body { font-family: "Inter", "Segoe UI", "Microsoft YaHei", "Yu Gothic", sans-se
       clear(facts);
       (s.facts || []).forEach(function (f) { facts.appendChild(el("div", "fact mono", f)); });
       if (!fit($("name"), 104, 52)) unfit.push("name");
-      if (t.use_it_for && !fit(use, 40, 24)) unfit.push("use");
+      // L6 row 5: a benefit line that cannot fit at the floor is DROPPED like one that
+      // failed its gate - never shown cut mid-word (seen live: "...AGENTIC WORKLOAI").
+      if (t.use_it_for && !fit(use, 40, 24)) {
+        use.textContent = "";
+        use.style.display = "none";
+        $("desc").style.height = "226px";
+      }
       if (!fit($("desc"), 40, 26)) unfit.push("desc");
       if (!fit($("owner"), 30, 20)) unfit.push("owner");
       // v3l3 row 2: drop the LAST fact chip while the row overflows; the first one
