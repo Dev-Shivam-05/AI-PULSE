@@ -1,0 +1,180 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.04,Live,,0,0,0,{\k20}This {\k20}week {\k24}in {\k30}AI
+Dialogue: 0,0:00:01.52,0:00:02.44,Live,,0,0,0,{\k6}the {\k30}ground {\k20}is {\k36}shifting
+Dialogue: 0,0:00:02.44,0:00:03.88,Live,,0,0,0,{\k36}beneath {\k48}even {\k12}the {\k38}giants
+Dialogue: 0,0:00:04.46,0:00:05.56,Live,,0,0,0,{\k16}A {\k32}major {\k36}player {\k26}has
+Dialogue: 0,0:00:05.56,0:00:07.14,Live,,0,0,0,{\k48}reportedly {\k66}dialed {\k14}back {\k30}its
+Dialogue: 0,0:00:07.14,0:00:09.64,Live,,0,0,0,{\k52}ambitious {\k56}fundraising {\k56}goals {\k58}{\k28}What
+Dialogue: 0,0:00:09.64,0:00:10.72,Live,,0,0,0,{\k12}does {\k22}this {\k40}signal {\k34}for
+Dialogue: 0,0:00:10.72,0:00:11.72,Live,,0,0,0,{\k10}the {\k36}future {\k28}of {\k26}AI
+Dialogue: 0,0:00:11.72,0:00:13.92,Live,,0,0,0,{\k66}development {\k24}and {\k48}investment {\k60}{\k22}We're
+Dialogue: 0,0:00:13.92,0:00:14.92,Live,,0,0,0,{\k38}counting {\k24}down {\k16}the {\k22}top
+Dialogue: 0,0:00:14.92,0:00:16.32,Live,,0,0,0,{\k32}5 {\k46}stories {\k26}that {\k36}truly
+Dialogue: 0,0:00:16.32,0:00:18.48,Live,,0,0,0,{\k44}mattered {\k44}{\k26}Open {\k40}AI {\k54}{\k8}a
+Dialogue: 0,0:00:18.48,0:00:19.86,Live,,0,0,0,{\k18}name {\k56}synonymous {\k36}with {\k28}cutting
+Dialogue: 0,0:00:19.86,0:00:21.66,Live,,0,0,0,{\k24}edge {\k38}AI {\k46}{\k26}is {\k46}reportedly
+Dialogue: 0,0:00:21.66,0:00:23.62,Live,,0,0,0,{\k70}adjusting {\k28}its {\k28}funding {\k60}strategy
+Dialogue: 0,0:00:24.24,0:00:25.86,Live,,0,0,0,{\k44}Initial {\k42}reports {\k46}suggested {\k30}a
+Dialogue: 0,0:00:25.86,0:00:27.54,Live,,0,0,0,{\k38}massive {\k36}dollar {\k54}30 {\k40}billion
+Dialogue: 0,0:00:27.54,0:00:30.00,Live,,0,0,0,{\k36}raise {\k50}{\k42}However {\k60}{\k22}recent {\k36}news
+Dialogue: 0,0:00:30.00,0:00:31.60,Live,,0,0,0,{\k44}indicates {\k26}a {\k46}revised {\k44}target
+Dialogue: 0,0:00:31.60,0:00:32.88,Live,,0,0,0,{\k22}of {\k24}dollar {\k44}20 {\k38}billion
+Dialogue: 0,0:00:32.88,0:00:34.10,Live,,0,0,0,{\k52}with {\k14}the {\k28}first {\k28}close
+Dialogue: 0,0:00:34.10,0:00:36.08,Live,,0,0,0,{\k62}potentially {\k52}even {\k32}lower {\k38}{\k14}This
+Dialogue: 0,0:00:36.08,0:00:37.94,Live,,0,0,0,{\k50}adjustment {\k24}in {\k40}open {\k72}AI's
+Dialogue: 0,0:00:37.94,0:00:39.68,Live,,0,0,0,{\k24}funding {\k44}round {\k72}suggests {\k34}a
+Dialogue: 0,0:00:39.68,0:00:42.02,Live,,0,0,0,{\k80}recalibration {\k16}of {\k66}expectations {\k72}in
+Dialogue: 0,0:00:42.02,0:00:43.66,Live,,0,0,0,{\k10}the {\k44}competitive {\k44}AI {\k56}market
+Dialogue: 0,0:00:44.22,0:00:45.58,Live,,0,0,0,{\k22}A {\k22}dollar {\k50}20 {\k42}billion
+Dialogue: 0,0:00:45.58,0:00:47.02,Live,,0,0,0,{\k52}raise {\k34}might {\k36}allow {\k22}for
+Dialogue: 0,0:00:47.02,0:00:48.44,Live,,0,0,0,{\k20}more {\k44}focused {\k58}deployment {\k20}of
+Dialogue: 0,0:00:48.44,0:00:49.88,Live,,0,0,0,{\k34}capital {\k42}towards {\k26}core {\k42}research
+Dialogue: 0,0:00:49.88,0:00:51.66,Live,,0,0,0,{\k30}and {\k48}development {\k34}{\k42}or {\k24}a
+Dialogue: 0,0:00:51.66,0:00:53.24,Live,,0,0,0,{\k16}more {\k56}conservative {\k50}approach {\k36}to
+Dialogue: 0,0:00:53.24,0:00:55.08,Live,,0,0,0,{\k32}scaling {\k78}operations {\k56}before {\k18}a
+Dialogue: 0,0:00:55.08,0:00:57.24,Live,,0,0,0,{\k34}potential {\k58}IPO {\k80}Shifting {\k34}gears
+Dialogue: 0,0:00:57.54,0:00:58.92,Live,,0,0,0,{\k26}NVIDIA {\k48}is {\k30}making {\k34}waves
+Dialogue: 0,0:00:58.92,0:01:00.06,Live,,0,0,0,{\k36}with {\k16}its {\k28}open {\k34}source
+Dialogue: 0,0:01:00.06,0:01:02.38,Live,,0,0,0,{\k72}contributions {\k64}{\k34}Their {\k20}new {\k42}Nemotron
+Dialogue: 0,0:01:02.38,0:01:03.62,Live,,0,0,0,{\k36}models {\k30}are {\k36}pushing {\k22}the
+Dialogue: 0,0:01:03.62,0:01:05.00,Live,,0,0,0,{\k32}envelope {\k32}for {\k28}what's {\k46}possible
+Dialogue: 0,0:01:05.00,0:01:07.34,Live,,0,0,0,{\k26}in {\k56}generative {\k30}AI {\k62}{\k60}particularly
+Dialogue: 0,0:01:07.34,0:01:09.00,Live,,0,0,0,{\k34}for {\k48}enterprise {\k74}applications
+Dialogue: 0,0:01:09.62,0:01:11.34,Live,,0,0,0,{\k28}The {\k46}Nemotron {\k36}release {\k62}offers
+Dialogue: 0,0:01:11.34,0:01:12.60,Live,,0,0,0,{\k22}a {\k24}glimpse {\k36}into {\k44}NVIDIA's
+Dialogue: 0,0:01:12.60,0:01:15.22,Live,,0,0,0,{\k66}strategy {\k52}to {\k86}democratize {\k58}advanced
+Dialogue: 0,0:01:15.22,0:01:17.26,Live,,0,0,0,{\k38}AI {\k66}capabilities {\k42}{\k20}These {\k38}models
+Dialogue: 0,0:01:17.26,0:01:18.46,Live,,0,0,0,{\k26}are {\k34}designed {\k34}for {\k26}both
+Dialogue: 0,0:01:18.46,0:01:20.40,Live,,0,0,0,{\k52}creative {\k44}freedom {\k50}and {\k48}practical
+Dialogue: 0,0:01:20.40,0:01:22.72,Live,,0,0,0,{\k58}enterprise {\k32}use {\k82}potentially {\k60}lowering
+Dialogue: 0,0:01:22.72,0:01:23.88,Live,,0,0,0,{\k24}the {\k30}barrier {\k24}to {\k38}entry
+Dialogue: 0,0:01:23.88,0:01:26.18,Live,,0,0,0,{\k28}for {\k64}sophisticated {\k52}AI {\k76}development
+Dialogue: 0,0:01:26.46,0:01:28.12,Live,,0,0,0,{\k60}This {\k36}move {\k24}by {\k46}NVIDIA
+Dialogue: 0,0:01:28.12,0:01:29.86,Live,,0,0,0,{\k78}underscores {\k18}a {\k20}broader {\k48}trend
+Dialogue: 0,0:01:30.10,0:01:31.64,Live,,0,0,0,{\k18}the {\k50}increasing {\k58}importance {\k28}of
+Dialogue: 0,0:01:31.64,0:01:33.38,Live,,0,0,0,{\k32}open {\k34}source {\k40}AI {\k56}{\k12}By
+Dialogue: 0,0:01:33.38,0:01:35.30,Live,,0,0,0,{\k36}releasing {\k50}powerful {\k54}models {\k38}{\k14}they
+Dialogue: 0,0:01:35.30,0:01:36.84,Live,,0,0,0,{\k38}foster {\k54}innovation {\k40}across {\k22}the
+Dialogue: 0,0:01:36.84,0:01:39.34,Live,,0,0,0,{\k50}community {\k48}{\k46}accelerating {\k64}development {\k42}and
+Dialogue: 0,0:01:39.34,0:01:39.90,Live,,0,0,0,{\k46}adoption
+Dialogue: 0,0:01:40.52,0:01:41.88,Live,,0,0,0,{\k40}Now {\k32}{\k20}for {\k10}a {\k34}story
+Dialogue: 0,0:01:41.88,0:01:43.16,Live,,0,0,0,{\k20}that {\k50}impacts {\k20}how {\k38}websites
+Dialogue: 0,0:01:43.16,0:01:44.86,Live,,0,0,0,{\k58}interact {\k32}with {\k26}AI {\k54}open
+Dialogue: 0,0:01:44.86,0:01:46.44,Live,,0,0,0,{\k38}AI {\k56}{\k12}is {\k26}rolling {\k26}out
+Dialogue: 0,0:01:46.44,0:01:47.42,Live,,0,0,0,{\k20}new {\k38}tools {\k24}to {\k16}help
+Dialogue: 0,0:01:47.42,0:01:48.98,Live,,0,0,0,{\k46}websites {\k50}express {\k28}their {\k32}AI
+Dialogue: 0,0:01:48.98,0:01:51.06,Live,,0,0,0,{\k46}training {\k56}preferences {\k60}{\k34}This {\k12}is
+Dialogue: 0,0:01:51.06,0:01:52.08,Live,,0,0,0,{\k14}a {\k30}crucial {\k34}step {\k24}for
+Dialogue: 0,0:01:52.08,0:01:53.62,Live,,0,0,0,{\k22}data {\k50}governance {\k42}and {\k40}ethical
+Dialogue: 0,0:01:53.62,0:01:55.84,Live,,0,0,0,{\k36}AI {\k68}development {\k28}{\k26}This {\k64}initiative
+Dialogue: 0,0:01:55.84,0:01:57.96,Live,,0,0,0,{\k28}by {\k78}OpenAI {\k90}aims {\k16}to
+Dialogue: 0,0:01:57.96,0:01:59.48,Live,,0,0,0,{\k14}give {\k40}content {\k58}creators {\k40}more
+Dialogue: 0,0:01:59.48,0:02:00.76,Live,,0,0,0,{\k46}control {\k42}over {\k24}how {\k16}their
+Dialogue: 0,0:02:00.76,0:02:01.90,Live,,0,0,0,{\k34}data {\k26}is {\k30}used {\k24}for
+Dialogue: 0,0:02:01.90,0:02:03.68,Live,,0,0,0,{\k32}AI {\k50}training {\k36}{\k54}It's {\k6}a
+Dialogue: 0,0:02:03.68,0:02:05.42,Live,,0,0,0,{\k20}move {\k42}towards {\k30}greater {\k82}transparency
+Dialogue: 0,0:02:05.42,0:02:06.78,Live,,0,0,0,{\k60}and {\k6}a {\k16}more {\k54}respectful
+Dialogue: 0,0:02:06.78,0:02:08.94,Live,,0,0,0,{\k80}ecosystem {\k42}{\k36}Imagine {\k24}a {\k34}website
+Dialogue: 0,0:02:08.94,0:02:10.00,Live,,0,0,0,{\k44}owner {\k22}being {\k28}able {\k12}to
+Dialogue: 0,0:02:10.00,0:02:11.34,Live,,0,0,0,{\k44}specify {\k38}through {\k20}a {\k32}simple
+Dialogue: 0,0:02:11.34,0:02:12.96,Live,,0,0,0,{\k36}tag {\k66}whether {\k24}their {\k36}content
+Dialogue: 0,0:02:12.96,0:02:13.68,Live,,0,0,0,{\k22}can {\k12}be {\k24}used {\k14}to
+Dialogue: 0,0:02:13.68,0:02:15.50,Live,,0,0,0,{\k32}train {\k50}future {\k38}AI {\k52}models
+Dialogue: 0,0:02:15.80,0:02:16.78,Live,,0,0,0,{\k30}much {\k22}like {\k36}robots
+Dialogue: 0,0:02:17.40,0:02:18.94,Live,,0,0,0,{\k44}TXT {\k34}for {\k24}web {\k42}crawlers
+Dialogue: 0,0:02:19.36,0:02:21.50,Live,,0,0,0,{\k38}This {\k66}mechanism {\k72}often {\k38}referred
+Dialogue: 0,0:02:21.50,0:02:22.36,Live,,0,0,0,{\k30}to {\k22}as {\k8}a {\k26}data
+Dialogue: 0,0:02:22.36,0:02:23.64,Live,,0,0,0,{\k32}opt {\k28}out {\k38}or {\k30}AI
+Dialogue: 0,0:02:23.64,0:02:25.64,Live,,0,0,0,{\k50}training {\k38}preference {\k54}standard {\k58}is
+Dialogue: 0,0:02:25.64,0:02:27.06,Live,,0,0,0,{\k34}vital {\k22}for {\k28}building {\k48}trust
+Dialogue: 0,0:02:27.26,0:02:28.38,Live,,0,0,0,{\k28}Without {\k24}it {\k20}{\k8}the {\k32}rapid
+Dialogue: 0,0:02:28.38,0:02:30.00,Live,,0,0,0,{\k58}expansion {\k28}of {\k26}AI {\k50}could
+Dialogue: 0,0:02:30.00,0:02:31.60,Live,,0,0,0,{\k82}inadvertently {\k24}lead {\k18}to {\k36}widespread
+Dialogue: 0,0:02:31.60,0:02:33.52,Live,,0,0,0,{\k68}resentment {\k28}from {\k42}content {\k54}creators
+Dialogue: 0,0:02:33.52,0:02:34.88,Live,,0,0,0,{\k62}whose {\k32}work {\k16}is {\k26}used
+Dialogue: 0,0:02:34.88,0:02:37.14,Live,,0,0,0,{\k38}without {\k48}consent {\k60}or {\k70}compensation
+Dialogue: 0,0:02:37.60,0:02:39.34,Live,,0,0,0,{\k54}While {\k34}some {\k40}AI {\k46}news
+Dialogue: 0,0:02:39.34,0:02:40.88,Live,,0,0,0,{\k42}focuses {\k46}on {\k42}lofty {\k24}funding
+Dialogue: 0,0:02:40.88,0:02:42.80,Live,,0,0,0,{\k46}rounds {\k58}{\k14}other {\k52}developments {\k22}are
+Dialogue: 0,0:02:42.80,0:02:44.38,Live,,0,0,0,{\k42}quietly {\k44}building {\k16}the {\k56}foundations
+Dialogue: 0,0:02:44.38,0:02:46.58,Live,,0,0,0,{\k36}for {\k40}safer {\k34}AI {\k56}{\k54}OpenAI
+Dialogue: 0,0:02:46.58,0:02:48.46,Live,,0,0,0,{\k72}also {\k38}released {\k38}its {\k40}Community
+Dialogue: 0,0:02:48.46,0:02:50.60,Live,,0,0,0,{\k46}Safety {\k46}Report {\k54}{\k28}detailing {\k40}new
+Dialogue: 0,0:02:50.60,0:02:51.90,Live,,0,0,0,{\k42}protections {\k40}for {\k38}teens
+Dialogue: 0,0:02:52.52,0:02:55.00,Live,,0,0,0,{\k30}This {\k34}report {\k62}highlights {\k122}OpenAI's
+Dialogue: 0,0:02:55.00,0:02:56.80,Live,,0,0,0,{\k36}commitment {\k40}to {\k56}responsible {\k48}AI
+Dialogue: 0,0:02:56.80,0:02:59.44,Live,,0,0,0,{\k72}deployment {\k54}{\k24}By {\k62}proactively {\k52}addressing
+Dialogue: 0,0:02:59.44,0:03:01.68,Live,,0,0,0,{\k50}potential {\k50}risks {\k38}{\k58}especially {\k28}for
+Dialogue: 0,0:03:01.68,0:03:03.40,Live,,0,0,0,{\k40}vulnerable {\k40}user {\k40}groups {\k36}{\k16}they
+Dialogue: 0,0:03:03.40,0:03:05.00,Live,,0,0,0,{\k10}are {\k32}setting {\k48}important {\k70}precedents
+Dialogue: 0,0:03:05.00,0:03:06.40,Live,,0,0,0,{\k14}for {\k14}the {\k42}entire {\k60}industry
+Dialogue: 0,0:03:06.62,0:03:07.82,Live,,0,0,0,{\k20}These {\k36}safety {\k28}measures {\k36}are
+Dialogue: 0,0:03:07.82,0:03:09.44,Live,,0,0,0,{\k42}critical {\k36}as {\k30}AI {\k54}becomes
+Dialogue: 0,0:03:09.44,0:03:10.74,Live,,0,0,0,{\k38}more {\k52}integrated {\k28}into {\k12}our
+Dialogue: 0,0:03:10.74,0:03:12.76,Live,,0,0,0,{\k22}daily {\k60}lives {\k30}{\k60}ensuring {\k30}that
+Dialogue: 0,0:03:12.76,0:03:14.40,Live,,0,0,0,{\k14}the {\k46}technology {\k54}serves {\k50}humanity
+Dialogue: 0,0:03:14.40,0:03:16.44,Live,,0,0,0,{\k62}without {\k50}causing {\k52}undue {\k30}harm
+Dialogue: 0,0:03:17.14,0:03:19.08,Live,,0,0,0,{\k50}Robust {\k38}safety {\k52}protocols {\k54}are
+Dialogue: 0,0:03:19.08,0:03:20.60,Live,,0,0,0,{\k50}paramount {\k20}to {\k44}ensure {\k38}AI
+Dialogue: 0,0:03:20.60,0:03:22.88,Live,,0,0,0,{\k74}applications {\k36}are {\k58}beneficial {\k60}and
+Dialogue: 0,0:03:22.88,0:03:24.08,Live,,0,0,0,{\k22}not {\k46}detrimental {\k36}to {\k16}young
+Dialogue: 0,0:03:24.08,0:03:25.60,Live,,0,0,0,{\k34}users {\k22}{\k34}development {\k40}and {\k22}well
+Dialogue: 0,0:03:25.60,0:03:27.36,Live,,0,0,0,{\k24}being {\k46}{\k14}And {\k46}finally {\k40}{\k6}the
+Dialogue: 0,0:03:27.36,0:03:28.62,Live,,0,0,0,{\k28}tech {\k44}giant {\k28}Apple {\k26}is
+Dialogue: 0,0:03:28.62,0:03:29.56,Live,,0,0,0,{\k26}weighing {\k30}in {\k24}on {\k14}the
+Dialogue: 0,0:03:29.56,0:03:31.22,Live,,0,0,0,{\k36}AI {\k54}race {\k36}{\k20}with {\k20}its
+Dialogue: 0,0:03:31.22,0:03:32.62,Live,,0,0,0,{\k44}CEO {\k48}stating {\k20}the {\k28}company
+Dialogue: 0,0:03:32.62,0:03:33.52,Live,,0,0,0,{\k38}doesn't {\k18}want {\k14}to {\k20}ship
+Dialogue: 0,0:03:33.52,0:03:35.20,Live,,0,0,0,{\k40}AI {\k40}for {\k58}AI's {\k20}sake
+Dialogue: 0,0:03:35.60,0:03:36.88,Live,,0,0,0,{\k14}This {\k38}signals {\k24}a {\k52}strategic
+Dialogue: 0,0:03:36.88,0:03:38.94,Live,,0,0,0,{\k48}emphasis {\k38}on {\k44}practical {\k76}application
+Dialogue: 0,0:03:38.94,0:03:41.24,Live,,0,0,0,{\k52}over {\k26}mere {\k72}technological {\k70}advancement
+Dialogue: 0,0:03:42.02,0:03:44.28,Live,,0,0,0,{\k56}Apple's {\k36}CEO {\k50}{\k22}John {\k52}Ternus
+Dialogue: 0,0:03:44.58,0:03:46.00,Live,,0,0,0,{\k36}defended {\k16}the {\k58}company's {\k32}measured
+Dialogue: 0,0:03:46.00,0:03:47.90,Live,,0,0,0,{\k36}approach {\k38}to {\k32}AI {\k74}integration
+Dialogue: 0,0:03:48.20,0:03:49.62,Live,,0,0,0,{\k14}This {\k58}perspective {\k46}suggests {\k24}a
+Dialogue: 0,0:03:49.62,0:03:51.26,Live,,0,0,0,{\k28}focus {\k34}on {\k34}user {\k68}experience
+Dialogue: 0,0:03:51.26,0:03:53.02,Live,,0,0,0,{\k50}and {\k30}real {\k30}world {\k56}utility
+Dialogue: 0,0:03:53.30,0:03:54.44,Live,,0,0,0,{\k42}rather {\k22}than {\k28}rushing {\k22}to
+Dialogue: 0,0:03:54.44,0:03:56.30,Live,,0,0,0,{\k28}deploy {\k48}AI {\k58}features {\k52}that
+Dialogue: 0,0:03:56.30,0:03:57.72,Live,,0,0,0,{\k20}lack {\k32}clear {\k46}purpose {\k44}or
+Dialogue: 0,0:03:57.72,0:03:58.20,Live,,0,0,0,{\k38}benefit
+Dialogue: 0,0:03:58.82,0:03:59.84,Live,,0,0,0,{\k16}It {\k38}implies {\k28}that {\k20}for
+Dialogue: 0,0:03:59.84,0:04:01.66,Live,,0,0,0,{\k34}Apple {\k74}AI {\k56}isn't {\k18}just
+Dialogue: 0,0:04:01.66,0:04:02.62,Live,,0,0,0,{\k28}about {\k28}having {\k16}the {\k24}most
+Dialogue: 0,0:04:02.62,0:04:04.72,Live,,0,0,0,{\k52}advanced {\k54}algorithms {\k46}{\k28}but {\k30}about
+Dialogue: 0,0:04:04.72,0:04:06.14,Live,,0,0,0,{\k20}how {\k34}those {\k56}algorithms {\k32}can
+Dialogue: 0,0:04:06.14,0:04:07.92,Live,,0,0,0,{\k52}seamlessly {\k52}enhance {\k30}the {\k44}user's
+Dialogue: 0,0:04:07.92,0:04:09.36,Live,,0,0,0,{\k50}interaction {\k26}with {\k16}their {\k42}devices
+Dialogue: 0,0:04:09.68,0:04:10.78,Live,,0,0,0,{\k22}This {\k26}stance {\k26}from {\k36}Apple
+Dialogue: 0,0:04:10.78,0:04:12.28,Live,,0,0,0,{\k46}could {\k46}influence {\k30}how {\k28}other
+Dialogue: 0,0:04:12.28,0:04:14.52,Live,,0,0,0,{\k38}companies {\k60}approach {\k40}AI {\k76}development
+Dialogue: 0,0:04:14.78,0:04:17.24,Live,,0,0,0,{\k92}prioritizing {\k50}meaningful {\k62}innovation {\k42}over
+Dialogue: 0,0:04:17.24,0:04:18.46,Live,,0,0,0,{\k34}simply {\k32}keeping {\k30}pace {\k26}with
+Dialogue: 0,0:04:18.46,0:04:18.78,Live,,0,0,0,{\k22}trends
+Dialogue: 0,0:04:19.42,0:04:20.66,Live,,0,0,0,{\k30}It {\k56}encourages {\k22}a {\k16}more
+Dialogue: 0,0:04:20.66,0:04:22.68,Live,,0,0,0,{\k54}thoughtful {\k64}user {\k46}centric {\k38}design
+Dialogue: 0,0:04:22.68,0:04:24.26,Live,,0,0,0,{\k48}process {\k28}{\k36}where {\k10}the {\k36}value
+Dialogue: 0,0:04:24.26,0:04:25.58,Live,,0,0,0,{\k52}proposition {\k38}of {\k16}an {\k26}AI
+Dialogue: 0,0:04:25.58,0:04:27.60,Live,,0,0,0,{\k52}feature {\k54}is {\k54}rigorously {\k42}tested
+Dialogue: 0,0:04:27.60,0:04:29.10,Live,,0,0,0,{\k52}against {\k30}real {\k34}world {\k34}needs
+Dialogue: 0,0:04:29.10,0:04:31.34,Live,,0,0,0,{\k60}before {\k44}widespread {\k68}adoption {\k44}{\k8}The
+Dialogue: 0,0:04:31.34,0:04:33.18,Live,,0,0,0,{\k34}AI {\k66}landscape {\k36}is {\k48}evolving
+Dialogue: 0,0:04:33.18,0:04:35.16,Live,,0,0,0,{\k60}rapidly {\k42}{\k20}with {\k36}major {\k40}players
+Dialogue: 0,0:04:35.16,0:04:37.12,Live,,0,0,0,{\k50}adjusting {\k68}strategies {\k52}and {\k26}new
+Dialogue: 0,0:04:37.12,0:04:39.08,Live,,0,0,0,{\k36}ethical {\k78}considerations {\k60}coming {\k22}to
+Dialogue: 0,0:04:39.08,0:04:40.84,Live,,0,0,0,{\k12}the {\k40}forefront {\k64}{\k26}From {\k34}funding
+Dialogue: 0,0:04:40.84,0:04:42.36,Live,,0,0,0,{\k36}shifts {\k30}to {\k32}safety {\k54}protocols
+Dialogue: 0,0:04:42.36,0:04:44.70,Live,,0,0,0,{\k38}and {\k38}practical {\k74}application {\k84}philosophies
+Dialogue: 0,0:04:44.70,0:04:46.28,Live,,0,0,0,{\k66}it's {\k4}a {\k42}dynamic {\k36}week

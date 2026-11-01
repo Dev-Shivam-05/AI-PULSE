@@ -5768,5 +5768,55 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-01T18:18:59.585777",
+    "title": "OpenAI $20B Target Amidst Funding Shifts",
+    "description": "OpenAI's funding round sees a significant adjustment, with reports indicating a lowered target. This week's AI Roundup breaks down the key stories that shaped the industry, from evolving AI safety protocols to major company strategies. We explore how this funding shift might impact OpenAI's future development and its competitive standing. Plus, discover how NVIDIA is pushing the boundaries with its latest open-source models and what Apple's CEO means by \"AI for AI's sake.\" Get the essential AI insights you need to stay ahead. #AI #OpenAI #Nvidia #TechNews #ArtificialIntelligence #FutureOfAI\nSubscribe to ToolDojo.\n\nSource: https://techcrunch.com/2026/10/31/openai-reportedly-lowers-funding-target-for-new-round/\n\n🔗 Sources:\n1. OpenAI reportedly lowers funding target for new round — https://techcrunch.com/2026/10/31/openai-reportedly-lowers-funding-target-for-new-round/\n2. nemotron-halloween — https://huggingface.co/blog/nvidia/nemotron-halloween\n3. Making it easier for websites to express AI training preferences — https://openai.com/index/helping-websites-express-ai-training-preferences\n4. Community safety report and new protections for teens — https://openai.com/index/community-safety-report-and-new-protections-for-teens\n5. Apple CEO says the company doesn’t ‘want to ship AI for AI’s sake’ — https://techcrunch.com/2026/10/31/apple-ceo-says-the-company-doesnt-want-to-ship-ai-for-ais-sake/\n\nChapters:\n0:00 AI Giants Shift\n0:57 Nvidia Open Source\n1:40 OpenAI Website Tools\n2:53 Responsible AI Deployment\n3:44 Apple Measured AI\n\n▶ Watch next: https://youtube.com/watch?v=QFKGh9DhDW4",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Funding",
+      "Venture Capital",
+      "Nvidia",
+      "Nemotron",
+      "Apple",
+      "Tech Industry",
+      "AI Safety",
+      "LLM",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/OpenAI_20B_Target_Amidst_Funding_Shifts_20261101_180600_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261101_181037.mp4",
+      "output/shorts/short_2_sb_20261101_181136.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261101_180856.jpg",
+    "youtube_url": "https://youtube.com/watch?v=rMTAgL2IYVQ",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=w6PEHZPeOVw",
+      "https://youtube.com/watch?v=yHPYv0Ws40E"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI $20B Target Amid Funding Shifts #Shorts",
+        "description": "OpenAI's $20 billion target is discussed in the context of changing funding landscapes.",
+        "instagram_caption": "💰 OpenAI aims for a $20 billion target. Funding shifts are impacting this goal. Follow @tooldojo!\n#OpenAI #AI #Funding #Technology #Investment #Business #TechNews #ArtificialIntelligence #Innovation #VentureCapital #Startups #FutureOfAI #AIIndustry #TechFunding #StartupLife #AIDevelopment #TechTrends #EnterpriseAI #AIRevolution #BusinessNews"
+      },
+      {
+        "title": "OpenAI Funding Shifts Detailed #Shorts",
+        "description": "An examination of the current funding shifts affecting OpenAI's objectives.",
+        "instagram_caption": "📊 OpenAI is navigating significant funding shifts. Learn more about their $20 billion target. Follow @tooldojo!\n#OpenAI #AI #Funding #Investment #TechNews #ArtificialIntelligence #Business #VentureCapital #Startup #Tech #Innovation #AIIndustry #TechFunding #AIResearch #BusinessStrategy #FutureTech #AIInvestment #GlobalTech #TechUpdates #AICommunity"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]

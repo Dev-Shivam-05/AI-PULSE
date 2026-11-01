@@ -1,0 +1,63 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 10,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "NVIDIA is making waves with its open-source contributions.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Their new Nemotron models are pushing the envelope for what's possible in generative AI, particularly for enterprise applications.",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "OpenAI is rolling out new tools to help websites express their AI training preferences.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "Imagine a website owner being able to specify through a simple tag whether their content can be used to train future AI models, much like robots.txt for web crawlers.",
+        "type": "quote",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "OpenAI also released its Community Safety Report, detailing new protections for teens.",
+        "type": "attribution",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "The fluctuating funding targets for leading AI labs signal a potential maturation of the AI investment landscape, moving beyond speculative hype towards more grounded, deliverable value propositions."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative flow and specific phrasing that is not directly present in the source texts. For example, 'the ground is shifting beneath even the giants' and 'Shifting gears, NVIDI"
+  },
+  "confidence": {
+    "score": 0.704,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.2,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}
