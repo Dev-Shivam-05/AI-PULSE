@@ -21,12 +21,13 @@ import json
 import multiprocessing as mp
 import os
 import queue
+import random
 import shutil
 import subprocess
 import sys
 import threading
 import time
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -41,7 +42,9 @@ import live_preflight as lp                 # noqa: E402
 PROFILE = lp.PROFILES["1080p30"]            # spec row 2
 W, H, FPS = PROFILE["w"], PROFILE["h"], PROFILE["fps"]
 CRF = "20"                                  # row 3: the storyboard's CRF (v3g1 row 7)
-SESSION_MINUTES = 120                       # row 4
+SESSION_MINUTES = 120                       # row 4 (the default when nothing else says)
+MAX_SESSION_MINUTES = 360                   # L6 row 7: the ramp's top stage (S4)
+MIN_SESSION_MINUTES = 30                    # L6 row 7: a manifest below this is ignored
 QUEUE_DEPTH = 3                             # row 19
 STANDBY_SECONDS = 10                        # row 20
 RESTARTS, RESTART_WAIT = 5, 10              # row 21
@@ -51,6 +54,20 @@ TTS_SECONDS = 120    # wall clock for one narration
 MAX_FAILURES = 5     # row 21a: consecutive failed segments end the session
 PREROLL = 3          # v3l3 row 1: segments ready before the connection opens
 MUSIC_VOLUME = 0.07  # v3l3 row 4: the long-form's bed level (factverse_engine.py)
+# L6 row 10: speech -19.8 LUFS (the long-form's measured voice), music 17 LU under it.
+# Tracks are loudness-normalised ONCE per session, so the mix gain is 1.0; a track that
+# cannot be normalised falls back to the raw file at MUSIC_VOLUME.
+MUSIC_TARGET_LUFS = -36.8
+VOICE_GAIN_DB = 0.0  # L6 row 10: measured edge-tts level vs -19.8 LUFS (spec section 6)
+# L6 row 8: one subscribe line after real value, then rarely. Seconds of session timeline.
+CTA_FIRST, CTA_EVERY, CTA_SECONDS, CTA_LEAD = 165, 900, 5, 2
+CTA_TEXT = ("If these discoveries help you choose AI tools, subscribe to ToolDojo "
+            "for practical updates.")              # review 2026-11-01 point 8, verbatim
+WRAP_LEAD = 150      # L6 row 9: ask for the end card this long before the target
+OVERRUN = 600        # L6 row 9: hard wall-clock stop this long after the target
+MANIFEST_URL = ("https://raw.githubusercontent.com/Dev-Shivam-05/AI-PULSE/main/"
+                "state/live_broadcast.json")
+IST = timezone(timedelta(hours=5, minutes=30))
 # Each remuxed segment restarts its TS continuity counters, so the demuxer flags the
 # seam packet; decoding the received stream shows no damage. Counted, not logged.
 SEAM_NOISE = ("Packet corrupt", "corrupt input packet")
@@ -95,25 +112,101 @@ def pick_track(tracks, day_of_year: int) -> str | None:
     return tracks[day_of_year % len(tracks)] if tracks else None
 
 
+def playlist_order(tracks, day: date) -> list:
+    """L6 row 10: every track, in an order shuffled once per calendar day (seeded by the
+    date, so a restarted session plays the same order). The whole list plays before any
+    track repeats; with today's 5 tracks that is the library's own limit."""
+    out = sorted(str(t) for t in tracks)
+    random.Random(day.toordinal()).shuffle(out)
+    return out
+
+
+def normalize_args(src: str, dst: str, ffmpeg: str = "ffmpeg",
+                   target: float = MUSIC_TARGET_LUFS) -> list:
+    """One track to the bed level (L6 row 10), as 44.1 kHz stereo WAV so the concat
+    demuxer joins tracks without a codec change between them."""
+    return [ffmpeg, "-hide_banner", "-loglevel", "error", "-y", "-i", src,
+            "-af", f"loudnorm=I={target}:TP=-2:LRA=11",
+            "-ar", str(lp.AUDIO_HZ), "-ac", "2", "-c:a", "pcm_s16le", dst]
+
+
+def concat_playlist(paths: list) -> str:
+    """An ffconcat file body. Single quotes in a path are escaped the way ffconcat wants."""
+    lines = ["ffconcat version 1.0"]
+    for p in paths:
+        lines.append("file '" + Path(p).as_posix().replace("'", "'\\''") + "'")
+    return "\n".join(lines) + "\n"
+
+
+def cta_window(seg_start: float, length: int, next_due: float) -> tuple:
+    """L6 row 8: ((at, until) within this segment, or None; the next due time). The
+    line appears CTA_LEAD s into the first segment that reaches the due time and stays
+    CTA_SECONDS; a segment too short to hold it passes the turn to the next one."""
+    if seg_start + length <= next_due:
+        return None, next_due
+    at = max(float(CTA_LEAD), next_due - seg_start)
+    if at + CTA_SECONDS > length:
+        return None, next_due
+    return (round(at, 3), round(at + CTA_SECONDS, 3)), seg_start + at + CTA_EVERY
+
+
+def session_minutes(cli: float | None, manifest: dict | None, default: float) -> float:
+    """L6 row 7: --minutes wins, then today's CI manifest, then config; always clamped."""
+    out = None
+    for cand in (cli, (manifest or {}).get("target_minutes"), default, SESSION_MINUTES):
+        try:
+            out = float(cand)
+            break
+        except (TypeError, ValueError):
+            continue                       # a bad value falls to the next source
+    return max(1.0, min(out, float(MAX_SESSION_MINUTES)))
+
+
+def manifest_for_today(data, today_ist: date) -> dict | None:
+    """L7: the CI-written broadcast manifest counts only for TODAY (IST) and only when
+    CI marked it ready with a sane target. Anything else is ignored, never trusted."""
+    if not isinstance(data, dict) or data.get("status") != "ready":
+        return None
+    if str(data.get("date", "")) != today_ist.isoformat():
+        return None
+    try:
+        t = float(data.get("target_minutes"))
+    except (TypeError, ValueError):
+        return None
+    if not MIN_SESSION_MINUTES <= t <= MAX_SESSION_MINUTES:
+        return None
+    return {"target_minutes": t, "broadcast_id": str(data.get("broadcast_id", ""))[:40],
+            "stage": str(data.get("stage", ""))[:8]}
+
+
+def wrap_due(offset: float, target_seconds: float) -> bool:
+    return offset >= target_seconds - WRAP_LEAD
+
+
 def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
                  ffmpeg: str = "ffmpeg", music: str | None = None,
-                 music_at: float = 0.0) -> list:
+                 music_at: float = 0.0, music_gain: float = MUSIC_VOLUME,
+                 voice_gain_db: float = 0.0) -> list:
     """One segment, encoded once at timeline 0. Exactly `length` seconds (an even
     number, row 11) so the 2 s GOPs tile the whole stream. With `music`, the bed is
-    looped from `music_at` (the session's running music time) under the voice."""
+    looped from `music_at` (the session's running music time) under the voice. A
+    `.ffconcat` music file is the L6 playlist; anything else is one track."""
     gop = FPS * lp.KEYFRAME_S
     cap = f"{PROFILE['kbps']}k"
     audio_in = (["-i", audio] if audio else
                 ["-f", "lavfi", "-i", f"anullsrc=r={lp.AUDIO_HZ}:cl=stereo"])
+    vgain = f"volume={voice_gain_db}dB," if voice_gain_db else ""
     if music:
-        music_in = ["-stream_loop", "-1", "-ss", f"{max(0.0, music_at):.3f}", "-i", music]
+        playlist = str(music).endswith(".ffconcat")
+        music_in = ["-stream_loop", "-1", "-ss", f"{max(0.0, music_at):.3f}",
+                    *(["-f", "concat", "-safe", "0"] if playlist else []), "-i", music]
         # both inputs run forever (apad, loop); -t below is what ends the segment
         mix = ["-filter_complex",
-               f"[1:a]apad[v];[2:a]volume={MUSIC_VOLUME}[m];"
+               f"[1:a]{vgain}apad[v];[2:a]volume={music_gain}[m];"
                "[v][m]amix=inputs=2:duration=shortest:normalize=0[a]",
                "-map", "0:v", "-map", "[a]"]
     else:
-        music_in, mix = [], ["-map", "0:v", "-map", "1:a", "-af", "apad"]
+        music_in, mix = [], ["-map", "0:v", "-map", "1:a", "-af", f"{vgain}apad"]
     return [
         ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
         "-f", "concat", "-safe", "0", "-i", concat_path, *audio_in, *music_in, *mix,
@@ -217,7 +310,12 @@ class Renderer:
         out_dir.mkdir(parents=True, exist_ok=True)
         unfit = self._page.evaluate("s => window.__load(s)", spec)
         shots = []
-        for i, t in enumerate(rd.frame_times(spec["length"], spec["phrases"])):
+        times = rd.frame_times(spec["length"], spec["phrases"])
+        cta = spec.get("cta")
+        if cta:   # L6 row 8: the line must appear and leave on a frame of its own
+            times = sorted(set(times) | {float(cta[0]), float(cta[1])})
+            times = [t for t in times if t < spec["length"]]
+        for i, t in enumerate(times):
             self._page.evaluate("t => window.__seek(t)", t)
             p = out_dir / f"{i:05d}.png"
             self._page.screenshot(path=str(p))
@@ -233,7 +331,8 @@ class Renderer:
 
 
 def encode(renderer: Renderer, spec: dict, audio: str | None, out_dir: Path,
-           music: str | None = None, music_at: float = 0.0) -> str | None:
+           music: str | None = None, music_at: float = 0.0,
+           music_gain: float = MUSIC_VOLUME) -> str | None:
     from factverse import storyboard   # pure concat_list; heavy deps are lazy there too
     shots, unfit = renderer.frames(spec, out_dir)
     if unfit:
@@ -242,7 +341,8 @@ def encode(renderer: Renderer, spec: dict, audio: str | None, out_dir: Path,
     lst.write_text(storyboard.concat_list(shots, spec["length"]), encoding="utf-8")
     ts = out_dir / "segment.ts"
     r = subprocess.run(segment_args(str(lst), audio, spec["length"], str(ts),
-                                    fv.FFMPEG or "ffmpeg", music, music_at),
+                                    fv.FFMPEG or "ffmpeg", music, music_at, music_gain,
+                                    VOICE_GAIN_DB),
                        capture_output=True, text=True, timeout=600)
     if r.returncode != 0 or not ts.exists() or ts.stat().st_size < 10000:
         log(f"  segment encode failed: {(r.stderr or '')[-300:]}")
@@ -276,8 +376,10 @@ class Producer:
     while Playwright decoded screenshots the writer thread could not keep the pipe full
     and ffmpeg logged 0.4-0.8 s input lags in the first 6-minute local session."""
 
-    def __init__(self, q, stop, history: dict, delay: float = 0.0):
+    def __init__(self, q, stop, history: dict, delay: float = 0.0, wrap=None,
+                 daily_at: str = ""):
         self.q, self.stop, self.delay = q, stop, delay
+        self.wrap, self.daily_at = wrap, daily_at
         self.history_at_start = dict(history)
         self.tools: list = []
         self.baseline: dict = {}
@@ -293,75 +395,130 @@ class Producer:
         self.pool_size = 0
         self.standby = None
         self.music, self.music_len, self.music_clock = None, 0.0, 0.0
+        self.music_gain = MUSIC_VOLUME
+        self.timeline = 0.0           # seconds of produced segments (CTA clock, L6 row 8)
+        self.next_cta = float(CTA_FIRST)
+        self.next_tool = None         # L6 row 6: the tool the NEXT spotlight will show
+        self.shown = 0
 
     def pick_music(self) -> None:
-        track = pick_track(MUSIC_DIR.glob("*.mp3"), datetime.now().timetuple().tm_yday)
+        """L6 row 10: the day's shuffled playlist, each track normalised to the bed level.
+        Falls back to v3-L.3's one raw track at MUSIC_VOLUME if normalising fails."""
+        tracks = playlist_order(MUSIC_DIR.glob("*.mp3"), datetime.now(IST).date())
+        if not tracks:
+            return
+        mdir = LIVE_DIR / "music"
+        shutil.rmtree(mdir, ignore_errors=True)
+        mdir.mkdir(parents=True, exist_ok=True)
+        done = []
+        for i, src in enumerate(tracks):
+            dst = mdir / f"{i:02d}.wav"
+            try:
+                r = subprocess.run(normalize_args(src, str(dst), fv.FFMPEG or "ffmpeg"),
+                                   capture_output=True, timeout=300)
+                if r.returncode == 0 and dst.exists() and media_seconds(str(dst)) > 1:
+                    done.append(str(dst))
+            except Exception:  # noqa: BLE001
+                pass
+        if done:
+            pl = mdir / "playlist.ffconcat"
+            pl.write_text(concat_playlist(done), encoding="utf-8")
+            self.music_len = sum(media_seconds(p) for p in done)
+            self.music, self.music_gain = str(pl), 1.0
+            log(f"  music: {len(done)} tracks, {self.music_len / 60:.1f} min, "
+                f"normalised to {MUSIC_TARGET_LUFS} LUFS: "
+                + ", ".join(Path(t).stem for t in tracks))
+            return
+        track = pick_track(tracks, datetime.now().timetuple().tm_yday)
         secs = media_seconds(track) if track else 0.0
         if track and secs > 1:
             self.music, self.music_len = track, secs
-            log(f"  music bed: {Path(track).name}")
+            log(f"  music bed (not normalised): {Path(track).name}")
 
     def _encode(self, spec: dict, audio: str | None, d: Path) -> str | None:
         """encode() with the bed continued from where the previous segment left it."""
         at = self.music_clock % self.music_len if self.music else 0.0
-        ts = encode(self.renderer, spec, audio, d, self.music, at)
+        ts = encode(self.renderer, spec, audio, d, self.music, at, self.music_gain)
         if ts:
             self.music_clock += spec["length"]
+            self.timeline += spec["length"]
         return ts
 
     def refresh(self, force: bool = False) -> None:
         if not force and time.monotonic() - self.last_refresh < REFRESH_SECONDS:
             return
         self.last_refresh = time.monotonic()
-        gh, hf = rd.fetch_github(), rd.fetch_hf()
+        gh, hf = rd.fetch_github_wide(), rd.fetch_hf_wide()
         if gh is None and hf is None:
             log("  data refresh failed on both sources; keeping the last data")
             return
         merged = {t["id"]: t for t in self.tools}
         # a source that failed keeps its previous tools; a source that answered replaces them
-        for kind, fresh_list in (("github", gh), ("hf", hf)):
+        for kinds, fresh_list in ((("github",), gh), (("hf", "space"), hf)):
             if fresh_list is not None:
-                merged = {k: v for k, v in merged.items() if v["kind"] != kind}
+                merged = {k: v for k, v in merged.items() if v["kind"] not in kinds}
                 merged.update({t["id"]: t for t in fresh_list})
         kept, dropped = rd.screen(list(merged.values()))
         self.tools = kept
         rd.update_baseline(self.baseline, kept)
         self.as_of = datetime.now(timezone.utc)
-        log(f"  data refreshed: {len(kept)} tools ({len(dropped)} screened out)")
+        log(f"  data refreshed: {len(kept)} tools ({len(dropped)} screened out; "
+            f"github {'ok' if gh is not None else 'FAILED'}, hf {'ok' if hf is not None else 'FAILED'})")
 
     def candidates(self) -> list:
         now = datetime.now(timezone.utc)
         return [t for t in rd.fresh(self.tools, self.history_at_start, self.spotlighted, now)
                 if rd.spotlightable(t, self.have_llm)]
 
-    def _spec(self, kind: str, phrases: list, length: int, tool=None, rank_no=0) -> dict:
-        rows = rd.board_rows(self.tools, self.baseline,
-                             include=tool["id"] if tool else None)
+    def _spec(self, kind: str, phrases: list, length: int, tool=None, rank_no=0,
+              use_it_for: str = "") -> dict:
+        now = datetime.now(timezone.utc)
+        sections = rd.board_sections(self.tools, self.baseline,
+                                     n=rd.SECTION_SIZE if kind == "spotlight" else rd.BIG_SECTION_SIZE,
+                                     include=tool["id"] if tool else None)
+        cta = None
+        if kind in ("spotlight", "board"):
+            cta, self.next_cta = cta_window(self.timeline, length, self.next_cta)
+        nxt = self.next_tool
         spec = {"type": kind, "as_of": f"{self.as_of:%H:%M} UTC" if self.as_of else "",
-                "board": rows, "phrases": [list(p) for p in phrases], "length": length}
+                "stale": rd.is_stale(self.as_of, now), "sections": sections,
+                "phrases": [list(p) for p in phrases], "length": length,
+                "next": nxt["name"] if (nxt and kind != "end") else "",
+                "cta": list(cta) if cta else None, "cta_text": CTA_TEXT}
         if tool:
-            prev = self.history_at_start.get(tool["id"])
             spec.update({
                 "tool": {"kind": tool["kind"], "name": tool["name"], "desc": tool["desc"],
-                         "url_text": tool["url"].replace("https://", "")},
+                         "url_text": tool["url"].replace("https://", ""),
+                         "label": rd.kind_label(tool), "use_it_for": use_it_for},
                 "facts": rd.chips(tool, self.history_at_start),
-                "rank_label": "BACK ON THE RADAR" if prev else f"#{rank_no} ON THE RADAR",
+                "status": rd.status_label(tool, self.history_at_start),
+                "rank_label": f"#{rank_no} {rd.kind_label(tool)}"
+                              + (" · ★/DAY" if tool["kind"] == "github" else " · TRENDING"),
                 "highlight": tool["id"]})
         return spec
+
+    def _pick_next(self, cands: list) -> dict:
+        """L6 row 6: the spotlight shows the tool it reserved last time, when that tool is
+        still a candidate, so the "NEXT" line on the previous frame comes true."""
+        if self.next_tool and any(c["id"] == self.next_tool["id"] for c in cands):
+            return next(c for c in cands if c["id"] == self.next_tool["id"])
+        return cands[0]
 
     def make_spotlight(self, d: Path):
         cands = self.candidates()
         if not cands:
             return "exhausted"
-        tool = cands[0]
+        tool = self._pick_next(cands)
         self.spotlighted.add(tool["id"])
-        ranked = rd.rank(self.tools)
-        rank_no = next((i for i, t in enumerate(ranked, 1) if t["id"] == tool["id"]), 0)
-        text, source = None, "template"
+        rest = [c for c in cands if c["id"] != tool["id"]]
+        self.next_tool = rest[0] if rest else None
+        rank_no = rd.section_rank(self.tools, tool)
+        text, source, use_it = None, "template", ""
         if self.have_llm:
             readme = rd.fetch_readme(tool)
-            text = rd.llm_narration(tool, rd.facts(tool, self.history_at_start), readme)
-            source = "llm" if text else "template"
+            got = rd.llm_spotlight(tool, rd.facts(tool, self.history_at_start), readme)
+            if got:
+                text, use_it, source = got["narration"], got["use_it_for"], "llm"
         if not text:
             if tool["kind"] == "github" and not rd.spoken_description(tool.get("desc", "")):
                 return None                  # no written narration and nothing readable
@@ -370,35 +527,56 @@ class Producer:
         if not words:
             # usually the network: put the tool back; MAX_FAILURES ends a dead session
             self.spotlighted.discard(tool["id"])
+            self.next_tool = tool
             log(f"  voice failed for {tool['id']}")
             return None
         length = rd.segment_seconds(secs)
         spec = self._spec("spotlight", rd.phrases(rd.punctuate(words, text)), length, tool,
-                          rank_no)
+                          rank_no, use_it)
         ts = self._encode(spec, str(d / "voice.mp3"), d)
+        if ts:
+            self.shown += 1
         return {"ts": ts, "length": length, "kind": "spotlight", "tool": tool,
-                "narration": source} if ts else None
+                "narration": source, "cta": bool(spec["cta"])} if ts else None
 
     def make_board(self, d: Path):
-        rows = rd.board_rows(self.tools, self.baseline)
+        sections = rd.board_sections(self.tools, self.baseline, n=rd.BIG_SECTION_SIZE)
+        sig = board_sig(sections["github"] + sections["hf"])
         phrases, audio = [], None
-        if rows and board_sig(rows) != self.last_board:
-            text = rd.board_narration(rows, self.as_of or datetime.now(timezone.utc))
+        if sig and sig != self.last_board:
+            text = rd.sections_narration(sections, self.as_of or datetime.now(timezone.utc))
             words, secs = voice(text, d / "voice.mp3")
             if words:
                 phrases, audio = rd.phrases(rd.punctuate(words, text)), str(d / "voice.mp3")
-                self.last_board = board_sig(rows)
+                self.last_board = sig
         length = rd.BOARD_SECONDS
         spec = self._spec("board", phrases, length)
         ts = self._encode(spec, audio, d)
-        return {"ts": ts, "length": length, "kind": "board", "tool": None} if ts else None
+        return {"ts": ts, "length": length, "kind": "board", "tool": None,
+                "cta": bool(spec["cta"])} if ts else None
 
     def make_standby(self) -> dict | None:
         d = LIVE_DIR / "standby"
         shutil.rmtree(d, ignore_errors=True)
-        ts = encode(self.renderer, self._spec("board", [], STANDBY_SECONDS), None, d,
-                    self.music, 0.0)
+        ts = encode(self.renderer, self._spec("standby", [], STANDBY_SECONDS), None, d,
+                    self.music, 0.0, self.music_gain)
         return {"ts": ts, "length": STANDBY_SECONDS, "kind": "standby", "tool": None} if ts else None
+
+    def make_end(self, reason: str) -> dict | None:
+        """L6 row 9: a voiced end card with the true stop reason, then the session ends."""
+        d = LIVE_DIR / "end"
+        shutil.rmtree(d, ignore_errors=True)
+        d.mkdir(parents=True, exist_ok=True)
+        text = rd.end_narration(self.shown, reason, self.daily_at)
+        words, secs = voice(text, d / "voice.mp3")
+        phrases = rd.phrases(rd.punctuate(words, text)) if words else []
+        length = max(STANDBY_SECONDS, rd.segment_seconds(secs)) if words else STANDBY_SECONDS
+        spec = self._spec("end", phrases, length)
+        spec.update({"end_reason": reason, "end_count": self.shown,
+                     "end_daily": self.daily_at})
+        ts = self._encode(spec, str(d / "voice.mp3") if words else None, d)
+        return {"ts": ts, "length": length, "kind": "end", "tool": None,
+                "reason": reason} if ts else None
 
     def run(self):
         try:
@@ -415,6 +593,10 @@ class Producer:
             if self.pool_size < rd.MIN_FRESH or not self.standby:
                 return
             while not self.stop.is_set():
+                if self.wrap is not None and self.wrap.is_set():
+                    log("  target length reached; rendering the end card")
+                    self._finish("time")
+                    return
                 self.refresh()
                 if self.delay:
                     time.sleep(self.delay)        # test hook: forces the standby path
@@ -426,7 +608,7 @@ class Producer:
                 seg = self.make_board(d) if kind == "board" else self.make_spotlight(d)
                 if seg == "exhausted":
                     log("  fresh pool exhausted; ending the session after what is queued")
-                    self._put(None)
+                    self._finish("exhausted")
                     return
                 if seg:
                     if kind == "spotlight":
@@ -449,6 +631,16 @@ class Producer:
             if self.renderer:
                 self.renderer.close()
 
+    def _finish(self, reason: str) -> None:
+        end = None
+        try:
+            end = self.make_end(reason)
+        except Exception as e:  # noqa: BLE001 — a missing end card must not cost the session
+            log(f"  end card failed: {type(e).__name__}")
+        if end:
+            self._put(end)
+        self._put(None)
+
     def _put(self, item):
         while not self.stop.is_set():
             try:
@@ -458,9 +650,10 @@ class Producer:
                 continue
 
 
-def producer_main(q, stop, history: dict, delay: float) -> None:
+def producer_main(q, stop, history: dict, delay: float, wrap=None,
+                  daily_at: str = "") -> None:
     """Child-process entry point (must be top level so Windows' spawn can pickle it)."""
-    Producer(q, stop, history, delay).run()
+    Producer(q, stop, history, delay, wrap, daily_at).run()
 
 
 # ------------------------------------------------------------------ sender
@@ -574,16 +767,19 @@ def remux(seg: dict, offset: float) -> bytes:
     return r.stdout if r.returncode == 0 else b""
 
 
-def run_session(dest: str, minutes: float, max_segments: int, producer_delay: float) -> dict:
+def run_session(dest: str, minutes: float, max_segments: int, producer_delay: float,
+                daily_at: str = "") -> dict:
     LIVE_DIR.mkdir(parents=True, exist_ok=True)
     history = rd.load_json(HISTORY, {})
     summary = {"start": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-               "segments": 0, "standby": 0, "restarts": 0, "seconds": 0, "tools": [],
-               "narration": {"llm": 0, "template": 0}, "status": "ok"}
+               "target_minutes": minutes, "segments": 0, "standby": 0, "restarts": 0,
+               "seconds": 0, "tools": [], "narration": {"llm": 0, "template": 0},
+               "cta": 0, "stop_reason": "", "remux_max_s": 0.0, "status": "ok"}
     q = mp.Queue(maxsize=QUEUE_DEPTH)
     stop = mp.Event()
-    prod = mp.Process(target=producer_main, args=(q, stop, history, producer_delay),
-                      daemon=True)
+    wrap = mp.Event()
+    prod = mp.Process(target=producer_main,
+                      args=(q, stop, history, producer_delay, wrap, daily_at), daemon=True)
     streamer = None
     producer_error = ""
     try:
@@ -621,10 +817,16 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
         log(f"  pre-roll: {len([p for p in pending if p])} segments ready")
         streamer = Streamer(dest)
         streamer.start()
-        offset, deadline = 0.0, time.monotonic() + minutes * 60
+        # L6 row 9: the producer is asked for its end card WRAP_LEAD s before the target;
+        # the wall clock is only a backstop (OVERRUN) for a producer that stopped answering
+        target_s = minutes * 60
+        offset, deadline = 0.0, time.monotonic() + target_s + OVERRUN
         while time.monotonic() < deadline:
             if max_segments and summary["segments"] >= max_segments:
                 break
+            if not wrap.is_set() and wrap_due(summary["seconds"], target_s):
+                wrap.set()
+                log(f"  {summary['seconds']}s streamed of {target_s:.0f}s: asking for the end card")
             if streamer.broken.is_set():
                 if summary["restarts"] >= RESTARTS:
                     summary["status"] = "ended: streamer kept failing"
@@ -649,7 +851,10 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
             if seg.get("ready"):
                 producer_error = seg.get("error", "")   # a late failure report
                 continue
+            t_remux = time.monotonic()
             data = remux(seg, offset)
+            summary["remux_max_s"] = round(max(summary["remux_max_s"],
+                                               time.monotonic() - t_remux), 2)
             if seg["kind"] != "standby":
                 shutil.rmtree(Path(seg["ts"]).parent, ignore_errors=True)
             if not data:
@@ -659,8 +864,13 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
                 continue                  # the writer broke; the top of the loop restarts
             offset += seg["length"]
             summary["seconds"] += seg["length"]
+            summary["cta"] += 1 if seg.get("cta") else 0
             if seg["kind"] == "standby":
                 summary["standby"] += 1
+            elif seg["kind"] == "end":
+                summary["stop_reason"] = seg.get("reason", "")
+                log(f"  queued end card ({seg['length']}s, {summary['stop_reason']})")
+                break
             else:
                 summary["segments"] += 1
                 if seg.get("tool"):
@@ -669,6 +879,8 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
                     summary["narration"][seg.get("narration", "template")] += 1
                     HISTORY.write_text(json.dumps(history, indent=1), encoding="utf-8")
             log(f"  queued {seg['kind']} ({seg['length']}s) - timeline {offset:.0f}s")
+        if not summary["stop_reason"]:
+            summary["stop_reason"] = "deadline" if time.monotonic() >= deadline else "producer ended"
         if producer_error:
             summary["status"] = f"ended: producer failed ({producer_error})"
     finally:
@@ -684,9 +896,31 @@ def run_session(dest: str, minutes: float, max_segments: int, producer_delay: fl
     return summary
 
 
+def fetch_manifest() -> dict | None:
+    """Today's CI manifest (L7), or None. Read-only, public, fail-soft: no manifest means
+    the session runs at the config length exactly as before."""
+    try:
+        import requests
+        r = requests.get(MANIFEST_URL, timeout=15)
+        data = r.json() if r.status_code == 200 else None
+    except Exception:  # noqa: BLE001
+        return None
+    return manifest_for_today(data, datetime.now(IST).date())
+
+
+def schedule_installed() -> bool:
+    """The end card promises tomorrow's session only when the daily task really exists."""
+    try:
+        r = subprocess.run(["schtasks", "/Query", "/TN", "ToolDojo Radar Live"],
+                           capture_output=True, timeout=20)
+        return r.returncode == 0
+    except Exception:  # noqa: BLE001
+        return False
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--minutes", type=float, default=SESSION_MINUTES)
+    ap.add_argument("--minutes", type=float, default=None)
     ap.add_argument("--out", help="local test target (a file or rtmp://127.0.0.1/...); "
                                   "never needs the stream key")
     ap.add_argument("--segments", type=int, default=0, help="stop after N segments (testing)")
@@ -694,7 +928,6 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     summary = {"status": "not started"}
     try:
-        minutes = max(1.0, min(a.minutes, SESSION_MINUTES))
         if a.out:
             if "youtube.com" in a.out.lower():
                 log("--out is for local tests; YouTube is reached only through .env")
@@ -713,8 +946,16 @@ def main(argv=None) -> int:
                     "(host *.youtube.com) - refusing to send the key anywhere else")
                 return 2
             dest = ingest_target(url, key)
+        # only a real session reads the manifest; a local test never touches the network here
+        manifest = None if (a.out or a.minutes is not None) else fetch_manifest()
+        minutes = session_minutes(a.minutes, manifest,
+                                  fv.setting("radar_session_minutes", SESSION_MINUTES))
+        log(f"target: {minutes:.0f} min"
+            + (f" (CI manifest, stage {manifest['stage']}, broadcast {manifest['broadcast_id']})"
+               if manifest else " (no manifest for today)"))
+        daily_at = fv.setting("radar_daily_at_spoken", "8 PM") if schedule_installed() else ""
         keep_awake(True)
-        summary = run_session(dest, minutes, a.segments, a.producer_delay)
+        summary = run_session(dest, minutes, a.segments, a.producer_delay, daily_at)
     except Exception as e:  # noqa: BLE001 — unattended: log, never crash the scheduler
         summary = {**summary, "status": f"crashed: {type(e).__name__}: {redact(str(e))[:200]}"}
         log(summary["status"])

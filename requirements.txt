@@ -10,7 +10,7 @@ Pillow>=10.2
 # Voice: Kokoro (default, free/Apache, near-real-time CPU) + edge-tts fallback
 kokoro-onnx>=0.4
 soundfile>=0.12
-edge-tts>=6.1.9
+edge-tts>=7.3.1  # 7.2.8 answered 403 on 2026-11-01 (expired Sec-MS-GEC version)
 
 # Word-accurate caption timing (local whisper alignment)
 faster-whisper>=1.0
