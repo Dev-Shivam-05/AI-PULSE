@@ -1089,6 +1089,8 @@ def test_evergreen_topic_rejects_a_reworded_repeat(monkeypatch):
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
         {"title_idea": "How Large Language Models Actually Work", "search_question": "q"},
         {"title_idea": "Why AI Chips Cost So Much", "search_question": "q"}]})
+    # v3-B.5: keep the live ledger's subject screen out of this used-topics test
+    monkeypatch.setattr(ap.learn, "read_runs", lambda path=None: [])
     t = ap.pick_evergreen_topic([])
     assert t["title_idea"] == "Why AI Chips Cost So Much"
 
@@ -1195,6 +1197,8 @@ def test_evergreen_dedup_separates_a_reword_from_a_new_subject(monkeypatch):
     monkeypatch.setattr(ap, "too_many_failures", lambda t: False)
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
         {"title_idea": "How Transformers Actually Work", "search_question": "q"}]})
+    # v3-B.5: keep the live ledger's subject screen out of this used-topics test
+    monkeypatch.setattr(ap.learn, "read_runs", lambda path=None: [])
     assert ap.pick_evergreen_topic([])["title_idea"] == "How Transformers Actually Work"
 
 
