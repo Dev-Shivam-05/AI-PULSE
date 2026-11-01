@@ -35,6 +35,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-G.3: packaging** | builder-first viral judge (no shock/fear/outrage, no "punish developer tooling"), critique pass and output contract; `packaging_payoff` + a long-form hype screen promote a clean alternate from `titles` (now in `_CARRY`) instead of shipping a stripped leftover (8/78 published titles were); ledger `thumb_text`/`title_alt`/`title_terms` (fear terms recorded, never blocking); impressions + CTR from the YouTube Reporting API (`channel_reach_basic_a1`) into `analytics.jsonl` + scoreboard, kill switch `reach_report` | ✅ built 2026-10-10 (357/357; the 8 real leftover scripts re-run: 6 get a clean alternate, 2 had lost `titles` to the `_CARRY` bug this fixes) | branch `v3-phase-g3`; spec: docs/spec/ai-pulse-v3g3.md; **owner: enable YouTube Reporting API in GCP**; record the CTR scale from the first rows |
 | **v3-G.4: 1080p long-form** | delivery canvas 1920×1080 from one constant (`fv.VIDEO_W/H`), read by the engine and both splices; generated cards keep their locked 1280×720 layouts and are scaled; captions keep PlayRes 1280×720 (`captions.LAYOUT_W/H`, libass scales it); the citation chip's video-pixel values ×1.5. Encoder presets/CRFs and thumbnails unchanged | ✅ built 2026-10-01 (263/263; a 305 s long-form rendered at both sizes through the real path: 1080p takes 2.6× as long, 646.7 s vs 249.7 s locally; frames read: chip 20.7% of the width and caption 5.1% of the height at both sizes) | branch `v3-phase-g4` (stacked on B.3); spec: docs/spec/ai-pulse-v3g4.md; **watch the first CI run's duration** (90-min timeout) |
 | **v3-G.4b: production basics** | 0.5 s fade dissolves scene→scene, ending on the narration boundary (tpad clone head, offsets from probed segment durations); hard cuts at the sting (0) and L2 (n−2) boundaries, inside scenes and next to empty scenes; falls back to the concat join on any failure. Bed from `assets/music/bed/*.mp3` only (CC0 rule in SOURCES.txt, day-of-year pick), 0.07 with 1 s/2 s fades and `amix normalize=0` (the old default halved the voice: −19.8 → −25.7 LUFS). Outro line "for AI you can use" | ✅ built 2026-10-10 (355/355; real 1080p render: voice −19.8 vs −19.7 LUFS with bed, bed 12.2 LU under; duration identical on/off; dissolve frames read) | branch `v3-phase-g4b`; spec: docs/spec/ai-pulse-v3g4b.md; kill switches `transitions`, `music_bed`; **owner supplies CC0 tracks**; post-merge: first CI run < 90 min + the `transitions:` log line |
+| **v3-B.5: daily lane mix + no-loop recordings** | review point 16 + the owner's "the GitHub recording comes in a loop": automatic runs go Mon/Tue/Thu/Fri tool (else evergreen), Wed debate, Sat evergreen, Sun roundup; news only as a hot-story replacement, at most once per ISO week (read from `PUBLISHED` ledger rows); kill switch `lane_mix_v2`. Evergreen subject screen (families `llm` / `hardware` + shared content words, 30 days). Recordings browse README → releases → issues → commits (HF: card → files → discussions) scrolling down only, and are recut AFTER the narration timings to each clip's exact `step5_build` share (≤ 1.35× slow, then a held frame), so `-stream_loop` never fires on a recording | ✅ built 2026-11-01 (426/426; real recut on removemacai: 6 pieces at their exact shares, 0 loops, frames read; subject screen measured on the real ledger: all 8 named repeats caught) | branch `v3-phase-b5`, carried by `v3-integration-1101`; spec: docs/spec/ai-pulse-v3b5.md; **known limit: a short README is ~69% held frame**; 4-week mix trial starts with the first CI run |
+| **v3-L.6: Radar Live viewer + inventory** | review points 3, 4, 5, 7, 8, 14: GitHub in 3 created-date windows (100 each, ≥ 50★) + HF 100 models + 100 Spaces; two source boards (GitHub 4 + HF 4, never ranked across); labels SPOTTED THIS SESSION / BACK ON RADAR / SOURCE DELAYED (> 30 min); benefit-first spotlight + a gated `USE IT TO:` line; NEXT cue only for the reserved tool; subscribe line at 165 s then ≤ every 900 s, 5 s, verbatim review wording; true-reason end card; music per-day shuffled playlist normalised to −36.8 LUFS under a −19.8 LUFS voice; session length from `--minutes` / CI manifest / config (clamp 360); edge-tts ≥ 7.3.1 (7.2.8 answered 403) | ✅ built 2026-11-01 (419/419; local 5-min session rendered, frames read, received audio measured — spec §Verification) | branch `v3-phase-l6`, carried by `v3-integration-1101`; spec: docs/spec/ai-pulse-v3l6.md; **UPDATED label not built** (no release data to verify a change against) |
+| v3-L.7: CI broadcast + measurement | review points 9-12: a CI job (~13:45 UTC) inserts + binds the day's broadcast, sets title `ToolDojo Radar LIVE \| AI Tools & Models \| {YYYY-MM-DD}` and the thumbnail, writes `state/live_broadcast.json` (the manifest L.6 already reads); REPLAY rename + chapters after; Telegram only after YouTube reports live; analytics `engagedViews`, LIVE/ON_DEMAND split, concurrent viewers per broadcast; the pilot log read by CI | ⏳ queued | new workflow + state file → the both-halves trap (stash list AND `state_merge.FILES`); open: the granted OAuth scope |
+| v3-L.8: reliability + ramp | review points 13 + 1: profile the seam lags (37 / 10 min) before changing code, one long private test at the next stage's length, then the ramp controller 120 → 180 → 240 → 300 → 360 min (7 sessions per stage, advance on ≥ 5/7 at 90% length + median live watch h +20% + live AVD ≥ 80% + 0 repeats; roll back after 2 failed cohorts) | ⏳ queued (after L.7) | release blocker before any stage above 120 min; Task Scheduler's 3 h kill is raised only when a longer stage is approved |
+| v3-L.9: 60-min show wheel | review point 6: rapid radar 18 / deep dives 15 / head-to-head 10 / releases 6 / doc walkthrough 6 / recap 5 min | ⛔ not before L.6-L.8 pass | free-tier Gemini cost per hour unmeasured |
 
 ## Now (owner, in this order)
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
@@ -139,20 +144,14 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-0. **2026-10-10: merge `v3-integration-1010`** (one PR carrying B.4, G.3, G.4b and the
-   gemini-fallback cleanup; combined suite green). PR:
-   https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-integration-1010. Then: enable the
-   YouTube Reporting API in GCP (G.3), drop 3 CC0 tracks into `assets/music/bed/` with a
-   SOURCES.txt row each (G.4b), and read the first run's log for `⏭️ Skipping tool candidate`,
-   `📎 first code block`, `transitions:`, `music:` and `↷ reach report`.
-   *Live work (L.4, L.5, seam lags, schedule) belongs to the separate live session.*
-1. **Finish the L.3 rollout.** `v3-phase-l3` is merged (PR #38) and the owner set Public.
-   Left: (a) upload `output/brand/banner_tooldojo_2560x1440.png` as the banner; (b) install
-   the schedule from a checkout on UPDATED MAIN. `E:\YOUTUBE\AI-PULSE` is on
-   `v3-gemini-fallback`, which lacks the L.3 code, so a task launched from there streams the
-   L.2 code publicly. Its `.env` and `assets/music/radar/` are gitignored and already there.
-2. **Build v3-L.5 (live link → Telegram)**, then measure the seam lags (spec v3l3 §6) before
-   any fix. L.4 (vertical) needs its CPU measurement first.
-3. **Read the daily runs and the A/B:** the ledger's `format` and the Actions duration of the
-   1080p renders (90-min timeout). After 10 mature pairs, read the storyboard A/B
-   (≥ 8 → v3-G.2). X (1.4), Meta (1.6) and the debate secrets are still owner clicks.
+0. **2026-11-01: merge `v3-integration-1101`** (one PR carrying B.5 and L.6 plus the docs;
+   combined suite green). PR:
+   https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-integration-1101?expand=1.
+   Then read the first CI run's log for `🧰 Tool day` / `🗓️` / `⏭️ Evergreen … repeats a recent
+   subject` and for NO `⚠️ recording recut failed` line.
+1. **Owner, once (review point 15 + L.3 leftovers):** a licence row per radar track
+   (title, artist, licence page, date) — 12-20 tracks / ≥ 60 min before any stage above
+   120 min; install the daily schedule from a checkout of UPDATED main; upload
+   `output/brand/banner_tooldojo_2560x1440.png`.
+2. **Build v3-L.7** (CI broadcast + measurement). The laptop half (manifest read) shipped in L.6.
+3. **Then v3-L.8** (seam-lag profiling → long private test → ramp controller).

@@ -565,3 +565,32 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   deprecations page). 3.5 flash-lite/flash stay at the end of the chain.
 - **HELD candidates are re-rolled by the retry cron** (no `mark_failed` on HELD). Left as is:
   10-05's hold was followed by a clean publish of the same tool.
+
+## 2026-11-01 — Radar Live + channel growth review (owner: `go for all`)
+
+- The owner delegated the review's open choices ("whatever you think will be best"). Review
+  table: `docs/debate/2026-11-01-radar-live-growth-review/RESULT.md`. Built so far: points 3, 4,
+  5, 7, 8, 14 (L.6) and 16 (B.5). Points 9-12 are L.7, 1 and 13 are L.8, 6 is L.9.
+- The session that built L.6 and B.5 ended before committing; a second session on the same
+  day committed its work unchanged as `wip:` commits, then verified, fixed and documented it.
+
+## 2026-11-01 — v3-B.5: daily lane mix + no-loop recordings
+
+- News is no longer a daily contender; a hot story may replace one slot per ISO week. Judged
+  from the ledger's `format`, never from a log line (the 09-29 "evergreen" fallback published news).
+- A recording never loops: it is recut after the timings exist, stretched at most 1.35×, then
+  held. A held frame was chosen over a loop; the cost (≈ 69% still frame on a short README) is
+  recorded as a known limit, not tuned away.
+- Evergreen repeats are screened by SUBJECT, not wording: the re-word check (0.7) missed all 8
+  LLM/hardware repeats because their words differed.
+
+## 2026-11-01 — v3-L.6: Radar Live viewer + inventory
+
+- Labels and the subscribe line use the review's exact words. The built code had "NEW / BACK ON
+  THE RADAR" and a shorter subscribe line; both were corrected to the agreed text.
+- The verbatim subscribe line does not fit the 900 px centre slot at a readable size (it shrank
+  to 18 px and ran under "SOURCE DELAYED" — rendered and seen). For its 5 s it takes the as-of
+  slot too and spans the bar at 28 px. Hiding the as-of text for 5 s every 15 min was preferred
+  over shortening agreed wording.
+- `UPDATED` is not built: nothing in the radar's data can verify a change, and the review gives
+  no threshold.
