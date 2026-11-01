@@ -251,6 +251,9 @@ def _isolate(monkeypatch, tmp_path):
     monkeypatch.setattr(rl, "LOG", tmp_path / "radar_live.log")
     monkeypatch.setattr(rl, "SESSIONS", tmp_path / "radar_sessions.jsonl")
     monkeypatch.setattr(rl, "_SECRETS", [])
+    # L6/L7: main() reads the CI manifest and the task list; tests never touch either
+    monkeypatch.setattr(rl, "fetch_manifest", lambda: None)
+    monkeypatch.setattr(rl, "schedule_installed", lambda: False)
 
 
 def test_no_key_means_off(monkeypatch, tmp_path):
