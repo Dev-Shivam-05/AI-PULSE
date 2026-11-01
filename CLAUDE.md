@@ -147,6 +147,11 @@ name that is not written there. If a decision is missing, add a row and get one 
   `def` silently replaced the earlier one and 16 Telegram/X tests failed with a TypeError in
   code nobody touched. Grep `^def <name>` before adding a helper; prefix it with the phase's
   subject (`_ledger_row`).
+- **A picker that reads the REAL ledger makes every older test of it depend on what was
+  published.** v3-B.5's evergreen subject screen calls `learn.read_runs(RUNS_LOG)`; two older
+  tests went red the day it landed because the live ledger's "The Chip Revolution" and LLM
+  evergreens blocked their fixture ideas. Stub the reader as the consumer sees it
+  (`ap.learn.read_runs`) in every test that reaches the picker, not just the new ones.
 - **A learning metric needs the numbers per VIDEO, not the top-N.** The collector's top-25
   report is crowded out by Shorts; 11 of the first 33 v3 long-forms never appeared in any
   snapshot. `analytics.ledger_query_args` asks for the ledger's own ids. And `json.loads`
