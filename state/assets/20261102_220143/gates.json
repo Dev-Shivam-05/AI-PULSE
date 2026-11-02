@@ -1,0 +1,51 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 10,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "DeepSeek Superagent",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "DeepSeek AI",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      },
+      {
+        "text": "ToolDojo",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "claim": "This prototype highlights a paradigm shift where AI tools manage their own deployment and maintenance, moving beyond merely assisting human developers to actively orchestrating their own operational lifecycles."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces the concept of an AI with zero open issues, which is not explicitly stated in the source text. The source text mentions that the prototype may still contain bugs and inconsisten"
+  },
+  "confidence": {
+    "score": 0.69,
+    "components": {
+      "format": 0.6,
+      "novelty": 0.9,
+      "facts": 0.3999999999999999,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "notify"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

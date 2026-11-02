@@ -5818,5 +5818,55 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-02T22:01:43.029729",
+    "title": "Run DeepSeek Superagent: Your Autonomous GitHub AI",
+    "description": "Unlock the power of an autonomous coding agent for your GitHub repositories. In this hands-on video, we'll show you how to activate DeepSeek Superagent, a research prototype from DeepSeek AI, and begin setting it up in under ten minutes. With an impressive 12,894 stars and zero open issues, this MIT-licensed tool, last updated October 31, 2026, is designed to take on development tasks with minimal human intervention. Learn its unique agent-driven setup process and how it can proactively manage pull requests and coding tasks. Ideal for developers already using DeepSeek Harness who want to explore advanced AI agent capabilities.\n\n🔧 Try it yourself:\nRead SETUP.md in this repository and set up dsh-superagent with me.\nhttps://github.com/deepseek-ai/dsh-superagent-prototype\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-11-02-run-deepseek-superagent-your-autonomous.html\n\n#AI #AutonomousAgent #DeepSeekAI #GitHubAutomation #CodingAgent #ToolDojo #FreeAI\nSubscribe to ToolDojo.\n\nSource: https://github.com/deepseek-ai/dsh-superagent-prototype\n\nChapters:\n0:00 AI Coder Superhero\n0:53 DeepSeek Superagent Intro\n1:35 Proactive Dev Team\n2:00 Free Autonomous Agents\n2:55 Isolated Dev Environment\n\n▶ Watch next: https://youtube.com/watch?v=rMTAgL2IYVQ",
+    "tags": [
+      "AI Agent",
+      "DeepSeek AI",
+      "GitHub Automation",
+      "Coding Assistant",
+      "Autonomous Software",
+      "Developer Tools",
+      "Open Source AI",
+      "MIT License",
+      "AI Development",
+      "ToolDojo",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning"
+    ],
+    "video": "output/videos/Run_DeepSeek_Superagent_Your_Autonomous_GitHub_AI_20261102_215659_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261102_215802.mp4",
+      "output/shorts/short_2_20261102_215838.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261102_215801.jpg",
+    "youtube_url": "https://youtube.com/watch?v=Q-P_P-Y1-to",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=u9ZyAfHKQNI",
+      "https://youtube.com/watch?v=1BDAEtLuSpU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "DeepSeek Superagent GitHub AI #Shorts",
+        "description": "Demonstration of the DeepSeek Superagent, an autonomous AI for GitHub tasks.",
+        "instagram_caption": "🚀 See the DeepSeek Superagent in action as it handles autonomous GitHub tasks. Watch this AI streamline your development workflow. Follow @tooldojo!\n#DeepSeek #Superagent #GitHubAI #AI #ArtificialIntelligence #DeveloperTools #Coding #SoftwareDevelopment #Tech #Innovation #Automation #GitHubCopilot #Productivity #DevOps #OpenSource #MachineLearning #FutureOfCoding #CodeAssistant #TechDemo #AIinAction"
+      },
+      {
+        "title": "Autonomous GitHub AI: DeepSeek #Shorts",
+        "description": "Showcasing the autonomous capabilities of the DeepSeek Superagent on GitHub.",
+        "instagram_caption": "⚡️ Discover how the DeepSeek Superagent performs autonomous functions directly on GitHub. This AI tool is designed to enhance your coding experience. Follow @tooldojo!\n#DeepSeekAI #GitHubAutomation #AICoding #DeveloperLife #TechGadgets #SoftwareEngineering #Programming #AIforDevelopers #TechNews #ProductivityHacks #AutomationTools #GitHubProjects #SmartTools #CodingLife #TechTrends #AIDevelopment #GitHubCommunity #FutureTech #CodeBot #AItools"
+      }
+    ],
+    "format": "tool",
+    "status": "PUBLISHED"
   }
 ]

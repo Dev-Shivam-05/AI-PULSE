@@ -1,0 +1,133 @@
+{
+  "title": "Run DeepSeek Superagent: Your Autonomous GitHub AI",
+  "thumb_text": "12,894 STARS. FREE.",
+  "description": "Unlock the power of an autonomous coding agent for your GitHub repositories. In this hands-on video, we'll show you how to activate DeepSeek Superagent, a research prototype from DeepSeek AI, and begin setting it up in under ten minutes. With an impressive 12,894 stars and zero open issues, this MIT-licensed tool, last updated October 31, 2026, is designed to take on development tasks with minimal human intervention. Learn its unique agent-driven setup process and how it can proactively manage pull requests and coding tasks. Ideal for developers already using DeepSeek Harness who want to explore advanced AI agent capabilities.\n\n🔧 Try it yourself:\nRead SETUP.md in this repository and set up dsh-superagent with me.\nhttps://github.com/deepseek-ai/dsh-superagent-prototype\n📄 Free 1-page cheat sheet: https://dev-shivam-05.github.io/AI-PULSE/tools/2026-11-02-run-deepseek-superagent-your-autonomous.html\n\n#AI #AutonomousAgent #DeepSeekAI #GitHubAutomation #CodingAgent #ToolDojo #FreeAI\nSubscribe to ToolDojo.\n\nSource: https://github.com/deepseek-ai/dsh-superagent-prototype\n\nChapters:\n0:00 AI Coder Superhero\n0:53 DeepSeek Superagent Intro\n1:35 Proactive Dev Team\n2:00 Free Autonomous Agents\n2:55 Isolated Dev Environment\n\n▶ Watch next: https://youtube.com/watch?v=rMTAgL2IYVQ",
+  "tags": [
+    "AI Agent",
+    "DeepSeek AI",
+    "GitHub Automation",
+    "Coding Assistant",
+    "Autonomous Software",
+    "Developer Tools",
+    "Open Source AI",
+    "MIT License",
+    "AI Development",
+    "ToolDojo",
+    "ai",
+    "artificial intelligence",
+    "ai news",
+    "machine learning",
+    "tech news",
+    "ai explained",
+    "technology",
+    "deep learning"
+  ],
+  "scenes": [
+    {
+      "scene_num": 1,
+      "narration": "Imagine an AI that writes code, manages a GitHub repo, and has zero open issues. With 12,894 stars. Today, you'll learn how to activate DeepSeek Superagent, a powerful autonomous coding agent, and begin setting it to work on your projects in under ten minutes.",
+      "visual_query": "glowing server racks",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 2,
+      "narration": "This is DeepSeek Superagent, a research prototype from DeepSeek AI. It’s a self-driven coding agent for a single GitHub repository, acting like an extra team member. Last updated October 31, 2026, it shows active development.",
+      "visual_query": "robot coding assistant",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 3,
+      "narration": "Its philosophy: minimize human attention, maximize value. It acts only when asked or allowed by rules, speaking up only when human intervention is required or a result, like a new pull request, is ready.",
+      "visual_query": "team collaboration dashboard",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 4,
+      "narration": "DeepSeek Superagent is a bundle for DeepSeek Harness, their agent orchestration platform. You need a Harness setup already running. You don't install it traditionally.",
+      "visual_query": "complex network diagram",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 5,
+      "narration": "Instead, ask your existing coding agent within DeepSeek Harness to install it. The command: `Read SETUP.md in this repository and set up dsh-superagent with me.` This agent-driven setup guides you through short questions and shows the full plan.",
+      "visual_query": "terminal window code",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 6,
+      "narration": "Once active, this Superagent listens to your GitHub repository. It can open a work item, work on it autonomously in its own session and directory, and answer back in the original conversation, often by submitting a pull request, hands-free.",
+      "visual_query": "pull request screen",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 7,
+      "narration": "Think of it as a proactive team member that identifies tasks, executes development, and suggests improvements without constant oversight. A web panel shows tasks needing human review or intervention.",
+      "visual_query": "project management dashboard",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 8,
+      "narration": "This is a research prototype, not production-ready. It may have bugs and inconsistent coding. It requires an existing DeepSeek Harness setup. Not for critical production systems, yet.",
+      "visual_query": "caution warning sign",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 9,
+      "narration": "For developers exploring autonomous agents, it's powerful and free. It's MIT licensed. Despite being a prototype, it boasts zero open issues. This agent shows a future where AI handles mundane tasks, leaving complex problems for humans.",
+      "visual_query": "person thinking innovation",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 10,
+      "narration": "Your next step: initiate the setup command within your DeepSeek Harness environment. The exact command is in the description below. What kind of repository would you first hand over to an autonomous agent? Subscribe to ToolDojo for more hands-on AI tools.",
+      "visual_query": "laptop coding hands",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 11,
+      "narration": "The 'agent-driven setup' command `Read SETUP.md in this repository and set up dsh-superagent with me.` prompts your Harness agent to parse `SETUP.md`. It interprets instructions, identifies prerequisites, and formulates a plan, presenting it for confirmation with explanations. This transparency builds trust.",
+      "visual_query": "flowchart of agent decision making",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 12,
+      "narration": "The 'autonomous session and directory' provides isolation. The Superagent spins up a dedicated, sandboxed environment, like a Docker container or server directory, to perform coding, testing, and debugging. This prevents conflicts and ensures work is contained.",
+      "visual_query": "isolated virtual machine environment",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 13,
+      "narration": "The Superagent proactively managing pull requests significantly speeds up development. For instance, detecting a security vulnerability, it can fix it, create a branch, and submit a pull request for your review. This shifts repetitive tasks to AI.",
+      "visual_query": "code review process visualization",
+      "speaker": "a"
+    },
+    {
+      "scene_num": 14,
+      "narration": "The 'web panel for human review' is the crucial human-in-the-loop mechanism. This panel acts as your command center, showing the Superagent's activities, tasks awaiting approval, and any errors. It allows for targeted intervention, balancing AI autonomy with human judgment.",
+      "visual_query": "AI oversight dashboard with approval buttons",
+      "speaker": "a"
+    }
+  ],
+  "titles": [
+    "DeepSeek Superagent: Get an AI Coder for Your Repo",
+    "Run DeepSeek Superagent: Your Autonomous GitHub AI",
+    "Activate DeepSeek Superagent: AI Agent for GitHub (12,894 Stars)"
+  ],
+  "synthesis_claim": "This prototype highlights a paradigm shift where AI tools manage their own deployment and maintenance, moving beyond merely assisting human developers to actively orchestrating their own operational lifecycles.",
+  "deliverable": {
+    "kind": "command",
+    "text": "Read SETUP.md in this repository and set up dsh-superagent with me.",
+    "url": "https://github.com/deepseek-ai/dsh-superagent-prototype"
+  },
+  "filter_segment": true,
+  "source_url": "https://github.com/deepseek-ai/dsh-superagent-prototype",
+  "format": "tool",
+  "signal_title": "deepseek-ai/dsh-superagent-prototype: Towards a More Autonomous Agent System",
+  "verified_facts": {
+    "stars": 12894,
+    "license": "MIT",
+    "last_update": "2026-10-31",
+    "open_issues": 0
+  },
+  "cheat_sheet": "2026-11-02-run-deepseek-superagent-your-autonomous.pdf"
+}
