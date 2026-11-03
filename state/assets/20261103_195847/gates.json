@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "OpenAI's aggressive expansion into search through ChatGPT, mirroring Google's own AI-driven evolution, indicates that the 'search engine' is transforming into an 'answer engine' where direct interaction with AI models will become the primary interface, potentially bypassing traditional website refer"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a narrative flow and specific phrasing that is not directly present in the source text. For example, 'Everyone's talking about ChatGPT taking over Google. But the reality is mor"
+  },
+  "confidence": {
+    "score": 0.94,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

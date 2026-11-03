@@ -5868,5 +5868,54 @@
     ],
     "format": "tool",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-03T19:58:47.025580",
+    "title": "ChatGPT: 20% of Google Search Volume",
+    "description": "ChatGPT is now handling a significant portion of search queries, reaching 20% of Google's volume. This development signals a major shift in how we access information online.  We'll break down what this means for you, how it impacts the tech landscape, and the potential for future monetization through ads.  Discover the evolving search engine battlefield and what this means for your daily digital interactions. #AI #ChatGPT #GoogleSearch #TechNews #OpenAI #ArtificialIntelligence\n\nSource: https://www.theverge.com/ai-artificial-intelligence/1025482/openai-says-chatgpt-is-catching-up-to-google-in-search\n\nChapters:\n0:00 ChatGPT vs Google\n1:06 Google Acknowledges AI\n2:10 Search Is Changing\n2:52 User Apathy Noted\n3:56 Information Gateway Risk\n\n▶ Watch next: https://youtube.com/watch?v=Q-P_P-Y1-to",
+    "tags": [
+      "ChatGPT",
+      "OpenAI",
+      "Google Search",
+      "AI",
+      "Search Engine",
+      "Tech",
+      "Artificial Intelligence",
+      "Generative AI",
+      "Future of Search",
+      "Tech Trends",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/ChatGPT_20_of_Google_Search_Volume_20261103_194513_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261103_195002.mp4",
+      "output/shorts/short_2_sb_20261103_195052.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261103_194818.jpg",
+    "youtube_url": "https://youtube.com/watch?v=2dCUL8wREW0",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=YDEAMRWcbX8",
+      "https://youtube.com/watch?v=OyzxATbap4Q"
+    ],
+    "shorts_meta": [
+      {
+        "title": "ChatGPT: 20% Google Search Volume #Shorts",
+        "description": "A visual representation showing ChatGPT's impact on Google Search volume, indicating it accounts for 20% of total search queries.",
+        "instagram_caption": "📊 ChatGPT is now handling 20% of all Google searches. This significant shift highlights the growing adoption of AI tools for information discovery. Follow @tooldojo! #ChatGPT #AISearch #GoogleSearch #TechTrends #AIRevolution #DigitalTransformation #SearchEngine #InformationAge #FutureOfSearch #AIImpact #TechNews #ArtificialIntelligence #ToolDojo #SearchVolume #GoogleAI #ContentCreation #ProductivityTools #OnlineSearch #AIUpdate #TechInsights"
+      },
+      {
+        "title": "20% Google Search Volume: ChatGPT #Shorts",
+        "description": "The video illustrates that ChatGPT is now responsible for 20% of the volume of searches typically handled by Google.",
+        "instagram_caption": "🚀 Did you know? ChatGPT now accounts for a massive 20% of Google's search volume. This indicates a major shift in how people find information online. Follow @tooldojo! #ChatGPT #Google #SearchEngine #AI #Tech #Digital #Innovation #Future #Internet #Information #Data #Web #Online #SEO #Content #AItools #TechNews #Business #Productivity #ToolDojo"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
