@@ -16,6 +16,7 @@ This module knows the merge semantics of every state file:
   * state/runs.jsonl / analytics.jsonl -> ordered line union
   * state/shadow_queue.jsonl           -> ordered line union
   * state/tools_index.json             -> union by page name, later entry wins
+  * state/pilot_b.json                 -> dict: origin/main's draw wins, days unioned
 
 Usage (from the repo root, typically in CI after `git checkout -B main origin/main`):
     python -m factverse.state_merge <incoming_dir>
@@ -64,6 +65,10 @@ FILES = (
     # v3-M.1 row 16: the second-slot shadow queue, one line per automatic run. A
     # .jsonl, so the ordered line union below is already its merge semantics.
     "state/shadow_queue.jsonl",
+    # v3-S.1: Pilot B's assignment and pairs. A DICT, so the generic list union
+    # would raise on it; pilot_b.merge keeps origin/main's random draw (earlier days
+    # were assigned under it) and unions the days, later `recorded_at` winning.
+    "state/pilot_b.json",
 )
 
 
@@ -206,6 +211,9 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         merged = _merge_seen(theirs, ours)
     elif rel == "state/tools_index.json":
         merged = _merge_index(theirs, ours)
+    elif rel == "state/pilot_b.json":
+        from factverse import pilot_b  # noqa: PLC0415
+        merged = pilot_b.merge(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))

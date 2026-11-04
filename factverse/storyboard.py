@@ -45,10 +45,17 @@ def engine_index(day) -> int:
     return 0 if day.timetuple().tm_yday % 2 == 0 else 1
 
 
+NATIVE_MARK = "_nv_"                          # v3-S.1: the native concept Short's file marker
+
+
 def engine_of(path) -> str:
     """Row 13: the A/B arm a rendered Short belongs to, from its file name. A
-    substring test — never a path split (the Windows/CI separator trap)."""
-    return "storyboard" if "_sb_" in str(path) else "crop"
+    substring test — never a path split (the Windows/CI separator trap).
+    v3-S.1 adds "native" (docs/spec/ai-pulse-v3-growth.md names the engine)."""
+    s = str(path)
+    if NATIVE_MARK in s:
+        return "native"
+    return "storyboard" if "_sb_" in s else "crop"
 
 
 def _norm_word(w: str) -> str:
@@ -393,8 +400,20 @@ def demote(board: dict, beat_idx: list[int], words: list) -> dict:
 
 
 def render(board: dict, out_mp4: str, words: list) -> str | None:
+    out, _meta = render_meta(board, out_mp4, words)
+    return out
+
+
+def render_meta(board: dict, out_mp4: str, words: list, demote_unfit: bool = True,
+                probes: tuple = ()) -> tuple[str | None, dict]:
+    """render() plus the renderer's own metadata (v3-S.1): `unfit` beats, the
+    smallest font size set after the fit pass (`min_px`), and for each probe time
+    t the fully-opaque/total text element count (`shown`). With
+    `demote_unfit=False` an unfit board is NOT demoted to statements: it returns
+    (None, meta) so the caller can repair the script instead."""
     t0 = time.monotonic()
     fdir = fv.TEMP / "sb_frames"
+    meta: dict = {"unfit": [], "min_px": None, "shown": {}, "frames": 0, "seconds": 0.0}
     try:
         from playwright.sync_api import sync_playwright
         shutil.rmtree(fdir, ignore_errors=True)
@@ -407,9 +426,17 @@ def render(board: dict, out_mp4: str, words: list) -> str | None:
                 page.goto(PAGE.resolve().as_uri())
                 page.wait_for_function("window.__ready === true", timeout=15000)
                 unfit = page.evaluate("b => window.__load(b)", board)
+                meta["unfit"] = list(unfit or [])
+                if unfit and not demote_unfit:
+                    meta["min_px"] = page.evaluate("() => window.__minSize()")
+                    print(f"  ↻ storyboard text does not fit at {board.get('floor', 44)} px")
+                    return None, meta
                 if unfit:
                     board = demote(board, list(unfit), words)
                     page.evaluate("b => window.__load(b)", board)
+                meta["min_px"] = page.evaluate("() => window.__minSize()")
+                for pt in probes:
+                    meta["shown"][str(pt)] = page.evaluate("t => window.__shown(t)", float(pt))
                 for i, t in enumerate(frame_times(board)):
                     page.evaluate("t => window.__seek(t)", t)
                     path = fdir / f"{i:05d}.png"
@@ -423,9 +450,10 @@ def render(board: dict, out_mp4: str, words: list) -> str | None:
                            timeout=600)
         if r.returncode != 0 or not Path(out_mp4).exists() or Path(out_mp4).stat().st_size < 10000:
             print(f"  ↻ storyboard encode failed: {(r.stderr or '')[-200:]}")
-            return None
+            return None, meta
+        meta["frames"], meta["seconds"] = len(frames), round(time.monotonic() - t0, 1)
         print(f"  🎨 Storyboard short rendered in {time.monotonic() - t0:.1f}s ({len(frames)} frames)")
-        return str(out_mp4)
+        return str(out_mp4), meta
     except Exception as e:  # noqa: BLE001
         print(f"  ↻ storyboard render failed: {type(e).__name__}: {str(e)[:120]}")
-        return None
+        return None, meta

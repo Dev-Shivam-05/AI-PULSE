@@ -124,7 +124,8 @@ def ledger_shorts(rows: list[dict]) -> list[dict]:
         for it in items:
             vid = video_id(it.get("url")) if isinstance(it, dict) else None
             eng = it.get("engine") if isinstance(it, dict) else None
-            if vid and vid not in seen and eng in ("storyboard", "crop"):
+            # v3-S.1: "native" joins the engines, so the collector fetches its numbers
+            if vid and vid not in seen and eng in ("storyboard", "crop", "native"):
                 seen.add(vid)
                 out.append({"id": vid, "engine": eng, "row": k,
                             "published": _date(r.get("publish_at")) or stamped})
@@ -222,7 +223,7 @@ def reach_by_format(rows: list[dict], reach: dict[tuple, dict]) -> dict[str, dic
 def shorts_ab(rows: list[dict], metrics: dict[str, dict], today: dt.date | None = None) -> dict:
     """v3-G.1 rows 13-14: views-weighted % viewed per arm, and the daily pairs."""
     today = today or dt.date.today()
-    arms = {"storyboard": [], "crop": []}
+    arms = {"storyboard": [], "crop": [], "native": []}
     by_row: dict[int, dict[str, dict]] = {}
     for s in ledger_shorts(rows):
         m = metrics.get(s["id"], {})
@@ -347,7 +348,7 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
         lines.append(f"{arm:<22}{r['impr']:>9}{ctr:>9}")
     # v3-G.1 rows 13-14: the storyboard A/B (Shorts mature after 2 days)
     lines += ["", f"{'shorts A/B':<22}{'videos':>7}{'mature':>9}{'views':>8}{'%viewed':>9}"]
-    for arm in ("short:storyboard", "short:crop"):
+    for arm in ("short:storyboard", "short:crop", "short:native"):
         s = ab[arm]
         pct = f"{s['wavp']:.1f}%" if s["views"] else "-"
         lines.append(f"{arm:<22}{s['videos']:>7}{s['mature']:>9}{s['views']:>8}{pct:>9}")

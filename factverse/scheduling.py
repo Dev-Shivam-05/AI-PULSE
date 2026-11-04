@@ -69,6 +69,38 @@ def long_slot(now: dt.datetime | None = None) -> str:
     return slot.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+PILOT_B_SLOTS = ((0, 18, 45), (1, 1, 30))   # v3-S.1: (day offset from D, hour, minute) UTC
+
+
+def pilot_b_slots(long_publish_rfc3339: str, now: dt.datetime | None = None) -> list[str] | None:
+    """v3-S.1 Pilot B: exactly 18:45 UTC on production day D (the long-form's publish
+    date) and 01:30 UTC on D+1, in that order (round 3 §4). With the default
+    16:45 long-form slot these ARE the slots shorts_slots_after_long already gives;
+    pinning them means a changed `longform_slot_utc` cannot move the pilot.
+
+    None when the first slot is not safely in the future (publishAt needs ~20 min)
+    or the input is unreadable: the caller then uses the normal grid and records
+    the pair as off-slot. Never raises."""
+    try:
+        base = dt.datetime.strptime(long_publish_rfc3339, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=dt.timezone.utc)
+        slots = [dt.datetime.combine(base.date() + dt.timedelta(days=d), dt.time(h, m),
+                                     dt.timezone.utc) for (d, h, m) in PILOT_B_SLOTS]
+        now = now or dt.datetime.now(dt.timezone.utc)
+        if slots[0] <= now + dt.timedelta(minutes=20):
+            return None
+        validate_distribution(slots)
+        return [t.strftime("%Y-%m-%dT%H:%M:%SZ") for t in slots]
+    except Exception:
+        return None
+
+
+def slot_label(rfc3339) -> str | None:
+    """"HH:MM" (UTC) of a publishAt string — the ledger's `slot`. None if unreadable."""
+    s = str(rfc3339 or "")
+    return s[11:16] if len(s) >= 16 and s[13] == ":" else None
+
+
 def shorts_slots_after_long(n: int, long_publish_rfc3339: str) -> list[str]:
     """Shorts drop schedule: the first Short lands ~2h after the long-form publish
     (routing traffic during its early-signal window), the rest fall on the daily

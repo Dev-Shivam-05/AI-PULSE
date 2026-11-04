@@ -62,6 +62,8 @@ from factverse import learn
 from factverse import memory
 from factverse import l2
 from factverse import shorts as shorts_mod
+from factverse import native_short
+from factverse import pilot_b
 from factverse.intelligence import signal_engine
 
 # Reuse the proven render/publish steps from the original engine (lives in scripts/).
@@ -1799,6 +1801,38 @@ def normalize_shorts_meta(meta, n: int, script: dict, hooks: list | None = None)
     return out
 
 
+def _s1_native_day(script: dict, crops: list, hooks: list) -> dict | None:
+    """v3-S.1: render the native concept Short and put the day's pair in slot order
+    (index 0 = 18:45 UTC). Before any upload, but it still never raises: a broken
+    native path must cost only the native Short. None = keep the crops as rendered."""
+    try:
+        windows = list(shorts_mod.last_windows)
+        nat = native_short.make(script, hook=(hooks[0] if hooks else ""),
+                                excerpt=(windows[0] if windows else ""))
+        day = scheduling.long_slot()[:10]
+        return pilot_b.plan_day(
+            day, crops, hooks, nat, native_short.last_skip,
+            pilot=fv.flag("pilot_b", False),
+            max_batches=int(float(fv.setting("pilot_b_batches", 1) or 1)),
+            parity_index=shorts_mod.sb.engine_index(_dt.date.fromisoformat(day)))
+    except Exception as e:  # noqa: BLE001
+        print(f"  ⚠️ native Short day failed ({type(e).__name__}) — crop Shorts only.")
+        return None
+
+
+def _s1_native_title(plan: dict | None, shorts: list, meta: list) -> None:
+    """The native Short is titled from its OWN script (validated in native_short),
+    not from step8_meta, which only knows the long-form."""
+    try:
+        if not plan or not plan.get("native_ok") or not plan.get("native_title"):
+            return
+        for i, p in enumerate(shorts):
+            if shorts_mod.sb.engine_of(p) == "native" and i < len(meta):
+                meta[i]["title"] = plan["native_title"]
+    except Exception:  # noqa: BLE001
+        return
+
+
 def already_published_today() -> bool:
     """Idempotence guard: exactly ONE published video per UTC day, no matter how
     many times the workflow fires (late cron + retry cron, re-runs, manual runs).
@@ -2155,8 +2189,16 @@ def run(publish: bool = False, force_format: str | None = None,
     # units freed, one fewer templated upload in the channel-level pattern.
     # Revisit only if Shorts→long CTR sustains >6% for 30 days.
     shorts_n = int(fv.setting("shorts_per_day", 2))
+    # v3-S.1: the native concept Short replaces the storyboard engine's Short, so
+    # with it on both rendered Shorts are crop excerpts (the control + a spare).
+    native_on = fv.flag("native_shorts", False)
     shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
-                                    max_count=min(shorts_n, 4), source_domain=src_domain)
+                                    max_count=min(shorts_n, 4), source_domain=src_domain,
+                                    storyboard=(False if native_on else None))
+    short_hooks = list(shorts_mod.last_hooks)
+    s1_plan = _s1_native_day(script, shorts, short_hooks) if (native_on and shorts) else None
+    if s1_plan:
+        shorts, short_hooks = s1_plan["shorts"], s1_plan["hooks"]
 
     print("  📝 Burning live word-by-word captions...")
     # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
@@ -2198,7 +2240,8 @@ def run(publish: bool = False, force_format: str | None = None,
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
     meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script,
-                                 hooks=list(shorts_mod.last_hooks))
+                                 hooks=short_hooks)
+    _s1_native_title(s1_plan, shorts, meta)
     # Trip the re-hook tripwire HERE, while nothing is uploaded and aborting is
     # still free. It used to run after the long-form was already on YouTube.
     if shorts:
@@ -2270,6 +2313,12 @@ def run(publish: bool = False, force_format: str | None = None,
         except Exception as e:
             print(f"  ⚠️ Shorts scheduling failed ({e}) — publishing them unscheduled.")
             slots = []
+        # v3-S.1 Pilot B: exactly 18:45 UTC on D and 01:30 UTC on D+1 (never raises)
+        s1_slots_ok = False
+        if s1_plan and s1_plan.get("assignment") and len(shorts) == 2:
+            _ps = scheduling.pilot_b_slots(long_publish_at)
+            if _ps and str(long_publish_at)[:10] == s1_plan["assignment"].get("day"):
+                slots, s1_slots_ok = _ps, True
         for i, sp in enumerate(shorts):
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
@@ -2280,11 +2329,15 @@ def run(publish: bool = False, force_format: str | None = None,
                 yt_shorts.append(u)
                 # v3-G.1 row 13: which arm drew this Short (post-upload zone:
                 # storyboard.engine_of is a substring test on our own name, cannot raise)
-                short_rows.append({"url": u, "engine": shorts_mod.sb.engine_of(sp)})
+                short_rows.append({"url": u, "engine": shorts_mod.sb.engine_of(sp),
+                                   # v3-S.1: "HH:MM" UTC; slot_label cannot raise
+                                   "slot": scheduling.slot_label(slots[i] if i < len(slots) else None)})
                 # visible path from the Short to the full video (description links
                 # are hidden on the Shorts player; a channel comment is tappable)
                 eng.yt_comment(u, f"▶️ Full breakdown: {yt_url}")
         status = "PUBLISHED"
+        # v3-S.1: every assigned pair is recorded, a skipped native included. Never raises.
+        pilot_b.record(s1_plan, short_rows, yt_url, s1_slots_ok)
     else:
         print("\n  ⏸️  Render-only (publish skipped).")
 
@@ -2321,8 +2374,12 @@ def run(publish: bool = False, force_format: str | None = None,
     except Exception as e:
         print(f"  ⚠️ Post-publish bookkeeping failed ({type(e).__name__}: {e}) — "
               f"recording the run anyway so today cannot publish twice.")
+    # v3-S.1: experiment / pair_id / arm / slot on a PUBLISHED long-form row only.
+    # Merge any other experiment's fields into THIS dict: a second `experiment=`
+    # keyword beside `**_s1_ledger` is a TypeError in the double-publish window.
+    _s1_ledger = pilot_b.ledger_fields(s1_plan) if status == "PUBLISHED" else {}
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
-               packaging=_pk["fixed"],
+               packaging=_pk["fixed"], **_s1_ledger,
                thumb_text=_ledger_thumb, title_alt=_ledger_title_alt,
                title_terms=_ledger_title_terms,
                evidence_source=_ledger_ev_source, evidence_status=_ledger_ev_status,

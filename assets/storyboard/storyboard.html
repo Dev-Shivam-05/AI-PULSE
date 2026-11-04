@@ -43,20 +43,35 @@ body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
 .bar { height: 46px; background: var(--cyan); border-radius: 999px; width: 0; }
 .val { font-family: "JetBrains Mono", monospace; font-weight: 400; font-size: 46px;
   line-height: 72px; color: var(--yellow); }
+/* v3-S.1 native Short: the headline sits in the crop Short's hook band (y = 0.10 x 1920,
+   960 px = 1080 - 2 x HOOK_MARGIN, shorts.py) and the diagram fills the stage below it,
+   down to the approved y 1150. A native compare stacks its two sides, so each label gets
+   the full 840 px at the 60 px floor. */
+#head { position: absolute; left: 60px; top: 192px; width: 960px; text-align: center; }
+#head .el { max-width: 960px; }
+.beat.stack .cols { flex-direction: column; }
 </style>
 </head>
 <body>
+<div id="head"></div>
 <div id="stage"></div>
 <script>
 (function () {
   "use strict";
   var AREA_H = 850, FLOOR = 44, STEP = 4;
+  // v3-S.1 native layout, all existing values: the hook overlay's top and its 2-line
+  // limit (shorts.py), the 60 px block gap, the stage's top 300 and bottom 1150 (row 7)
+  var HEAD_TOP = 192, HEAD_LINES = 2, GAP = 60, STAGE_TOP = 300, STAGE_BOTTOM = 1150;
+  var areaH = AREA_H;
   var ENTER = 0.32, HL = 0.24, COUNT = 0.70, BAR = 0.70, CPS = 32, RISE = 28;
-  var START = { line: 130, value: 307, label: 67, ltitle: 68, litem: 68, rtitle: 68, ritem: 68,
-                step: 68, user: 64, ai: 64, bar: 68, chip: 46 };
+  // v3-S.1: "head" is the native Short's headline, sized like a statement line
+  var START = { line: 130, head: 130, value: 307, label: 67, ltitle: 68, litem: 68, rtitle: 68,
+                ritem: 68, step: 68, user: 64, ai: 64, bar: 68, chip: 46 };
   var COLOR = { ltitle: "var(--cyan)", rtitle: "var(--violet)", value: "var(--yellow)",
                 chip: "var(--cyan)" };
   var board = null, beats = [];
+  // v3-S.1: a native board carries its own floor (60 px, round 3); storyboard keeps 44
+  function floor() { return (board && board.floor) || FLOOR; }
 
   // cubic-bezier(0.16, 1, 0.3, 1) — the approved entrance curve
   function bezier(p1x, p1y, p2x, p2y) {
@@ -114,6 +129,9 @@ body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
     root._b = b; root._els = [];
     var els = b.els, t = b.template;
     function add(e, parent) { var d = textEl(e, parent); root._els.push(d); return d; }
+    // v3-S.1: the native Short's headline, above its diagram for the whole Short
+    if (b.head) { root._head = add(b.head, document.getElementById("head")); }
+    if (b.stack) root.classList.add("stack");
     if (t === "statement" || t === "number") {
       root.classList.add("center");
       els.forEach(function (e) { add(e, root); });
@@ -154,20 +172,31 @@ body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
   }
 
   // row 10: shrink 4 px at a time, never below 44; say which beats still do not fit
+  // v3-S.1: with a headline, the stage starts GAP below the headline's real height
+  function place(root) {
+    var stage = document.getElementById("stage"), top = STAGE_TOP;
+    if (root._head) top = HEAD_TOP + root._head.scrollHeight + GAP;
+    areaH = root._head ? STAGE_BOTTOM - top : AREA_H;
+    stage.style.top = top + "px";
+    stage.style.height = areaH + "px";
+    root.style.height = areaH + "px";
+  }
   function fits(root) {
-    var ok = root.scrollHeight <= AREA_H + 1;
+    place(root);
+    var ok = root.scrollHeight <= areaH + 1;
     root._els.forEach(function (d) { if (d.scrollWidth > d.clientWidth + 1) ok = false; });
+    if (root._head && root._head.scrollHeight > HEAD_LINES * (root._head._size + 26) + 1) ok = false;
     return ok;
   }
   function fit(root) {
     root._els.forEach(function (d) {
-      while (d.scrollWidth > d.clientWidth + 1 && d._size - STEP >= FLOOR) setSize(d, d._size - STEP);
+      while (d.scrollWidth > d.clientWidth + 1 && d._size - STEP >= floor()) setSize(d, d._size - STEP);
     });
     var guard = 0;
     while (!fits(root) && guard++ < 200) {
       var shrunk = false;
       root._els.forEach(function (d) {
-        if (d._size - STEP >= FLOOR) { setSize(d, d._size - STEP); shrunk = true; }
+        if (d._size - STEP >= floor()) { setSize(d, d._size - STEP); shrunk = true; }
       });
       if (!shrunk) break;
     }
@@ -176,8 +205,9 @@ body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
 
   window.__load = function (b) {
     board = b;
-    var stage = document.getElementById("stage");
+    var stage = document.getElementById("stage"), head = document.getElementById("head");
     while (stage.firstChild) stage.removeChild(stage.firstChild);
+    while (head.firstChild) head.removeChild(head.firstChild);
     beats = board.beats.map(build);
     var unfit = [];
     beats.forEach(function (root, i) { if (!fit(root)) unfit.push(i); });
@@ -249,10 +279,35 @@ body { font-family: "Inter", sans-serif; font-weight: 900; color: var(--text); }
       if (i === 0 && t < b.start) on = true;
       root.style.visibility = on ? "visible" : "hidden";
       root.style.display = on ? "flex" : "none";       // nothing of a hidden beat can paint
-      if (on) apply(root, t);
+      if (root._head) root._head.style.display = on ? "" : "none";
+      if (on) { if (root._head) place(root); apply(root, t); }
     });
   };
   window.__timeline = function () { return board ? board.intervals : []; };
+  // v3-S.1 renderer metadata, read by native_short's gate: the smallest font size
+  // actually set after the fit pass, and how many text elements are fully opaque at t
+  // (the product of every ancestor's computed opacity, so a faded card counts).
+  window.__minSize = function () {
+    var m = null;
+    beats.forEach(function (root) {
+      root._els.forEach(function (d) { if (m === null || d._size < m) m = d._size; });
+    });
+    return m;
+  };
+  window.__shown = function (t) {
+    window.__seek(t);
+    var out = { shown: 0, total: 0 };
+    beats.forEach(function (root) {
+      if (root.style.display === "none") return;
+      root._els.forEach(function (d) {
+        var op = 1, n = d;
+        while (n && n !== document.body) { op *= parseFloat(getComputedStyle(n).opacity); n = n.parentNode; }
+        out.total++;
+        if (op >= 0.999) out.shown++;
+      });
+    });
+    return out;
+  };
 
   Promise.all([document.fonts.load('900 64px "Inter"'), document.fonts.load('46px "JetBrains Mono"')])
     .then(function () { window.__ready = true; }, function () { window.__ready = true; });
