@@ -387,6 +387,12 @@ def publish_page(script: dict, sheet: dict | None = None, video_url: str = "",
         return None
     try:
         entry = entry_for(script, sheet, video_url, pdf=pdf)
+        # v3-P.1 shared interface: the catalog row carries the evidence (without the
+        # local clip path). Inside this try: post-upload zone.
+        from factverse import evidence as _ev
+        view = _ev.catalog_view(script.get("evidence") if isinstance(script, dict) else None)
+        if view:
+            entry["evidence"] = view
         if not entry_name(entry):
             return None
         entries = upsert(load_catalog(), entry)
