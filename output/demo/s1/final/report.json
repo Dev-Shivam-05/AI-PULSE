@@ -1,0 +1,87 @@
+{
+  "model_calls": 1,
+  "skip": "",
+  "path": "E:\\YOUTUBE\\AI-PULSE-s1\\output\\shorts\\short_demo_nv_20261104_195543.mp4",
+  "measured": {
+    "duration": 24.5,
+    "source": "asr",
+    "first_speech": 0.182,
+    "last_speech": 21.237,
+    "asr_first": 0.0,
+    "onset": 0.182083,
+    "offset": 21.237125,
+    "asr_words": 61,
+    "script_words": 61,
+    "sentence_ends": [
+      3.64,
+      7.92,
+      12.2,
+      16.24,
+      21.237
+    ]
+  },
+  "min_px": 60,
+  "shown": {
+    "0.0": {
+      "shown": 7,
+      "total": 7
+    },
+    "2.0": {
+      "shown": 7,
+      "total": 7
+    }
+  },
+  "render_s": 30.3,
+  "shift": 0.0,
+  "length": 24.5,
+  "attempts": 1,
+  "match": "same_question",
+  "spec": {
+    "question": "Why does AI run on GPUs instead of CPUs?",
+    "headline": "GPUs vs CPUs for AI",
+    "sentences": [
+      "AI runs on GPUs because they do thousands of small sums at once.",
+      "A CPU has a few strong cores that work one task after another.",
+      "A GPU has thousands of simple cores working at the same time.",
+      "But for branching everyday code, the CPU is still faster.",
+      "So parallel math goes to the GPU, and decisions stay on the CPU."
+    ],
+    "answer": 1,
+    "qualification": 4,
+    "template": "compare",
+    "els": [
+      {
+        "text": "CPU cores",
+        "cue": "CPU has",
+        "role": "ltitle"
+      },
+      {
+        "text": "few strong cores",
+        "cue": "strong cores",
+        "role": "litem"
+      },
+      {
+        "text": "one after another",
+        "cue": "after another",
+        "role": "litem"
+      },
+      {
+        "text": "GPU cores",
+        "cue": "GPU has",
+        "role": "rtitle"
+      },
+      {
+        "text": "thousands of cores",
+        "cue": "simple cores",
+        "role": "ritem"
+      },
+      {
+        "text": "all at the same time",
+        "cue": "same time",
+        "role": "ritem"
+      }
+    ],
+    "title": "Why AI runs on GPUs, not CPUs #Shorts"
+  },
+  "gate_failures": []
+}

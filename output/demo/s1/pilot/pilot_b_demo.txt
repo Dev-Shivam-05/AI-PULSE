@@ -1,0 +1,50 @@
+# Pilot B - 6 production days through assign/plan_day/record
+batch 1 draw: {'drawn_at': '2026-11-04T14:27:03+00:00', 'first_native_slot': '18:45', 'method': "random.SystemRandom().choice(('18:45', '01:30'))"}
+B1-01  D=2026-11-05  18:45=native  01:30=crop   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-01', 'arm': 'native@18:45', 'slot': '18:45'}
+B1-02  D=2026-11-06  18:45=crop  01:30=native   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-02', 'arm': 'native@01:30', 'slot': '01:30'}
+B1-03  D=2026-11-07  18:45=native  01:30=crop   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-03', 'arm': 'native@18:45', 'slot': '18:45'}
+B1-04  D=2026-11-08  18:45=crop  01:30=native   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-04', 'arm': 'native@01:30', 'slot': '01:30'}
+B1-05  D=2026-11-09  18:45=native  01:30=crop   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-05', 'arm': 'native@18:45', 'slot': '18:45'}
+B1-06  D=2026-11-10  18:45=crop  01:30=native   ledger: {'experiment': 'pilot_b', 'pair_id': 'B1-06', 'arm': 'native@01:30', 'slot': '01:30'}
+
+# schedule (python -m factverse.pilot_b schedule)
+  B1-01  D=2026-11-05  2026-11-05 18:45Z native        2026-11-06 01:30Z crop
+  B1-02  D=2026-11-06  2026-11-06 18:45Z crop          2026-11-07 01:30Z native
+  B1-03  D=2026-11-07  2026-11-07 18:45Z native        2026-11-08 01:30Z crop
+  B1-04  D=2026-11-08  2026-11-08 18:45Z crop          2026-11-09 01:30Z native
+  B1-05  D=2026-11-09  2026-11-09 18:45Z native        2026-11-10 01:30Z crop
+  B1-06  D=2026-11-10  2026-11-10 18:45Z crop          2026-11-11 01:30Z native
+
+# readout (python -m factverse.pilot_b readout <dir>) as of 2026-11-20
+
+Pilot B readout - 2026-11-20  (stayed-to-watch, %; floor 100 feed impressions per Short; crop baseline median 16.9% n=18)
+
+pair   day         native@   native    crop     adv  n_impr  c_impr  match / status
+B1-01  2026-11-05  18:45       31.2    18.0   +13.2     412     380  same_question / evaluable [7-day pair export]
+B1-02  2026-11-06  01:30       24.5    16.1    +8.4     233     290  same_question / evaluable [7-day pair export]
+B1-03  2026-11-07  18:45       27.9    21.3    +6.6     180     205  concept_family / evaluable [7-day pair export]
+B1-04  2026-11-08  01:30       19.4    22.0    -2.6     512     498  same_question / evaluable [7-day pair export]
+B1-05  2026-11-09  18:45       25.0    14.8   +10.2     140      96  same_question / UNEVALUABLE: below 100 feed impressions [7-day pair export]
+B1-06  2026-11-10  01:30       29.3    17.5   +11.8     260     241  same_question / evaluable [7-day pair export]
+
+batch 1: 5 of 6 assigned pairs evaluable
+  native median 27.9% | crop median 18.0% | median paired advantage +8.4 pts | native wins 4 of 5
+  exposure-weighted: native 25.8% vs crop 19.2% (+6.5 pts)
+  without the largest winner (B1-01): median advantage +7.5 pts, weighted +4.2 pts
+  watch-time guardrail: not available (no Shorts-feed watch-time export)
+  verdict: audience effect unresolved (fewer than 6 evaluable pairs)
+
+# same data read on 2026-11-12 (windows still open)
+
+Pilot B readout - 2026-11-12  (stayed-to-watch, %; floor 100 feed impressions per Short; crop baseline median 16.9% n=18)
+
+pair   day         native@   native    crop     adv  n_impr  c_impr  match / status
+B1-01  2026-11-05  18:45       31.2    18.0   +13.2     412     380  same_question / UNEVALUABLE: observation window open until 2026-11-13 (provisional) [7-day pair export]
+B1-02  2026-11-06  01:30       24.5    16.1    +8.4     233     290  same_question / UNEVALUABLE: observation window open until 2026-11-14 (provisional) [7-day pair export]
+B1-03  2026-11-07  18:45       27.9    21.3    +6.6     180     205  concept_family / UNEVALUABLE: observation window open until 2026-11-15 (provisional) [7-day pair export]
+B1-04  2026-11-08  01:30       19.4    22.0    -2.6     512     498  same_question / UNEVALUABLE: observation window open until 2026-11-16 (provisional) [7-day pair export]
+B1-05  2026-11-09  18:45       25.0    14.8   +10.2     140      96  same_question / UNEVALUABLE: below 100 feed impressions; observation window open until 2026-11-17 (provisional) [7-day pair export]
+B1-06  2026-11-10  01:30       29.3    17.5   +11.8     260     241  same_question / UNEVALUABLE: observation window open until 2026-11-18 (provisional) [7-day pair export]
+
+batch 1: 0 of 6 assigned pairs evaluable
+  verdict: audience effect unresolved (fewer than 6 evaluable pairs)
