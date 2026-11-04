@@ -837,6 +837,25 @@ def test_p1_site_catalog_entry_carries_the_evidence_without_its_clip(monkeypatch
     assert e["source"] == "author" and "clip" not in e
 
 
+def test_p1_k1_catalog_evidence_is_recomputed_and_keeps_the_space_version(monkeypatch, tmp_path):
+    """Integration (P.1 + K.1): K.1's entry_for stores tasks.clean_evidence, which
+    recomputes label/wording from the enums. P.1's catalog_view must not overwrite
+    it with the dict as given; only the hosted Space's `version` is carried."""
+    saved = []
+    monkeypatch.setattr(site, "enabled", lambda: True)
+    monkeypatch.setattr(site, "load_catalog", lambda path=None: [])
+    monkeypatch.setattr(site, "save_catalog", lambda entries, path=None: saved.append(entries) or True)
+    monkeypatch.setattr(site, "rebuild", lambda entries=None: 1)
+    s = {"title": "Demo Tool", "format": "tool", "cheat_sheet": "2026-11-04-demo-tool.pdf",
+         "deliverable": {"kind": "command", "text": "pip install demo-tool", "url": _P1_GH},
+         "evidence": _p1_hosted_ev(tmp_path, label="Best tool ever", wording="Flawless.",
+                                   version="abc123sha")}
+    assert site.publish_page(s, {}, "")
+    e = saved[0][0]["evidence"]
+    assert e["label"] == "Hosted test" and e["wording"] == "Passed this specific test."
+    assert e["version"] == "abc123sha" and "clip" not in e
+
+
 def test_p1_text_fetches_are_bounded_too(monkeypatch):
     """A Space's own server answers /config: a slow drip or a huge body must cost
     the fetch, never hold the run (requests' timeout is not a deadline)."""

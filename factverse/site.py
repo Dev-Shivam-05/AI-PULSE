@@ -670,10 +670,15 @@ def publish_page(script: dict, sheet: dict | None = None, video_url: str = "",
         entry = entry_for(script, sheet, video_url, pdf=pdf)
         # v3-P.1 shared interface: the catalog row carries the evidence (without the
         # local clip path). Inside this try: post-upload zone.
+        # Integration (P.1 + K.1): entry_for already stored `tasks.clean_evidence`,
+        # which RECOMPUTES label/wording from the enums (K.1's verbatim-contract
+        # trap). P.1's catalog_view carries them as given, so it must not replace
+        # that dict; only the field clean_evidence does not know, the hosted
+        # Space's `version` (sha), is carried across, coerced.
         from factverse import evidence as _ev
         view = _ev.catalog_view(script.get("evidence") if isinstance(script, dict) else None)
-        if view:
-            entry["evidence"] = view
+        if view and isinstance(entry.get("evidence"), dict) and view.get("version"):
+            entry["evidence"]["version"] = str(view["version"])[:64]
         if not entry_name(entry):
             return None
         entries = upsert(load_catalog(), entry)
