@@ -242,7 +242,8 @@ def test_b5_recut_is_all_or_nothing(monkeypatch, tmp_path):
 
 
 def test_b5_run_recuts_after_every_inject_and_before_step5():
-    src = inspect.getsource(ap.run)
+    # v3-P.2 moved run()'s render block, unchanged in order, into _render_longform
+    src = inspect.getsource(ap._render_longform)
     cut = src.index("screencap.recut(")
     for earlier in ("infographics.inject_cards(", "screencap.inject_code_card(",
                     "receipts.inject_receipt_clip(", "scene_durations("):
