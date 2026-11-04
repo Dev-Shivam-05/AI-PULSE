@@ -70,8 +70,11 @@ One phase per session. A phase that isn't pushed doesn't exist.
    say `📈 Analytics snapshot saved (… N ledger videos)` with N ≈ 33+ and print the scoreboard.
    `⚠️ ledger query skipped: …` means the `video==` filter shape is wrong — costs nothing, but
    paste that line into the next session.
-1.4. **Create the X app and add its 4 Actions secrets** (v3-F.3). Free tier, ~500
-   posts/month against our ~31. The order matters: set **App permissions = Read and
+1.4. ⛔ *2026-11-04: X has NO free tier any more. docs.x.com/x-api/getting-started/pricing
+   (checked 2026-11-04) is pay-per-use: $0.015 per post, $0.20 per post with a URL, and every
+   post we make carries a URL (~$6.20/month at our volume). `"twitter": false` is now the
+   config default (v3-K.1). Owner decision: pay, or leave X off. The steps below only apply if
+   you choose to pay.* **Create the X app and add its 4 Actions secrets** (v3-F.3). The order matters: set **App permissions = Read and
    write** BEFORE generating the access token, or the token stays read-only and posting
    returns 403 `oauth1-permissions`. Then repo Settings → Secrets and variables →
    Actions → New repository secret, four times: `X_API_KEY`, `X_API_SECRET`,
