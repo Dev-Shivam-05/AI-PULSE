@@ -31,6 +31,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
+      # v3-M.1 row 16: the shadow queue's job time is measured from HERE, so the
+      # p95 gate sees setup steps too, not only the pipeline process.
+      - name: Stamp the job start
+        run: echo "JOB_STARTED_AT=$(date +%s)" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
@@ -146,7 +151,8 @@ jobs:
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
                      state/l2_usage.json state/stock_ledger.json state/tools_index.json \
                      state/notified.json state/notified_x.json \
-                     state/notified_ig.json state/notified_fb.json; do
+                     state/notified_ig.json state/notified_fb.json \
+                     state/shadow_queue.jsonl; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is

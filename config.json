@@ -55,5 +55,10 @@
     "telegram": true,
     "twitter": true,
     "instagram": true,
-    "facebook": true
+    "facebook": true,
+    "memory_fields": true,
+    "memory_analytics": true,
+    "north_star": true,
+    "followup_candidates": true,
+    "shadow_queue": true
 }

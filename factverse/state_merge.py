@@ -14,6 +14,7 @@ This module knows the merge semantics of every state file:
   * state/stock_ledger.json            -> ordered line/entry union
   * output/production_log.json         -> union of entries by (timestamp, title)
   * state/runs.jsonl / analytics.jsonl -> ordered line union
+  * state/shadow_queue.jsonl           -> ordered line union
   * state/tools_index.json             -> union by page name, later entry wins
 
 Usage (from the repo root, typically in CI after `git checkout -B main origin/main`):
@@ -60,6 +61,9 @@ FILES = (
     # the video for the other, which would then never post it at all.
     "state/notified_ig.json",
     "state/notified_fb.json",
+    # v3-M.1 row 16: the second-slot shadow queue, one line per automatic run. A
+    # .jsonl, so the ordered line union below is already its merge semantics.
+    "state/shadow_queue.jsonl",
 )
 
 

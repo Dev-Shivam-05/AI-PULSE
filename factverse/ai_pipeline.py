@@ -59,6 +59,7 @@ from factverse import scheduling
 from factverse import gates
 from factverse import evidence
 from factverse import learn
+from factverse import memory
 from factverse import l2
 from factverse import shorts as shorts_mod
 from factverse.intelligence import signal_engine
@@ -340,7 +341,10 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # would put "Passed this specific test." on an untested tool, license any
     # outcome claim past the substantiation gate, and burn a source label on
     # footage nobody vetted. script_tool sets the real one; _carry_over returns it.
-    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts", "evidence"):
+    # v3-M.1: "followup" (parent id, family, question) is build_script's, from the
+    # follow-up rule — a planted one would forge search demand into the ledger.
+    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts", "evidence",
+                    "followup"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -393,6 +397,10 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     s["titles"] = [t for t in s["titles"] if t]
     s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
+    # v3-M.1 row 9: model-written memory fields — carried, not popped; coerced
+    # because raw LLM output is never type-safe (a string, a dict, null).
+    s["question_answered"] = memory.coerce_question(s.get("question_answered"))
+    s["questions_open"] = memory.coerce_questions(s.get("questions_open"))
     # v3 tool-format contract: the concrete thing the viewer leaves with
     dl = s.get("deliverable")
     if isinstance(dl, dict) and str(dl.get("text", "")).strip():
@@ -435,6 +443,14 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False)
     # v3-G.3 #2: the title tells a builder what they get. The tool lane adds the
     # formula because its whole video is one usable thing.
     formula = ("\n  TOOL VIDEO title formula: [what you can do] + [tool name]." if tool else "")
+    # v3-M.1 row 9: the memory record's viewer-need fields, for every lane
+    mem, mem_json = "", ""
+    if fv.flag("memory_fields", False):
+        mem = ("\n- question_answered: ONE sentence, the main question a viewer has that this "
+               "video answers.\n- questions_open: 1-3 specific, useful questions a viewer will "
+               "still have AFTER this video and that it does NOT answer (a setup case, a limit, "
+               "a comparison). Never a question the video answers.")
+        mem_json = '"question_answered":"...","questions_open":["..."],\n'
     return f"""OUTPUT FIELDS:
 - titles: 3 DIFFERENT title options, each <=60 chars, the key ENTITY (model/company/tool name)
   in the first 30 chars, ONE concrete number where honest, consequence framing over event
@@ -451,12 +467,12 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False)
   NOT stated in any source. This is mandatory; a video without genuine synthesis is not ready.
 - scenes: {scene_range} scenes, {words_per_scene} words each. Each scene: scene_num, narration,
   visual_query. Include one mid-video FILTER segment (what does NOT matter and why) — mark that
-  scene with "filter": true.
+  scene with "filter": true.{mem}
 
 Return ONLY JSON:
 {{"titles":["..."],"title":"...","thumb_text":"...","description":"...","tags":["..."],
 "synthesis_claim":"...",
-"scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
+{mem_json}"scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
 
 
 # --------------------------------------------------------------- candidate kinds
@@ -723,6 +739,7 @@ DO something concrete in the next ten minutes — that is the entire point of th
 
 TOOL: {title}
 SOURCE: {source}  ({url})
+{memory.followup_prompt(item)}
 
 {ev_brief}{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
 {grounding}
@@ -1075,7 +1092,10 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "receipts",        # v3-E.2 #6: the measured check must survive them too
           "debate",          # v3-H #13: the transcript the quotes and cards are checked against
           "evidence",        # v3-P.1: the clip, status and rights record (popped by _validate_script)
-          "titles")          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
+          "titles",          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
+          # v3-M.1 row 9: the rewrite prompts never show them, so every pass would
+          # reset them to empty; "followup" is run()'s and is popped in _validate_script
+          "question_answered", "questions_open", "followup")
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1603,7 +1623,8 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         return None
     if fmt == "tool":
         tools = []
-        for c in ranked:
+        # v3-M.1 row 9: a follow-up candidate goes first and passes every gate below
+        for c in [f for f in memory.followup_items() if not too_many_failures(f["title"])] + ranked:
             if c.get("kind") != "tool":
                 continue
             blocked, term = gates.tool_unsuitable(c["title"])
@@ -1639,6 +1660,8 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             s = script_tool(cand)
             if s:
                 s["signal_title"] = cand["title"]
+                if memory.followup_of(cand):
+                    s["followup"] = memory.followup_of(cand)
                 return s
             mark_failed(cand["title"])
             print("     ↻ tool script failed, trying next...")
@@ -1839,6 +1862,10 @@ def _fallback_format(fmt: str, force_format: str | None, fallback: bool,
 # bounded it, and a kill in the post-upload zone is the double-publish window.
 MAX_DAY_ATTEMPTS = 3
 
+# v3-M.1 row 16: the first attempt's ranked signals, for shadow.after_run. A list
+# mutated in place, because under `python -m` this module runs as __main__.
+LAST_RANKED: list = []
+
 
 def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool,
                attempt: int = 1):
@@ -1862,6 +1889,8 @@ def run(publish: bool = False, force_format: str | None = None,
         record_run(status="SKIPPED_DUPLICATE_DAY", format="-")
         return {"status": "SKIPPED_DUPLICATE_DAY"}
     ranked = [i for i in signal_engine.rank(limit=20) if not too_many_failures(i["title"])]
+    if attempt == 1:
+        LAST_RANKED[:] = ranked      # v3-M.1 row 16: read by the shadow queue in __main__
     fmt, viral = decide_format(force_format, ranked)
     print(f"  🧭 Format today: {fmt.upper()}")
 
@@ -2020,6 +2049,7 @@ def run(publish: bool = False, force_format: str | None = None,
     # spec v3-G.3 #9: the ledger's packaging fields, computed and coerced HERE — the
     # title is final from this line on, and nothing new may raise past the upload.
     _ledger_thumb = str(script.get("thumb_text") or "")
+    _ledger_memory = memory.ledger_fields(script)   # v3-M.1 row 9; never raises
     _ledger_title_alt = bool(_pk.get("title_alt") or _hs["alt"])
     _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
     _ledger_ev_source, _ledger_ev_status = evidence.ledger_fields(script)
@@ -2312,7 +2342,8 @@ def run(publish: bool = False, force_format: str | None = None,
                tool_page=bool(tool_page),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
-               quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
+               quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0,
+               **_ledger_memory)
     eng.cleanup()
     print(f"\n  ✅ DONE [{status}] → {video}")
     # save_report may have been the thing that failed above; a published video
@@ -2324,5 +2355,15 @@ if __name__ == "__main__":
     args = [a.lower() for a in sys.argv[1:]]
     do_publish = "publish" in args
     forced = next((a for a in args if a in ("news", "evergreen", "roundup", "tool", "debate")), None)
+    import time as _time
+    _t0 = _time.monotonic()
     ok = run(publish=do_publish, force_format=forced)
+    # v3-M.1 row 16: AFTER run() — the ledger row is written, nothing is in the
+    # double-publish window. Fail-soft and bounded inside; this try is the backstop.
+    try:
+        from factverse import shadow
+        shadow.after_run(LAST_RANKED, sys.modules[__name__], publish=do_publish,
+                         forced=forced, run_s=_time.monotonic() - _t0)
+    except Exception as _e:  # noqa: BLE001
+        print(f"  ⚠️ shadow queue skipped: {_e}")
     sys.exit(0 if ok else 1)
