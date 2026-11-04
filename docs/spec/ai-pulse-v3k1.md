@@ -203,7 +203,7 @@ add an upload.
 
 ## Verification
 
-- **Suite:** see the phase report (full `py -3 -m pytest tests/ -q` on the branch).
+- **Suite: 471 passed** (2026-11-04, full `py -3 -m pytest tests/ -q` on the branch, 137 s; 22 of them new in `tests/test_k1_catalogue.py`).
 - **Fixture site** (`k1_fixture.py`, scratchpad, not committed): a catalog with one speech-to-text
   hub of 2 hosted tools on the same input (one failed then passed: `now_passes`), an author demo
   in that family with a `javascript:` URL and a `javascript:` `source_url`, a family with only 2
@@ -259,7 +259,7 @@ add an upload.
 
 ## Done when
 
-- [x] Tests green with the new module (see report for the count).
+- [x] Tests green with the new module (471 passed).
 - [x] Fixture site rendered and screenshots read at 1280 and 390 px; alert body read;
       `javascript:` neutralised.
 - [ ] Owner: Search Console (5 steps above).
