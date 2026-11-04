@@ -2,9 +2,15 @@
 
 The channel's only distribution surface is YouTube's own feed. A Telegram
 channel is the cheapest owned one there is — free, no review, no algorithm —
-and the v3-F.1 tool page already emits the OG card Telegram renders. X's free
-tier adds a second surface for the same ledger row at the same price (~500
-posts/month against our ~31).
+and the v3-F.1 tool page already emits the OG card Telegram renders. X was built as a
+second surface on the assumption of a free tier; since 2026 the X API is
+pay-per-use only ($0.015 per post, $0.200 per post that carries a URL — and
+every post here carries one), so v3-K.1 turned it OFF by default
+(`"twitter": false`, docs/spec/ai-pulse-v3k1.md row 17). The code is kept.
+
+v3-K.1 adds a third, separate surface: task alerts. One message to a PUBLIC
+opt-in channel (`task_follow_channel`) only when a task hub's answer materially
+changes, with its own `notified_tasks.json` (spec rows 9-12).
 
 **Why this is a separate entry point and not part of run():** `eng.yt_upload`
 uploads the long-form PRIVATE with `publishAt` = `longform_slot_utc` (16:45
@@ -19,7 +25,8 @@ repo red or block the state-save. The two surfaces are independent — each has
 its own switch, its own secrets and its own `notified` list, so one being
 broken or unconfigured never costs the other its post.
 
-Specs: docs/spec/ai-pulse-v3f2.md (Telegram), docs/spec/ai-pulse-v3f3.md (X)
+Specs: docs/spec/ai-pulse-v3f2.md (Telegram), docs/spec/ai-pulse-v3f3.md (X),
+docs/spec/ai-pulse-v3k1.md (task alerts)
 """
 from __future__ import annotations
 
@@ -40,12 +47,14 @@ import requests
 
 from factverse import config as fv
 from factverse import site
+from factverse import tasks
 
 API = "https://api.telegram.org"
 X_API = "https://api.x.com/2/tweets"
 RUNS_LOG = fv.STATE / "runs.jsonl"
 NOTIFIED = fv.STATE / "notified.json"
 NOTIFIED_X = fv.STATE / "notified_x.json"
+NOTIFIED_TASKS = fv.STATE / "notified_tasks.json"     # v3-K.1: its OWN list (row 12)
 
 MAX_NOTIFIED = 500       # F.2 #10 — newest N video URLs are remembered
 MAX_AGE_HOURS = 36       # F.2 #3 — never post a video older than this
@@ -65,7 +74,13 @@ def enabled() -> bool:
 def x_enabled() -> bool:
     # "twitter", not "x": fv.setting overrides from the env var of the same
     # UPPER name, and `$X` is far too generic a name to bet an unattended job on.
-    return fv.flag("twitter", True)
+    # v3-K.1 row 17: default OFF. X has no free tier any more, and a post with a
+    # URL costs $0.200; switching it on is an owner decision with a budget.
+    return fv.flag("twitter", False)
+
+
+def task_alerts_enabled() -> bool:
+    return fv.flag("task_alerts", True)
 
 
 def _token() -> str:
@@ -562,6 +577,125 @@ def _post_x() -> None:
         print(f"   ⚠️ x failed — {type(e).__name__}: {_redact(e, '', secrets)}")
 
 
+# --------------------------------------------------------------- task alerts (v3-K.1)
+def _public_video(url: str, rows: list[dict], now: _dt.datetime) -> str:
+    """The video link, only when the ledger proves it is public already. The
+    long-form is PRIVATE until publishAt (the F.2 trap), and an alert is no
+    different from an announcement: a link nobody can open is worse than none."""
+    url = str(url or "").strip()
+    if not url:
+        return ""
+    for row in rows or []:
+        if not isinstance(row, dict) or row.get("status") != "PUBLISHED":
+            continue
+        if str(row.get("youtube_url") or "").strip() != url:
+            continue
+        when = _when(row)
+        if when is not None and when <= now:
+            return site.safe_link(url)
+    return ""
+
+
+def format_task_alert(event: dict, video: str = "") -> str:
+    """The task-alert body (K.1 row 11). Pure. Telegram HTML, escaped for Telegram
+    (`_esc`, quote=False), shed by whole blocks under the 4096 limit — never sliced.
+
+    What changed, the supporting result, who should care, where to inspect it."""
+    ev = event if isinstance(event, dict) else {}
+    h = ev.get("hub") if isinstance(ev.get("hub"), dict) else {}
+    lab = str(h.get("label") or "")[:80]
+    name = tasks.hub_name(str(h.get("family") or ""))
+    hub = site.safe_link(site.hub_url(name)) if name else ""
+    if not (lab and hub and ev.get("kind") in tasks.ALERT_KINDS):
+        return ""
+    names = lambda xs: ", ".join(str(x)[:80] for x in (xs or [])[:8]) or "none"
+    head = [f"🔁 <b>Task update: {_esc(lab)}</b> {_esc(h.get('hashtag', ''))}"]
+    if ev.get("kind") == "now_passes":
+        change = (f"{names(ev.get('flipped'))} failed our fixed test before and passes "
+                  "it now, so our answer changed.")
+    else:
+        change = "Our answer changed."
+    change += (f" Passed now: {names(ev.get('answer'))}. "
+               f"Before: {names(ev.get('previous'))}.")
+    blocks: list[tuple[str, list[str]]] = [("change", ["", f"<b>What changed:</b> {_esc(change)}"])]
+    trig = ev.get("trigger") if isinstance(ev.get("trigger"), dict) else {}
+    tev = trig.get("ev") if isinstance(trig.get("ev"), dict) else {}
+    if tev:
+        res = (f"{str(trig.get('name') or '')[:80]} — {tev.get('label', '')}, "
+               f"{tev.get('captured_at', '')}: {tev.get('wording', '')}")
+        blocks.append(("result", ["", f"<b>The result:</b> {_esc(res)}"]))
+        if tev.get("observed"):
+            blocks.append(("observed", [f"<i>{_esc(str(tev['observed'])[:400])}</i>"]))
+        if tev.get("input"):
+            blocks.append(("input", [f"Input: {_esc(str(tev['input'])[:300])}"]))
+    blocks.append(("who", ["", f"<b>Who should care:</b> anyone choosing a "
+                               f"{_esc(lab.lower())} tool."]))
+    tail = ["", f"🔎 Full comparison: {_esc(hub)}"]
+    if video:
+        blocks.append(("video", [f"▶ {_esc(video)}"]))
+    foot = ["", "<i>We post here only when this answer materially changes.</i>"]
+
+    def _join(bs) -> str:
+        return "\n".join(head + [ln for _, b in bs for ln in b] + tail + foot)
+
+    for drop in ("observed", "input", "video", "who", "result"):
+        text = _join(blocks)
+        if len(text) <= MAX_TEXT:
+            return text
+        blocks = [(k, b) for k, b in blocks if k != drop]
+    return _join(blocks)
+
+
+def _post_task_alerts(now: _dt.datetime | None = None) -> None:
+    """At most one task alert per run (K.1 row 11), or a logged no-op. Never raises.
+
+    It goes to the PUBLIC opt-in channel the hub offers, never to TELEGRAM_CHAT_ID:
+    a person chose to follow THIS task there (Telegram's own rule — a bot cannot
+    start a conversation). Its own `notified_tasks.json`, so this surface and the
+    video announcement can never retire each other's items."""
+    token = ""
+    try:
+        if not task_alerts_enabled():
+            print("  ↷ Task alerts: disabled by config (task_alerts=false).")
+            return
+        channel = tasks.follow_channel()
+        if not channel:
+            print("  ↷ Task alerts: no public channel configured (task_follow_channel).")
+            return
+        token = _token()
+        if not token:
+            print("  ↷ Task alerts: bot not configured — skipping.")
+            return
+        now = now or _dt.datetime.utcnow()
+        sent = load_notified(NOTIFIED_TASKS)
+        events = [e for e in tasks.alert_events(site.load_catalog(), now.date())
+                  if e.get("id") not in sent]
+        if not events:
+            print("  ↷ Task alerts: no material change to post.")
+            return
+        ev = events[0]
+        trig = ev.get("trigger") if isinstance(ev.get("trigger"), dict) else {}
+        entry = trig.get("entry") if isinstance(trig.get("entry"), dict) else {}
+        video = _public_video(entry.get("video_url", ""), load_rows(), now)
+        text = format_task_alert(ev, video)
+        if not text:
+            print("  ↷ Task alerts: no material change to post.")
+            return
+        hub = site.safe_link(site.hub_url(tasks.hub_name(ev["hub"]["family"])))
+        if send(text, hub, token, "@" + channel):
+            print(f"  🔁 Task alert: posted — {ev['id']}")
+            save_notified(sent + [ev["id"]], NOTIFIED_TASKS)
+    except Exception as e:
+        # A raise BEFORE the token was read leaves `token` empty, and then nothing
+        # would be redacted. Read the env directly (never via _token(), which may be
+        # the very seam that raised) so the value is hidden on every path.
+        try:
+            tok = token or str(os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
+        except Exception:
+            tok = token
+        print(f"   ⚠️ task alert failed — {type(e).__name__}: {_redact(e, tok)}")
+
+
 def main(argv: list[str] | None = None) -> int:
     """Always returns 0 — a failed announcement must never fail the workflow.
 
@@ -569,6 +703,7 @@ def main(argv: list[str] | None = None) -> int:
     its post, and vice versa."""
     _post_telegram()
     _post_x()
+    _post_task_alerts()
     return 0
 
 

@@ -1,12 +1,13 @@
 name: ToolDojo — announce
 
 # v3-F.2/F.3: one Telegram message and one X post per published video.
+# v3-K.1: plus one task alert, only when a task hub's answer materially changes.
 #
-# Both surfaces run in the same job off the same ledger row, but they are
-# independent: separate switches, separate secrets, separate notified lists,
-# so one being broken or unconfigured never costs the other its post. X's
-# free tier allows ~500 posts/month; one video a day is ~31, so there is no
-# quota code.
+# The surfaces run in the same job, but they are independent: separate
+# switches, separate secrets, separate notified lists, so one being broken or
+# unconfigured never costs another its post. X is OFF by default since v3-K.1
+# (`"twitter": false`): the X API has no free tier any more, and a post with a
+# URL costs $0.200 (docs.x.com, checked 2026-11-04).
 #
 # This is a SEPARATE workflow from publish.yml on purpose. The pipeline runs at
 # 12:23 UTC but uploads the long-form PRIVATE with publishAt = longform_slot_utc
@@ -47,7 +48,7 @@ jobs:
       - name: Install minimal deps
         run: pip install requests
 
-      - name: Post the day's video
+      - name: Post the day's video (+ any task alert)
         env:
           # v3-F.2 #7 / v3-F.3 #3: an unset secret expands to "" and the module
           # logs "not configured" and exits 0 — each seam costs nothing until
@@ -74,7 +75,7 @@ jobs:
           ok=0
           for i in 1 2 3; do
             mkdir -p /tmp/notify_incoming
-            for f in state/notified.json state/notified_x.json; do
+            for f in state/notified.json state/notified_x.json state/notified_tasks.json; do
               [ -f "$f" ] && cp "$f" /tmp/notify_incoming/ || true
             done
             # a local change to a tracked file makes `checkout -B` refuse, and under
@@ -83,7 +84,7 @@ jobs:
             git fetch origin main --quiet
             git checkout -B main origin/main --quiet
             python -m factverse.state_merge /tmp/notify_incoming
-            git add state/notified.json state/notified_x.json 2>/dev/null || true
+            git add state/notified.json state/notified_x.json state/notified_tasks.json 2>/dev/null || true
             if git commit -m "state update [skip ci]" --quiet; then
               if git push origin main; then ok=1; break; fi
             else
