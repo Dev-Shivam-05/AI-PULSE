@@ -60,6 +60,8 @@ CONTEXT_RESULT_AT = 15.0        # where the renderer puts the result if scene 1 
 SCALE_MAX = 4.0                 # most the result region is enlarged
 AR_MIN, AR_MAX = 0.75, 4.0      # region aspect clamp: guarantees >= 40% coverage when it fits
 DIFF_T = 24                     # per-pixel change (0-255) that marks the result region
+BLOCK_DENSITY = 0.25            # share of a 12x12 block that must change to count as result
+BASELINE_MIN_AREA = 0.04        # a change region smaller than this is a detail, not the result
 MATCH_MAX = 14.0                # mean abs diff (0-255) for "this frame shows that reference"
 BLANK_STD_MIN = 8.0
 CAPTION_BAND = 0.78             # frames are compared above this height (burned captions below)
@@ -296,7 +298,13 @@ def region_plan(first, result, W: int | None = None, H: int | None = None) -> di
     sw, sh = result.size
     a = np.asarray(first.convert("L").resize((192, 108)), dtype=np.int16)
     b = np.asarray(result.convert("L").resize((192, 108)), dtype=np.int16)
-    mask = np.abs(a - b) > DIFF_T
+    raw = np.abs(a - b) > DIFF_T
+    # Keep only DENSE change: 12x12-cell blocks (16x9 of them) where >= BLOCK_DENSITY
+    # of the pixels changed. A swapped image or a new output is dense; a button
+    # hover, a focus ring or an example's selection border is sparse — measured on
+    # gradio/image_mod, those thin edits stretched the region over the whole page.
+    blocks = raw.reshape(9, 12, 16, 12).mean(axis=(1, 3)) >= BLOCK_DENSITY
+    mask = np.kron(blocks, np.ones((12, 12), dtype=bool)) & raw
     if mask.sum() < 4:                            # nothing changed: the content area itself
         bg = np.asarray(result.convert("RGB").resize((192, 108)), dtype=np.int16)
         mask = np.abs(bg - np.array(BG)).sum(axis=2) > 30
@@ -375,7 +383,27 @@ def pick_result_frame(clip: str, out_dir: Path) -> tuple[str, str] | None:
     if not best:
         return None
     shutil.copy(best, out_dir / "result.png")
-    return first, str(out_dir / "result.png")
+    res = Image.open(best).convert("RGB")
+    # The baseline is the EARLIEST SETTLED frame: a hosted clip opens 1 s before the
+    # example click, while the page may still be laying out (measured on
+    # gradio/image_mod: frame 0 had the buttons 380 px higher, so "what changed"
+    # was the whole page). Of frame 0 and the frame at 1.0 s, the one whose dense
+    # change region is SMALLER (but >= BASELINE_MIN_AREA of the frame) wins.
+    choices = [first]
+    if d > 3.0:
+        one = _grab(clip, 1.0, str(out_dir / "first_1s.png"))
+        if one:
+            choices.append(one)
+    best_base, best_area = first, None
+    for c in choices:
+        plan = region_plan(Image.open(c).convert("RGB"), res)
+        if not plan:
+            continue
+        x0, y0, x1, y1 = plan["crop"]
+        area = (x1 - x0) * (y1 - y0) / float(res.width * res.height)
+        if area >= BASELINE_MIN_AREA and (best_area is None or area < best_area):
+            best_base, best_area = c, area
+    return best_base, str(out_dir / "result.png")
 
 
 def render_result_still(first_png: str, result_png: str, label_png: str, out_png: str) -> dict | None:
@@ -525,20 +553,30 @@ def timeline(arm: str, durs: list) -> dict | None:
             "step_at": round(step_at, 3), "step_seconds": round(step_len, 3)}
 
 
+# Every opening clip is TAGGED as what swscale actually produced from RGB (BT.601 =
+# bt470bg, limited range) — the tags the screen recording's pieces carry. Measured
+# 2026-11-04: an untagged still and a bt470bg recording piece concatenated in one
+# scene made ffmpeg reconfigure its filter graph mid-join, drop 270 frames (9 s),
+# and the dissolve join fell back to hard cuts.
+_TAGS = ["-colorspace", "bt470bg", "-color_range", "tv"]
+
+
 def _still_args(png: str, seconds: float, out: str) -> list[str]:
     return [fv.FFMPEG or "ffmpeg", "-y", "-loop", "1", "-framerate", str(FPS), "-i", str(png),
             "-t", f"{seconds:.3f}", "-vf", f"scale={fv.VIDEO_W}:{fv.VIDEO_H},setsar=1,format=yuv420p",
-            "-r", str(FPS), "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18", str(out)]
+            "-r", str(FPS), "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+            *_TAGS, str(out)]
 
 
 def _concat_args(parts: list[str], out: str) -> list[str]:
     args = [fv.FFMPEG or "ffmpeg", "-y"]
     for p in parts:
         args += ["-i", str(p)]
-    graph = "".join(f"[{i}:v]setpts=PTS-STARTPTS,fps={FPS},format=yuv420p[v{i}];" for i in range(len(parts)))
+    graph = "".join(f"[{i}:v]setpts=PTS-STARTPTS,fps={FPS},format=yuv420p,"
+                    f"setparams=range=tv:colorspace=bt470bg[v{i}];" for i in range(len(parts)))
     graph += "".join(f"[v{i}]" for i in range(len(parts))) + f"concat=n={len(parts)}:v=1:a=0[v]"
     return args + ["-filter_complex", graph, "-map", "[v]", "-an", "-c:v", "libx264",
-                   "-preset", "veryfast", "-crf", "18", str(out)]
+                   "-preset", "veryfast", "-crf", "18", *_TAGS, str(out)]
 
 
 def _sequence_piece(ev: dict, seconds: float, label_png: str, out: str) -> str | None:
@@ -607,9 +645,8 @@ def place_opening(script: dict, scene_clips: list, durs: list, arm: str) -> dict
                     return None
                 parts.append(p)
             clip = str(out / f"scene_{idx}.mp4")
-            if len(parts) == 1:
-                shutil.copy(parts[0], clip)
-            elif not _ffmpeg(_concat_args(parts, clip)):
+            # always through the concat encode, even for one part: it sets the tags
+            if not _ffmpeg(_concat_args(parts, clip)):
                 return None
             made[idx] = clip
         for idx, clip in made.items():

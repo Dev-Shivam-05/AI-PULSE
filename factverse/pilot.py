@@ -440,7 +440,7 @@ def decide(rows: list[dict], avd_baseline_s: float | None, treatment_avds: list,
     elif (wins >= PROMISING_WINS and m >= PROMISING_ADV) or res["avd_guardrail"] == "breached":
         res["decision"] = "revise delivery"
         res["why"] = ("AVD below the frozen pre-pilot median" if res["avd_guardrail"] == "breached"
-                      else "early retention improved but a later checkpoint missed its target")
+                      else "proof-first won the pairs, but a treatment median missed 65/45/38")
     elif m <= 0:
         res["decision"], res["why"] = "flat", "median advantage <= 0: run one more 6-pair batch"
     else:
