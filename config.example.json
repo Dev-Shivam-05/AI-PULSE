@@ -50,7 +50,13 @@
     "music_bed": true,
     "site_pages": true,
     "telegram": true,
-    "twitter": true,
+    "twitter": false,
     "instagram": true,
-    "facebook": true
+    "facebook": true,
+    "task_hubs": true,
+    "task_hubs_max": 1,
+    "task_hubs_withdrawn": [],
+    "task_follow_channel": "",
+    "task_alerts": true,
+    "google_site_verification": ""
 }
