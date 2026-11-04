@@ -89,7 +89,17 @@ Every other value is a **delegated decision** with its default and reason.
   `_validate_script`, carried by `_CARRY` (with `query_map` and `task`).
 - Ledger (one dict, `_p2_ledger`, computed before the upload): `experiment`, `pair_id`, `arm`,
   `slot`, `pilot_stratum`, `pilot_intent`, `opening` (the gate's result), `duration_s`,
-  `pilot_task`, `t_signal`, `t_evidence`, `t_publication`.
+  `pilot_task`, `t_signal`, `t_evidence`, `t_publication`. The experiment keys are ABSENT (not
+  None) on a non-pilot video, so the integration can write `{**_s1_ledger, **_p2_ledger}`:
+  Pilot A owns `experiment`/`pair_id`/`arm`/`slot` only on its own videos. Never pass a separate
+  `experiment=` keyword beside a splat (a TypeError in the double-publish window).
+- **For the integration merge** (read-only `git merge-tree` against `origin/v3-growth-1104`:
+  conflicts in `ai_pipeline.py`, `state_merge.py`, `publish.yml`): run()'s render block now lives
+  in `_render_longform` and the thumbnail/Shorts call in `_make_extras`. v3-S.1's edits to that
+  block must be ported: `storyboard=(False if native_on else None)` into `_make_extras`'s
+  `make_shorts` call; `short_hooks = list(shorts_mod.last_hooks)` and the `_s1_native_day` plan
+  read in run() right after `thumb, shorts = …` (both paths). The FILES tuple and the stash list
+  take both sides' new entries.
 - `state/pilot_a.json`: frozen design + `avd_baseline` + `members` (appended after an upload).
   `state_merge`: main's design wins, members union by (pair_id, arm), first wins.
 - `state/analytics.jsonl` snapshots gain `pilot_reads`: `[{video, age, start, end, read_on,

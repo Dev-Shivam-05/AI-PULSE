@@ -175,10 +175,12 @@ def assign(ev: dict, grounding: str = "", design: dict | None = None,
 
 
 def ledger_fields(script) -> dict:
-    """The growth spec's experiment fields, coerced (None when not a pilot video)."""
+    """The growth spec's experiment fields, coerced. {} when not a pilot video, so
+    `{**pilot_b_fields, **these}` lets Pilot A own the long-form row only when the
+    video really is a Pilot A video (v3-S.1's `_s1_ledger` carries the same keys)."""
     p = script.get("pilot") if isinstance(script, dict) else None
     if not isinstance(p, dict) or p.get("experiment") != EXPERIMENT:
-        return {"experiment": None, "pair_id": None, "arm": None, "slot": None}
+        return {}
     slot = p.get("slot")
     return {"experiment": EXPERIMENT, "pair_id": str(p.get("pair_id") or ""),
             "arm": p.get("arm") if p.get("arm") in ARMS else None,

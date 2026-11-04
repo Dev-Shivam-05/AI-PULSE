@@ -158,7 +158,7 @@ def test_p2_members_union_first_record_wins():
 
 
 def test_p2_ledger_fields_are_coerced_and_none_off_pilot():
-    assert pilot.ledger_fields({}) == {"experiment": None, "pair_id": None, "arm": None, "slot": None}
+    assert pilot.ledger_fields({}) == {}          # merges under v3-S.1's experiment dict
     f = pilot.ledger_fields({"pilot": {"experiment": "pilot_a", "pair_id": 3, "arm": "evil", "slot": "9"}})
     assert f["experiment"] == "pilot_a" and f["pair_id"] == "3" and f["arm"] is None and f["slot"] is None
 
