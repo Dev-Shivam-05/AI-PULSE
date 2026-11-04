@@ -45,6 +45,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | **v3-S.1: native concept Short + Pilot B** | rows 7, 8, 15 (Reels): the storyboard slot becomes a native concept Short with its own script (complete diagram at 0.00 s, ≤ 8-word headline, speech ≤ 0.30 s, answer by 0:07, 20–28 s, ≤ 65 words, ≥ 60 px, no sting/CTA) checked on the encoded file; Pilot B = 6 day-pairs native vs crop, slots 18:45 D / 01:30 D+1 alternated; stayed-to-watch is in NO public API, so the readout reads a Studio CSV export; Reels carry the native Short only | ✅ built 2026-11-04 (516/516 on the branch; native Short rendered end to end: 24.5 s, first speech 0.18 s, answer 3.6 s, 61 words, 60 px; frames read) | branch `v3-phase-s1`, carried by `v3-growth-1104`; spec: docs/spec/ai-pulse-v3s1.md; kill switches `native_shorts`, `pilot_b`, `pilot_b_batches`, `reels_native_only`; **owner: export one Studio CSV per pair on D+8** |
 | **v3-M.1: memory + north star + shadow queue** | rows 9, 10, 16, 18: per-video memory record, writer outputs `question_answered`/`questions_open`, per-video search terms (traffic-source detail, YT_SEARCH), follow-up candidate at ≥ 50 search views / 28 d + open question + evidence, 14-day cooldown; north-star block (on-demand long-form watch time per 28 d vs 12.11 h, ladder 24.22 / 60.55 / 121.10 / 302.75 / 605.50 / 1,211 h, outlier flag > 50%); search capture by age band; 14-day shadow queue for a second daily slot (≥ 10 days with a qualified 2nd candidate, p95 job < 60 min); learn's long-form comparison starts 2026-08-28 | ✅ built 2026-11-04 (494/494 on the branch; scoreboard read over the real state; the live gate pass found and fixed a slot-starvation bug) | branch `v3-phase-m1`, carried by `v3-growth-1104`; spec: docs/spec/ai-pulse-v3m1.md; five API queries verified only by args (no token) — first CI run prints `now: … h` |
 | **v3-K.1: task catalogue + task follow + tool pages** | rows 11, 12, 14, 15: `task_family` per tool, hub page per family only with ≥ 2 hosted tests on the identical input (max 1 hub), conditional answer, history, outdated/inconclusive/withdrawn states; "follow this task" via a public Telegram channel + hashtag, alerts only on a material change (`state/notified_tasks.json`); tool pages show decision, evidence, prerequisites, limitations; X off by default (pay-per-use); Search Console meta-tag support; Challenger spec | ✅ built 2026-11-04 (471/471 on the branch; fixture site screenshotted at 1280/390 and read; a `javascript:` Source-link hole found by looking and fixed) | branch `v3-phase-k1`, carried by `v3-growth-1104`; spec: docs/spec/ai-pulse-v3k1.md; first family: speech-to-text (≥ 3 comparable CPU Spaces); **owner: Search Console + public Telegram channel** |
+| **v3-N.1: ToolDojo Node (dedicated live PC)** | owner's second PC (i3 5th gen, 8 GB, ~256 GB, Windows): `node/install.ps1` (machine-wide Python 3.11 + git required, venv, hidden standard user `tooldojo` with a random password, startup task with Password logon → session 0, never a window), `node/supervisor.py` (stdlib only: job table `node_jobs`, never two streams at once, backoff 30→600 s, per-day attempt cap, hang kill of the whole process tree, power-cut resume with `--minutes <left>` when ≥ `min_minutes` remain, HTTPS-Date clock, disk guard, self-update with rollback, Telegram alert with redaction), `node_preflight.py` picks the stream profile (1080p QSV → 720p QSV → 720p x264 → insufficient) from inside the task context, `status.ps1`, `uninstall.ps1`, `scripts/build_node_bundle.py` (38.9 MB ZIP, no secrets) | ✅ built 2026-11-04 (690/690 on the branch, 736/736 merged; 130 s supervisor run with crashing / hanging / late / missing jobs, power-cut simulation, self-update rollback, installer `-DryRun` 18 actions — NOT run on the real node) | branch `v3-phase-n1`, carried by `v3-growth-1104`; spec: docs/spec/ai-pulse-v3n1.md; **hardware verdict: 720p30 x264 likely, 1080p not safe, Quick Sync on HD 5500 likely fails (MFX -9); upgrade = refurb i5-8500T mini PC ~₹20-31k** |
+| v3-T.1: ToolDojo Live Trials | the 11-04 live concept: one named tool tested on fixed inputs in a 12-min vertical show, Sat 18:45-18:57 UTC, 4 prepared narration branches, count scorecard, results sheet page; runs against HOSTED demos through the P.1 engine (no candidate code on the node); first family speech-to-text; live-day 18:45 Short drop + 72 h recap guard behind `trials_live`; node job row shipped disabled | 🟡 in progress at session end (5 commits on `v3-phase-t1`, local 12-min verification was running; not merged) | branch `v3-phase-t1`; spec `docs/spec/ai-pulse-v3t1.md` if the agent finished it; **WER pass threshold needs the owner's word** |
 | v3-K.2: Radar Challenger segment | row 11: a recorded 2-3 min segment inside Radar Live; boards "Trending now" vs "Challenger results" (an author demo never gets a tested position); 3 fixed inputs per tool, one task family, max 1 new challenger per day; "Recorded test" label + timestamp on replays; equal Radar promotion for both Pilot A arms | ⏳ queued | needs v3-P.1 hosted evidence (built) and v3-L.7; spec section in docs/spec/ai-pulse-v3k1.md |
 
 ## Now (owner, in this order)
@@ -153,14 +155,28 @@ One phase per session. A phase that isn't pushed doesn't exist.
    return these, so today we have no CTR baseline at all.
 
 ## Next 3
-0. **2026-11-01: merge `v3-integration-1101`** (one PR carrying B.5 and L.6 plus the docs;
-   combined suite green). PR:
-   https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-integration-1101?expand=1.
-   Then read the first CI run's log for `🧰 Tool day` / `🗓️` / `⏭️ Evergreen … repeats a recent
-   subject` and for NO `⚠️ recording recut failed` line.
-1. **Owner, once (review point 15 + L.3 leftovers):** a licence row per radar track
-   (title, artist, licence page, date) — 12-20 tracks / ≥ 60 min before any stage above
-   120 min; install the daily schedule from a checkout of UPDATED main; upload
-   `output/brand/banner_tooldojo_2560x1440.png`.
-2. **Build v3-L.7** (CI broadcast + measurement). The laptop half (manifest read) shipped in L.6.
-3. **Then v3-L.8** (seam-lag profiling → long private test → ramp controller).
+0. **2026-11-04: finish v3-T.1, then ONE PR.**
+   - Read `v3-phase-t1`'s state, its spec and its verification. Make it green and verified, then
+     merge it into `v3-growth-1104`.
+   - Owner opens ONE PR:
+     https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-growth-1104?expand=1
+   - That branch already carries `v3-integration-1101` (B.5, L.6), so the 11-01 PR is superseded.
+     Do not merge both.
+1. **Owner decisions (one word each):**
+   - the delegated values in the six phase specs;
+   - T.1 hosted-only instead of local CPU;
+   - the speech-to-text WER pass threshold;
+   - Live Trials beside Radar Live or instead of it;
+   - pay for X or leave it off.
+2. **Owner, on the node PC:**
+   - On the laptop: `radar_schedule.ps1 -Uninstall`.
+   - Build the ZIP.
+   - On the node: run `node\install.ps1`.
+   - Set BIOS AC-recovery = Power On.
+   - Plug-pull test, then `status.ps1`. Steps are in `node/README.md`.
+3. **After the first CI run on the merged code**, read:
+   - `🎞️ Evidence` / `↻ no admissible evidence` / `OPENING_BLOCKED` / `🧩 Native Short`;
+   - the north-star `now: … h` line (compare with Studio's 28-day long-form figure);
+   - `state/pilot_a.json` / `pilot_b.json`.
+
+   Then build v3-L.7.

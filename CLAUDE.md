@@ -287,6 +287,13 @@ name that is not written there. If a decision is missing, add a row and get one 
 - **A kill switch that defaults ON reaches every older test that walks that path.**
   `tests/conftest.py` pins the new growth switches OFF, and each phase's own tests turn them on.
   A new default-on switch belongs in that fixture too.
+- **The node runs jobs as another user in session 0.** Its consequences:
+  - A per-user Python/git install is invisible to that user, so `install.ps1` requires
+    machine-wide installs.
+  - A child started with `DETACHED_PROCESS` flashes a console; use `CREATE_NO_WINDOW`.
+  - A `.env` saved with a BOM breaks its first key.
+  - A node-wide env var reaches every job that imports your module.
+  - Never test the installer for real on the owner's laptop: `-DryRun` only.
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
