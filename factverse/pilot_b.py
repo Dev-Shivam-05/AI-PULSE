@@ -191,7 +191,8 @@ def plan_day(day: str, crops: list, hooks: list, native: dict | None, native_ski
                 "match": (native or {}).get("match") or ""}
     except Exception as e:  # noqa: BLE001
         print(f"  ⚠️ pilot_b plan failed: {type(e).__name__} — today's Shorts as rendered")
-        return {"shorts": list(crops or []), "hooks": list(hooks or []), "assignment": None,
+        return {"shorts": list(crops) if isinstance(crops, list) else [],
+                "hooks": list(hooks) if isinstance(hooks, list) else [], "assignment": None,
                 "native_index": None, "native_ok": False, "native_skip": "plan failed",
                 "state": None}
 

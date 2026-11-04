@@ -3633,9 +3633,12 @@ def test_resolve_short_splits_on_both_separators_and_bounds_the_size(tmp_path):
     assert reels.resolve_short("output/shorts/empty.mp4", tmp_path) is None
 
 
-def test_pick_entry_only_ever_considers_the_last_run(tmp_path):
+def test_pick_entry_only_ever_considers_the_last_run(monkeypatch, tmp_path):
     """#3: an older row is another day's video whose file left with its runner.
-    Posting one on a retry firing is how a week-old Short lands as today's Reel."""
+    Posting one on a retry firing is how a week-old Short lands as today's Reel.
+    v3-S.1: this is the pre-S.1 "first Short" rule (reels_native_only off); the
+    native-only rule is tests/test_s1_native.py."""
+    monkeypatch.setattr(reels, "native_only", lambda: False)
     _short_at(tmp_path)
     url = "https://youtube.com/watch?v=ABCDEFGHIJK"
     assert reels.pick_entry([_log_row()], [], tmp_path)[0]["title"] == "A Tool"
@@ -3945,6 +3948,7 @@ def test_reels_are_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys
 def test_reels_record_a_url_only_after_a_successful_post(monkeypatch, tmp_path, capsys):
     """The idempotence contract, per surface: post once, remember it, never post
     it twice — and on a failure remember NOTHING, so tomorrow may still try."""
+    monkeypatch.setattr(reels, "native_only", lambda: False)   # v3-S.1: posting mechanics only
     _short_at(tmp_path)
     log = tmp_path / "production_log.json"
     log.write_text(json.dumps([_log_row()]), encoding="utf-8")
@@ -3984,6 +3988,7 @@ def test_reels_record_a_url_only_after_a_successful_post(monkeypatch, tmp_path, 
 
 
 def test_one_broken_surface_never_takes_the_other_down(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(reels, "native_only", lambda: False)   # v3-S.1: posting mechanics only
     _short_at(tmp_path)
     log = tmp_path / "production_log.json"
     log.write_text(json.dumps([_log_row(format="news")]), encoding="utf-8")
