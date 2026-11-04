@@ -39,8 +39,23 @@ from factverse import config as fv          # noqa: E402
 from factverse import radar as rd           # noqa: E402
 import live_preflight as lp                 # noqa: E402
 
-PROFILE = lp.PROFILES["1080p30"]            # spec row 2
+# v3-N.1 rows 9-10: on the ToolDojo Node the preflight picks the output profile and the
+# encoder and the supervisor passes them as RADAR_PROFILE / RADAR_ENCODER. Unset (the
+# laptop) = 1080p30 x264, exactly as before. The page is ALWAYS rendered at its locked
+# 1920x1080 layout and scaled down in ffmpeg: a 1280 px viewport would re-flow the board.
+PAGE_W, PAGE_H = 1920, 1080
+ENCODERS = ("libx264", "h264_qsv")
+PROFILE_NAME = str(fv.setting("radar_profile", "1080p30") or "1080p30")
+if PROFILE_NAME not in lp.PROFILES:
+    PROFILE_NAME = "1080p30"
+ENCODER = str(fv.setting("radar_encoder", "libx264") or "libx264")
+if ENCODER not in ENCODERS:
+    ENCODER = "libx264"
+PROFILE = lp.PROFILES[PROFILE_NAME]         # spec row 2
 W, H, FPS = PROFILE["w"], PROFILE["h"], PROFILE["fps"]
+# Session-0 safe Quick Sync: D3D11, never D3D9 (a scheduled task with nobody signed in
+# has no interactive desktop, and D3D9 device creation fails there - ffmpeg trac #7511).
+QSV_DEVICE = ["-init_hw_device", "qsv=qs:hw_any,child_device_type=d3d11va"]
 CRF = "20"                                  # row 3: the storyboard's CRF (v3g1 row 7)
 SESSION_MINUTES = 120                       # row 4 (the default when nothing else says)
 MAX_SESSION_MINUTES = 360                   # L6 row 7: the ramp's top stage (S4)
@@ -186,13 +201,35 @@ def wrap_due(offset: float, target_seconds: float) -> bool:
 def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
                  ffmpeg: str = "ffmpeg", music: str | None = None,
                  music_at: float = 0.0, music_gain: float = MUSIC_VOLUME,
-                 voice_gain_db: float = 0.0) -> list:
+                 voice_gain_db: float = 0.0, encoder: str | None = None,
+                 profile: str | None = None) -> list:
     """One segment, encoded once at timeline 0. Exactly `length` seconds (an even
     number, row 11) so the 2 s GOPs tile the whole stream. With `music`, the bed is
     looped from `music_at` (the session's running music time) under the voice. A
-    `.ffconcat` music file is the L6 playlist; anything else is one track."""
-    gop = FPS * lp.KEYFRAME_S
-    cap = f"{PROFILE['kbps']}k"
+    `.ffconcat` music file is the L6 playlist; anything else is one track.
+    `encoder` / `profile` default to the module's (N.1); the node preflight passes
+    them explicitly so it measures this exact command."""
+    enc = encoder if encoder in ENCODERS else ENCODER
+    prof = lp.PROFILES.get(profile or PROFILE_NAME, PROFILE)
+    fps = prof["fps"]
+    gop = fps * lp.KEYFRAME_S
+    cap = f"{prof['kbps']}k"
+    scale = ("" if (prof["w"], prof["h"]) == (PAGE_W, PAGE_H)
+             else f",scale={prof['w']}:{prof['h']}:flags=bicubic")
+    if enc == "h264_qsv":
+        pre, pix = list(QSV_DEVICE), "nv12"
+        # CBR at YouTube's recommended rate (v3l section 5): QSV has no CRF; equal
+        # -b:v / -maxrate is its constant-bitrate mode. No B-frames, same reason as x264.
+        vcodec = ["-c:v", "h264_qsv", "-preset", lp.X264_PRESET, "-profile:v", "high",
+                  "-b:v", cap, "-bf", "0"]
+    else:
+        pre, pix = [], "yuv420p"
+        vcodec = ["-c:v", "libx264", "-preset", lp.X264_PRESET, "-profile:v", "high",
+                  "-crf", CRF,
+                  # no B-frames: with them a segment's first DTS is negative, and after the
+                  # offset it lands before the previous segment's last one (measured at the
+                  # 10 s seam)
+                  "-bf", "0"]
     audio_in = (["-i", audio] if audio else
                 ["-f", "lavfi", "-i", f"anullsrc=r={lp.AUDIO_HZ}:cl=stereo"])
     vgain = f"volume={voice_gain_db}dB," if voice_gain_db else ""
@@ -208,20 +245,17 @@ def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
     else:
         music_in, mix = [], ["-map", "0:v", "-map", "1:a", "-af", f"{vgain}apad"]
     return [
-        ffmpeg, "-hide_banner", "-loglevel", "error", "-y",
+        ffmpeg, "-hide_banner", "-loglevel", "error", "-y", *pre,
         "-f", "concat", "-safe", "0", "-i", concat_path, *audio_in, *music_in, *mix,
-        "-vf", f"fps={FPS},format=yuv420p",
-        "-c:v", "libx264", "-preset", lp.X264_PRESET, "-profile:v", "high", "-crf", CRF,
-        # no B-frames: with them a segment's first DTS is negative, and after the offset
-        # it lands before the previous segment's last one (measured at the 10 s seam)
-        "-bf", "0",
+        "-vf", f"fps={fps}{scale},format={pix}",
+        *vcodec,
         "-maxrate", cap, "-bufsize", cap,
         "-g", str(gop), "-keyint_min", str(gop), "-sc_threshold", "0",
         "-c:a", "aac", "-b:a", f"{lp.AUDIO_KBPS}k",
         "-ar", str(lp.AUDIO_HZ), "-ac", "2",
         # exactly length*FPS frames: the concat list's doubled last frame made one extra,
         # a duplicate timestamp at the next seam (measured in the first local session)
-        "-frames:v", str(length * FPS),
+        "-frames:v", str(length * fps),
         "-t", str(length), "-muxdelay", "0", "-muxpreload", "0", "-f", "mpegts", out_ts,
     ]
 
@@ -300,7 +334,7 @@ class Renderer:
         from playwright.sync_api import sync_playwright   # heavy, optional: import here
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch()
-        self._page = self._browser.new_page(viewport={"width": W, "height": H},
+        self._page = self._browser.new_page(viewport={"width": PAGE_W, "height": PAGE_H},
                                             device_scale_factor=1)
         self._page.goto(PAGE.resolve().as_uri())
         self._page.wait_for_function("window.__ready === true", timeout=15000)
@@ -909,7 +943,11 @@ def fetch_manifest() -> dict | None:
 
 
 def schedule_installed() -> bool:
-    """The end card promises tomorrow's session only when the daily task really exists."""
+    """The end card promises tomorrow's session only when the daily task really exists.
+    On the ToolDojo Node (v3-N.1) the supervisor's job table IS the schedule, and it says
+    so through TOOLDOJO_NODE_SCHEDULED=1 for a job that repeats."""
+    if os.environ.get("TOOLDOJO_NODE_SCHEDULED") == "1":
+        return True
     try:
         r = subprocess.run(["schtasks", "/Query", "/TN", "ToolDojo Radar Live"],
                            capture_output=True, timeout=20)
