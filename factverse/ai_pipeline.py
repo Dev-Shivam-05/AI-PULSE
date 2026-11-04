@@ -1873,6 +1873,24 @@ def _s1_native_day(script: dict, crops: list, hooks: list) -> dict | None:
         return None
 
 
+def _ledger_family(script) -> str:
+    """The K.1 task family for the ledger row, so the north-star and memory
+    counters (which read `task_family` off PUBLISHED rows) see it. Tool videos
+    only; K.1's deterministic classifier over the same fields `site.entry_for`
+    feeds it (title + the signal's tool name). The cheat sheet's `what`, which the
+    catalog also reads, does not exist before the upload. Computed before the
+    upload, so it never raises: "" on anything unexpected."""
+    try:
+        if not isinstance(script, dict) or script.get("format") != "tool":
+            return ""
+        from factverse import tasks
+        fam = tasks.task_family({"title": str(script.get("title") or ""),
+                                 "tool": str(script.get("signal_title") or "")})
+        return fam if isinstance(fam, str) else ""
+    except Exception:  # noqa: BLE001 — the ledger row matters more than the family
+        return ""
+
+
 def _s1_native_title(plan: dict | None, shorts: list, meta: list) -> None:
     """The native Short is titled from its OWN script (validated in native_short),
     not from step8_meta, which only knows the long-form."""
@@ -2493,6 +2511,7 @@ def run(publish: bool = False, force_format: str | None = None,
     # AFTER the opening repair loop, which may replace `script`: the ledger reads
     # the script that is actually uploaded. Both never raise.
     _ledger_memory = memory.ledger_fields(script)   # v3-M.1 row 9
+    _ledger_task_family = _ledger_family(script)    # v3-K.1 family on the ledger row
 
     # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
     if starts and arm:
@@ -2663,6 +2682,7 @@ def run(publish: bool = False, force_format: str | None = None,
                # Pilot B and Pilot A share experiment/pair_id/arm/slot: ONE splat, and
                # P.2's keys win on a day both pilots run (they are absent otherwise).
                **{**_s1_ledger, **_p2_ledger},
+               task_family=_ledger_task_family,
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts=short_rows,
                shorts_rendered=len(shorts),
