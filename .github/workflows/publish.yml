@@ -146,7 +146,8 @@ jobs:
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
                      state/l2_usage.json state/stock_ledger.json state/tools_index.json \
                      state/notified.json state/notified_x.json \
-                     state/notified_ig.json state/notified_fb.json; do
+                     state/notified_ig.json state/notified_fb.json \
+                     state/pilot_a.json state/first_seen.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is
