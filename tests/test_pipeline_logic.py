@@ -4304,7 +4304,8 @@ def test_every_gate_uses_the_fallback_helper():
     src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
     # policy, advice, fact-check (v3-B.1) + the debate quote gate (v3-H #9)
     # + the evidence overclaim gate (v3-P.1)
-    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 5
+    # + the opening contract (v3-P.2): pre-render lint, gate after the repair, refused repair
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 8
     assert 'force_format="evergreen")' not in src
 
 

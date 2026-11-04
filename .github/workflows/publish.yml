@@ -154,7 +154,7 @@ jobs:
                      state/notified.json state/notified_x.json \
                      state/notified_ig.json state/notified_fb.json \
                      state/shadow_queue.jsonl \
-                     state/pilot_b.json \
+                     state/pilot_b.json state/pilot_a.json state/first_seen.json \
                      state/notified_tasks.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done

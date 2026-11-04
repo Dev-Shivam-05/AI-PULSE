@@ -61,6 +61,9 @@ from factverse import evidence
 from factverse import learn
 from factverse import memory
 from factverse import l2
+from factverse import opening
+from factverse import pilot
+from factverse import querymap
 from factverse import shorts as shorts_mod
 from factverse import native_short
 from factverse import pilot_b
@@ -345,8 +348,10 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # footage nobody vetted. script_tool sets the real one; _carry_over returns it.
     # v3-M.1: "followup" (parent id, family, question) is build_script's, from the
     # follow-up rule — a planted one would forge search demand into the ledger.
+    # v3-P.2: "pilot" (the Pilot A slot) and "query_map" are run()'s too — a planted
+    # slot would put a video into an experiment arm nobody drew for it.
     for planted in ("receipts", "cheat_sheet", "debate", "verified_facts", "evidence",
-                    "followup"):
+                    "followup", "pilot", "query_map"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -718,6 +723,21 @@ def script_tool(item: dict) -> dict | None:
             return None
         else:
             ev = ev if isinstance(ev, dict) else evidence.empty("gather failed")
+    # spec v3-P.2: the first admissible evidence is one of the ledger's three
+    # timestamps (row 13); Pilot A draws its slot HERE, before the writer, because
+    # the two arms are different scripts. Arrival order only — never performance.
+    pilot_slot = None
+    if evidence.admissible(ev):
+        if fv.flag("query_map", False):
+            querymap.note_seen([url], field="evidence")
+        if fv.flag("pilot_a", False):
+            try:
+                pilot_slot = pilot.assign(ev, grounding, pilot.load(), _ledger_rows())
+            except Exception as e:  # noqa: BLE001 — a bad state file costs the pilot, not the day
+                print(f"     ⚠️ pilot assignment skipped ({type(e).__name__}: {e})")
+            if pilot_slot:
+                print(f"     🧪 Pilot A: pair {pilot_slot['pair_id']}, {pilot_slot['arm']}-first "
+                      f"(slot {pilot_slot['slot']}, {pilot_slot['stratum']})")
     # spec v3-E #1/#4: hand the writer REAL numbers and REAL complaints. Both are
     # fail-soft — an API miss costs the block, never the video.
     facts = _verified_facts(url)
@@ -735,6 +755,31 @@ def script_tool(item: dict) -> dict | None:
         lim_rule = ('- ONE honest limitation scene — mark it "filter": true. Base it ONLY on '
                     "these real open issues from the tool's own tracker, or on limits stated "
                     "in the SOURCE EXCERPT: " + "; ".join(issues))
+    structure = f"""STRUCTURE (a transaction, not a broadcast):
+- Scene 1 HOOK: the specific thing the viewer will be able to do by the end, plus the most
+  surprising concrete detail (stars, size, speed, price=free). No greetings.
+- What it actually is and who built it (1-2 scenes, attributed).
+- GETTING IT RUNNING: the exact real steps/commands from the source. If the source shows an
+  install command, quote it EXACTLY — commands are the one place verbatim is required, not banned.
+- What to actually make with it: 3-5 concrete uses, most impressive first.
+{lim_rule}
+- Final scene: the single next action + "the exact command is in the description" + ONE question
+  to the audience + subscribe, all in two sentences.
+{_RETENTION_RULES}"""
+    scene_range, per_scene = "10-14", "50-70"
+    if pilot_slot:
+        # spec v3-P.2: the Pilot A architecture replaces the lane's structure — the
+        # renderer and the opening gate rely on these scene roles being in order.
+        structure = (opening.writer_block(pilot_slot["arm"], ev, pilot_slot.get("intent", ""))
+                     + (f"- The limitation scene: {lim_rule[2:]}\n" if issues else ""))
+        scene_range, per_scene = opening.scene_count_rule()
+        if pilot_slot["arm"] == "context":
+            # the evidence brief puts the result in scene 1; context-first moves it to 2
+            ev_brief = (ev_brief.replace("Scene 1 must open by stating",
+                                         "Scene 2 (the result scene) must open by stating")
+                        .replace("Scene 1 must begin with", "Scene 2 (the result scene) must begin with"))
+    task_field = ('\n"task": "the task this tool does, 2-5 words, no numbers (e.g. Rotate Images)"'
+                  if (pilot_slot or fv.flag("query_map", False)) else "")
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
 Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
 DO something concrete in the next ten minutes — that is the entire point of the video.
@@ -746,24 +791,14 @@ SOURCE: {source}  ({url})
 {ev_brief}{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
 {grounding}
 
-STRUCTURE (a transaction, not a broadcast):
-- Scene 1 HOOK: the specific thing the viewer will be able to do by the end, plus the most
-  surprising concrete detail (stars, size, speed, price=free). No greetings.
-- What it actually is and who built it (1-2 scenes, attributed).
-- GETTING IT RUNNING: the exact real steps/commands from the source. If the source shows an
-  install command, quote it EXACTLY — commands are the one place verbatim is required, not banned.
-- What to actually make with it: 3-5 concrete uses, most impressive first.
-{lim_rule}
-- Final scene: the single next action + "the exact command is in the description" + ONE question
-  to the audience + subscribe, all in two sentences.
-{_RETENTION_RULES}
+{structure}
 {_VISUAL_RULES}
 
-{_output_contract("10-14", "50-70", tool=True)}
+{_output_contract(scene_range, per_scene, tool=True)}
 
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
-"url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
+"url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video.{task_field}"""
     s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
     if not s:
@@ -794,7 +829,17 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
             s["verified_facts"] = facts
         if ev is not None:
             s["evidence"] = ev
+        if pilot_slot:
+            s["pilot"] = pilot_slot
     return s
+
+
+def _ledger_rows() -> list[dict]:
+    """The run ledger, or [] — Pilot A reads its published members from it."""
+    try:
+        return learn.read_runs(RUNS_LOG)
+    except Exception:  # noqa: BLE001
+        return []
 
 
 # --------------------------------------------------------------- format: evergreen
@@ -1094,6 +1139,9 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "receipts",        # v3-E.2 #6: the measured check must survive them too
           "debate",          # v3-H #13: the transcript the quotes and cards are checked against
           "evidence",        # v3-P.1: the clip, status and rights record (popped by _validate_script)
+          "pilot",           # v3-P.2: the Pilot A slot (popped by _validate_script)
+          "query_map",       # v3-P.2: name/alias/task the packaging used (popped too)
+          "task",            # v3-P.2: the writer's task phrase — the query-map title reads it
           "titles",          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
           # v3-M.1 row 9: the rewrite prompts never show them, so every pass would
           # reset them to empty; "followup" is run()'s and is popped in _validate_script
@@ -1162,6 +1210,11 @@ def place_description_blocks(script: dict) -> None:
     (spec v3-C decisions 7/8) — links above the fold, where the transaction happens.
     Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
     desc = str(script.get("description", ""))
+    # spec v3-P.2 row 13: the FIRST sentence names the tool, the task and the
+    # evidence status — its own paragraph, so the deliverable block below lands
+    # directly under it (the manufactured "\n\nSource:" line is further down).
+    if fv.flag("query_map", False) and isinstance(script.get("query_map"), dict):
+        desc = querymap.lead_description(desc, script)
     promo = str(fv.setting("promo_block", "") or "").strip()
     dl = script.get("deliverable")
     if (dl or promo) and _DL_MARK not in desc and (not promo or promo not in desc):
@@ -1914,6 +1967,269 @@ def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool
     return run(publish=publish, force_format=nxt, fallback=True, attempt=attempt + 1)
 
 
+# --------------------------------------------------------------- v3-P.2 pilot helpers
+def _pilot_arm(script: dict) -> str | None:
+    """The Pilot A arm this script was written for, or None. Only a tool video
+    with admissible evidence and a drawn slot is a pilot video."""
+    p = script.get("pilot") if isinstance(script, dict) else None
+    if not (fv.flag("pilot_a", False) and isinstance(p, dict) and p.get("arm") in opening.ARMS
+            and script.get("format") == "tool" and evidence.admissible(script.get("evidence"))):
+        return None
+    return p["arm"]
+
+
+# A lint issue the encoded gate cannot catch later (content, not timing) blocks.
+_LINT_HARD = ("scene_count", "first_sentence_long", "first_sentence_content", "limitation_missing")
+
+
+def _pilot_lint(script: dict, arm: str) -> tuple[dict, list[str]]:
+    """(script, hard issues left). One writer fix pass when the pre-render lint
+    finds anything; only content issues block here — timing is the gate's job."""
+    issues = opening.lint(script, arm)
+    if issues:
+        print(f"  ✍️  Pilot script lint: {issues} — one fix pass")
+        fixed = _pilot_fix(script, issues, arm)
+        if fixed:
+            script = fixed
+            issues = opening.lint(script, arm)
+    return script, [i for i in issues if i in _LINT_HARD]
+
+
+def _pilot_fix(script: dict, failures: list[str], arm: str) -> dict | None:
+    """One writer repair of the narration (and task). Only `scenes` and `task` are
+    adopted: title, packaging and every run()-computed key stay as they were."""
+    try:
+        raw = llm.generate_json(opening.fix_prompt(script, failures, arm), max_tokens=8192,
+                                temperature=0.3)
+        task = raw.get("task") if isinstance(raw, dict) else None
+        fixed = _validate_script(raw, script["title"], script.get("source_url", ""))
+        if not fixed:
+            return None
+        out = dict(script)
+        out["scenes"] = fixed["scenes"]
+        if task:
+            out["task"] = str(task)[:60]
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"   ⚠️ pilot fix pass failed: {e}")
+        return None
+
+
+def _recheck_fixed(script: dict) -> str:
+    """The gates a rewritten narration must pass again ("" = clean): the evidence
+    overclaim screen, the verbatim-overlap policy gate, advice framing, and the
+    fact check — a repair must never be a way around them."""
+    try:
+        narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+        if evidence.overclaims(script):
+            return "overclaim"
+        if verbatim_overlap(narration, script.get("grounding", "")) > MAX_OVERLAP:
+            return "overlap"
+        if gates.advice_framing(narration).get("advice"):
+            return "advice"
+        fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
+                              gates.fact_sources(script))
+        return "" if fc.get("passed", True) else "factcheck"
+    except Exception as e:  # noqa: BLE001
+        return f"recheck error {type(e).__name__}"
+
+
+def _trim_lead(audio: str, words: list) -> tuple[str, list]:
+    """Round 3: first speech by 0.50 s. A voice that starts later than 0.35 s is
+    trimmed to start 0.15 s before its first word; the word timings shift with it.
+    Fail soft: the untouched pair."""
+    try:
+        lead = float(words[0][0]) - 0.15
+        if float(words[0][0]) <= 0.35 or lead <= 0:
+            return audio, words
+        out = str(Path(audio).with_name("voice_trim" + Path(audio).suffix))
+        import subprocess
+        r = subprocess.run([fv.FFMPEG or "ffmpeg", "-y", "-ss", f"{lead:.3f}", "-i", str(audio),
+                            str(out)], capture_output=True, text=True, timeout=120)
+        if r.returncode != 0 or not Path(out).exists():
+            return audio, words
+        return out, [(max(0.0, a - lead), max(0.0, b - lead), w) for a, b, w in words]
+    except Exception:  # noqa: BLE001
+        return audio, words
+
+
+def _make_extras(video: str, script: dict, words, starts, src_domain: str, tool_shot: str):
+    """Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
+    Person-first thumbnail mined from this run's own footage; engine design is the fallback."""
+    thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
+    thumb = None
+    if tool_shot:
+        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
+        thumb = thumbnail.make_tool_thumb(
+            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
+    thumb = (thumb
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
+                               title=script["title"])
+             or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
+    # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
+    # units freed, one fewer templated upload in the channel-level pattern.
+    # Revisit only if Shorts→long CTR sustains >6% for 30 days.
+    shorts_n = int(fv.setting("shorts_per_day", 2))
+    # v3-S.1: the native concept Short replaces the storyboard engine's Short, so
+    # with it on both rendered Shorts are crop excerpts (the control + a spare).
+    native_on = fv.flag("native_shorts", False)
+    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
+                                    max_count=min(shorts_n, 4), source_domain=src_domain,
+                                    storyboard=(False if native_on else None))
+    return thumb, shorts
+
+
+def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = None) -> dict | None:
+    """Clips -> voice -> word timing -> build -> captions -> branding -> L2 -> QA.
+    Returns what run() needs downstream, or None after recording why (the
+    statuses are the ones this block always wrote). `arm` (Pilot A) swaps in the
+    opening contract: no receipts card or small code card, no sting, no cold
+    open at 0:00, and the thumbnail/Shorts wait for the gate (run() makes them)."""
+    # v3-B: a tool video is illustrated by the tool itself — a screen recording
+    # of its real page — never stock. capture() fails soft; stock is the fallback.
+    scene_clips, tool_shot, cap = None, "", None
+    if script.get("format") == "tool":
+        cap = screencap.capture(script)
+        if cap:
+            scene_clips = cap["scene_clips"]
+            tool_shot = cap.get("screenshot") or ""
+            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        else:
+            print("  ⚠️ Screen capture failed — stock visuals for this run.")
+    if scene_clips is None:
+        scene_clips = eng.step3_download(script)
+
+    src_domain, src_chip = source_chip(script)
+
+    print("\n[4/10] 🎙️ Voiceover...")
+    audio, edge_words = synthesize_voice(narration, script)
+    if not audio:
+        print("  ❌ Voice step failed.")
+        record_run(status="VOICE_FAILED", format=fmt, title=script["title"])
+        return None
+    words = captions.transcribe_words(audio) or edge_words
+    if not words:
+        print("  ❌ Caption timing failed.")
+        record_run(status="TIMING_FAILED", format=fmt, title=script["title"])
+        return None
+    # v3: captions must show the SCRIPT's spelling — whisper mishears proper
+    # nouns ("Haapoja" -> "Hoppogja") and those typos were burned on screen
+    words = captions.correct_words(words, narration)
+    if arm:
+        audio, words = _trim_lead(audio, words)
+    audio_dur = eng.dur(audio)
+    durs = scene_durations(script, words, audio_dur)
+    starts = None
+    if durs:
+        starts = [0.0]
+        for d in durs[:-1]:
+            starts.append(starts[-1] + d)
+    print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
+          f"scene sync: {'ON' if durs else 'uniform fallback'}")
+    shares = durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)
+
+    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
+    # AFTER the timings exist — step5_build splits a scene's time equally between
+    # its clips, so a card rendered to a fixed length either loops (replaying the
+    # count-up mid-scene) or is cut before the number reaches its real value.
+    infographics.inject_cards(script, scene_clips, source_domain=src_domain, scene_durs=shares)
+    if script.get("format") == "debate":
+        # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
+        # _lead_with replaces a stat card rather than stacking a third clip
+        debate.inject_cards(script, scene_clips)
+    if script.get("format") == "tool" and not arm:
+        # the deliverable, on screen as a terminal card, in the scenes that speak it.
+        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
+        # leading the scene, so that a third clip cannot squeeze the command below
+        # readable length. It is a still, so it stays duration-agnostic.
+        screencap.inject_code_card(script, scene_clips)
+        # spec v3-E.2 #11: real terminal footage of the check leads the install
+        # scene, replacing the still card there (the final scene keeps it).
+        # Animated, so it must render to its exact slot share — the C.3 law.
+        receipts.inject_receipt_clip(script, scene_clips, shares)
+    meta = None
+    if arm:
+        # spec v3-P.2: the opening contract owns scenes 1-4 (result / context / step /
+        # sequence), rendered to their exact shares — needs the REAL timings.
+        meta = opening.place_opening(script, scene_clips, durs, arm) if durs else None
+        if meta is None:
+            print("  ⚠️ opening contract could not be placed — the gate will refuse this render.")
+    elif script.get("format") == "tool" and fv.flag("evidence_engine", False):
+        # spec v3-P.1: the evidence clip LEADS scene 1, replacing its recording/stock
+        # clip (never stacking), rendered to its exact slot share now that the timings
+        # exist (the C.3 law). After every inject_*, BEFORE recut: recut then skips the
+        # replaced slot.
+        if evidence.admissible(script.get("evidence")) and evidence.place_clip(
+                script, scene_clips, shares) is None:
+            print("  ⚠️ evidence clip could not be placed — scene 1 keeps its recording.")
+    if cap:
+        # spec v3-B.5: the recording was chunked before the narration existed, so
+        # step5_build looped every chunk shorter than its slot. Recut it now, to the
+        # exact share each recording clip gets — LAST, after every inject_* call has
+        # settled how many clips each scene holds. Fail soft: provisional clips stay.
+        if screencap.recut(cap, scene_clips, shares) is None:
+            print("  ⚠️ recording recut failed — provisional clips (may loop) this run.")
+
+    video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
+    if not video:
+        print("  ❌ Build step failed.")
+        mark_failed(script.get("signal_title", script["title"]))
+        record_run(status="BUILD_FAILED", format=fmt, title=script["title"])
+        return None
+
+    thumb, shorts, clean = None, [], ""
+    if arm:
+        import shutil as _sh
+        clean = str(Path(video).with_name(Path(video).stem + "_clean.mp4"))
+        try:
+            _sh.copy(video, clean)
+        except OSError:
+            clean = ""
+    else:
+        thumb, shorts = _make_extras(video, script, words, starts, src_domain, tool_shot)
+
+    print("  📝 Burning live word-by-word captions...")
+    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
+    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
+                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
+    # on-screen source chips during fact delivery (content timeline; frames carry
+    # the overlay through the cold-open re-order untouched)
+    cites = []
+    if starts and len(starts) >= 6 and src_chip:
+        for i in (1, len(starts) // 2, len(starts) - 2):
+            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
+    video = captions.burn_ass(video, ass, citations=cites)
+
+    if arm:
+        # round 3 §2: NO brand-only sting anywhere in a pilot video, and the human
+        # cold open must not displace frame 0 — it is not spliced in at all.
+        print("\n  🎬 Branding: none (Pilot A — no sting, no cold open at 0:00)")
+        intro_shift = 0.0
+        insight_at = starts[-1] if starts else None
+        video, l2_rec = l2.inject(video, insight_at, cold_open=False)
+    else:
+        print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
+        video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
+        # L2 human editorial injection: real cold open at 0:00, insight block before
+        # the final scene — the policy's "creator's original insight", batched weekly.
+        intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
+        insight_at = (starts[-1] + intro_shift) if starts else None
+        video, l2_rec = l2.inject(video, insight_at)
+    if fv.flag("require_insight_block", False) and not l2_rec.get("insight"):
+        print("  🛑 O1 GATE: insight block required and missing. Publishing nothing is better.")
+        record_run(status="INSIGHT_MISSING", format=fmt, title=script["title"])
+        return None
+
+    if not qa_video(video, audio_dur):
+        mark_failed(script.get("signal_title", script["title"]))
+        record_run(status="QA_FAILED", format=fmt, title=script["title"])
+        return None
+    return {"video": video, "clean": clean, "words": words, "durs": durs, "starts": starts,
+            "audio_dur": audio_dur, "scene_clips": scene_clips, "l2_rec": l2_rec,
+            "intro_shift": intro_shift, "src_domain": src_domain, "tool_shot": tool_shot,
+            "thumb": thumb, "shorts": shorts, "opening": meta}
+
+
 def run(publish: bool = False, force_format: str | None = None,
         fallback: bool = False, attempt: int = 1) -> dict | None:
     print("=" * 70)
@@ -1925,6 +2241,9 @@ def run(publish: bool = False, force_format: str | None = None,
     ranked = [i for i in signal_engine.rank(limit=20) if not too_many_failures(i["title"])]
     if attempt == 1:
         LAST_RANKED[:] = ranked      # v3-M.1 row 16: read by the shadow queue in __main__
+    if fv.flag("query_map", False):
+        # spec v3-P.2 row 13: the FIRST time each tool signal was seen (earliest wins)
+        querymap.note_seen([c.get("url") for c in ranked if c.get("kind") == "tool"])
     fmt, viral = decide_format(force_format, ranked)
     print(f"  🧭 Format today: {fmt.upper()}")
 
@@ -1950,11 +2269,31 @@ def run(publish: bool = False, force_format: str | None = None,
     # docs/ — measured, not theorised. _CARRY still preserves the real one afterwards.
     script.pop("cheat_sheet", None)
 
-    # critique first (it now cuts repetition), then the floor (sanity only),
-    # then the CAP — padding is the enemy, not brevity
-    script = critique_pass(script)
-    script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
-    script = enforce_max_length(script, MAX_WORDS)
+    # spec v3-P.2: a Pilot A script keeps its scene architecture — the critique and
+    # length passes restructure scenes freely, which would move the result, the
+    # limitation and the step out of the slots the renderer and the gate rely on.
+    arm = _pilot_arm(script)
+    if arm:
+        script, hard = _pilot_lint(script, arm)
+        if hard:
+            print(f"  🛑 OPENING CONTRACT: the script breaks it before render: {hard}")
+            record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                       opening={"passed": False, "failures": hard, "stage": "script"},
+                       **pilot.ledger_fields(script))
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+    else:
+        # critique first (it now cuts repetition), then the floor (sanity only),
+        # then the CAP — padding is the enemy, not brevity
+        script = critique_pass(script)
+        script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+        script = enforce_max_length(script, MAX_WORDS)
+
+    # spec v3-P.2 row 13: query-map packaging for a tool video with admissible evidence
+    if (fv.flag("query_map", False) and script.get("format") == "tool"
+            and evidence.admissible(script.get("evidence"))):
+        if querymap.apply(script):
+            print(f"  🔎 Query-map title: {script['title']!r}")
 
     # v3: the deliverable is the whole point of a tool video
     place_description_blocks(script)
@@ -2047,7 +2386,7 @@ def run(publish: bool = False, force_format: str | None = None,
     # after every gate that could still reject the video (3 min of network must not
     # precede a veto) and before the payoff gate, so the beat's numbers can support
     # the packaging. install_scene_idx first: an unbeatable script costs zero minutes.
-    if script.get("format") == "tool" and fv.flag("receipts_check", True):
+    if script.get("format") == "tool" and fv.flag("receipts_check", True) and not arm:
         if receipts.install_scene_idx(script) is not None:
             _rc_plan = receipts.check_plan(
                 (script.get("deliverable") or {}).get("text", ""),
@@ -2083,155 +2422,87 @@ def run(publish: bool = False, force_format: str | None = None,
     # spec v3-G.3 #9: the ledger's packaging fields, computed and coerced HERE — the
     # title is final from this line on, and nothing new may raise past the upload.
     _ledger_thumb = str(script.get("thumb_text") or "")
-    _ledger_memory = memory.ledger_fields(script)   # v3-M.1 row 9; never raises
     _ledger_title_alt = bool(_pk.get("title_alt") or _hs["alt"])
     _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
     _ledger_ev_source, _ledger_ev_status = evidence.ledger_fields(script)
-    # v3-B: a tool video is illustrated by the tool itself — a screen recording
-    # of its real page — never stock. capture() fails soft; stock is the fallback.
-    scene_clips, tool_shot, cap = None, "", None
-    if script.get("format") == "tool":
-        cap = screencap.capture(script)
-        if cap:
-            scene_clips = cap["scene_clips"]
-            tool_shot = cap.get("screenshot") or ""
-            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
-        else:
-            print("  ⚠️ Screen capture failed — stock visuals for this run.")
-    if scene_clips is None:
-        scene_clips = eng.step3_download(script)
-
-    src_domain, src_chip = source_chip(script)
-
-    print("\n[4/10] 🎙️ Voiceover...")
-    audio, edge_words = synthesize_voice(narration, script)
-    if not audio:
-        print("  ❌ Voice step failed.")
-        record_run(status="VOICE_FAILED", format=fmt, title=script["title"])
-        return None
-    words = captions.transcribe_words(audio) or edge_words
-    if not words:
-        print("  ❌ Caption timing failed.")
-        record_run(status="TIMING_FAILED", format=fmt, title=script["title"])
-        return None
-    # v3: captions must show the SCRIPT's spelling — whisper mishears proper
-    # nouns ("Haapoja" -> "Hoppogja") and those typos were burned on screen
-    words = captions.correct_words(words, narration)
-    audio_dur = eng.dur(audio)
-    durs = scene_durations(script, words, audio_dur)
-    starts = None
-    if durs:
-        starts = [0.0]
-        for d in durs[:-1]:
-            starts.append(starts[-1] + d)
-    print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
-          f"scene sync: {'ON' if durs else 'uniform fallback'}")
-
-    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
-    # AFTER the timings exist — step5_build splits a scene's time equally between
-    # its clips, so a card rendered to a fixed length either loops (replaying the
-    # count-up mid-scene) or is cut before the number reaches its real value.
-    infographics.inject_cards(script, scene_clips, source_domain=src_domain,
-                              scene_durs=durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
-    if script.get("format") == "debate":
-        # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
-        # _lead_with replaces a stat card rather than stacking a third clip
-        debate.inject_cards(script, scene_clips)
-    if script.get("format") == "tool":
-        # the deliverable, on screen as a terminal card, in the scenes that speak it.
-        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
-        # leading the scene, so that a third clip cannot squeeze the command below
-        # readable length. It is a still, so it stays duration-agnostic.
-        screencap.inject_code_card(script, scene_clips)
-        # spec v3-E.2 #11: real terminal footage of the check leads the install
-        # scene, replacing the still card there (the final scene keeps it).
-        # Animated, so it must render to its exact slot share — the C.3 law.
-        receipts.inject_receipt_clip(script, scene_clips,
-                                     durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
-    if script.get("format") == "tool" and fv.flag("evidence_engine", False):
-        # spec v3-P.1: the evidence clip LEADS scene 1, replacing its recording/stock
-        # clip (never stacking), rendered to its exact slot share now that the timings
-        # exist (the C.3 law). After every inject_*, BEFORE recut: recut then skips the
-        # replaced slot. v3-P.2 builds its opening contract on this same call.
-        if evidence.admissible(script.get("evidence")) and evidence.place_clip(
-                script, scene_clips,
-                durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)) is None:
-            print("  ⚠️ evidence clip could not be placed — scene 1 keeps its recording.")
-    if cap:
-        # spec v3-B.5: the recording was chunked before the narration existed, so
-        # step5_build looped every chunk shorter than its slot. Recut it now, to the
-        # exact share each recording clip gets — LAST, after every inject_* call has
-        # settled how many clips each scene holds. Fail soft: provisional clips stay.
-        if screencap.recut(cap, scene_clips,
-                           durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)) is None:
-            print("  ⚠️ recording recut failed — provisional clips (may loop) this run.")
-
-    video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
-    if not video:
-        print("  ❌ Build step failed.")
-        mark_failed(script.get("signal_title", script["title"]))
-        record_run(status="BUILD_FAILED", format=fmt, title=script["title"])
-        return None
-
-    # Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
-    # Person-first thumbnail mined from this run's own footage; engine design is the fallback.
-    thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
-    thumb = None
-    if tool_shot:
-        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
-        thumb = thumbnail.make_tool_thumb(
-            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
-    thumb = (thumb
-             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
-                               title=script["title"])
-             or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
-    # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
-    # units freed, one fewer templated upload in the channel-level pattern.
-    # Revisit only if Shorts→long CTR sustains >6% for 30 days.
-    shorts_n = int(fv.setting("shorts_per_day", 2))
-    # v3-S.1: the native concept Short replaces the storyboard engine's Short, so
-    # with it on both rendered Shorts are crop excerpts (the control + a spare).
+    # spec v3-P.2 row 13: first signal / first admissible evidence (publication is
+    # added at record time); computed HERE, before the upload, and never raises
+    _ledger_ts = (querymap.timestamps(script, None)
+                  if fv.flag("query_map", False) and script.get("format") == "tool" else {})
+    # ---- render, and for a Pilot A video the opening gate on the ENCODED file ----
+    gate, repairs = None, 0
+    while True:
+        r = _render_longform(script, narration, fmt, arm)
+        if r is None:
+            return None                         # its status is already on the ledger
+        if not arm:
+            break
+        gate = (opening.measure(r["video"], r["opening"], script, r["words"], r["audio_dur"],
+                                (script.get("pilot") or {}).get("partner_seconds"))
+                if r.get("opening") else {"passed": False, "failures": ["placement"]})
+        gate["attempts"] = repairs + 1
+        print(f"  📏 Opening gate ({arm}-first, attempt {repairs + 1}): "
+              f"{'PASS' if gate['passed'] else 'FAIL ' + str(gate['failures'])}")
+        if gate["passed"]:
+            break
+        if repairs >= 1:                        # one automatic repair, then skip
+            print("  🛑 OPENING CONTRACT: still failing after one repair — skipping like the lane does.")
+            record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                       opening=opening.ledger_view(gate), **pilot.ledger_fields(script))
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+        repairs += 1
+        if opening.repair_kind(gate["failures"]) == "script":
+            fixed = _pilot_fix(script, gate["failures"], arm)
+            blocked = _recheck_fixed(fixed) if fixed else "no repair"
+            if blocked:
+                print(f"  🛑 OPENING CONTRACT: the repair was refused ({blocked}).")
+                record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                           opening=opening.ledger_view(gate), **pilot.ledger_fields(script))
+                mark_failed(script.get("signal_title", script["title"]))
+                return _fall_back(publish, fmt, force_format, fallback, attempt)
+            script = fixed
+            narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+            words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
+            place_description_blocks(script)
+        print(f"  🔁 Opening repair ({opening.repair_kind(gate['failures'])}) — re-rendering once.")
+    video, words, durs, starts = r["video"], r["words"], r["durs"], r["starts"]
+    audio_dur, scene_clips, l2_rec = r["audio_dur"], r["scene_clips"], r["l2_rec"]
+    intro_shift, src_domain = r["intro_shift"], r["src_domain"]
+    thumb, shorts = r["thumb"], r["shorts"]
+    if arm:
+        # the clean copy (no captions) is what the thumbnail and the Shorts are cut
+        # from — made only now, so a failed gate never pays for them
+        thumb, shorts = _make_extras(r["clean"], script, words, starts, src_domain, r["tool_shot"])
+    # v3-S.1: the native concept Short and the day's pair, read right after the
+    # thumbnail/Shorts call on BOTH paths (_make_extras ran inside _render_longform
+    # for a non-pilot video, just above for a Pilot A one). shorts_mod.last_hooks
+    # belongs to that last make_shorts call. Before any upload; never raises.
     native_on = fv.flag("native_shorts", False)
-    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
-                                    max_count=min(shorts_n, 4), source_domain=src_domain,
-                                    storyboard=(False if native_on else None))
     short_hooks = list(shorts_mod.last_hooks)
     s1_plan = _s1_native_day(script, shorts, short_hooks) if (native_on and shorts) else None
     if s1_plan:
         shorts, short_hooks = s1_plan["shorts"], s1_plan["hooks"]
-
-    print("  📝 Burning live word-by-word captions...")
-    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
-    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
-                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
-    # on-screen source chips during fact delivery (content timeline; frames carry
-    # the overlay through the cold-open re-order untouched)
-    cites = []
-    if starts and len(starts) >= 6 and src_chip:
-        for i in (1, len(starts) // 2, len(starts) - 2):
-            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
-    video = captions.burn_ass(video, ass, citations=cites)
-
-    print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
-    video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
-
-    # L2 human editorial injection: real cold open at 0:00, insight block before
-    # the final scene — the policy's "creator's original insight", batched weekly.
-    intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
-    insight_at = (starts[-1] + intro_shift) if starts else None
-    video, l2_rec = l2.inject(video, insight_at)
-    if fv.flag("require_insight_block", False) and not l2_rec.get("insight"):
-        print("  🛑 O1 GATE: insight block required and missing. Publishing nothing is better.")
-        record_run(status="INSIGHT_MISSING", format=fmt, title=script["title"])
-        return None
-
-    if not qa_video(video, audio_dur):
-        mark_failed(script.get("signal_title", script["title"]))
-        record_run(status="QA_FAILED", format=fmt, title=script["title"])
-        return None
+    # spec v3-P.2: every Pilot A / query-map ledger field as ONE dict, computed here,
+    # before the upload — the published record_run splats it once (a second
+    # `experiment=` keyword would be a TypeError inside the double-publish window).
+    _p2_ledger = dict(pilot.ledger_fields(script), opening=opening.ledger_view(gate),
+                      duration_s=(gate or {}).get("duration_s"),
+                      pilot_task=str((script.get("query_map") or {}).get("task") or ""),
+                      **_ledger_ts)
+    # AFTER the opening repair loop, which may replace `script`: the ledger reads
+    # the script that is actually uploaded. Both never raise.
+    _ledger_memory = memory.ledger_fields(script)   # v3-M.1 row 9
 
     # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
-    if starts:
+    if starts and arm:
+        # spec v3-P.2 row 13: descriptive chapters, only for sections that exist
+        chapters = (querymap.chapters(opening.chapter_candidates(script, starts, r["opening"]))
+                    if fv.flag("query_map", False) else "")
+        if chapters:
+            script["description"] = script["description"].rstrip() + "\n\n" + chapters
+            print(f"  📑 {chapters.count(chr(10))} descriptive chapters added to description")
+    elif starts:
         cold_shift = l2._dur(fv.TEMP / "l2_cold.mp4") if l2_rec.get("cold_open") else 0.0
         chapters = (tool_chapters(script, starts, intro_shift + cold_shift)
                     or build_chapters(script, starts, intro_shift + cold_shift))
@@ -2279,6 +2550,8 @@ def run(publish: bool = False, force_format: str | None = None,
         print("\n  📤 Publishing...")
         # decouple render from publish: upload private, publish at the fixed slot
         long_publish_at = scheduling.long_slot()
+        if _ledger_ts:
+            _p2_ledger["t_publication"] = str(long_publish_at or "")
         # chain design: the description carries a watch-next link to the previous
         # episode; comments stitch the chain in both directions after upload
         prev_url = _last_published_url()
@@ -2369,6 +2642,9 @@ def run(publish: bool = False, force_format: str | None = None,
 
         # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
         _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+        if arm and yt_url:
+            pilot.record_member(script, learn.video_id(yt_url) or "", long_publish_at,
+                                (gate or {}).get("duration_s"))
 
         report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
     except Exception as e:
@@ -2379,11 +2655,14 @@ def run(publish: bool = False, force_format: str | None = None,
     # keyword beside `**_s1_ledger` is a TypeError in the double-publish window.
     _s1_ledger = pilot_b.ledger_fields(s1_plan) if status == "PUBLISHED" else {}
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
-               packaging=_pk["fixed"], **_s1_ledger,
+               packaging=_pk["fixed"],
                thumb_text=_ledger_thumb, title_alt=_ledger_title_alt,
                title_terms=_ledger_title_terms,
                evidence_source=_ledger_ev_source, evidence_status=_ledger_ev_status,
                claims_fixed=list(_sb["fixed"]),
+               # Pilot B and Pilot A share experiment/pair_id/arm/slot: ONE splat, and
+               # P.2's keys win on a day both pilots run (they are absent otherwise).
+               **{**_s1_ledger, **_p2_ledger},
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts=short_rows,
                shorts_rendered=len(shorts),
