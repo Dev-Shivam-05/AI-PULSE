@@ -29,6 +29,11 @@ SCOREBOARD_OUT = fv.BASE / "output" / "demo" / "learn" / "scoreboard.txt"
 
 # All locked in the spec — do not change without a spec row.
 DATA_FLOOR = "2026-08-24"   # self-view cutoff: nothing earlier is real traffic
+# v3-M.1 row 18: Studio flagged a long-form view-counting change ending 2026-08-27,
+# so long-form views across 08-24..08-27 are not comparable with later ones. The
+# per-format / per-hook COMPARISON starts the day after; the self-view cutoff above
+# still bounds every query, the Shorts A/B and the ids measured.
+LONGFORM_FLOOR = "2026-08-28"
 MATURE_DAYS = 7             # a video counts once it has had a week
 MIN_VIDEOS = 5              # trusted arm: >= 5 mature videos ...
 MIN_VIEWS = 100             # ... and >= 100 views (no single viewer > 1% of the arm)
@@ -75,9 +80,11 @@ def read_runs(path: Path | None = None) -> list[dict]:
     return rows
 
 
-def ledger_videos(rows: list[dict]) -> list[dict]:
-    """PUBLISHED long-forms since DATA_FLOOR, one entry per video id, oldest first."""
+def ledger_videos(rows: list[dict], published_from: str | None = None) -> list[dict]:
+    """PUBLISHED long-forms since DATA_FLOOR, one entry per video id, oldest first.
+    `published_from` additionally drops videos published (publish_at) before it."""
     floor = _date(DATA_FLOOR)
+    pfloor = _date(published_from) if published_from else None
     out, seen = [], set()
     for r in rows:
         if not isinstance(r, dict) or r.get("status") != "PUBLISHED":
@@ -86,12 +93,15 @@ def ledger_videos(rows: list[dict]) -> list[dict]:
         stamped = _date(r.get("timestamp"))
         if not vid or vid in seen or stamped is None or stamped < floor:
             continue
+        published = _date(r.get("publish_at")) or stamped
+        if pfloor and published < pfloor:
+            continue
         seen.add(vid)
         hook = r.get("hook_pattern")
         out.append({"id": vid,
                     "format": str(r.get("format") or "-"),
                     "hook_pattern": hook if hook in gates.HOOK_PATTERNS else None,
-                    "published": _date(r.get("publish_at")) or stamped})
+                    "published": published})
     return out
 
 
@@ -256,7 +266,7 @@ def score(rows: list[dict], metrics: dict[str, dict],
     """Arms keyed 'format:<f>' and 'hook:<p>' -> _arm stats."""
     today = today or dt.date.today()
     groups: dict[str, list[dict]] = {}
-    for v in ledger_videos(rows):
+    for v in ledger_videos(rows, published_from=LONGFORM_FLOOR):   # v3-M.1 row 18
         m = metrics.get(v["id"], {})
         item = {"mature": (today - v["published"]).days >= MATURE_DAYS,
                 "views": _num(m.get("views")), "avd_s": _num(m.get("avd_s"))}
@@ -309,7 +319,8 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
     stats = score(rows, metrics, today)
     drop = dropped_patterns(stats)
     ab = shorts_ab(rows, metrics, today)
-    lines = [f"v3-D scoreboard - {today.isoformat()}  (data from {DATA_FLOOR}; a video "
+    lines = [f"v3-D scoreboard - {today.isoformat()}  (data from {DATA_FLOOR}, long-form "
+             f"comparison from {LONGFORM_FLOOR}; a video "
              f"matures {MATURE_DAYS} days after publish; trusted = >={MIN_VIDEOS} mature "
              f"and >={MIN_VIEWS} views)",
              f"per-video numbers for {len(metrics)} ledger video(s)",
@@ -342,6 +353,15 @@ def scoreboard(runs_path: Path | None = None, analytics_path: Path | None = None
         lines.append(f"{arm:<22}{s['videos']:>7}{s['mature']:>9}{s['views']:>8}{pct:>9}")
     lines.append(f"A/B pairs: {ab['pairs']} · storyboard wins: {ab['wins']}"
                  + (f"  → {ab['verdict']}" if ab["verdict"] else f"  (verdict at {AB_PAIRS})"))
+    # v3-M.1 rows 9/10/16 + the search-longevity open point. Imported here: both
+    # modules import this one. Each block is its own try, so a bug costs it alone.
+    from factverse import northstar, shadow
+    for name, block in (("north star", lambda: northstar.block(rows, analytics_path, today)),
+                        ("shadow queue", lambda: shadow.block(rows, today=today))):
+        try:
+            lines += ["", block().rstrip("\n")]
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ {name} block skipped: {type(e).__name__}: {e}")
     return "\n".join(lines) + "\n"
 
 
