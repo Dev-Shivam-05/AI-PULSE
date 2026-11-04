@@ -296,13 +296,14 @@ def media_seconds(path: str) -> float:
 class Renderer:
     """One headless Chromium page for the whole session."""
 
-    def __init__(self):
+    def __init__(self, page: Path = PAGE, size: tuple = (W, H)):
+        # v3-T.1 reuses this renderer for its vertical page (trials_live.py)
         from playwright.sync_api import sync_playwright   # heavy, optional: import here
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch()
-        self._page = self._browser.new_page(viewport={"width": W, "height": H},
+        self._page = self._browser.new_page(viewport={"width": size[0], "height": size[1]},
                                             device_scale_factor=1)
-        self._page.goto(PAGE.resolve().as_uri())
+        self._page.goto(Path(page).resolve().as_uri())
         self._page.wait_for_function("window.__ready === true", timeout=15000)
 
     def frames(self, spec: dict, out_dir: Path) -> tuple:
@@ -315,6 +316,9 @@ class Renderer:
         if cta:   # L6 row 8: the line must appear and leave on a frame of its own
             times = sorted(set(times) | {float(cta[0]), float(cta[1])})
             times = [t for t in times if t < spec["length"]]
+        if spec.get("extra_times"):   # v3-T.1: timed state changes get a frame of their own
+            times = sorted(set(times) | {float(x) for x in spec["extra_times"]
+                                         if 0 <= float(x) < spec["length"]})
         for i, t in enumerate(times):
             self._page.evaluate("t => window.__seek(t)", t)
             p = out_dir / f"{i:05d}.png"
