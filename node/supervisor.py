@@ -167,6 +167,7 @@ def parse_job(raw) -> tuple:
         # "back every day" only then, L6 row 9)
         "daily": len(set(days)) == 7,
         "pulse_file": safe_relpath(raw.get("pulse_file", "")),
+        "radar_profile": raw.get("radar_profile") is True,
         "env": {str(k): str(v) for k, v in env.items()},
     }
     return job, ""
@@ -924,6 +925,11 @@ class Supervisor:
         if job:
             if job.get("stream"):
                 penv, _ = profile_env(self.profile(), str(self.c("node_stream_profile")))
+                # RADAR_* only for a row that opts in: v3-T.1 calls rl.segment_args for its
+                # VERTICAL frames, and a RADAR_PROFILE=720p30 there would scale them to
+                # 1280x720. Every stream job gets the generic TOOLDOJO_* pair.
+                if not job.get("radar_profile"):
+                    penv = {k: v for k, v in penv.items() if not k.startswith("RADAR_")}
                 env.update(penv)
             if job.get("daily"):
                 env["TOOLDOJO_NODE_SCHEDULED"] = "1"

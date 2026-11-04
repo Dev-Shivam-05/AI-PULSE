@@ -139,6 +139,7 @@ The L.2 "2.31×" figure came from testsrc2 and was generator-bound on the i9. Do
 | 22 | Forced profile | `node_stream_profile`: `auto`, or `720p30_x264` / `1080p30_qsv` / … | An escape hatch if the measurement is wrong |
 | 23 | Supervisor deps | stdlib only | A broken venv or a bad update cannot take the supervisor (or its alerts) down |
 | 24 | Node venv | `node/requirements-node.txt`: requests, edge-tts ≥ 7.3.1, playwright 1.60.0 | The daily pipeline's heavy deps (Kokoro, whisper, OpenCV, rembg) never run here. Smaller = less load, less to break |
+| 25 | Who gets the profile | Every stream job gets `TOOLDOJO_STREAM_PROFILE` / `TOOLDOJO_ENCODER`. `RADAR_PROFILE` / `RADAR_ENCODER` go only to a row with `"radar_profile": true` (the radar row) | v3-T.1 calls `rl.segment_args` for its 1080×1920 frames. A `RADAR_PROFILE=720p30` there would scale them to 1280×720 |
 
 ## 4. Recovery matrix
 
@@ -224,7 +225,7 @@ wrong. The `tooldojo` account never signs in interactively.
  "days": ["sat"], "start_utc": "18:45", "lead_seconds": 300,
  "slot_minutes": 12, "min_minutes": 12, "max_minutes": 30,
  "hang_seconds": 300, "pulse_file": "logs/trials_live.log",
- "attempts_per_day": 2, "remaining_arg": "", "env": {}}
+ "attempts_per_day": 2, "remaining_arg": "", "radar_profile": false, "env": {}}
 ```
 
 Each field:
@@ -239,6 +240,12 @@ Each field:
   write `pulse_file`.
 - `TOOLDOJO_NODE=1` is always set. `TOOLDOJO_NODE_SCHEDULED=1` is set only for a job that
   runs every day.
+- A stream job always gets `TOOLDOJO_STREAM_PROFILE` (`1080p30` / `720p30`) and
+  `TOOLDOJO_ENCODER` (`libx264` / `h264_qsv`). Only `"radar_profile": true` adds
+  `RADAR_PROFILE` / `RADAR_ENCODER`.
+- **For T.1:** a 1080×1920 x264 encode costs the same as 1080p30. When the node picked
+  `720p30`, read `TOOLDOJO_STREAM_PROFILE` and render or scale to 720×1280. `rl.segment_args`
+  now takes `encoder=` / `profile=`.
 - T.1 adds its imports to `node/requirements-node.txt` and its module to
   `node_import_check`.
 
@@ -269,6 +276,8 @@ checked with `Test-Path` / `Get-ScheduledTask` / `Get-LocalUser`.
 - `stream_a` / `stream_b`: B logged `waiting - stream_a holds the stream (never two at
   once)` and started the second A exited.
 - `stream_a`'s child saw `RADAR_PROFILE=720p30 libx264` and `TOOLDOJO_NODE_SCHEDULED=1`.
+  This run predates row 25: a stream row now needs `radar_profile: true` for `RADAR_*`
+  (unit-tested).
   Its printed `/bot123…:AAqq…/sendMessage` reached the job log as `/bot***/sendMessage`.
 - `too_late`: `skipped … only 1.2 min left of the 16:11Z slot (needs 5)`.
 - `missing_exe`: `could not start: FileNotFoundError`, twice, then the cap. The other five
@@ -334,9 +343,11 @@ captions and storyboard imported.
   the BIOS power-on and Windows Home's handling of `NoAutoRebootWithLoggedOnUsers` are
   documented and coded, but they can only be verified on that PC. The README's
   pull-the-plug test is the acceptance step.
-- "Log on as a batch job" is granted by Task Scheduler when a task is registered with a
-  password. If a Home build does not do this, `status.ps1` shows the task's last result
-  ≠ 0. The fix is a manual `secpol`-free grant, which is not automated here.
+- "Log on as a batch job" is normally granted by Task Scheduler when a task is
+  registered with a password. Windows Home has no `secpol.msc` to check it. If a Home build
+  does not grant it, `status.ps1` shows the task's last result ≠ 0 and no heartbeat. That
+  case is not automated here; the fallback is to set the task's user again in the Task
+  Scheduler UI.
 - The Job Object is assigned right after `Popen`. A grandchild spawned in the first
   milliseconds could escape it, which is negligible for Python start-up. `taskkill /T` is
   the fallback.
@@ -371,6 +382,10 @@ captions and storyboard imported.
 - **The node's measured profile must not live in a tracked file.** Writing it into
   `config.json` would make the tree dirty, and the self-update would then refuse every
   update forever. It lives in `data\node.local.json`.
+- **A node-wide env var reaches every job, including the ones that import yours.**
+  `RADAR_PROFILE` was first given to every stream job, but T.1 imports `radar_live` and
+  calls `rl.segment_args` for vertical frames, so 720p30 would have scaled them to
+  1280×720. Scope an env var to the row that asked for it.
 - **A multiprocessing child's prints never reach the parent's pipe** (spawn, no
   inherited handles). A stdout-silence watchdog therefore kills a healthy radar during
   pre-roll unless the job's log file also counts as a pulse.

@@ -87,6 +87,7 @@ def test_n1_config_job_table_parses_in_both_files():
         # 14:30 UTC = 20:00 IST, the v3l2 row 24 slot; 180 min = the old task's 3 h kill
         assert radar["start_utc"] == "14:30" and radar["max_minutes"] == 180
         assert radar["min_minutes"] == 30 and radar["stream"] and radar["daily"]
+        assert radar["radar_profile"] is True
         trials = next(j for j in jobs if j["name"] == "live_trials")
         assert trials["days"] == ["sat"] and trials["start_utc"] == "18:45"
         assert trials["enabled"] is False          # until v3-T.1 ships scripts/trials_live.py
@@ -428,7 +429,8 @@ def test_n1_watchdog_kills_a_hung_child_and_backs_off(tmp_path, monkeypatch):
 def test_n1_stream_env_and_daily_flag_reach_the_child(tmp_path, monkeypatch):
     monkeypatch.setattr(sv, "Child", _N1FakeChild)
     _N1FakeChild.made, _N1FakeChild.fail_for = [], set()
-    sup = _n1_sup(tmp_path, [_n1_raw("radar", stream=True, env={"X": "1"})])
+    sup = _n1_sup(tmp_path, [_n1_raw("radar", stream=True, radar_profile=True, env={"X": "1"}),
+                             _n1_raw("vertical", stream=True, start_utc="15:30")])
     sup.local_path.parent.mkdir(parents=True, exist_ok=True)
     sup.local_path.write_text(json.dumps({"stream_profile": "1080p30", "encoder": "h264_qsv"}))
     sup.tick()
@@ -436,6 +438,15 @@ def test_n1_stream_env_and_daily_flag_reach_the_child(tmp_path, monkeypatch):
     assert env["RADAR_PROFILE"] == "1080p30" and env["RADAR_ENCODER"] == "h264_qsv"
     assert env["TOOLDOJO_NODE_SCHEDULED"] == "1" and env["X"] == "1"
     assert env["PYTHONIOENCODING"] == "utf-8"
+    # a stream row that does not opt in (v3-T.1's vertical show) gets only the generic
+    # pair: RADAR_PROFILE=720p30 would scale its 1080x1920 frames through rl.segment_args
+    _N1FakeChild.made[0].code = 0                # the radar ends; one stream at a time
+    sup.now = lambda: _n1_at(15, 31)
+    sup.tick()
+    env = _N1FakeChild.made[-1].env
+    assert _N1FakeChild.made[-1].name == "vertical"
+    assert "RADAR_PROFILE" not in env and "RADAR_ENCODER" not in env
+    assert env["TOOLDOJO_STREAM_PROFILE"] == "1080p30" and env["TOOLDOJO_ENCODER"] == "h264_qsv"
 
 
 def test_n1_pause_file_stops_new_starts(tmp_path, monkeypatch):

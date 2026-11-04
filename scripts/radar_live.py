@@ -52,7 +52,8 @@ ENCODER = str(fv.setting("radar_encoder", "libx264") or "libx264")
 if ENCODER not in ENCODERS:
     ENCODER = "libx264"
 PROFILE = lp.PROFILES[PROFILE_NAME]         # spec row 2
-W, H, FPS = PROFILE["w"], PROFILE["h"], PROFILE["fps"]
+# W, H = the RENDER size (the page), whatever the output profile; segment_args scales
+W, H, FPS = PAGE_W, PAGE_H, PROFILE["fps"]
 # Session-0 safe Quick Sync: D3D11, never D3D9 (a scheduled task with nobody signed in
 # has no interactive desktop, and D3D9 device creation fails there - ffmpeg trac #7511).
 QSV_DEVICE = ["-init_hw_device", "qsv=qs:hw_any,child_device_type=d3d11va"]
@@ -334,7 +335,7 @@ class Renderer:
         from playwright.sync_api import sync_playwright   # heavy, optional: import here
         self._pw = sync_playwright().start()
         self._browser = self._pw.chromium.launch()
-        self._page = self._browser.new_page(viewport={"width": PAGE_W, "height": PAGE_H},
+        self._page = self._browser.new_page(viewport={"width": W, "height": H},
                                             device_scale_factor=1)
         self._page.goto(PAGE.resolve().as_uri())
         self._page.wait_for_function("window.__ready === true", timeout=15000)
