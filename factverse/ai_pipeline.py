@@ -1580,6 +1580,27 @@ def _lane_mix_v2(ranked: list[dict], day: _dt.date):
     return "evergreen", None
 
 
+def _trials_skip_short(slot) -> bool:
+    """v3-T.1 row 8 (docs/spec/ai-pulse-v3t1.md): True for the Short slotted at the
+    Live Trials time on a live Saturday, with `trials_live` on. Called in the
+    post-upload zone: imported lazily and never raises."""
+    try:
+        from factverse import trials
+        return trials.skip_short_slot(slot)
+    except Exception:
+        return False
+
+
+def _trials_recap_blocked(item: dict) -> bool:
+    """v3-T.1 row 9: a tool candidate that would recap a Live Trials episode inside
+    its archive's first 72 h. Never raises; no episodes recorded = never blocks."""
+    try:
+        from factverse import trials
+        return trials.recap_blocked(item)
+    except Exception:
+        return False
+
+
 def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
     if fmt == "debate":
         q = debate.pick_question(news_candidates(ranked), fetch_text)
@@ -1632,6 +1653,10 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
             blocked, term = gates.tool_unsuitable(c["title"])
             if blocked:
                 print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            # v3-T.1 row 9: no recap of a Live Trials episode in its archive's first 72 h
+            if _trials_recap_blocked(c):
+                print(f"  ⏭️ Skipping tool candidate (Live Trials archive < 72 h): {c['title'][:60]}")
                 continue
             # spec v3-B.4: filtered HERE, before the [:3] cut, so "3 candidates
             # tried" means 3 that can actually ground a tool video. 6 of the 9
@@ -2320,6 +2345,11 @@ def run(publish: bool = False, force_format: str | None = None,
             if _ps and str(long_publish_at)[:10] == s1_plan["assignment"].get("day"):
                 slots, s1_slots_ok = _ps, True
         for i, sp in enumerate(shorts):
+            # v3-T.1 row 8: on a Live Trials Saturday the live takes the 18:45 slot, so
+            # that Short is not uploaded (3 notifications / 24 h). Never raises.
+            if _trials_skip_short(slots[i] if i < len(slots) else None):
+                print(f"  📺 Short {i + 1} skipped: the Live Trials stream takes its 18:45 UTC slot.")
+                continue
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
             u = eng.yt_upload(sp, mi.get("title", script["title"] + " #Shorts"),

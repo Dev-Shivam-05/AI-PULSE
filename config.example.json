@@ -70,5 +70,9 @@
     "task_hubs_withdrawn": [],
     "task_follow_channel": "",
     "task_alerts": true,
-    "google_site_verification": ""
+    "google_site_verification": "",
+    "trials_live": false,
+    "node_jobs": [
+        {"name":"live_trials","enabled":false,"stream":true,"cmd":["{python}","scripts/trials_live.py"],"days":["sat"],"start_utc":"18:45","lead_seconds":300,"slot_minutes":12,"min_minutes":12,"max_minutes":30,"hang_seconds":300,"pulse_file":"logs/trials_live.log","attempts_per_day":2,"remaining_arg":"","radar_profile":false,"env":{}}
+    ]
 }
