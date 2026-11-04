@@ -485,10 +485,11 @@ def test_t1_voice_mix_places_each_clip():
     assert "adelay=0|0" in fc and "adelay=61500|61500" in fc and a[a.index("-t") + 1] == "90"
 
 
-def test_t1_main_refuses_other_lengths_and_youtube_out(monkeypatch, capsys):
+def test_t1_main_refuses_other_lengths_and_youtube_out(monkeypatch, tmp_path):
     import trials_live as tl
     monkeypatch.setattr(tl.rl, "keep_awake", lambda on: None)
-    monkeypatch.setattr(tl, "SESSIONS", Path(capsys.__class__.__name__ + "_none") / "x")  # unwritable is fine
+    monkeypatch.setattr(tl, "SESSIONS", tmp_path / "s.jsonl")
+    monkeypatch.setattr(tl, "LOG", tmp_path / "l.log")
     assert tl.main(["--minutes", "10"]) == 2
     assert tl.main(["--out", "rtmps://a.rtmp.youtube.com/live2/k"]) == 2
     assert tl.main(["--start-at", "6pm", "--out", "x.flv"]) == 2
