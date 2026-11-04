@@ -1,0 +1,33 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 0,
+    "critical_failures": [],
+    "soft_failures": [],
+    "note": "no grounding available (evergreen) — skipped"
+  },
+  "synthesis": {
+    "present": true,
+    "verified": true,
+    "note": "no source to compare (evergreen)"
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline provides a narrative structure and a specific argument about the implications and challenges of open-source AI, culminating in a synthesis claim that is not present in the provided (empty)"
+  },
+  "confidence": {
+    "score": 0.844,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.6,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

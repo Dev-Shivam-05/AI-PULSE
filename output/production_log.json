@@ -5917,5 +5917,54 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-04T20:14:52.264182",
+    "title": "Open Source AI: The Revolution You're Not Hearing About (Yet)",
+    "description": "Explore open-source AI, the revolution reshaping technology. Discover how freely available AI models and tools are democratizing innovation, accelerating development, and leveling the playing field.  Unlike proprietary systems, open-source AI fosters collaboration, allowing anyone to inspect, modify, and build upon cutting-edge artificial intelligence. This shift is empowering researchers, developers, and businesses worldwide, driving unprecedented advancements.  Learn why this movement is critical for the future of AI and how it impacts everything from scientific discovery to everyday applications. Understand the advantages and implications of this burgeoning, yet often overlooked, technological paradigm shift. \n\n#AI #OpenSourceAI #ArtificialIntelligence #TechRevolution #Innovation #MachineLearning #FutureOfTech\n\nChapters:\n0:00 Open Source Power\n1:16 Lowering Barriers\n2:05 Community Collaboration\n3:10 Ownership Irrelevant\n3:58 Accelerating Science\n\n▶ Watch next: https://youtube.com/watch?v=2dCUL8wREW0",
+    "tags": [
+      "Open Source AI",
+      "AI Revolution",
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Tech Explained",
+      "Innovation",
+      "Democratization of AI",
+      "AI Development",
+      "Future of Technology",
+      "Open Source Technology",
+      "ai",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Open_Source_AI_The_Revolution_Youre_Not_Hearing_Ab_20261104_200012_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_sb_20261104_200512.mp4",
+      "output/shorts/short_2_20261104_200557.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261104_200330.jpg",
+    "youtube_url": "https://youtube.com/watch?v=ejaldREefSA",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=x8jOBQdRjjE",
+      "https://youtube.com/watch?v=81xu622QoRU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Llama 3: Meta's Open Source AI #Shorts",
+        "description": "Meta's Llama 3 models are now open source.  This allows developers to use and build upon them freely, accelerating AI development.",
+        "instagram_caption": "🚀 Meta's Llama 3 is now open source, empowering developers worldwide. This move is a significant step towards a more accessible AI future. Follow @tooldojo! #OpenSourceAI #Llama3 #MetaAI #AIRevolution #TechNews #DeveloperTools #MachineLearning #ArtificialIntelligence #FOSS #Innovation #AICoding #FutureOfTech #TechUpdate #OpenInnovation #AICommunity #DeepLearning #LLM #AIforGood #TechTrends #DigitalTransformation"
+      },
+      {
+        "title": "Open Source AI Models Grow #Shorts",
+        "description": "The number of open source AI models is increasing rapidly.  This trend democratizes AI access and fosters collaborative development.",
+        "instagram_caption": "💡 The landscape of open source AI is expanding with more models becoming available. This democratizes access and fuels collaborative innovation. Follow @tooldojo! #OpenSource #AI #ArtificialIntelligence #MachineLearning #Tech #Innovation #Developer #Coding #LLM #FOSS #AIChatbot #TechTrends #FutureTech #OpenAI #AIModels #TechCommunity #DigitalFuture #AIResearch #SoftwareDevelopment #OpenSourceCommunity"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
