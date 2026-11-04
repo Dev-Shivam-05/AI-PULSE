@@ -594,3 +594,68 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   over shortening agreed wording.
 - `UPDATED` is not built: nothing in the radar's data can verify a change, and the review gives
   no threshold.
+
+## 2026-11-04 — Channel growth review, 4 rounds (owner: `go for all`)
+
+- Review table: `docs/debate/2026-11-04-tooldojo-channel-growth/RESULT.md`. It stays local, like
+  every review folder: it holds Studio analytics and this repo is public.
+  - Claude played the owner inside the rounds. The owner then answered the 18-row table with
+    "go for all … do not stop until everything is done".
+  - Programme spec: `docs/spec/ai-pulse-v3-growth.md`.
+- **Row 1 diagnosis:** ToolDojo wins the click for exact-tool searches: 82% of long-form views in
+  the 28 days to 2026-11-03 came from search. But no tool video ever showed the tool working.
+  - The lane recorded a README page, and the command came last.
+  - Retention on every tool video fell from 95% to 55-60% by 0:07.
+  - gpu-unlock's "Get The Commands" chapter started at 4:42, with 12% of viewers left.
+- **Row 2 bottleneck order:** proof → Shorts opening → memory → lane allocation → no reason to
+  return → originality risk.
+- **Row 18 data corrections:**
+  - Studio's country watch-time rows exceed the channel total (US 155.2M ms + IN 202.5M ms >
+    275.2M ms), so geography watch time is not used.
+  - Long-form views across 2026-08-24/27 are not comparable: Studio flags a counting change
+    ending 08-27. learn's long-form comparison now starts 2026-08-28; the 08-24 self-view
+    cutoff is unchanged.
+  - The storyboard/crop split was observational, not an A/B test.
+- **North star:** on-demand long-form watch time per rolling 28 days, from **12.11 h** (Oct 7 -
+  Nov 3) to 100× = 1,211 h.
+  - Ladder: 2× by day 30, 5× by day 60, 10× by day 90. Day 0 = the first Pilot A publication.
+  - Live and archived-live watch time are counted separately.
+- **Evidence beats coverage.** A tool day with no admissible evidence falls back to another lane.
+  On 2026-11-04 only 3 of 27 trending candidates had admissible evidence, so most tool days will
+  fall back until supply grows. This is the agreed rule, not a defect.
+- **Source (b), running candidate code, is not built.** Its containment gates (a gVisor-class
+  sandbox, zero network, 2 CPU / 2 GiB / 120 s) cannot be met on GitHub runners or on a Windows
+  Home PC. They are written in `ai-pulse-v3p1.md` as a later phase.
+- **X is pay-per-use.** docs.x.com, checked 2026-11-04: $0.015 per post, $0.20 per post with a
+  URL, and no free tier. `twitter` now defaults to false. Paying is the owner's decision.
+- **Delegated values:** every value the rounds did not fix is listed in its phase spec as
+  "delegated - default chosen: X, because Y". Counts: P.1 26, P.2 32, S.1 21, M.1 20. K.1's are
+  the task families, "comparable" = identical fixed input, and 30 days to outdated. Owner
+  confirmation pending.
+- **On a day both pilots run, Pilot A owns the long-form row's `experiment` / `pair_id` / `arm` /
+  `slot`.** Pilot B's slot lives in `state/pilot_b.json` and on each Short row.
+
+## 2026-11-04 — Live-stream concept round (3 rounds, ChatGPT proposed freely)
+
+- Folder: `docs/debate/2026-11-04-tooldojo-live-stream-ideas/RESULT.md` (local only). ChatGPT was
+  told nothing about automation or Radar.
+- Its bet, and Claude's: **ToolDojo Live Trials**.
+  - One named tool, 12 min, fixed inputs, deterministic checks, a count scorecard.
+  - Narration prepared in 4 branches, with the line "Prepared narration • Tool execution and
+    scores live".
+  - Saturday 18:45-18:57 UTC, vertical.
+  - A 14-day test of 2 episodes, measured against an archive AVD of 1:02.
+- **The integrator changed one thing.** The round wanted local CPU execution first. T.1 instead
+  tests the tool's HOSTED demo through the P.1 engine, so no candidate code ever runs on the
+  owner's PC. Running it locally would need the source-(b) containment the growth contract
+  requires. Owner to confirm.
+- **The owner supplied a dedicated PC for live work** (i3 5th gen, 8 GB, ~256 GB). Its
+  requirements:
+  - starts itself after a power cut, with zero manual steps;
+  - nothing blocks;
+  - the lowest possible load;
+  - no AI assistant on the box;
+  - never shows a window while the owner uses it;
+  - setup is a ZIP, a few commands and the credentials once.
+
+  This is phase v3-N.1.

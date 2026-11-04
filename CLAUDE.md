@@ -258,6 +258,36 @@ name that is not written there. If a decision is missing, add a row and get one 
   `setpts=PTS-STARTPTS,…,settb=AVTB` or xfade fails "timebase do not match". Count frames
   with `ffprobe -count_frames`; the audio-trimmed duration hides it.
 
+- **Mixed colour tags inside a scene make the dissolve join drop frames.** v3-P.2's untagged
+  stills next to recording pieces lost 9 s and fell back to hard cuts. Opening clips are tagged
+  `bt470bg`; tag any new generated clip the same way.
+- **Wording fixed by contract is recomputed where it is RENDERED, never carried in a dict.**
+  The evidence `label` / status `wording`, and every catalog href, are rebuilt at render time.
+  A clean merge of P.1 into K.1 silently swapped K.1's recompute for P.1's pass-through, so a
+  planted "Best tool ever" label would have reached the public catalog. A test now pins it.
+- **A hosted demo's frame 0 is not a settled page, and a changed page is not a visible
+  result.** Some Spaces pre-load their first example's output, and Gradio 6 puts no element ids
+  on components. A quota error shows in a toast, not on the red "Error" badge.
+  `evidence.py` checks a visible pixel change in the output region; keep it that way.
+- **Whisper clamps the first word to 0.00 s.** Any "speech starts by N s" gate needs the
+  measured audio onset (`silencedetect`); take the later of the two.
+- **Word budgets are a property of the voice.** edge-tts reads ~3.1 words/s and Kokoro ~2.5,
+  so a 150-210 s band in words is only right for one of them. The opening gate measures the
+  encoded duration; re-tune the budgets from CI's first pilot day.
+- **Experiment fields reach `record_run` as ONE merged dict** (`{**_s1_ledger, **_p2_ledger}`).
+  A second `experiment=` keyword is a TypeError inside the double-publish window. AST-check
+  the PUBLISHED call for duplicate keywords after any merge.
+- **`creatorContentType` is a dimension, never a filter**, in the YouTube Analytics API. Filter
+  the on-demand rows in code.
+- **Shorts "stayed to watch" and feed impressions are in NO public API** (Analytics or
+  Reporting, checked 2026-11-04). Pilot B reads a Studio CSV export instead.
+- **Screen candidates BEFORE cutting to N.** The shadow queue's first live pass spent all 3
+  slots on Product Hunt pages that the free screen rejects anyway, and never reached the
+  eligible repo.
+- **A kill switch that defaults ON reaches every older test that walks that path.**
+  `tests/conftest.py` pins the new growth switches OFF, and each phase's own tests turn them on.
+  A new default-on switch belongs in that fixture too.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.
