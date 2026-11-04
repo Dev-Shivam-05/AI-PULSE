@@ -26,6 +26,7 @@ from pathlib import Path
 
 from factverse import config as fv
 from factverse import deliverable
+from factverse import tasks
 
 CATALOG = fv.BASE / "state" / "tools_index.json"
 DOCS = fv.BASE / "docs"
@@ -102,7 +103,7 @@ def entry_for(script: dict, sheet: dict | None = None, video_url: str = "",
     name = pdf if pdf is not None else script.get("cheat_sheet")
     pdf_file = deliverable.safe_name(name or "")     # never an un-sanitized href
     d = date or _dt.date.today()
-    return {
+    out = {
         "page": (page_name(script.get("cheat_sheet") or "")
                  or f"{d.isoformat()}-{deliverable.slug(script.get('title', ''))}.html"),
         "pdf": pdf_file,
@@ -119,6 +120,12 @@ def entry_for(script: dict, sheet: dict | None = None, video_url: str = "",
         "uses": _as_list(sheet.get("uses"))[:3],
         "skip_if": str(sheet.get("skip_if", "")).strip(),
     }
+    # v3-K.1: the "Before you start" list (the sheet's own setup steps), the
+    # shared-interface evidence WITHOUT its runner-local clip, and the task family.
+    out["steps"] = _as_list(sheet.get("steps"))[:5]
+    out["evidence"] = tasks.clean_evidence(script.get("evidence"))
+    out["task_family"] = tasks.task_family(out)
+    return out
 
 
 def load_catalog(path: Path | None = None) -> list[dict]:
@@ -188,6 +195,25 @@ footer{{margin-top:44px;padding-top:18px;border-top:1px solid {LINE};color:{MUTE
 .row .t{{font-weight:600;font-size:18px;margin:2px 0 4px}}
 .row .w{{color:{MUTED};font-size:14px}}
 .row:last-of-type{{border-bottom:0}}
+.decision{{background:{BOX};border:1px solid {LINE};border-left:4px solid {ACCENT};
+border-radius:8px;padding:16px 18px;margin:20px 0 0}}
+.decision p{{margin:8px 0 0}}
+.badge{{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;
+text-transform:uppercase;border:1px solid {LINE};border-radius:999px;padding:3px 10px;
+color:{FG};background:{BG}}}
+.verdict{{font-weight:600;font-size:17px}}
+.state{{border:1px solid {ACCENT};border-radius:8px;padding:12px 16px;margin:16px 0 0;
+font-size:15px}}
+.state b{{color:{ACCENT}}}
+.res{{border:1px solid {LINE};border-radius:8px;padding:14px 16px;margin:10px 0 0;
+background:{BOX}}}
+.res .n{{font-weight:700;font-size:17px}}
+.res .s{{margin:4px 0 0}}
+.res .l{{color:{MUTED};font-size:14px;margin:6px 0 0;word-break:break-word}}
+.res .l a{{color:{MUTED}}}
+.note{{color:{MUTED};font-size:14px}}
+.follow{{border:1px dashed {LINE};border-radius:8px;padding:14px 16px;margin:12px 0 0}}
+.hist li{{margin:8px 0}}
 @media(max-width:520px){{body{{font-size:15px}}h1{{font-size:25px}}
 .cmd{{flex-direction:column}}.copy{{align-self:flex-start}}}}"""
 
@@ -199,7 +225,14 @@ var g=window.getSelection();g.removeAllRanges();g.addRange(r)}
 try{navigator.clipboard.writeText(s).then(ok,sel)}catch(e){sel()}})})();"""
 
 
-def _head(title: str, desc: str, canonical: str, image: str) -> str:
+def verification_token() -> str:
+    """K.1 row 15: Search Console's HTML-tag method, from config. Google's token is
+    URL-safe base64; anything else is dropped rather than written into our <head>."""
+    tok = str(fv.setting("google_site_verification", "") or "").strip()
+    return tok if re.fullmatch(r"[A-Za-z0-9_-]{10,100}", tok) else ""
+
+
+def _head(title: str, desc: str, canonical: str, image: str, verify: bool = False) -> str:
     """<head> incl. the OG/Twitter card F.2/F.3 will rely on (spec #10)."""
     d = _esc(desc[:160])
     tags = [
@@ -217,6 +250,9 @@ def _head(title: str, desc: str, canonical: str, image: str) -> str:
     ]
     if image:
         tags.append(f'<meta property="og:image" content="{_esc(image)}">')
+    tok = verification_token() if verify else ""
+    if tok:
+        tags.append(f'<meta name="google-site-verification" content="{_esc(tok)}">')
     tags.append(f"<style>{_CSS}</style>")
     return "".join(tags)
 
@@ -246,51 +282,266 @@ def entry_name(entry: dict) -> str:
     return name if name.endswith(".html") else ""
 
 
-def render_page(entry: dict) -> str:
-    """One tool page. Pure: same entry in, same bytes out (spec acceptance #2)."""
+# v3-K.1 row 14: what each evidence source does NOT establish. Review round 3's
+# "What ToolDojo may claim" column, turned into the reader's limitation line.
+NOT_ESTABLISHED = {
+    "hosted": ("A hosted-demo run does not establish that installation works, that it "
+               "works offline, or that it works on your hardware."),
+    "sandbox": ("A fixed test in our environment does not establish that the package is "
+                "safe or that the tool works generally."),
+    "author": ("This is the author's demonstration, not our test. It does not show how "
+               "the tool behaves on your inputs or your hardware."),
+    "none": ("We have not run this tool. Everything on this page comes from its own "
+             "documentation."),
+}
+NO_SPEED_RANKING = ("No speed ranking: hosted demos run on hardware and queues we do not "
+                    "control, so only the result on the fixed input is compared.")
+
+
+def rights_line(rights) -> str:
+    """The attribution line an author demo must carry (review row 4: asset path,
+    commit, licence, copyright notice, NOTICE material, modification)."""
+    if not isinstance(rights, dict):
+        return ""
+    parts = []
+    if rights.get("path"):
+        parts.append(f"Asset: {rights['path']}")
+    if rights.get("commit"):
+        parts.append(f"commit {str(rights['commit'])[:12]}")
+    if rights.get("license"):
+        parts.append(f"Licence: {rights['license']}")
+    if rights.get("copyright"):
+        parts.append(str(rights["copyright"]))
+    if rights.get("notice"):
+        parts.append(f"Notice: {rights['notice']}")
+    if rights.get("modified"):
+        parts.append(f"Modified: {rights['modified']}")
+    return " · ".join(parts)
+
+
+def _ev(entry: dict) -> dict:
+    """The entry's evidence, re-coerced (merged state is data, not trusted output);
+    an entry without any is honestly "Not independently tested"."""
+    ev = tasks.clean_evidence((entry or {}).get("evidence") if isinstance(entry, dict) else None)
+    return ev or tasks.clean_evidence({"source": "none"})
+
+
+def _evidence_block(ev: dict, today: _dt.date, links: list[tuple[str, str]] = ()) -> str:
+    """One evidence card: label, verbatim status wording, then only what is true."""
+    src = ev.get("source", "none")
+    out = [f'<span class="badge">{_esc(ev.get("label") or "Not tested")}</span>',
+           f'<p class="s"><b>{_esc(ev.get("wording"))}</b></p>']
+    if tasks.is_outdated(ev, today):
+        out.append(f'<p class="s"><b>Outdated:</b> tested {_esc(ev["captured_at"])}, more '
+                   f'than {tasks.OUTDATED_DAYS} days ago. It may no longer hold.</p>')
+    if ev.get("input"):
+        out.append(f'<p class="s">Our fixed input: {_esc(ev["input"])}</p>')
+    if ev.get("observed"):
+        lead = "What the author's demo shows" if src == "author" else "What we saw"
+        out.append(f'<p class="s">{lead}: {_esc(ev["observed"])}</p>')
+    claims = ev.get("supported_claims") or []
+    if claims:
+        out.append('<ul class="s">' + "".join(f"<li>{_esc(c)}</li>" for c in claims) + "</ul>")
+    meta = []
+    if ev.get("captured_at"):
+        meta.append(("Captured " if src == "author" else "Tested ") + _esc(ev["captured_at"]))
+    if ev.get("url"):                     # already scheme-checked by clean_evidence
+        meta.append(f'<a href="{_esc(ev["url"])}" rel="noopener nofollow">'
+                    + ("Author's asset" if src == "author" else "The demo") + "</a>")
+    for text, href in links or ():
+        if href:
+            meta.append(f'<a href="{_esc(href)}">{_esc(text)}</a>')
+    if meta:
+        out.append('<p class="l">' + " · ".join(meta) + "</p>")
+    rl = rights_line(ev.get("rights"))
+    if rl:
+        out.append(f'<p class="l">{_esc(rl)}</p>')
+    return "".join(out)
+
+
+def render_page(entry: dict, hub: str = "", today: _dt.date | None = None) -> str:
+    """One tool page. Pure: same entry in, same bytes out (spec acceptance #2).
+
+    v3-K.1 row 14 (useful HTML, not a download wrapper): the video first, then the
+    decision with its evidence label, then evidence, prerequisites and limits."""
     e = entry if isinstance(entry, dict) else {}
+    today = today or _dt.date.today()
     title, what = str(e.get("title", "")), str(e.get("what", ""))
     canonical = public_url(entry_name(e))
     vid = str(e.get("video_id") or video_id(e.get("video_url", "")))
     img = f"https://i.ytimg.com/vi/{vid}/maxresdefault.jpg" if vid else ""
+    ev = _ev(e)
     out = [f"<!doctype html><html lang=\"en\"><head>{_head(title, what, canonical, img)}"
            f"</head><body><div class=\"wrap\">{_brand()}",
            f"<h1>{_esc(title)}</h1>"]
-    meta = " · ".join(x for x in (str(e.get("date", "")), str(e.get("tool", ""))) if x)
+    meta = " · ".join(_esc(x) for x in (str(e.get("date", "")), str(e.get("tool", ""))) if x)
+    hub = deliverable.safe_name(hub or "")
+    if hub.endswith(".html"):
+        fam = tasks.family_of(e)
+        meta += (" · " if meta else "") + (f'<a href="../tasks/{_esc(hub)}">Compare '
+                                           f'{_esc(tasks.label(fam).lower())} tools</a>')
     if meta:
-        out.append(f'<p class="meta">{_esc(meta)}</p>')
+        out.append(f'<p class="meta">{meta}</p>')
+    if vid:
+        out.append('<div class="embed"><iframe loading="lazy" '
+                   f'src="https://www.youtube-nocookie.com/embed/{_esc(vid)}" '
+                   f'title="{_esc(title)}" allowfullscreen '
+                   'allow="accelerometer;clipboard-write;encrypted-media;picture-in-picture">'
+                   "</iframe></div>")
+    out.append(f'<div class="decision"><span class="badge">'
+               f'{_esc(ev.get("label") or "Not tested")}</span>'
+               f'<p class="verdict">{_esc(ev.get("wording"))}</p>'
+               + (f'<p><b>Skip it if:</b> {_esc(e["skip_if"])}</p>' if e.get("skip_if") else "")
+               + "</div>")
     if e.get("command"):
         out.append('<h2>The exact command</h2><div class="cmd">'
                    f'<code id="cmd">{_esc(e["command"])}</code>'
                    '<button class="copy" id="c" type="button">Copy</button></div>')
     if what:
         out.append(f"<h2>What it is</h2><p>{_esc(what)}</p>")
+    steps = [s for s in _steps(e.get("steps")) if s]
+    if steps:
+        out.append("<h2>Before you start</h2><ol>"
+                   + "".join(f"<li>{_esc(s)}</li>" for s in steps) + "</ol>")
     uses = [u for u in (e.get("uses") or []) if str(u).strip()]
     if uses:
         out.append("<h2>What to make with it</h2><ul>"
                    + "".join(f"<li>{_esc(u)}</li>" for u in uses) + "</ul>")
-    if e.get("skip_if"):
-        out.append(f'<h2>Skip it if</h2><p>{_esc(e["skip_if"])}</p>')
-    if vid:
-        out.append('<h2>The video</h2><div class="embed"><iframe loading="lazy" '
-                   f'src="https://www.youtube-nocookie.com/embed/{_esc(vid)}" '
-                   f'title="{_esc(title)}" allowfullscreen '
-                   'allow="accelerometer;clipboard-write;encrypted-media;picture-in-picture">'
-                   "</iframe></div>")
+    out.append(f'<h2>Evidence</h2><div class="res">{_evidence_block(ev, today)}</div>')
+    # the reader's own "skip it if" already sits in the decision box above
+    out.append("<h2>Limitations</h2>"
+               + f'<p>{_esc(NOT_ESTABLISHED.get(ev["source"], ""))}</p>')
     if e.get("pdf"):
         out.append(f'<h2>Take it with you</h2><a class="btn" href="{_esc(e["pdf"])}">'
                    "⬇ Download the 1-page PDF</a>")
-    if e.get("source_url"):
-        out.append(f'<h2>Source</h2><p class="src"><a href="{_esc(e["source_url"])}" '
-                   f'rel="noopener">{_esc(e["source_url"])}</a></p>')
-    handle = str(fv.setting("channel_handle", "aipulse") or "aipulse")
-    out.append(f'<footer>{_esc(fv.CHANNEL_NAME)} · '
-               f'<a href="https://youtube.com/@{_esc(handle)}">youtube.com/@{_esc(handle)}</a>'
-               f"</footer></div><script>{_JS}</script></body></html>")
+    # Guarded AGAIN at render: entry_for checks it on write, but the catalog is
+    # merged state read back off origin/main, and a row written by any other path
+    # (an older version, a hand edit, a bad merge) reached this href unchecked.
+    src = safe_link(e.get("source_url"))
+    if src:
+        out.append(f'<h2>Source</h2><p class="src"><a href="{_esc(src)}" '
+                   f'rel="noopener">{_esc(src)}</a></p>')
+    out.append(_footer() + f"</div><script>{_JS}</script></body></html>")
     return "".join(out)
 
 
-def render_index(entries: list[dict]) -> str:
+def _steps(v) -> list[str]:
+    """`steps` is merged state: a list of strings, or coerced into one."""
+    return _as_list(v)[:5]
+
+
+def _footer() -> str:
+    handle = str(fv.setting("channel_handle", "aipulse") or "aipulse")
+    return (f'<footer>{_esc(fv.CHANNEL_NAME)} · '
+            f'<a href="https://youtube.com/@{_esc(handle)}">youtube.com/@{_esc(handle)}</a>'
+            "</footer>")
+
+
+_STATE_NOTE = {
+    "outdated": ("Outdated", "the newest test here is from {newest}, more than {days} days "
+                 "ago. The answer may no longer hold until we test again."),
+    "inconclusive": ("Inconclusive", "none of the tested options passed this input, so "
+                     "there is no recommendation yet."),
+    "withdrawn": ("Withdrawn", "we no longer stand behind this comparison, so it makes no "
+                  "recommendation. The results are kept below for the record."),
+}
+_KIND_TEXT = {
+    "first_answer": "First comparison published.",
+    "checked_again": "Checked again — recommendation unchanged.",
+    "recommendation_changed": "Recommendation changed.",
+    "now_passes": "Recommendation changed — an input that failed before now passes.",
+}
+
+
+def _names(xs) -> str:
+    xs = [str(x) for x in xs or []]
+    return ", ".join(xs) if xs else "none"
+
+
+def hub_url(name: str) -> str:
+    return site_url(f"tasks/{name}")
+
+
+def render_hub(h: dict, today: _dt.date | None = None) -> str:
+    """One task hub (K.1 rows 4-9). Pure. Every value is escaped for HTML and every
+    href is either ours (relative) or passed the scheme guard."""
+    h = h if isinstance(h, dict) else {}
+    today = today or _dt.date.today()
+    lab, name, state = str(h.get("label", "")), str(h.get("name", "")), str(h.get("state", ""))
+    title = f"{lab}: tested options compared"
+    tested = h.get("tested") or []
+    answer = str(h.get("answer", ""))
+    out = [f"<!doctype html><html lang=\"en\"><head>"
+           f"{_head(title, answer, hub_url(name), '')}</head><body><div class=\"wrap\">"
+           f"{_brand()}<h1>{_esc(title)}</h1>",
+           f'<p class="meta">Last tested {_esc(h.get("newest", ""))} · {len(tested)} options '
+           f'on the same input · {_esc(h.get("hashtag", ""))}</p>']
+    if state in _STATE_NOTE:
+        word, text = _STATE_NOTE[state]
+        out.append(f'<div class="state"><b>{_esc(word)}:</b> '
+                   + _esc(text.format(newest=h.get("newest", ""), days=tasks.OUTDATED_DAYS))
+                   + "</div>")
+    shown = (_STATE_NOTE["withdrawn"][1][0].upper() + _STATE_NOTE["withdrawn"][1][1:]
+             if state == "withdrawn" else answer)
+    out.append('<h2>The current answer</h2><div class="decision">'
+               f'<p class="verdict">{_esc(shown)}</p>'
+               '<p class="note">This answer is conditional: it holds for the fixed input '
+               "below and the test dates listed. It does not say any tool is the best "
+               "in general.</p></div>")
+    if h.get("input"):
+        out.append(f'<h2>Our fixed input</h2><p>{_esc(h["input"])}</p>')
+    out.append("<h2>Tested options</h2>")
+    for r in tested:
+        e, ev = r.get("entry") or {}, r.get("ev") or {}
+        out.append(f'<div class="res"><div class="n">{_esc(r.get("name", ""))}</div>'
+                   + _evidence_block(ev, today, _links(e)) + "</div>")
+    out.append(f'<p class="note">{_esc(NO_SPEED_RANKING)}</p>')
+    cands = h.get("candidates") or []
+    if cands:
+        out.append("<h2>Candidate profiles — not tested by us</h2>"
+                   '<p class="note">An author demo shows what the author recorded. It never '
+                   "earns a tested position on this page.</p>")
+        for r in cands:
+            e, ev = r.get("entry") or {}, r.get("ev") or {}
+            out.append(f'<div class="res"><div class="n">{_esc(r.get("name", ""))}</div>'
+                       + _evidence_block(ev, today, _links(e)) + "</div>")
+    out.append(f"<h2>What these tests do not establish</h2>"
+               f'<p>{_esc(NOT_ESTABLISHED["hosted"])}</p>')
+    hist = list(reversed(h.get("history") or []))
+    if hist:
+        items = []
+        for ev in hist:
+            line = f'<b>{_esc(ev.get("date", ""))}</b> — {_esc(_KIND_TEXT.get(ev.get("kind"), ""))}'
+            if ev.get("kind") in ("recommendation_changed", "now_passes"):
+                line += (f' Passed now: {_esc(_names(ev.get("answer")))}. '
+                         f'Before: {_esc(_names(ev.get("previous")))}.')
+            elif ev.get("kind") == "first_answer":
+                line += f' Passed: {_esc(_names(ev.get("answer")))}.'
+            items.append(f"<li>{line}</li>")
+        out.append('<h2>Change history</h2><ul class="hist">' + "".join(items) + "</ul>")
+    ch = tasks.follow_channel()
+    if ch and state != "withdrawn" and fv.flag("task_alerts", True):
+        out.append("<h2>Follow changes to this task</h2><div class=\"follow\">"
+                   "<p>One message only when this answer materially changes: the "
+                   "recommendation changes, or an input that failed now passes. Never for a "
+                   "new star count or a new repo.</p>"
+                   f'<p><a class="btn" href="https://t.me/{_esc(ch)}" rel="noopener">'
+                   f"Follow on Telegram</a> "
+                   f'<span class="note">posts tagged {_esc(h.get("hashtag", ""))}</span></p></div>')
+    out.append(_footer() + "</div></body></html>")
+    return "".join(out)
+
+
+def _links(e: dict) -> list[tuple[str, str]]:
+    """Tool page, cheat sheet and video for one catalog row, relative to tasks/."""
+    name = entry_name(e)
+    pdf = deliverable.safe_name(str(e.get("pdf") or ""))
+    return [("Tool page", f"../tools/{name}" if name else ""),
+            ("Cheat sheet", f"../tools/{pdf}" if pdf.lower().endswith(".pdf") else ""),
+            ("Video", safe_link(e.get("video_url")))]
+
+
+def render_index(entries: list[dict], hubs: list[dict] | None = None) -> str:
     """Newest-first list of every catalog entry (spec #11). Pure."""
     rows = sorted([e for e in entries if entry_name(e)],
                   key=lambda e: (str(e.get("date", "")), str(e.get("page", ""))), reverse=True)
@@ -298,10 +549,19 @@ def render_index(entries: list[dict]) -> str:
     pitch = "One free AI tool a day, actually run and checked before it ships."
     handle = str(fv.setting("channel_handle", "aipulse") or "aipulse")
     out = [f"<!doctype html><html lang=\"en\"><head>"
-           f"{_head(name, pitch, site_url(), '')}</head><body><div class=\"wrap\">",
+           f"{_head(name, pitch, site_url(), '', verify=True)}</head><body><div class=\"wrap\">",
            f"<h1>{_esc(_wordmark(name)[0])}<span>{_esc(_wordmark(name)[1])}</span></h1>"
            f"<p class=\"meta\">{_esc(pitch)} · "
            f'<a href="https://youtube.com/@{_esc(handle)}">youtube.com/@{_esc(handle)}</a></p>']
+    hub_rows = [h for h in (hubs or []) if isinstance(h, dict) and h.get("name")]
+    if hub_rows:
+        out.append("<h2>Compare by task</h2>")
+        for h in hub_rows:
+            word = _STATE_NOTE.get(h.get("state"), ("Current", ""))[0]
+            out.append(f'<a class="row" href="tasks/{_esc(h["name"])}">'
+                       f'<div class="d">{_esc(word)} · last tested {_esc(h.get("newest", ""))}</div>'
+                       f'<div class="t">{_esc(h.get("label", ""))} →</div>'
+                       f'<div class="w">{_esc(h.get("answer", ""))}</div></a>')
     if rows:
         out.append(f"<h2>{len(rows)} tool{'s' if len(rows) != 1 else ''}</h2>")
         for e in rows:
@@ -318,9 +578,12 @@ def render_index(entries: list[dict]) -> str:
     return "".join(out)
 
 
-def render_sitemap(entries: list[dict]) -> str:
+def render_sitemap(entries: list[dict], hubs: list[dict] | None = None) -> str:
     rows = [e for e in entries if entry_name(e)]
-    urls = [(site_url(), max((str(e.get("date", "")) for e in rows), default=""))]
+    hub_rows = [h for h in (hubs or []) if isinstance(h, dict) and h.get("name")]
+    dates = [str(e.get("date", "")) for e in rows] + [str(h.get("newest", "")) for h in hub_rows]
+    urls = [(site_url(), max(dates, default=""))]
+    urls += [(hub_url(h["name"]), str(h.get("newest", ""))) for h in hub_rows]
     urls += [(public_url(entry_name(e)), str(e.get("date", "")))
              for e in sorted(rows, key=lambda e: str(e.get("date", "")), reverse=True)]
     body = "".join(
@@ -354,22 +617,40 @@ def rebuild(entries: list[dict] | None = None) -> int:
         entries = load_catalog() if entries is None else entries
         recent = sorted(entries, key=lambda e: (str(e.get("date", "")), str(e.get("page", ""))),
                         reverse=True)[:MAX_PAGES]
+        today = _dt.date.today()
+        try:
+            hubs = tasks.hubs(entries, today)  # v3-K.1: [] until the supply exists
+        except Exception as ex:
+            print(f"   ⚠️ task hubs skipped: {type(ex).__name__}: {ex}")
+            hubs = []
+        hub_for = {h["family"]: h["name"] for h in hubs if h.get("state") != "withdrawn"}
         n = 0
         for e in recent:
             name = entry_name(e)               # a catalog row is data, not a path
             if not name:
                 continue
             try:
-                n += int(_write(TOOLS_DIR / name, render_page(e)))
+                n += int(_write(TOOLS_DIR / name,
+                                render_page(e, hub=hub_for.get(tasks.family_of(e), ""))))
             except Exception as ex:
                 # One unreadable page file used to abort the loop, which skipped the
                 # index and sitemap writes BELOW it — the site then froze at its
                 # pre-corruption state on every future run, while publish_page still
                 # returned a URL and the ledger still said tool_page=True.
                 print(f"   ⚠️ page skipped ({name}): {type(ex).__name__}: {ex}")
-        n += int(_write(DOCS / "index.html", render_index(entries)))
-        n += int(_write(DOCS / "sitemap.xml", render_sitemap(entries)))
-        print(f"  🌐 Site: {len(recent)} page(s), {n} file(s) written")
+        written = []
+        for h in hubs:
+            # per-item isolation (the F.1 freeze): one bad hub never costs the index
+            try:
+                name = tasks.hub_name(h.get("family", ""))
+                if name:
+                    n += int(_write(DOCS / "tasks" / name, render_hub(h, today)))
+                    written.append(h)
+            except Exception as ex:
+                print(f"   ⚠️ hub skipped ({h.get('family', '?')}): {type(ex).__name__}: {ex}")
+        n += int(_write(DOCS / "index.html", render_index(entries, written)))
+        n += int(_write(DOCS / "sitemap.xml", render_sitemap(entries, written)))
+        print(f"  🌐 Site: {len(recent)} page(s), {len(written)} hub(s), {n} file(s) written")
         return n
     except Exception as e:                                     # never fatal
         print(f"   ⚠️ site rebuild failed ({type(e).__name__}: {e})")

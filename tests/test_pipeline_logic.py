@@ -3332,6 +3332,10 @@ def test_x_is_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys):
     calls = []
     monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
     _no_x(monkeypatch)
+    # v3-K.1 row 17: X is OFF by default now (pay-per-use, no free tier). This test
+    # is about the seam once the owner switches it on, so it switches it on through
+    # CONFIG, which keeps the env-var override below working.
+    monkeypatch.setattr(notify.fv, "CONFIG", dict(notify.fv.CONFIG, twitter=True))
     notify._post_x()
     assert calls == [] and "X not configured" in capsys.readouterr().out
 

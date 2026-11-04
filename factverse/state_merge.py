@@ -69,6 +69,9 @@ FILES = (
     # would raise on it; pilot_b.merge keeps origin/main's random draw (earlier days
     # were assigned under it) and unions the days, later `recorded_at` winning.
     "state/pilot_b.json",
+    # v3-K.1: task alerts, the fifth surface and its own list (event ids, not video
+    # URLs). Written by notify.yml; stashed by publish.yml too, like its siblings.
+    "state/notified_tasks.json",
 )
 
 
