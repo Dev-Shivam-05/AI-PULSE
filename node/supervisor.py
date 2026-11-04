@@ -901,6 +901,8 @@ class Supervisor:
             ok, tail = self.import_check()
             if not ok:
                 self.alert(f"import check failed; jobs will fail until fixed. {tail[-200:]}")
+            else:
+                self.say("import check ok")
         _, self.version, _ = self.git("rev-parse", "--short", "HEAD", timeout=30)
         if preflight and not self.profile().get("stream_profile"):
             self.run_preflight()
@@ -1057,8 +1059,14 @@ class Supervisor:
                 free = shutil.disk_usage(str(self.app)).free / 1e9
                 if free < float(self.c("node_disk_min_free_gb")) and not self.children:
                     freed = self.cleanup()
-                    self.say(f"disk guard: {free:.1f} GB free < {self.c('node_disk_min_free_gb')} GB;"
-                             f" cleaned {freed / 1e6:.0f} MB of the node's own temp files")
+                    # one line when it freed something, else once a day: a low disk that
+                    # has nothing of ours left to clean must not fill the log every minute
+                    today = now.date().isoformat()
+                    if freed or self.state.get("disk_low_logged") != today:
+                        self.state["disk_low_logged"] = today
+                        self.say(f"disk guard: {free:.1f} GB free < "
+                                 f"{self.c('node_disk_min_free_gb')} GB; cleaned "
+                                 f"{freed / 1e6:.0f} MB of the node's own temp files")
                     free = shutil.disk_usage(str(self.app)).free / 1e9
                 was_ok = self.disk_ok
                 self.disk_ok = free >= float(self.c("node_disk_floor_gb"))
@@ -1112,7 +1120,8 @@ class Supervisor:
             child = self.children.get(job["name"])
             jobs[job["name"]] = {
                 "enabled": job["enabled"], "stream": job["stream"],
-                "window": f"{','.join(job['days'])} {job['start_utc']}Z +{job['slot_minutes']:.0f}m",
+                "window": (f"{'daily' if job['daily'] else ','.join(job['days'])} "
+                           f"{job['start_utc']}Z +{job['slot_minutes']:.0f}m"),
                 "in_window": bool(slot_at(job, now)), "next_window": nxt.isoformat() if nxt else "",
                 "running": bool(child), "pid": child.pid if child else None,
                 "silent_s": round(mono - child.last_output) if child else None,
