@@ -106,7 +106,8 @@ jobs:
         # the forced lane is empty on scheduled runs (the shell drops the empty arg)
         run: python -m factverse.ai_pipeline publish ${{ github.event.inputs.format }}
 
-      # v3-F.4: the day's first Short, re-uploaded as an IG Reel and an FB Reel.
+      # v3-F.4: the day's Short, re-uploaded as an IG Reel and an FB Reel. v3-S.1:
+      # only the NATIVE concept Short (ToolDojo's own visuals); no native, no Reel.
       # It runs HERE, not on notify.yml with Telegram/X, because output/shorts/ is
       # gitignored and dies with this runner — announcing a link can happen
       # anywhere, re-uploading a file can only happen where the file is. The
@@ -146,7 +147,8 @@ jobs:
                      state/failed_topics.json state/runs.jsonl state/analytics.jsonl \
                      state/l2_usage.json state/stock_ledger.json state/tools_index.json \
                      state/notified.json state/notified_x.json \
-                     state/notified_ig.json state/notified_fb.json; do
+                     state/notified_ig.json state/notified_fb.json \
+                     state/pilot_b.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is
