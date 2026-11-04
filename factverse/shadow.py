@@ -107,7 +107,13 @@ def check(ranked: list, primary_url: str, ap, budget_s: float = BUDGET_S,
     """Gate up to `max_candidates` second candidates and stop at the first qualified
     one. Runs in a daemon thread joined with `budget_s`: requests' timeout is a
     per-read gap, not a deadline, so only a wall clock bounds a slow-drip page."""
-    cands = second_candidates(ranked, primary_url)[:max_candidates]
+    # The no-network screens run BEFORE the cut, as build_script's do (spec v3-B.4):
+    # measured live 2026-11-04, three Product Hunt pages ranked ahead of a GitHub
+    # repo that passes, and a cut first spent all 3 slots on them.
+    others = second_candidates(ranked, primary_url)
+    able = [c for c in others if not ap.gates.tool_unsuitable(str(c.get("title") or ""))[0]
+            and ap.tool_source_eligible(str(c.get("url") or ""))]
+    cands = able[:max_candidates]
     done: list[dict] = []
 
     def work():
@@ -127,7 +133,7 @@ def check(ranked: list, primary_url: str, ap, budget_s: float = BUDGET_S,
     checked = list(done)
     best = next((c for c in checked if c.get("qualified") is True), None) \
         or next((c for c in checked if c.get("qualified") == "unknown"), None)
-    return {"candidates": len(cands), "checked": checked,
+    return {"candidates": len(cands), "screened_out": len(others) - len(able), "checked": checked,
             "qualified": best["qualified"] if best else False,
             "second": best, "network_s": round(time.monotonic() - t0, 1),
             "timed_out": th.is_alive()}
@@ -161,7 +167,8 @@ def after_run(ranked: list, ap, publish: bool, forced, run_s: float,
                "timestamp": dt.datetime.utcnow().isoformat(timespec="seconds"),
                "primary_status": prim.get("status"), "primary_format": prim.get("format"),
                "primary_url": prim.get("source_url") or None,
-               "candidates": res["candidates"], "qualified": res["qualified"],
+               "candidates": res["candidates"], "screened_out": res["screened_out"],
+               "qualified": res["qualified"],
                "second": res["second"], "checked": res["checked"],
                "network_s": res["network_s"], "timed_out": res["timed_out"],
                "run_s": round(float(run_s), 1), "job_s": job_s}

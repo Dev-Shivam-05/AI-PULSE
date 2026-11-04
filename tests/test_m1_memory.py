@@ -657,10 +657,13 @@ def test_m1_prewriter_gate_runs_script_tools_checks_in_order(monkeypatch):
 def test_m1_shadow_check_skips_the_primary_and_stops_at_a_qualified_one(monkeypatch):
     monkeypatch.setattr(memory, "evidence_probe", lambda item: ("author", {}))
     fake = _m1_ap({_m1_raw(r): "r" * 1500 for r in ("p/prim", "b/two", "c/three")})
-    ranked = [_m1_cand("p/prim"), {"kind": "story", "title": "news"}, _m1_cand("q/thin"),
+    ph = [{"kind": "tool", "title": f"PH {i}", "url": f"https://www.producthunt.com/products/{i}"}
+          for i in range(3)]
+    ranked = [_m1_cand("p/prim"), {"kind": "story", "title": "news"}, *ph, _m1_cand("q/thin"),
               _m1_cand("b/two"), _m1_cand("c/three"), _m1_cand("d/four")]
     res = shadow.check(ranked, "https://github.com/p/prim/", fake)
-    assert res["candidates"] == 3, "bounded to 3 second candidates"
+    # measured live 2026-11-04: ineligible pages must not spend the 3 slots
+    assert res["candidates"] == 3 and res["screened_out"] == 3, "bounded to 3 second candidates"
     assert [c["title"] for c in res["checked"]] == ["q/thin", "b/two"], "stops at the first qualified"
     assert res["qualified"] is True and res["second"]["title"] == "b/two" and not res["timed_out"]
 

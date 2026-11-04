@@ -484,7 +484,7 @@ def build_record(row: dict, rows: list[dict], snaps: list[dict], script: dict | 
             "published_utc": row.get("publish_at") or row.get("timestamp"),
             "format": "long", "lane": row.get("format"),
             "topic_family": row.get("task_family"),
-            "canonical_tool": str(ix.get("tool") or entity_of(src) or "") or None,
+            "canonical_tool": entity_of(src) or None,
             "source_url": src or None,
             "experiment": row.get("experiment"), "pair_id": row.get("pair_id"),
             "arm": row.get("arm"), "slot": row.get("slot"),
@@ -541,7 +541,9 @@ def _latest_metrics_from(snaps: list[dict]) -> dict:
 
 
 def records(n: int = 3, runs_path: Path | None = None, analytics_path: Path | None = None,
-            today: dt.date | None = None) -> list[dict]:
+            today: dt.date | None = None, ids: list[str] | None = None) -> list[dict]:
+    """The records of the last `n` PUBLISHED long-forms, or of the given video ids.
+    Display only: a probe is never called here (evidence shows as "unknown")."""
     today = today or dt.date.today()
     rows = learn.read_runs(runs_path)
     snaps = snapshots(analytics_path)
@@ -550,14 +552,22 @@ def records(n: int = 3, runs_path: Path | None = None, analytics_path: Path | No
                              probe=lambda item: ("unknown", None), index=index)
     pub = [r for r in rows if isinstance(r, dict) and r.get("status") == "PUBLISHED"
            and learn.video_id(r.get("youtube_url"))]
+    if ids:
+        pub = [r for r in pub if learn.video_id(r.get("youtube_url")) in set(ids)]
+    else:
+        pub = pub[-n:]
     return [build_record(r, rows, snaps, index=index, today=today, evaluations=evs)
-            for r in pub[-n:]]
+            for r in pub]
 
 
 def main(argv: list[str]) -> int:
+    """`python -m factverse.memory [n | id id ...]`"""
     try:
-        n = int(argv[0]) if argv else 3
-        print(json.dumps(records(n), indent=2, ensure_ascii=False, default=str))
+        if argv and not argv[0].isdigit():
+            out = records(ids=argv)
+        else:
+            out = records(int(argv[0]) if argv else 3)
+        print(json.dumps(out, indent=2, ensure_ascii=False, default=str))
     except Exception as e:  # noqa: BLE001
         print(f"  ⚠️ memory records skipped: {e}")
     return 0
