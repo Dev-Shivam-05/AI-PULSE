@@ -292,8 +292,18 @@ def test_p2_timeline_context_puts_the_result_in_its_window(d0, result_at, s0, s1
     assert op.CONTEXT_RESULT_FROM <= tl["result_at"] <= op.CONTEXT_RESULT_TO
 
 
+def test_p2_timeline_context_keeps_the_result_up_when_scenes_end_early():
+    # measured on the repaired context render: scenes 1+2 ended before 0:15, and the
+    # first timeline refused the opening outright ("placement")
+    tl = op.timeline("context", [10.0, 3.0, 6.0, 20.0, 30.0])
+    assert tl["result_at"] == 15.0 and tl["step_at"] == 18.0
+    assert tl["scenes"][1] == [("context", 3.0)]
+    assert tl["scenes"][2] == [("context", 2.0), ("result", 3.0), ("step", 1.0)]
+    assert tl["step_seconds"] >= op.STEP_MIN_SECONDS and tl["sequence_at"] == 23.5
+
+
 def test_p2_timeline_refuses_what_cannot_carry_it():
-    assert op.timeline("context", [10.0, 3.0, 6.0, 20.0, 30.0]) is None
+    assert op.timeline("context", [10.0, 1.0, 1.0, 2.0, 30.0]) is None
     assert op.timeline("proof", [6.0, 8.0]) is None and op.timeline("x", [1] * 6) is None
 
 

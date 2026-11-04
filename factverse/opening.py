@@ -57,6 +57,7 @@ CONTEXT_S1_WORDS = (28, 42)     # context scene 1 fills ~11-17 s of task context
 CONTEXT_OPEN_WORDS = 56         # context scenes 1+2: the step scene starts by ~22 s
 STEP_HOLD = 5.5                 # step card on screen; +0.5 covers the incoming dissolve
 CONTEXT_RESULT_AT = 15.0        # where the renderer puts the result if scene 1 misses the window
+RESULT_MIN_SHOW = 3.0           # context arm: the result stays up at least this long
 SCALE_MAX = 4.0                 # most the result region is enlarged
 AR_MIN, AR_MAX = 0.75, 4.0      # region aspect clamp: guarantees >= 40% coverage when it fits
 DIFF_T = 24                     # per-pixel change (0-255) that marks the result region
@@ -523,34 +524,45 @@ def timeline(arm: str, durs: list) -> dict | None:
     b = [0.0]
     for x in d:
         b.append(b[-1] + x)
-    scenes: dict[int, list] = {}
+    b4 = b[SEQ_SCENE + 1]
+    # Absolute visual events first, then cut at the scene boundaries: the opening's
+    # times (result at 0:15, step by 0:25) are the contract, scene ends are not.
     if arm == "proof":
-        scenes[0] = [("result", d[0])]
-        result_at = 0.0
+        R, owned = 0.0, (0, STEP_SCENE, SEQ_SCENE)    # scene 2 keeps its own visuals
+        events = [("result", 0.0, b[1])]
+        step_at = b[STEP_SCENE]
     else:
         b1 = b[1]
         R = b1 if CONTEXT_RESULT_FROM <= b1 < CONTEXT_RESULT_TO else CONTEXT_RESULT_AT
-        if R >= b[2] - 1.0:
-            return None                            # scene 2 too short to show the result
-        if R < b1:
-            scenes[0] = [("context", R), ("result", b1 - R)]
-            scenes[1] = [("result", d[1])]
-        else:
-            scenes[0] = [("context", d[0])]
-            scenes[1] = ([("context", R - b1)] if R > b1 else []) + [("result", d[1] - (R - b1))]
-        result_at = R
-    step_at = b[STEP_SCENE]
-    spill = max(0.0, STEP_HOLD - d[STEP_SCENE])
-    scenes[STEP_SCENE] = [("step", d[STEP_SCENE])]
-    if spill and d[SEQ_SCENE] - spill >= 1.0:
-        scenes[SEQ_SCENE] = [("step", spill), ("sequence", d[SEQ_SCENE] - spill)]
-    elif spill:
-        scenes[SEQ_SCENE] = [("step", d[SEQ_SCENE])]
-    else:
-        scenes[SEQ_SCENE] = [("sequence", d[SEQ_SCENE])]
-    step_len = d[STEP_SCENE] + min(spill, d[SEQ_SCENE]) if spill else d[STEP_SCENE]
-    return {"arm": arm, "scenes": scenes, "bounds": b, "result_at": round(result_at, 3),
-            "step_at": round(step_at, 3), "step_seconds": round(step_len, 3)}
+        # the result stays up >= RESULT_MIN_SHOW even when scenes 1+2 end early; the
+        # step card then appears that much after its narration starts
+        step_at = max(b[STEP_SCENE], R + RESULT_MIN_SHOW)
+        owned = (0, 1, STEP_SCENE, SEQ_SCENE)
+        events = [("context", 0.0, R), ("result", R, step_at)]
+    step_end = max(b[SEQ_SCENE], step_at + STEP_HOLD)
+    if step_end > b4 - 1.0:                    # the sequence would get under a second
+        step_end = b4
+    if step_at >= b4 - STEP_MIN_SECONDS:
+        return None
+    events += [("step", step_at, step_end)]
+    if step_end < b4:
+        events += [("sequence", step_end, b4)]
+    scenes: dict[int, list] = {}
+    for i in owned:
+        lo, hi, pieces = b[i], b[i + 1], []
+        for kind, s, e in events:
+            secs = min(e, hi) - max(s, lo)
+            if secs >= 1.0 / FPS:
+                if pieces and pieces[-1][0] == kind:
+                    pieces[-1] = (kind, pieces[-1][1] + secs)
+                else:
+                    pieces.append((kind, round(secs, 3)))
+        if not pieces:
+            return None
+        scenes[i] = [(k, round(s, 3)) for k, s in pieces]
+    return {"arm": arm, "scenes": scenes, "bounds": b, "result_at": round(R, 3),
+            "step_at": round(step_at, 3), "step_seconds": round(step_end - step_at, 3),
+            "sequence_at": round(step_end, 3) if step_end < b4 else None}
 
 
 # Every opening clip is TAGGED as what swscale actually produced from RGB (BT.601 =
@@ -927,10 +939,8 @@ def chapter_candidates(script: dict, starts: list, meta: dict) -> list[tuple[flo
         if limitation(script, "proof") and limitation(script, "proof")[0] == 1:
             c.append((float(starts[1]), "Requirements"))
     c.append((float(tl.get("step_at") or starts[STEP_SCENE]), "Starting step"))
-    seq = (tl.get("scenes") or {}).get(SEQ_SCENE) or []
-    if any(k == "sequence" for k, _s in seq):          # the sequence really is on screen
-        spill = sum(s for k, s in seq if k == "step")
-        c.append((float(starts[SEQ_SCENE]) + spill,
+    if tl.get("sequence_at") is not None:              # the sequence really is on screen
+        c.append((float(tl["sequence_at"]),
                   "Input to output" if hosted else "The author's demo, step by step"))
     for i in range(SEQ_SCENE + 1, len(sc) - 1):
         if LIMIT_RX.search(_NOT_TESTED.sub("", sc[i].get("narration", ""))):
