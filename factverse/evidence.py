@@ -316,14 +316,40 @@ def copyright_line(text: str) -> str:
 
 
 # ============================================================ network seams
+TEXT_FETCH_SECONDS = 30.0          # wall clock for one README / JSON / /config fetch
+TEXT_MAX_BYTES = 5 * 1024 * 1024   # and its byte cap
+
+
+class _Fetched:
+    """The slice of a requests.Response the readers use, built from a bounded read."""
+
+    def __init__(self, status_code: int, body: bytes, encoding: str | None):
+        self.status_code = status_code
+        self._body = body
+        self.text = body.decode(encoding or "utf-8", errors="replace")
+
+    def json(self):
+        return json.loads(self.text)
+
+
 def _http_get(url: str, **kw):
-    """requests.get or None. Imported here: the seam tests stub as `ev._http_get`."""
+    """A bounded GET, or None. requests' `timeout` is a per-read gap, never a
+    deadline (CLAUDE.md): a Space's own server answers /config, and a slow drip
+    would hold the unattended run. So the body is streamed under a wall clock and
+    a byte cap. The seam tests stub as `ev._http_get`."""
     try:
         import requests
-        kw.setdefault("timeout", HTTP_TIMEOUT)
         h = dict(kw.pop("headers", None) or {})
         h.setdefault("User-Agent", "Mozilla/5.0 ToolDojo-evidence")
-        return requests.get(url, headers=h, **kw)
+        deadline = time.monotonic() + TEXT_FETCH_SECONDS
+        with requests.get(url, headers=h, params=kw.get("params"), stream=True,
+                          timeout=kw.get("timeout", HTTP_TIMEOUT)) as r:
+            buf = bytearray()
+            for chunk in r.iter_content(1 << 16):
+                buf += chunk
+                if len(buf) > TEXT_MAX_BYTES or time.monotonic() > deadline:
+                    return None
+            return _Fetched(r.status_code, bytes(buf), r.encoding)
     except Exception:
         return None
 

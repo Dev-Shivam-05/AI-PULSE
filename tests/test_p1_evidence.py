@@ -835,3 +835,23 @@ def test_p1_site_catalog_entry_carries_the_evidence_without_its_clip(monkeypatch
     assert site.publish_page(s, {}, "")
     e = saved[0][0]["evidence"]
     assert e["source"] == "author" and "clip" not in e
+
+
+def test_p1_text_fetches_are_bounded_too(monkeypatch):
+    """A Space's own server answers /config: a slow drip or a huge body must cost
+    the fetch, never hold the run (requests' timeout is not a deadline)."""
+    import requests
+
+    class _S(_P1Stream):
+        encoding = "utf-8"
+    monkeypatch.setattr(requests, "get", lambda *a, **k: _S([b'{"a": 1}']))
+    r = ev._http_get("https://x.hf.space/config")
+    assert r.status_code == 200 and r.json() == {"a": 1}
+    monkeypatch.setattr(ev, "TEXT_MAX_BYTES", 10)
+    monkeypatch.setattr(requests, "get", lambda *a, **k: _S([b"x" * 8] * 3))
+    assert ev._http_get("u") is None
+    monkeypatch.setattr(ev, "TEXT_MAX_BYTES", 10 ** 6)
+    ticks = iter([0.0, 10.0, 31.0, 40.0])
+    monkeypatch.setattr(ev.time, "monotonic", lambda: next(ticks))
+    monkeypatch.setattr(requests, "get", lambda *a, **k: _S([b"x"] * 3))
+    assert ev._http_get("u") is None
