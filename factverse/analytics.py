@@ -52,6 +52,152 @@ def ledger_query_args(ids: list[str], today: dt.date) -> dict | None:
                 sort="-views", maxResults=len(ids))
 
 
+# ------------------------------------------------------------------ v3-M.1
+# Query shapes verified 2026-11-04 against the official reference:
+#   https://developers.google.com/youtube/analytics/dimensions
+#     creatorContentType values: LIVE_STREAM, SHORTS, STORY, VIDEO_ON_DEMAND, UNSPECIFIED
+#   https://developers.google.com/youtube/analytics/channel_reports
+#     "Traffic source detail": dimension insightTrafficSourceDetail, filter
+#     insightTrafficSourceType required, 0 or 1 video filter, sort -views or
+#     -estimatedMinutesWatched, maxResults <= 25 REQUIRED.
+#     "Traffic source": dimension insightTrafficSourceType (+ day); a video filter
+#     with several ids may also be added as a dimension; videos x days <= 50,000.
+#     "Top videos": video (+ creatorContentType), sort + maxResults <= 200 required.
+#   creatorContentType is a DIMENSION in every report, never a filter.
+WINDOW_DAYS = 28            # the north star and the follow-up rule: rolling 28 days
+TERMS_MAX_RESULTS = 25      # the report's own maximum
+TOP_MAX_RESULTS = 200       # the top-videos report's own maximum
+VIDEOS_X_DAYS_MAX = 50000   # the traffic-source report's own limit
+
+
+def window_28(today: dt.date) -> tuple[str, str]:
+    """The 28 days ending YESTERDAY, inclusive — how the 12.11 h baseline was read
+    (Oct 7 - Nov 3, read on Nov 4)."""
+    end = today - dt.timedelta(days=1)
+    return (end - dt.timedelta(days=WINDOW_DAYS - 1)).isoformat(), end.isoformat()
+
+
+def content_type_args(start: str, end: str) -> dict:
+    return dict(ids="channel==MINE", startDate=start, endDate=end,
+                dimensions="creatorContentType", metrics="estimatedMinutesWatched,views")
+
+
+def vod_top_args(start: str, end: str) -> dict:
+    """Per-video 28-day watch time, for the largest-video share. Content type is a
+    dimension here (it is not a filter anywhere), so VIDEO_ON_DEMAND is kept
+    client-side."""
+    return dict(ids="channel==MINE", startDate=start, endDate=end,
+                dimensions="video,creatorContentType", metrics="estimatedMinutesWatched",
+                sort="-estimatedMinutesWatched", maxResults=TOP_MAX_RESULTS)
+
+
+def search_by_video_args(ids: list[str], start: str, end: str) -> dict | None:
+    """28-day views per (video, traffic source) for the ledger's long-forms: ONE
+    query that says which videos are worth a search-terms query."""
+    ids = [i for i in ids if i][-learn.LEDGER_CAP:]
+    if not ids:
+        return None
+    return dict(ids="channel==MINE", startDate=start, endDate=end,
+                dimensions="video,insightTrafficSourceType",
+                filters="video==" + ",".join(ids), metrics="views")
+
+
+def search_terms_args(video: str, start: str, end: str) -> dict:
+    """The raw YouTube-search terms of ONE video over the 28-day window."""
+    return dict(ids="channel==MINE", startDate=start, endDate=end,
+                dimensions="insightTrafficSourceDetail",
+                filters=f"video=={video};insightTrafficSourceType==YT_SEARCH",
+                metrics="views", sort="-views", maxResults=TERMS_MAX_RESULTS)
+
+
+def age_args(videos: list[dict], today: dt.date,
+             window_days: int | None = None) -> tuple[dict | None, dict]:
+    """(args, {video: publish date}) for the per-day report behind the 72h/7d/28d
+    snapshots and the search-longevity bands: long-forms published in the last
+    `window_days`, from the oldest one's publish day to today."""
+    from factverse import memory
+    window_days = window_days or memory.AGE_WINDOW_DAYS
+    floor = today - dt.timedelta(days=window_days)
+    pub = {v["id"]: v["published"] for v in videos
+           if isinstance(v.get("published"), dt.date) and floor <= v["published"] <= today}
+    if not pub:
+        return None, {}
+    start = min(pub.values())
+    if len(pub) * ((today - start).days + 1) > VIDEOS_X_DAYS_MAX:
+        return None, {}
+    return dict(ids="channel==MINE", startDate=start.isoformat(), endDate=today.isoformat(),
+                dimensions="video,day,insightTrafficSourceType",
+                filters="video==" + ",".join(pub), metrics="views,estimatedMinutesWatched"), pub
+
+
+def _types(resp) -> dict:
+    """{creatorContentType: {"minutes", "views"}} from the content-type report."""
+    from factverse import memory
+    heads, rows = memory._cols(resp)
+    try:
+        it, imin, iviews = (heads.index("creatorContentType"),
+                            heads.index("estimatedMinutesWatched"), heads.index("views"))
+    except ValueError:
+        return {}
+    return {str(r[it]): {"minutes": int(learn._num(r[imin])), "views": int(learn._num(r[iviews]))}
+            for r in rows if len(r) > max(it, imin, iviews)}
+
+
+def _vod_top(resp) -> list[list]:
+    from factverse import memory
+    heads, rows = memory._cols(resp)
+    try:
+        iv, it, imin = (heads.index("video"), heads.index("creatorContentType"),
+                        heads.index("estimatedMinutesWatched"))
+    except ValueError:
+        return []
+    return [[str(r[iv]), int(learn._num(r[imin]))] for r in rows
+            if len(r) > max(iv, it, imin) and str(r[it]) == "VIDEO_ON_DEMAND"]
+
+
+def collect_m1(yta, today: dt.date, rows: list[dict]) -> dict:
+    """The v3-M.1 additions to a snapshot. Every query has its own try: a bad one
+    costs only its own key, never the reports beside it."""
+    from factverse import memory
+    out: dict = {}
+    start, end = window_28(today)
+    if fv.flag("north_star", False):
+        try:
+            types = _types(yta.reports().query(**content_type_args(start, end)).execute())
+            out["north_star"] = {"start": start, "end": end, "by_type": types}
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ north-star query skipped: {e}")
+        try:
+            out["vod_top"] = {"start": start, "end": end, "videos": _vod_top(
+                yta.reports().query(**vod_top_args(start, end)).execute())}
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ largest-video query skipped: {e}")
+    if fv.flag("memory_analytics", False):
+        videos = learn.ledger_videos(rows)
+        try:
+            args = search_by_video_args([v["id"] for v in videos], start, end)
+            if args:
+                s28 = memory.search28_by_video(yta.reports().query(**args).execute())
+                out["search28"] = {"start": start, "end": end, "videos": s28}
+                terms = {}
+                for vid in memory.pick_term_videos(s28):
+                    try:
+                        terms[vid] = memory.parse_terms(
+                            yta.reports().query(**search_terms_args(vid, start, end)).execute())
+                    except Exception as e:  # noqa: BLE001 — one video costs only itself
+                        print(f"  ⚠️ search terms for {vid} skipped: {e}")
+                out["search_terms"] = {"start": start, "end": end, "videos": terms}
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ search-by-video query skipped: {e}")
+        try:
+            args, pub = age_args(videos, today)
+            if args:
+                out["age_bands"] = memory.aggregate_age(yta.reports().query(**args).execute(), pub)
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ age-band query skipped: {e}")
+    return out
+
+
 # v3-G.3 #10-11: impressions and thumbnail CTR exist ONLY in the YouTube Reporting
 # API (bulk CSV reports), never in the Analytics API queries above.
 REACH_TYPE = "channel_reach_basic_a1"
@@ -188,6 +334,12 @@ def collect(yta=None, ytr=None) -> dict:
         "top_videos_7d": videos.get("rows", []),
         "video_headers": [h["name"] for h in videos.get("columnHeaders", [])],
     }
+    # v3-M.1: north star, search terms, age bands. Each query has its own try
+    # inside; the outer one guards the ledger read. Runs BEFORE the ledger query.
+    try:
+        snap.update(collect_m1(yta, today, learn.read_runs()))
+    except Exception as e:  # noqa: BLE001
+        print(f"  ⚠️ v3-M.1 queries skipped: {e}")
     # v3-D #2: its own try — a bad filter must not cost the two reports above
     try:
         args = ledger_query_args(learn.ledger_ids(learn.read_runs()), today)
