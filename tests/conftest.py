@@ -15,3 +15,15 @@ import pytest
 def _p1_evidence_switches_off(monkeypatch):
     for name in ("EVIDENCE_ENGINE", "EVIDENCE_REQUIRED", "CLAIM_SUBSTANTIATION"):
         monkeypatch.setenv(name, "0")
+
+
+@pytest.fixture(autouse=True)
+def _m1_network_switches_off(monkeypatch):
+    """Integration (v3-M.1 + v3-P.1): `followup_candidates` and `shadow_queue` read
+    the REAL state files and, now that evidence.py exists, call `evidence.probe`
+    — GitHub/HF over the network — for any family with enough search views. Every
+    older build_script("tool") test reaches memory.followup_items, so once main's
+    analytics carry `search_terms` they would go to the network. Off by default;
+    tests/test_m1_memory.py turns them on with `_m1_flag`, which overrides this."""
+    for name in ("FOLLOWUP_CANDIDATES", "SHADOW_QUEUE"):
+        monkeypatch.setenv(name, "0")
