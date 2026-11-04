@@ -315,8 +315,9 @@ checked with `Test-Path` / `Get-ScheduledTask` / `Get-LocalUser`.
 - `uninstall.ps1 -DryRun`: 2 actions, nothing changed.
 
 **Bundle**:
-- `ToolDojoNode-db451a9100.zip`: 38.9 MB, 157 files (factverse 38, scripts 10, node 6,
-  docs 66, assets 23 including 5 radar music tracks, configs, BUNDLE.json).
+- `ToolDojoNode-e9f53758c4.zip` (rebuilt at the last code commit): 38.9 MB, 159 files
+  (factverse 38, scripts 10, node 7, docs 67, assets 23 including 5 radar music tracks,
+  configs, BUNDLE.json).
 - No `.env` (only the placeholder `.env.example`), no `output/ state/ temp/ logs/ tests/`,
   no token/pickle/client_secret files.
 - The credential-shape scan of every committed file found nothing.
