@@ -439,7 +439,7 @@ def test_t1_segment_args_overlay_keeps_the_radar_encoder():
     a = tl.segment_args("l.txt", "v.mp3", 30, "o.ts", "m.ffconcat", 0.0, 1.0, cap)
     fc = a[a.index("-filter_complex") + 1]
     assert f"overlay=x={tl.CAP_X}:y={tl.CAP_Y}" in fc and "between(t,3.000,12.000)" in fc
-    assert "[3:a]volume=1.0" in fc and "scale=720" not in fc
+    assert "[3:a]volume=1.0" in fc and "scale=720:1280" not in fc
     assert a[a.index("-frames:v") + 1] == str(30 * rl.FPS) and a[a.index("-bf") + 1] == "0"
     assert a[a.index("-g") + 1] == str(rl.FPS * rl.lp.KEYFRAME_S)
     assert a[a.index("-maxrate") + 1] == f"{rl.PROFILE['kbps']}k"

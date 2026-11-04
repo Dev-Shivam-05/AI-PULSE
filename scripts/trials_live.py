@@ -48,12 +48,19 @@ GRID = (("open", 30), ("rules", 30), ("result1", 30),
         ("verdict", 60), ("files", 60), ("limits", 60))
 QUEUE_DEPTH = 2         # producer lead, in segments
 PREROLL = 2             # "open" + "rules" are ready before the connection opens
-HOLD_SECONDS = 2        # a late window is covered by this silent hold, never a gap
+# A late window is covered by a silent hold, never a gap. 10 s like radar's standby:
+# a 2 s hold cost ~3.5 s to remux and send, so the first local session sank behind
+# real time while it repeated them.
+HOLD_SECONDS = 10
+MAX_HOLD_SECONDS = 120  # more hold than this and the show ends (the producer stalled)
 HOLD_MARGIN = 4.0       # seconds of stream left in the pipe before a hold is sent
 PREP_TIMEOUT = 25 * 60  # planning + preflight + every voice + the first renders
 OVERRUN = 300           # wall-clock backstop after the grid
 PHRASE_WORDS = 5        # captions at 64 px hold 2 lines
-CAP_W, CAP_H, CAP_X, CAP_Y = 790, 444, 145, 512     # #vbox inside #ev (trials.html)
+# #vbox inside #ev (trials.html); even sides for yuv420p. Recordings are always
+# REC_W x REC_H (1280x720), so the scale is exact: no pad (a 405-high pad failed
+# on rounding and cost the first local session every capture window).
+CAP_W, CAP_H, CAP_X, CAP_Y = 720, 404, 180, 512
 RESULT_REPLAY_MAX = 12.0  # a result window replays at most this much of the run
 STREAM_ENV = ("YT_TRIALS_STREAM_URL", "YT_TRIALS_STREAM_KEY")
 VOICE_WORKERS = 4
@@ -401,8 +408,7 @@ def segment_args(concat_path: str, audio: str | None, length: int, out_ts: str,
         at, shown = float(capture["at"]), float(capture["shown"])
         vf = (f"[0:v]fps={FPS},format=yuv420p[b];"
               f"[2:v]setpts=(PTS-STARTPTS)/{float(c['speed']):.4f}+{at:.3f}/TB,fps={FPS},"
-              f"scale={CAP_W}:{CAP_H}:force_original_aspect_ratio=decrease:flags=lanczos,"
-              f"pad={CAP_W}:{CAP_H}:(ow-iw)/2:(oh-ih)/2:color=black,format=yuv420p[c];"
+              f"scale={CAP_W}:{CAP_H}:flags=lanczos,setsar=1,format=yuv420p[c];"
               f"[b][c]overlay=x={CAP_X}:y={CAP_Y}:eof_action=pass:"
               f"enable='between(t,{at:.3f},{at + shown:.3f})'{scale},format=yuv420p[v]")
         n = 3
@@ -472,12 +478,17 @@ class Producer:
         tracks = rl.playlist_order(rl.MUSIC_DIR.glob("*.mp3"), datetime.now(timezone.utc).date())
         if not tracks:
             return
+        # normalised once per track and kept: re-normalising 5 tracks cost 72 s of the
+        # node's 300 s lead in the first local session
         mdir = WORK / "music"
-        shutil.rmtree(mdir, ignore_errors=True)
         mdir.mkdir(parents=True, exist_ok=True)
         done = []
-        for i, src in enumerate(tracks):
-            dst = mdir / f"{i:02d}.wav"
+        for src in tracks:
+            st = Path(src).stat()
+            dst = mdir / f"{tr.slug(Path(src).stem, 30)}-{st.st_size}.wav"
+            if dst.exists() and rl.media_seconds(str(dst)) > 1:
+                done.append(str(dst))
+                continue
             try:
                 r = subprocess.run(rl.normalize_args(src, str(dst), fv.FFMPEG or "ffmpeg"),
                                    capture_output=True, timeout=300, creationflags=NO_WINDOW)
@@ -585,12 +596,20 @@ class Producer:
                 audio = None
         at = self.music_clock % self.music_len if self.music else 0.0
         ts = d / "segment.ts"
-        r = subprocess.run(segment_args(str(lst), audio, spec["length"], str(ts), self.music, at,
-                                        self.music_gain, spec.get("capture"), fv.FFMPEG or "ffmpeg",
-                                        self.profile),
-                           capture_output=True, text=True, timeout=900, creationflags=NO_WINDOW)
-        if r.returncode != 0 or not ts.exists() or ts.stat().st_size < 10000:
-            log(f"  {name}: segment encode failed: {(r.stderr or '')[-300:]}")
+        ok = False
+        # a capture that cannot be composited costs the replay, never the window: the
+        # second attempt encodes the same frames, voice and bed without it
+        for capture in ([spec["capture"], None] if spec.get("capture") else [None]):
+            r = subprocess.run(segment_args(str(lst), audio, spec["length"], str(ts), self.music, at,
+                                            self.music_gain, capture, fv.FFMPEG or "ffmpeg",
+                                            self.profile),
+                               capture_output=True, text=True, timeout=900, creationflags=NO_WINDOW)
+            ok = r.returncode == 0 and ts.exists() and ts.stat().st_size >= 10000
+            if ok:
+                break
+            log(f"  {name}: segment encode failed{' with the replay' if capture else ''}: "
+                f"{(r.stderr or '')[-300:]}")
+        if not ok:
             return None
         if advance_music:
             self.music_clock += spec["length"]
@@ -929,6 +948,11 @@ def run_show(dest: str, opts: dict) -> dict:
             summary["seconds"] += seg["length"]
             if seg["kind"] == "standby":
                 summary["holds"] += 1
+                if summary["holds"] * HOLD_SECONDS > MAX_HOLD_SECONDS:
+                    # the producer has stalled: end the show rather than air a hold card
+                    summary["status"] = f"ended: producer stalled ({summary['holds']} holds)"
+                    log("  " + summary["status"])
+                    break
             else:
                 summary["segments"].append(seg.get("wid"))
             log(f"  queued {seg.get('wid')} ({seg['length']}s) - timeline {offset:.0f}s")
