@@ -57,6 +57,7 @@ from factverse import debate
 from factverse import site
 from factverse import scheduling
 from factverse import gates
+from factverse import evidence
 from factverse import learn
 from factverse import l2
 from factverse import shorts as shorts_mod
@@ -335,7 +336,11 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # would put words in a model's mouth that the quote gate then trusts.
     # v3-B.2: "verified_facts" is support for fact_check and packaging_payoff — a
     # planted one would license the model's own invented numbers past both.
-    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts"):
+    # v3-P.1: "evidence" is what the channel may SHOW and CLAIM — a planted one
+    # would put "Passed this specific test." on an untested tool, license any
+    # outcome claim past the substantiation gate, and burn a source label on
+    # footage nobody vetted. script_tool sets the real one; _carry_over returns it.
+    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts", "evidence"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -678,6 +683,23 @@ def script_tool(item: dict) -> dict | None:
     if unsuitable:
         print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
         return None
+    # spec v3-P.1: functional evidence — hosted demo first, then the author's demo —
+    # gathered AFTER the screen (never record what we would refuse) and BEFORE the
+    # writer, which is told what the evidence lets it claim and what it does not.
+    ev, ev_brief = None, ""
+    if fv.flag("evidence_engine", False):
+        ev = evidence.gather(item, probe_result=item.get("_evidence_probe"))
+        if evidence.admissible(ev):
+            ev_brief = evidence.writer_brief(ev)
+            print(f"     🎞️ Evidence: {ev['label']} — {ev['wording']}")
+        elif fv.flag("evidence_required", True):
+            # review row 17: no admissible evidence = skip by default. The "before you
+            # install" verdict is the only allowed exception and is NOT built (spec).
+            why = "could not look" if ev is None else (ev.get("note") or "none found")
+            print(f"     ↻ no admissible evidence ({why[:120]}) — skipped (row 17).")
+            return None
+        else:
+            ev = ev if isinstance(ev, dict) else evidence.empty("gather failed")
     # spec v3-E #1/#4: hand the writer REAL numbers and REAL complaints. Both are
     # fail-soft — an API miss costs the block, never the video.
     facts = _verified_facts(url)
@@ -702,7 +724,7 @@ DO something concrete in the next ten minutes — that is the entire point of th
 TOOL: {title}
 SOURCE: {source}  ({url})
 
-{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
+{ev_brief}{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
 {grounding}
 
 STRUCTURE (a transaction, not a broadcast):
@@ -751,6 +773,8 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
         s["format"] = "tool"
         if facts:
             s["verified_facts"] = facts
+        if ev is not None:
+            s["evidence"] = ev
     return s
 
 
@@ -1050,6 +1074,7 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
           "receipts",        # v3-E.2 #6: the measured check must survive them too
           "debate",          # v3-H #13: the transcript the quotes and cards are checked against
+          "evidence",        # v3-P.1: the clip, status and rights record (popped by _validate_script)
           "titles")          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
 
 
@@ -1150,6 +1175,20 @@ def place_description_blocks(script: dict) -> None:
             desc = desc[:end] + "\n\n" + promo + desc[end:]
         else:                                       # other formats: after the hook paragraph
             desc = _insert_after_hook(desc, promo)
+    # spec v3-P.1: author footage carries its licence material in ONE line, right
+    # under the deliverable block (else under the hook). Idempotent; a rewrite that
+    # mangled the line has every stale copy cut before the true one goes back in.
+    ev_line = evidence.attribution_line(script.get("evidence"))
+    if ev_line and ev_line not in desc:
+        desc = "\n".join(l for l in desc.split("\n")
+                         if not l.startswith(evidence.AUTHOR_MARK)).strip()
+        i = desc.find(_DL_MARK)
+        end = desc.find("\n\n", i) if i >= 0 else -1
+        if i >= 0:
+            end = len(desc) if end < 0 else end
+            desc = desc[:end] + "\n\n" + ev_line + desc[end:]
+        else:
+            desc = _insert_after_hook(desc, ev_line)
     # v3-H #12: who debated, and how — under the hook, once
     if (script.get("format") == "debate" and isinstance(script.get("debate"), dict)
             and debate.PANEL_MARK not in desc):
@@ -1579,7 +1618,23 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
                       f"{c['title'][:60]}")
                 continue
             tools.append(c)
-        for cand in tools[:3]:
+        # spec v3-P.1: with evidence required, a candidate whose cheap probe finds no
+        # possible evidence source is skipped HERE, before it takes one of the three
+        # slots — the probe is seconds, a gather + writer call is minutes. A probe that
+        # could not look (None) keeps the candidate: gather decides.
+        probe_gate = fv.flag("evidence_engine", False) and fv.flag("evidence_required", True)
+        picked = []
+        for c in tools:
+            if len(picked) >= 3:
+                break
+            if probe_gate:
+                pr = evidence.probe(c)
+                if pr is not None and pr.get("source") == "none":
+                    print(f"  ⏭️ Skipping tool candidate (no evidence source): {c['title'][:60]}")
+                    continue
+                c = dict(c, _evidence_probe=pr)
+            picked.append(c)
+        for cand in picked:
             print(f"  🧰 Trying tool: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
             s = script_tool(cand)
             if s:
@@ -1889,6 +1944,17 @@ def run(publish: bool = False, force_format: str | None = None,
             mark_failed(script.get("signal_title", script["title"]))
             return _fall_back(publish, fmt, force_format, fallback, attempt)
 
+    # spec v3-P.1: after every rewrite pass, the narration may claim only what the
+    # evidence allows — never "we tested" over an author demo, never "works offline"
+    # or "on your hardware" over a hosted test. A day lost beats a false claim.
+    if fv.flag("evidence_engine", False):
+        _oc = evidence.overclaims(script)
+        if _oc:
+            print(f"  🛑 EVIDENCE GATE: narration claims more than the evidence shows: {_oc[:3]}")
+            record_run(status="OVERCLAIM_BLOCKED", format=fmt, title=script["title"])
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+
     # Accuracy gate: claim-level fact check against the bound sources. A hook/
     # thumbnail claim that cannot be traced to a source is a hard fail.
     fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
@@ -1945,11 +2011,18 @@ def run(publish: bool = False, force_format: str | None = None,
               f"{script['title']!r}")
     elif _hs["terms"]:
         print(f"  ✂️ Long-form title had hype ({', '.join(_hs['terms'])}) — kept: no clean alternate")
+    # spec v3-P.1 row 3: an outcome claim on the packaging that the channel did not
+    # observe is attributed ("Claimed 2× …") or dropped. LAST of the title passes —
+    # an alternate promoted above could carry a claim — and before the ledger fields.
+    _sb = gates.substantiate_claims(script)
+    if _sb["fixed"]:
+        print(f"  ✂️ Unobserved outcome claim(s) {_sb['claims']} — {'; '.join(_sb['evidence'])}")
     # spec v3-G.3 #9: the ledger's packaging fields, computed and coerced HERE — the
     # title is final from this line on, and nothing new may raise past the upload.
     _ledger_thumb = str(script.get("thumb_text") or "")
     _ledger_title_alt = bool(_pk.get("title_alt") or _hs["alt"])
     _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
+    _ledger_ev_source, _ledger_ev_status = evidence.ledger_fields(script)
     # v3-B: a tool video is illustrated by the tool itself — a screen recording
     # of its real page — never stock. capture() fails soft; stock is the fallback.
     scene_clips, tool_shot, cap = None, "", None
@@ -2011,6 +2084,15 @@ def run(publish: bool = False, force_format: str | None = None,
         # Animated, so it must render to its exact slot share — the C.3 law.
         receipts.inject_receipt_clip(script, scene_clips,
                                      durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
+    if script.get("format") == "tool" and fv.flag("evidence_engine", False):
+        # spec v3-P.1: the evidence clip LEADS scene 1, replacing its recording/stock
+        # clip (never stacking), rendered to its exact slot share now that the timings
+        # exist (the C.3 law). After every inject_*, BEFORE recut: recut then skips the
+        # replaced slot. v3-P.2 builds its opening contract on this same call.
+        if evidence.admissible(script.get("evidence")) and evidence.place_clip(
+                script, scene_clips,
+                durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)) is None:
+            print("  ⚠️ evidence clip could not be placed — scene 1 keeps its recording.")
     if cap:
         # spec v3-B.5: the recording was chunked before the narration existed, so
         # step5_build looped every chunk shorter than its slot. Recut it now, to the
@@ -2213,6 +2295,8 @@ def run(publish: bool = False, force_format: str | None = None,
                packaging=_pk["fixed"],
                thumb_text=_ledger_thumb, title_alt=_ledger_title_alt,
                title_terms=_ledger_title_terms,
+               evidence_source=_ledger_ev_source, evidence_status=_ledger_ev_status,
+               claims_fixed=list(_sb["fixed"]),
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts=short_rows,
                shorts_rendered=len(shorts),
