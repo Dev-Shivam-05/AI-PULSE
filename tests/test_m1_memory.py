@@ -394,11 +394,17 @@ def test_m1_followup_never_uses_lifetime_or_stale_windows():
 
 
 def test_m1_missing_evidence_module_is_unknown(monkeypatch):
+    # Integration: once v3-P.1's evidence.py is imported, `from factverse import
+    # evidence` reads the PACKAGE ATTRIBUTE first, so sys.modules alone no longer
+    # stands in for the module. Patch both, as the import machinery sees them.
+    import factverse as _m1_pkg
     monkeypatch.setitem(sys.modules, "factverse.evidence", None)   # import -> ImportError
+    monkeypatch.delattr(_m1_pkg, "evidence", raising=False)
     assert memory.evidence_probe({"url": "x"}) == ("unknown", None)
     fake = types.ModuleType("factverse.evidence")
     fake.probe = lambda item: None                                  # fail-soft None
     monkeypatch.setitem(sys.modules, "factverse.evidence", fake)
+    monkeypatch.setattr(_m1_pkg, "evidence", fake, raising=False)
     assert memory.evidence_probe({})[0] == "unknown"
     fake.probe = lambda item: {"source": "author"}
     assert memory.evidence_probe({})[0] == "author"
