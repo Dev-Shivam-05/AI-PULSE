@@ -31,8 +31,27 @@ footer{margin-top:44px;padding-top:18px;border-top:1px solid #30363D;color:#8B94
 .row .t{font-weight:600;font-size:18px;margin:2px 0 4px}
 .row .w{color:#8B949E;font-size:14px}
 .row:last-of-type{border-bottom:0}
+.decision{background:#161B22;border:1px solid #30363D;border-left:4px solid #DC2626;
+border-radius:8px;padding:16px 18px;margin:20px 0 0}
+.decision p{margin:8px 0 0}
+.badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;
+text-transform:uppercase;border:1px solid #30363D;border-radius:999px;padding:3px 10px;
+color:#E6EDF3;background:#0D1117}
+.verdict{font-weight:600;font-size:17px}
+.state{border:1px solid #DC2626;border-radius:8px;padding:12px 16px;margin:16px 0 0;
+font-size:15px}
+.state b{color:#DC2626}
+.res{border:1px solid #30363D;border-radius:8px;padding:14px 16px;margin:10px 0 0;
+background:#161B22}
+.res .n{font-weight:700;font-size:17px}
+.res .s{margin:4px 0 0}
+.res .l{color:#8B949E;font-size:14px;margin:6px 0 0;word-break:break-word}
+.res .l a{color:#8B949E}
+.note{color:#8B949E;font-size:14px}
+.follow{border:1px dashed #30363D;border-radius:8px;padding:14px 16px;margin:12px 0 0}
+.hist li{margin:8px 0}
 @media(max-width:520px){body{font-size:15px}h1{font-size:25px}
-.cmd{flex-direction:column}.copy{align-self:flex-start}}</style></head><body><div class="wrap"><a class="brand" href="../index.html">Tool<span>Dojo</span></a><h1>Double Your AI Speed: gpu-unlock for GeForce RTX</h1><p class="meta">2026-10-29 · Zagitta/gpu-unlock: Your GeForce runs AI at half speed. This fixes it for 20/30/40 series cards. Up to 2× FP16</p><h2>The exact command</h2><div class="cmd"><code id="cmd">git clone https://github.com/Zagitta/gpu-unlock • cd gpu-unlock • make install</code><button class="copy" id="c" type="button">Copy</button></div><h2>What it is</h2><p>gpu-unlock is a free, community-driven Linux tool that removes NVIDIA&#x27;s artificial cap on tensor core performance for GeForce RTX GPUs, doubling AI speed.</p><h2>What to make with it</h2><ul><li>Accelerate LLM prefill/prompt processing by 25-55%</li><li>Speed up image generation (ComfyUI, SDXL) by 30-55%</li><li>Boost fine-tuning models (LoRA, BF16 training) by 25-50%</li></ul><h2>Skip it if</h2><p>Does not affect gaming, FP32 CUDA, INT8/INT4 GGUFs, or memory-bound LLM token generation. No change if your primary use is not tensor core AI math.</p><h2>The video</h2><div class="embed"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/4MTEDi4MdnQ" title="Double Your AI Speed: gpu-unlock for GeForce RTX" allowfullscreen allow="accelerometer;clipboard-write;encrypted-media;picture-in-picture"></iframe></div><h2>Take it with you</h2><a class="btn" href="2026-10-29-double-your-ai-speed-gpu-unlock-for-gefo.pdf">⬇ Download the 1-page PDF</a><h2>Source</h2><p class="src"><a href="https://github.com/Zagitta/gpu-unlock" rel="noopener">https://github.com/Zagitta/gpu-unlock</a></p><footer>ToolDojo · <a href="https://youtube.com/@tooldojo">youtube.com/@tooldojo</a></footer></div><script>(function(){var b=document.getElementById('c'),t=document.getElementById('cmd');
+.cmd{flex-direction:column}.copy{align-self:flex-start}}</style></head><body><div class="wrap"><a class="brand" href="../index.html">Tool<span>Dojo</span></a><h1>Double Your AI Speed: gpu-unlock for GeForce RTX</h1><p class="meta">2026-10-29 · Zagitta/gpu-unlock: Your GeForce runs AI at half speed. This fixes it for 20/30/40 series cards. Up to 2× FP16</p><div class="embed"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/4MTEDi4MdnQ" title="Double Your AI Speed: gpu-unlock for GeForce RTX" allowfullscreen allow="accelerometer;clipboard-write;encrypted-media;picture-in-picture"></iframe></div><div class="decision"><span class="badge">Not tested</span><p class="verdict">Not independently tested.</p><p><b>Skip it if:</b> Does not affect gaming, FP32 CUDA, INT8/INT4 GGUFs, or memory-bound LLM token generation. No change if your primary use is not tensor core AI math.</p></div><h2>The exact command</h2><div class="cmd"><code id="cmd">git clone https://github.com/Zagitta/gpu-unlock • cd gpu-unlock • make install</code><button class="copy" id="c" type="button">Copy</button></div><h2>What it is</h2><p>gpu-unlock is a free, community-driven Linux tool that removes NVIDIA&#x27;s artificial cap on tensor core performance for GeForce RTX GPUs, doubling AI speed.</p><h2>What to make with it</h2><ul><li>Accelerate LLM prefill/prompt processing by 25-55%</li><li>Speed up image generation (ComfyUI, SDXL) by 30-55%</li><li>Boost fine-tuning models (LoRA, BF16 training) by 25-50%</li></ul><h2>Evidence</h2><div class="res"><span class="badge">Not tested</span><p class="s"><b>Not independently tested.</b></p></div><h2>Limitations</h2><p>We have not run this tool. Everything on this page comes from its own documentation.</p><h2>Take it with you</h2><a class="btn" href="2026-10-29-double-your-ai-speed-gpu-unlock-for-gefo.pdf">⬇ Download the 1-page PDF</a><h2>Source</h2><p class="src"><a href="https://github.com/Zagitta/gpu-unlock" rel="noopener">https://github.com/Zagitta/gpu-unlock</a></p><footer>ToolDojo · <a href="https://youtube.com/@tooldojo">youtube.com/@tooldojo</a></footer></div><script>(function(){var b=document.getElementById('c'),t=document.getElementById('cmd');
 if(!b||!t)return;b.addEventListener('click',function(){var s=t.textContent;
 function ok(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)}
 function sel(){var r=document.createRange();r.selectNodeContents(t);

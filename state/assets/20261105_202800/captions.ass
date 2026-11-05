@@ -1,0 +1,190 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.06,Live,,0,0,0,{\k12}Can {\k8}a {\k28}machine {\k58}truly
+Dialogue: 0,0:00:01.06,0:00:02.40,Live,,0,0,0,{\k38}create {\k30}art {\k20}with {\k36}soul
+Dialogue: 0,0:00:02.92,0:00:04.40,Live,,0,0,0,{\k24}AI {\k40}image {\k58}generators {\k26}can
+Dialogue: 0,0:00:04.40,0:00:05.80,Live,,0,0,0,{\k26}now {\k30}produce {\k38}stunning {\k46}visuals
+Dialogue: 0,0:00:05.80,0:00:07.20,Live,,0,0,0,{\k24}in {\k48}seconds {\k32}{\k22}but {\k14}they
+Dialogue: 0,0:00:07.20,0:00:09.08,Live,,0,0,0,{\k28}lack {\k38}one {\k54}fundamental {\k58}element
+Dialogue: 0,0:00:09.74,0:00:11.54,Live,,0,0,0,{\k18}lived {\k64}experience {\k64}{\k22}By {\k12}the
+Dialogue: 0,0:00:11.54,0:00:12.40,Live,,0,0,0,{\k20}end {\k10}of {\k16}this {\k30}video
+Dialogue: 0,0:00:12.74,0:00:14.30,Live,,0,0,0,{\k12}you'll {\k42}understand {\k66}precisely {\k36}where
+Dialogue: 0,0:00:14.30,0:00:16.06,Live,,0,0,0,{\k34}AI {\k76}excels {\k54}and {\k12}where
+Dialogue: 0,0:00:16.06,0:00:17.28,Live,,0,0,0,{\k10}the {\k28}human {\k42}artist {\k42}remains
+Dialogue: 0,0:00:17.28,0:00:19.32,Live,,0,0,0,{\k92}irreplaceable {\k46}{\k32}enabling {\k22}you {\k12}to
+Dialogue: 0,0:00:19.32,0:00:21.08,Live,,0,0,0,{\k40}navigate {\k36}this {\k50}evolving {\k50}creative
+Dialogue: 0,0:00:21.08,0:00:23.04,Live,,0,0,0,{\k60}landscape {\k46}{\k38}Imagine {\k22}a {\k30}vast
+Dialogue: 0,0:00:23.04,0:00:25.10,Live,,0,0,0,{\k48}digital {\k60}library {\k48}{\k24}millions {\k26}of
+Dialogue: 0,0:00:25.10,0:00:28.04,Live,,0,0,0,{\k32}images {\k100}meticulously {\k86}cataloged {\k76}AI
+Dialogue: 0,0:00:28.04,0:00:29.82,Live,,0,0,0,{\k48}image {\k58}generators {\k40}don't {\k32}think
+Dialogue: 0,0:00:29.82,0:00:31.42,Live,,0,0,0,{\k36}or {\k36}feel {\k62}they {\k26}learn
+Dialogue: 0,0:00:31.42,0:00:33.08,Live,,0,0,0,{\k42}patterns {\k34}and {\k46}relationships {\k44}from
+Dialogue: 0,0:00:33.08,0:00:34.62,Live,,0,0,0,{\k20}this {\k30}data {\k48}{\k40}They {\k16}are
+Dialogue: 0,0:00:34.62,0:00:37.20,Live,,0,0,0,{\k62}sophisticated {\k58}prediction {\k54}machines {\k44}{\k40}assembling
+Dialogue: 0,0:00:37.20,0:00:38.46,Live,,0,0,0,{\k44}pixels {\k44}based {\k28}on {\k10}the
+Dialogue: 0,0:00:38.46,0:00:39.90,Live,,0,0,0,{\k26}prompts {\k20}you {\k50}provide {\k28}{\k20}Think
+Dialogue: 0,0:00:39.90,0:00:40.42,Live,,0,0,0,{\k12}of {\k8}it {\k16}like {\k16}a
+Dialogue: 0,0:00:40.42,0:00:42.16,Live,,0,0,0,{\k26}chef {\k62}following {\k28}an {\k58}incredibly
+Dialogue: 0,0:00:42.16,0:00:44.22,Live,,0,0,0,{\k64}detailed {\k58}recipe {\k50}{\k12}but {\k22}without
+Dialogue: 0,0:00:44.22,0:00:45.90,Live,,0,0,0,{\k32}ever {\k44}tasting {\k24}the {\k58}ingredients
+Dialogue: 0,0:00:46.38,0:00:47.96,Live,,0,0,0,{\k36}Their {\k48}strength {\k44}lies {\k30}in
+Dialogue: 0,0:00:47.96,0:00:49.72,Live,,0,0,0,{\k32}speed {\k38}and {\k42}scale {\k36}{\k28}Need
+Dialogue: 0,0:00:49.72,0:00:51.08,Live,,0,0,0,{\k12}a {\k40}thousand {\k44}variations {\k40}of
+Dialogue: 0,0:00:51.08,0:00:52.68,Live,,0,0,0,{\k8}a {\k48}concept {\k54}{\k20}An {\k30}AI
+Dialogue: 0,0:00:52.68,0:00:53.84,Live,,0,0,0,{\k46}can {\k32}deliver {\k24}them {\k14}in
+Dialogue: 0,0:00:53.84,0:00:55.44,Live,,0,0,0,{\k26}minutes {\k82}They {\k14}can {\k38}explore
+Dialogue: 0,0:00:55.44,0:00:57.64,Live,,0,0,0,{\k66}stylistic {\k44}fusions {\k74}impossible {\k36}for
+Dialogue: 0,0:00:57.64,0:00:58.72,Live,,0,0,0,{\k12}a {\k30}single {\k44}human {\k22}to
+Dialogue: 0,0:00:58.72,0:01:00.04,Live,,0,0,0,{\k38}master {\k32}in {\k8}a {\k44}lifetime
+Dialogue: 0,0:01:00.24,0:01:01.98,Live,,0,0,0,{\k26}This {\k18}is {\k92}democratizing {\k38}visual
+Dialogue: 0,0:01:01.98,0:01:03.84,Live,,0,0,0,{\k56}creation {\k26}for {\k28}many {\k44}{\k32}offering
+Dialogue: 0,0:01:03.84,0:01:05.90,Live,,0,0,0,{\k60}powerful {\k44}tools {\k30}for {\k72}ideation
+Dialogue: 0,0:01:05.90,0:01:08.10,Live,,0,0,0,{\k26}and {\k32}rapid {\k90}prototyping {\k20}{\k52}But
+Dialogue: 0,0:01:08.10,0:01:09.76,Live,,0,0,0,{\k36}here's {\k8}the {\k42}problem {\k54}{\k26}AI
+Dialogue: 0,0:01:09.76,0:01:12.18,Live,,0,0,0,{\k52}doesn't {\k44}understand {\k56}context {\k58}{\k22}nuance
+Dialogue: 0,0:01:12.44,0:01:13.68,Live,,0,0,0,{\k32}or {\k16}the {\k48}emotional {\k28}weight
+Dialogue: 0,0:01:13.68,0:01:15.14,Live,,0,0,0,{\k22}of {\k14}an {\k36}image {\k54}{\k20}It
+Dialogue: 0,0:01:15.14,0:01:16.14,Live,,0,0,0,{\k14}can {\k28}render {\k20}a {\k38}crying
+Dialogue: 0,0:01:16.14,0:01:17.78,Live,,0,0,0,{\k42}child {\k52}beautifully {\k48}{\k14}but {\k8}it
+Dialogue: 0,0:01:17.78,0:01:19.06,Live,,0,0,0,{\k32}doesn't {\k26}grasp {\k30}the {\k40}heartbreak
+Dialogue: 0,0:01:19.06,0:01:20.62,Live,,0,0,0,{\k36}behind {\k28}those {\k28}tears {\k64}Its
+Dialogue: 0,0:01:20.62,0:01:21.76,Live,,0,0,0,{\k34}output {\k30}is {\k8}a {\k42}reflection
+Dialogue: 0,0:01:21.76,0:01:22.86,Live,,0,0,0,{\k20}of {\k12}its {\k30}training {\k38}data
+Dialogue: 0,0:01:23.10,0:01:24.44,Live,,0,0,0,{\k16}not {\k12}a {\k46}personal {\k50}narrative
+Dialogue: 0,0:01:25.00,0:01:26.20,Live,,0,0,0,{\k32}Human {\k40}artists {\k28}{\k8}on {\k12}the
+Dialogue: 0,0:01:26.20,0:01:27.68,Live,,0,0,0,{\k14}other {\k38}hand {\k32}{\k12}bring {\k42}intent
+Dialogue: 0,0:01:28.02,0:01:29.26,Live,,0,0,0,{\k44}emotion {\k18}{\k18}and {\k10}a {\k34}lifetime
+Dialogue: 0,0:01:29.26,0:01:30.76,Live,,0,0,0,{\k38}of {\k56}experiences {\k42}to {\k14}their
+Dialogue: 0,0:01:30.76,0:01:33.14,Live,,0,0,0,{\k40}work {\k62}{\k22}Each {\k58}brushstroke {\k32}{\k24}each
+Dialogue: 0,0:01:33.14,0:01:34.62,Live,,0,0,0,{\k26}color {\k40}choice {\k28}{\k14}is {\k40}infused
+Dialogue: 0,0:01:34.62,0:01:36.54,Live,,0,0,0,{\k36}with {\k40}personal {\k36}meaning {\k54}{\k26}cultural
+Dialogue: 0,0:01:36.54,0:01:38.72,Live,,0,0,0,{\k64}understanding {\k32}{\k22}and {\k28}unique {\k62}perspective
+Dialogue: 0,0:01:39.14,0:01:39.80,Live,,0,0,0,{\k10}Their {\k26}art {\k22}is {\k8}a
+Dialogue: 0,0:01:39.80,0:01:41.76,Live,,0,0,0,{\k62}conversation {\k44}{\k10}a {\k42}story {\k30}{\k8}a
+Dialogue: 0,0:01:41.76,0:01:42.46,Live,,0,0,0,{\k24}piece {\k12}of {\k12}their {\k22}own
+Dialogue: 0,0:01:42.46,0:01:44.42,Live,,0,0,0,{\k44}soul {\k56}{\k48}Consider {\k20}the {\k28}difference
+Dialogue: 0,0:01:44.42,0:01:45.76,Live,,0,0,0,{\k34}between {\k14}a {\k40}perfectly {\k46}rendered
+Dialogue: 0,0:01:45.76,0:01:46.92,Live,,0,0,0,{\k46}photograph {\k26}of {\k10}a {\k34}sunset
+Dialogue: 0,0:01:46.92,0:01:48.24,Live,,0,0,0,{\k58}and {\k10}a {\k34}painting {\k30}that
+Dialogue: 0,0:01:48.24,0:01:49.76,Live,,0,0,0,{\k42}captures {\k28}the {\k52}asterisk {\k30}feeling
+Dialogue: 0,0:01:49.76,0:01:51.24,Live,,0,0,0,{\k68}asterisk {\k12}of {\k16}that {\k42}sunset
+Dialogue: 0,0:01:51.38,0:01:52.84,Live,,0,0,0,{\k1}the {\k38}warmth {\k46}{\k10}the {\k42}nostalgia
+Dialogue: 0,0:01:53.30,0:01:54.54,Live,,0,0,0,{\k6}the {\k36}specific {\k44}memory {\k38}it
+Dialogue: 0,0:01:54.54,0:01:56.50,Live,,0,0,0,{\k48}evokes {\k64}{\k36}AI {\k32}can {\k16}give
+Dialogue: 0,0:01:56.50,0:01:57.76,Live,,0,0,0,{\k12}you {\k14}the {\k26}former {\k46}{\k28}only
+Dialogue: 0,0:01:57.76,0:01:58.70,Live,,0,0,0,{\k14}a {\k32}human {\k26}can {\k22}imbue
+Dialogue: 0,0:01:58.70,0:01:59.84,Live,,0,0,0,{\k18}the {\k24}latter {\k40}{\k12}This {\k20}leads
+Dialogue: 0,0:01:59.84,0:02:00.90,Live,,0,0,0,{\k26}to {\k12}the {\k36}ethical {\k32}gray
+Dialogue: 0,0:02:00.90,0:02:02.58,Live,,0,0,0,{\k48}areas {\k64}{\k16}When {\k14}an {\k26}AI
+Dialogue: 0,0:02:02.58,0:02:03.94,Live,,0,0,0,{\k62}generates {\k22}an {\k28}image {\k24}in
+Dialogue: 0,0:02:03.94,0:02:04.70,Live,,0,0,0,{\k10}the {\k36}style {\k20}of {\k10}a
+Dialogue: 0,0:02:04.70,0:02:06.64,Live,,0,0,0,{\k40}specific {\k40}human {\k48}artist {\k46}{\k20}using
+Dialogue: 0,0:02:06.64,0:02:07.68,Live,,0,0,0,{\k24}their {\k26}work {\k26}as {\k28}training
+Dialogue: 0,0:02:07.68,0:02:09.36,Live,,0,0,0,{\k40}data {\k38}{\k8}who {\k46}truly {\k36}owns
+Dialogue: 0,0:02:09.36,0:02:11.12,Live,,0,0,0,{\k20}that {\k54}creation {\k58}{\k26}This {\k18}is
+Dialogue: 0,0:02:11.12,0:02:12.56,Live,,0,0,0,{\k10}a {\k50}complex {\k52}legal {\k32}and
+Dialogue: 0,0:02:12.56,0:02:13.82,Live,,0,0,0,{\k26}moral {\k42}debate {\k44}that {\k14}is
+Dialogue: 0,0:02:13.82,0:02:15.56,Live,,0,0,0,{\k28}far {\k24}from {\k34}settled {\k54}{\k34}The
+Dialogue: 0,0:02:15.56,0:02:16.94,Live,,0,0,0,{\k44}concern {\k48}isn't {\k24}that {\k22}AI
+Dialogue: 0,0:02:16.94,0:02:18.58,Live,,0,0,0,{\k40}will {\k38}replace {\k34}all {\k42}artists
+Dialogue: 0,0:02:18.92,0:02:19.56,Live,,0,0,0,{\k18}but {\k14}that {\k16}it {\k16}might
+Dialogue: 0,0:02:19.56,0:02:21.04,Live,,0,0,0,{\k58}devalue {\k12}the {\k26}human {\k42}element
+Dialogue: 0,0:02:21.30,0:02:22.72,Live,,0,0,0,{\k14}If {\k38}visually {\k44}similar {\k46}outputs
+Dialogue: 0,0:02:22.72,0:02:24.20,Live,,0,0,0,{\k30}can {\k10}be {\k44}generated {\k64}instantly
+Dialogue: 0,0:02:24.20,0:02:26.12,Live,,0,0,0,{\k36}and {\k62}cheaply {\k30}{\k18}will {\k46}society
+Dialogue: 0,0:02:26.12,0:02:27.96,Live,,0,0,0,{\k40}still {\k50}recognize {\k40}and {\k54}compensate
+Dialogue: 0,0:02:27.96,0:02:29.14,Live,,0,0,0,{\k22}the {\k24}years {\k16}of {\k46}practice
+Dialogue: 0,0:02:29.74,0:02:31.24,Live,,0,0,0,{\k18}skill {\k34}{\k12}and {\k44}emotional {\k42}labor
+Dialogue: 0,0:02:31.24,0:02:33.42,Live,,0,0,0,{\k24}a {\k32}human {\k40}artist {\k112}invests
+Dialogue: 0,0:02:33.60,0:02:35.18,Live,,0,0,0,{\k44}FILTER {\k42}{\k24}What {\k26}doesn't {\k22}matter
+Dialogue: 0,0:02:35.18,0:02:36.24,Live,,0,0,0,{\k26}is {\k14}the {\k32}debate {\k34}over
+Dialogue: 0,0:02:36.24,0:02:37.88,Live,,0,0,0,{\k30}whether {\k32}AI {\k42}is {\k50}sentient
+Dialogue: 0,0:02:38.16,0:02:39.10,Live,,0,0,0,{\k22}or {\k22}if {\k18}it's {\k32}truly
+Dialogue: 0,0:02:39.10,0:02:40.28,Live,,0,0,0,{\k58}creative {\k26}in {\k8}the {\k26}human
+Dialogue: 0,0:02:40.28,0:02:42.40,Live,,0,0,0,{\k32}sense {\k62}These {\k54}philosophical {\k64}arguments
+Dialogue: 0,0:02:42.40,0:02:43.76,Live,,0,0,0,{\k50}distract {\k36}from {\k10}the {\k40}practical
+Dialogue: 0,0:02:43.76,0:02:45.76,Live,,0,0,0,{\k60}reality {\k66}{\k22}AI {\k44}is {\k8}a
+Dialogue: 0,0:02:45.76,0:02:46.96,Live,,0,0,0,{\k30}tool {\k36}{\k20}and {\k12}like {\k22}any
+Dialogue: 0,0:02:46.96,0:02:48.60,Live,,0,0,0,{\k34}tool {\k44}{\k14}its {\k32}impact {\k40}depends
+Dialogue: 0,0:02:48.60,0:02:49.42,Live,,0,0,0,{\k22}on {\k18}how {\k16}we {\k26}use
+Dialogue: 0,0:02:49.42,0:02:50.34,Live,,0,0,0,{\k22}it {\k32}and {\k20}how {\k18}we
+Dialogue: 0,0:02:50.34,0:02:51.30,Live,,0,0,0,{\k32}define {\k20}its {\k34}outputs
+Dialogue: 0,0:02:52.00,0:02:53.78,Live,,0,0,0,{\k34}AI {\k80}excels {\k18}at {\k46}generating
+Dialogue: 0,0:02:53.78,0:02:56.02,Live,,0,0,0,{\k54}visuals {\k84}aesthetically {\k36}pleasing {\k50}arrangements
+Dialogue: 0,0:02:56.02,0:02:56.74,Live,,0,0,0,{\k28}of {\k34}pixels
+Dialogue: 0,0:02:57.50,0:02:58.98,Live,,0,0,0,{\k20}Humans {\k48}create {\k28}art {\k52}expressions
+Dialogue: 0,0:02:58.98,0:03:01.24,Live,,0,0,0,{\k32}of {\k52}consciousness {\k56}{\k34}intent {\k24}{\k28}and
+Dialogue: 0,0:03:01.24,0:03:02.92,Live,,0,0,0,{\k38}emotion {\k46}{\k8}The {\k32}distinction {\k44}is
+Dialogue: 0,0:03:02.92,0:03:04.76,Live,,0,0,0,{\k36}subtle {\k26}but {\k52}profound {\k46}{\k24}like
+Dialogue: 0,0:03:04.76,0:03:05.72,Live,,0,0,0,{\k18}the {\k26}difference {\k38}between {\k14}a
+Dialogue: 0,0:03:05.72,0:03:07.24,Live,,0,0,0,{\k36}perfect {\k56}replica {\k48}and {\k12}an
+Dialogue: 0,0:03:07.24,0:03:09.66,Live,,0,0,0,{\k40}original {\k62}masterpiece {\k66}{\k36}For {\k38}designers
+Dialogue: 0,0:03:09.66,0:03:11.74,Live,,0,0,0,{\k46}and {\k34}content {\k56}creators {\k54}{\k18}AI
+Dialogue: 0,0:03:11.74,0:03:13.84,Live,,0,0,0,{\k60}offers {\k58}incredible {\k60}potential {\k32}for
+Dialogue: 0,0:03:13.84,0:03:16.08,Live,,0,0,0,{\k66}inspiration {\k56}{\k12}mood {\k34}boards {\k30}{\k26}and
+Dialogue: 0,0:03:16.08,0:03:17.84,Live,,0,0,0,{\k32}rapid {\k34}asset {\k50}generation {\k38}{\k22}It
+Dialogue: 0,0:03:17.84,0:03:18.92,Live,,0,0,0,{\k10}can {\k32}handle {\k20}the {\k46}repetitive
+Dialogue: 0,0:03:18.92,0:03:20.66,Live,,0,0,0,{\k38}tasks {\k62}{\k36}freeing {\k10}up {\k28}human
+Dialogue: 0,0:03:20.66,0:03:22.10,Live,,0,0,0,{\k66}creatives {\k16}to {\k32}focus {\k30}on
+Dialogue: 0,0:03:22.10,0:03:24.14,Live,,0,0,0,{\k38}higher {\k32}level {\k104}conceptualization {\k30}and
+Dialogue: 0,0:03:24.14,0:03:24.64,Live,,0,0,0,{\k40}storytelling
+Dialogue: 0,0:03:25.40,0:03:26.22,Live,,0,0,0,{\k30}But {\k14}when {\k14}it {\k24}comes
+Dialogue: 0,0:03:26.22,0:03:28.34,Live,,0,0,0,{\k14}to {\k42}branding {\k46}{\k42}emotional {\k58}connection
+Dialogue: 0,0:03:28.62,0:03:29.72,Live,,0,0,0,{\k20}or {\k54}conveying {\k12}a {\k24}unique
+Dialogue: 0,0:03:29.72,0:03:31.48,Live,,0,0,0,{\k42}message {\k30}that {\k42}resonates {\k52}deeply
+Dialogue: 0,0:03:31.92,0:03:32.96,Live,,0,0,0,{\k6}the {\k24}human {\k38}touch {\k36}remains
+Dialogue: 0,0:03:32.96,0:03:35.16,Live,,0,0,0,{\k74}paramount {\k50}{\k18}A {\k44}brand's {\k34}visual
+Dialogue: 0,0:03:35.16,0:03:36.72,Live,,0,0,0,{\k50}identity {\k42}needs {\k16}a {\k38}story
+Dialogue: 0,0:03:36.96,0:03:38.24,Live,,0,0,0,{\k10}a {\k34}purpose {\k58}a {\k26}human
+Dialogue: 0,0:03:38.24,0:03:39.66,Live,,0,0,0,{\k42}voice {\k34}behind {\k30}it {\k26}{\k10}The
+Dialogue: 0,0:03:39.66,0:03:41.64,Live,,0,0,0,{\k64}strangest {\k36}part {\k60}{\k8}As {\k30}AI
+Dialogue: 0,0:03:41.64,0:03:42.84,Live,,0,0,0,{\k34}gets {\k36}better {\k18}at {\k32}mimicking
+Dialogue: 0,0:03:42.84,0:03:44.62,Live,,0,0,0,{\k38}human {\k50}styles {\k42}{\k14}the {\k34}value
+Dialogue: 0,0:03:44.62,0:03:46.82,Live,,0,0,0,{\k22}of {\k52}asterisk {\k54}authenticity {\k82}asterisk
+Dialogue: 0,0:03:47.02,0:03:48.50,Live,,0,0,0,{\k12}and {\k54}asterisk {\k46}original {\k36}human
+Dialogue: 0,0:03:48.50,0:03:50.62,Live,,0,0,0,{\k60}experience {\k72}asterisk {\k40}will {\k40}likely
+Dialogue: 0,0:03:50.62,0:03:51.34,Live,,0,0,0,{\k62}skyrocket
+Dialogue: 0,0:03:52.12,0:03:53.12,Live,,0,0,0,{\k12}The {\k52}provenance {\k12}of {\k24}art
+Dialogue: 0,0:03:53.12,0:03:54.06,Live,,0,0,0,{\k34}knowing {\k20}it {\k20}came {\k20}from
+Dialogue: 0,0:03:54.06,0:03:54.84,Live,,0,0,0,{\k12}a {\k34}human {\k24}with {\k8}a
+Dialogue: 0,0:03:54.84,0:03:56.56,Live,,0,0,0,{\k22}unique {\k68}perspective {\k52}will {\k30}become
+Dialogue: 0,0:03:56.56,0:03:58.22,Live,,0,0,0,{\k20}a {\k20}key {\k74}differentiator {\k38}{\k14}Think
+Dialogue: 0,0:03:58.22,0:03:59.12,Live,,0,0,0,{\k10}of {\k12}the {\k30}difference {\k38}between
+Dialogue: 0,0:03:59.12,0:04:00.26,Live,,0,0,0,{\k16}a {\k26}mass {\k50}produced {\k22}piece
+Dialogue: 0,0:04:00.26,0:04:01.42,Live,,0,0,0,{\k20}of {\k36}furniture {\k46}and {\k14}a
+Dialogue: 0,0:04:01.42,0:04:03.64,Live,,0,0,0,{\k66}handcrafted {\k46}heirloom {\k52}{\k28}Both {\k30}serve
+Dialogue: 0,0:04:03.64,0:04:04.86,Live,,0,0,0,{\k14}a {\k36}function {\k44}{\k10}but {\k18}one
+Dialogue: 0,0:04:04.86,0:04:06.32,Live,,0,0,0,{\k38}carries {\k16}a {\k38}legacy {\k44}{\k10}a
+Dialogue: 0,0:04:06.32,0:04:07.84,Live,,0,0,0,{\k42}story {\k50}and {\k10}a {\k50}tangible
+Dialogue: 0,0:04:07.84,0:04:09.28,Live,,0,0,0,{\k48}connection {\k32}to {\k20}its {\k34}maker
+Dialogue: 0,0:04:09.98,0:04:11.50,Live,,0,0,0,{\k24}AI {\k46}image {\k56}generators {\k26}are
+Dialogue: 0,0:04:11.50,0:04:13.16,Live,,0,0,0,{\k42}powerful {\k54}tools {\k30}for {\k40}generating
+Dialogue: 0,0:04:13.16,0:04:13.82,Live,,0,0,0,{\k56}images
+Dialogue: 0,0:04:14.44,0:04:15.82,Live,,0,0,0,{\k22}Human {\k38}artists {\k44}create {\k34}art
+Dialogue: 0,0:04:15.82,0:04:17.22,Live,,0,0,0,{\k24}with {\k30}meaning {\k44}{\k8}The {\k34}future
+Dialogue: 0,0:04:17.22,0:04:19.08,Live,,0,0,0,{\k48}isn't {\k32}AI {\k52}versus {\k44}humans
+Dialogue: 0,0:04:19.52,0:04:21.04,Live,,0,0,0,{\k10}but {\k36}humans {\k62}leveraging {\k44}AI
+Dialogue: 0,0:04:21.04,0:04:22.54,Live,,0,0,0,{\k44}to {\k46}amplify {\k32}their {\k28}unique
+Dialogue: 0,0:04:22.54,0:04:23.60,Live,,0,0,0,{\k54}creative {\k42}voices
+Dialogue: 0,0:04:24.28,0:04:25.92,Live,,0,0,0,{\k66}Ultimately {\k44}{\k6}the {\k32}value {\k16}of
+Dialogue: 0,0:04:25.92,0:04:26.90,Live,,0,0,0,{\k24}art {\k16}will {\k40}always {\k18}be
+Dialogue: 0,0:04:26.90,0:04:27.74,Live,,0,0,0,{\k28}tied {\k20}to {\k10}the {\k26}human
+Dialogue: 0,0:04:27.74,0:04:29.36,Live,,0,0,0,{\k62}experience {\k24}it {\k36}reflects {\k40}and
+Dialogue: 0,0:04:29.36,0:04:29.88,Live,,0,0,0,{\k42}evokes
+Dialogue: 0,0:04:30.50,0:04:32.18,Live,,0,0,0,{\k28}AI {\k40}can {\k40}replicate {\k50}form
+Dialogue: 0,0:04:32.44,0:04:33.50,Live,,0,0,0,{\k14}but {\k10}it {\k28}cannot {\k54}replicate
+Dialogue: 0,0:04:33.50,0:04:34.64,Live,,0,0,0,{\k22}the {\k28}human {\k42}journey {\k22}that
+Dialogue: 0,0:04:34.64,0:04:35.72,Live,,0,0,0,{\k18}gives {\k36}art {\k24}its {\k30}depth
+Dialogue: 0,0:04:35.72,0:04:37.64,Live,,0,0,0,{\k80}Embrace {\k16}the {\k40}tools {\k48}{\k8}but
+Dialogue: 0,0:04:37.64,0:04:38.66,Live,,0,0,0,{\k26}never {\k34}forget {\k20}the {\k22}source
+Dialogue: 0,0:04:38.66,0:04:39.74,Live,,0,0,0,{\k18}of {\k20}true {\k60}inspiration

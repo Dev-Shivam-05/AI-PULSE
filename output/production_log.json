@@ -5966,5 +5966,56 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-05T20:28:00.665972",
+    "title": "Human Artist vs AI: Creativity's New Frontier",
+    "description": "AI image generators vs human artists creativity: The honest truth.  We dive deep into the core of creativity, pitting algorithmic generation against the human touch.  This isn't about replacing artists; it's about understanding the evolving landscape of visual creation. Discover the unique strengths of AI in generating vast quantities of imagery and the irreplaceable depth of human emotion, intention, and lived experience that fuels true artistry.  We'll dissect the ethical questions, explore practical applications, and offer a clear vision of what this means for the future of art, design, and how we perceive creative output.  Understand the distinct value each brings to the table and make informed decisions about your own creative projects. #AI #ArtTech #HumanCreativity #DigitalArt #FutureOfArt #CreativeTools #AIart\n\nChapters:\n0:00 AI Art Soul\n1:10 AI Lacks Context\n2:02 Ethical Gray Areas\n3:12 Designer Inspiration\n4:00 Mass Produced Vs\n\n▶ Watch next: https://youtube.com/watch?v=ejaldREefSA",
+    "tags": [
+      "AI image generators",
+      "human artists",
+      "creativity",
+      "AI art",
+      "digital art",
+      "art and technology",
+      "generative art",
+      "creative process",
+      "art ethics",
+      "future of art",
+      "ai",
+      "artificial intelligence",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Human_Artist_vs_AI_Creativitys_New_Frontier_20261105_201252_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261105_201756.mp4",
+      "output/shorts/short_2_20261105_201904.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261105_201621.jpg",
+    "youtube_url": "https://youtube.com/watch?v=hczQwyNDIgE",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=lLGh-034F8I",
+      "https://youtube.com/watch?v=oyQqNrns6JU"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI Art Tool Midjourney #Shorts",
+        "description": "Comparison of art created by a human artist and the AI tool Midjourney.",
+        "instagram_caption": "🎨 See how Midjourney creates art alongside a human artist.  The results might surprise you.\nFollow @tooldojo!\n#AIart #Midjourney #DigitalArt #ArtComparison #CreativeAI #AIvsHuman #ArtTech #GenerativeArt #ArtistLife #FutureOfArt #TechInArt #AIcreativity #ArtTools #VisualArt #ArtisticProcess #DigitalCreation #AIgenerated #ArtCommunity #TechTrends #Inspiration"
+      },
+      {
+        "title": "Human vs AI art creation #Shorts",
+        "description": "Demonstrates the process and output of human artists and AI art generation.",
+        "instagram_caption": "🤔 Witness the differences in creative processes between human artists and AI.  Which approach sparks your interest?\nFollow @tooldojo!\n#AIart #HumanArtist #ArtisticProcess #Creativity #DigitalArt #AItools #ArtTech #GenerativeArt #ArtistVsAI #FutureOfArt #TechInArt #AIcreativity #ArtTools #VisualArt #ArtisticExpression #DigitalCreation #AIgenerated #ArtCommunity #TechTrends #Innovation"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]
