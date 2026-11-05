@@ -1313,7 +1313,7 @@ def render_sheet(ep: dict) -> str:
             f"<p class=\"l\">{e(c.get('what'))} Voice {e(c.get('voice'))}, rate {e(c.get('rate'))}. "
             f"Ran {e(r.get('ran_at'))}"
             + (f", {e(r.get('seconds'))} s from upload to result" if r.get("seconds") is not None else "")
-            + f". {e(r.get('why'))}."
+            + f". {e(str(r.get('why') or '')[:1].upper() + str(r.get('why') or '')[1:])}."
             + (f" <a href=\"{e(wav)}\">Download the clip</a>" if wav else "") + "</p></div>")
     parts += ["<h2>Repeat it yourself</h2><ol>",
               f"<li>Download the four clips (links above). Each one is a 16 kHz mono WAV.</li>",

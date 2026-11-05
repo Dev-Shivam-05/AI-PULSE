@@ -189,13 +189,20 @@ body { font-family: "Inter", "Segoe UI", sans-serif; font-weight: 900; color: va
     $("big").className = sc.big_cls || "";
     $("bigsub").textContent = sc.sub || "";
     window.__seek(0);
-    // measure every state once: the transcript, the out lines, each score row
+    // measure every state once, each one VISIBLE: a display:none element measures 0 and
+    // "fits" (the repeat's sub-line was clipped at 64 px while reporting no problem)
+    $("pend").style.display = "none";
+    $("outl").style.display = "block";
+    $("rows").style.display = "block";
+    $("tot").style.display = "block";
     if (out.tokens && out.tokens.length) {
-      $("tx").style.display = "block"; $("pend").style.display = "none";
+      $("tx").style.display = "block";
       if (transcript(out.tokens)) unfit.push("transcript_cut");
     }
     if (over($("outb"))) unfit.push("output");
-    Array.prototype.forEach.call(rows.querySelectorAll(".rtext"), function (r) {
+    // measured with the RESULT text: a row only says its value once its check ticks
+    Array.prototype.forEach.call(rows.querySelectorAll(".rtext"), function (r, i) {
+      r.textContent = sc.rows[i].text;
       if (!fit(r, 64, 52)) unfit.push("score_row");
     });
     if (!fit($("big"), 96, 80)) unfit.push("score");
@@ -229,15 +236,26 @@ body { font-family: "Inter", "Segoe UI", sans-serif; font-weight: 900; color: va
     $("rows").style.display = total ? "none" : "block";
     $("tot").style.display = total ? "block" : "none";
     var marks = $("rows").querySelectorAll(".mark");
+    var texts = $("rows").querySelectorAll(".rtext");
     (sc.rows || []).forEach(function (r, i) {
       var on = r.at == null || t >= r.at;
       var st = on ? (r.state || "wait") : "wait";
       marks[i].textContent = MARK[st] || MARK.wait;
       marks[i].className = "mark " + (st === "wait" ? "" : st);
+      // no spoilers: until a check ticks, its row names the check, not the value
+      texts[i].textContent = on || !r.pending ? r.text : r.pending;
     });
+    // the running count moves when the test's branch lands, not when the window opens
+    var early = seg.top_score_at != null && t < seg.top_score_at;
+    $("tscore").textContent = (early ? seg.top_score_before : seg.top_score) || "";
   };
 
-  window.__ready = true;
+  // The first __load measures text, so the faces must be in first. A segment fitted in
+  // the fallback face and then drawn in the real one is clipped (the first hold card's
+  // disclosure lost its last characters).
+  function ready() { window.__ready = true; }
+  Promise.all([document.fonts.load('900 64px "Inter"'),
+               document.fonts.load('400 36px "JetBrains Mono"')]).then(ready, ready);
 })();
 </script>
 </body>

@@ -57,6 +57,7 @@ HOLD_MARGIN = 4.0       # seconds of stream left in the pipe before a hold is se
 PREP_TIMEOUT = 25 * 60  # planning + preflight + every voice + the first renders
 OVERRUN = 300           # wall-clock backstop after the grid
 PHRASE_WORDS = 5        # captions at 64 px hold 2 lines
+CAP_HOLD = 0.6          # trials.html's CAP_HOLD: a caption stays this long past its phrase
 # #vbox inside #ev (trials.html); even sides for yuv420p. Recordings are always
 # REC_W x REC_H (1280x720), so the scale is exact: no pad (a 405-high pad failed
 # on rounding and cost the first local session every capture window).
@@ -182,8 +183,24 @@ def check_rows(r: dict, at0: float) -> list:
                 else "WORD ERRORS ?")
         if c.get("value") == "not run":
             text = "KEY WORDS NOT RUN" if c["id"] == "terms" else "ERRORS NOT RUN"
-        rows.append({"text": text, "state": st, "at": round(at0 + 2 * i, 3)})
+        rows.append({"text": text, "state": st, "at": round(at0 + 2 * i, 3),
+                     "pending": "KEY WORDS" if c["id"] == "terms" else "WORD ERRORS"})
     return rows
+
+
+def frame_times(spec: dict) -> list:
+    """The only moments this page can change: the state changes and the caption edges.
+    radar's every-whole-second grid exists for its moving clock; here it spent 21 of the
+    38 s a 90 s window takes to render, which is what put a hold card at 1:30."""
+    ts = {0.0}
+    for a, b, _text in spec.get("phrases") or []:
+        ts |= {float(a), float(b) + CAP_HOLD}
+    ev, out, score = spec.get("ev") or {}, spec.get("out") or {}, spec.get("score") or {}
+    marks = [ev.get("video_from"), ev.get("video_to"), out.get("reveal_at"),
+             score.get("total_at"), spec.get("top_score_at"), *(spec.get("extra_times") or []),
+             *(r.get("at") for r in score.get("rows") or [])]
+    ts |= {float(x) for x in marks if x is not None}
+    return sorted(round(t, 3) for t in ts if 0 <= t < spec["length"])
 
 
 def base_spec(plan: dict, length: int, results: list) -> dict:
@@ -269,6 +286,7 @@ def spec_result(plan: dict, index: int, r: dict, results_so_far: list, wid: str)
                   "big_cls": {"PASS": "pass", "PARTIAL_FAIL": "fail"}.get(r["branch"], "na"),
                   "sub": f"TEST {index + 1} · {t['passed']}/{2 * len(results_so_far)} SO FAR"}
     s["extra_times"] = [reveal] + [x["at"] for x in rows] + [total_at]
+    s["top_score_before"], s["top_score_at"] = top_score(results_so_far[:-1]), total_at
     return s
 
 
@@ -320,6 +338,11 @@ def spec_repeat(plan: dict, index: int, first: dict, r: dict, results: list,
     return s
 
 
+def verdict_cls(verdict: str) -> str:
+    """The count keeps one colour across the verdict, files and limits windows."""
+    return {"PASS": "pass", "PARTIAL_FAIL": "fail"}.get(verdict, "na")
+
+
 def spec_verdict(plan: dict, results: list, rep: dict | None, verdict: str) -> dict:
     s = base_spec(plan, GRID_LEN["verdict"], results)
     mark = {"PASS": "✓", "PARTIAL_FAIL": "✗"}
@@ -333,7 +356,7 @@ def spec_verdict(plan: dict, results: list, rep: dict | None, verdict: str) -> d
         {"text": tr.BRANCH_LABEL[verdict], "cls": "cyan" if verdict == "PASS" else "yel"},
         {"text": tr.tally_text(t).upper(), "cls": "sub"}]}
     s["score"] = {"mode": "total", "rows": [], "big": f"{t['passed']}/{t['declared']} CHECKS",
-                  "big_cls": "pass" if verdict == "PASS" else "fail" if verdict == "PARTIAL_FAIL" else "na",
+                  "big_cls": verdict_cls(verdict),
                   "sub": "PASSED"}
     return s
 
@@ -358,7 +381,7 @@ def spec_files(plan: dict, results: list, url: str | None, verdict: str) -> dict
                                                  {"text": "AND CHECK IS KEPT", "cls": "sub"}]}
     t = tr.tally(results)
     s["score"] = {"mode": "total", "rows": [], "big": f"{t['passed']}/{t['declared']} CHECKS",
-                  "big_cls": "pass" if verdict == "PASS" else "na", "sub": tr.BRANCH_LABEL[verdict]}
+                  "big_cls": verdict_cls(verdict), "sub": tr.BRANCH_LABEL[verdict]}
     return s
 
 
@@ -372,7 +395,7 @@ def spec_limits(plan: dict, results: list, verdict: str) -> dict:
         {"text": plan["set"]["title"].upper(), "cls": "sub"}]}
     t = tr.tally(results)
     s["score"] = {"mode": "total", "rows": [], "big": f"{t['passed']}/{t['declared']} CHECKS",
-                  "big_cls": "pass" if verdict == "PASS" else "na", "sub": "TOOLDOJO LIVE TRIALS"}
+                  "big_cls": verdict_cls(verdict), "sub": "TOOLDOJO LIVE TRIALS"}
     return s
 
 
@@ -578,6 +601,7 @@ class Producer:
         self.n += 1
         shutil.rmtree(d, ignore_errors=True)
         d.mkdir(parents=True, exist_ok=True)
+        spec["times"] = frame_times(spec)
         shots, unfit = self.renderer.frames(spec, d)
         if [u for u in unfit if u != "transcript_cut"]:
             log(f"  {name}: text did not fit at the floor: {unfit}")

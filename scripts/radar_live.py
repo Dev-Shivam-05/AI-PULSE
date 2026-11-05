@@ -346,7 +346,8 @@ class Renderer:
         out_dir.mkdir(parents=True, exist_ok=True)
         unfit = self._page.evaluate("s => window.__load(s)", spec)
         shots = []
-        times = rd.frame_times(spec["length"], spec["phrases"])
+        # v3-T.1 passes its own list: its page has no moving clock to redraw every second
+        times = spec.get("times") or rd.frame_times(spec["length"], spec["phrases"])
         cta = spec.get("cta")
         if cta:   # L6 row 8: the line must appear and leave on a frame of its own
             times = sorted(set(times) | {float(cta[0]), float(cta[1])})

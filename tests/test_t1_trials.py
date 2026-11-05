@@ -514,6 +514,86 @@ def test_t1_main_off_switch_and_key_redaction(monkeypatch, capsys, tmp_path):
     tl.rl._SECRETS.clear()
 
 
+def _t1_scored(clip, text=None, branch="PASS"):
+    text = clip["text"] if text is None else text
+    return {"branch": branch, "transcript": text, "checks": tr.checks_for(clip, text),
+            "ran_at": "2026-11-07T18:46:00+00:00", "recording": "", "cut": None}
+
+
+def test_t1_a_check_row_does_not_spoil_its_value_before_it_ticks():
+    import trials_live as tl
+    clip = _t1_set()["clips"][0]
+    rows = tl.check_rows(_t1_scored(clip), 10.0)
+    assert [r["pending"] for r in rows] == ["KEY WORDS", "WORD ERRORS"]
+    assert all(r["pending"] not in ("", r["text"]) and "/" not in r["pending"] for r in rows)
+    page = (ROOT / "assets" / "trials" / "trials.html").read_text(encoding="utf-8")
+    assert "r.pending" in page
+
+
+def test_t1_the_running_count_moves_when_the_branch_lands():
+    import trials_live as tl
+    plan = _t1_plan()
+    clips = plan["set"]["clips"]
+    res = [_t1_scored(clips[0]), _t1_scored(clips[1])]
+    s = tl.spec_result(plan, 1, res[1], res, "result2")
+    assert s["top_score"] == "SCORE 4/4" and s["top_score_before"] == "SCORE 2/2"
+    assert s["top_score_at"] == s["score"]["total_at"]
+    first = tl.spec_result(plan, 0, res[0], res[:1], "result1")
+    assert first["top_score_before"] == "" and first["top_score"] == "SCORE 2/2"
+    assert first["top_score_at"] in tl.frame_times(first)
+
+
+def test_t1_frame_times_cover_every_change_and_drop_the_idle_seconds():
+    import trials_live as tl
+    plan = _t1_plan()
+    clip = plan["set"]["clips"][1]
+    s = tl.spec_run(plan, 1, _t1_scored(clip), [], 20.0)
+    s["phrases"] = [[0.0, 2.0, "a"], [2.0, 4.5, "b"], [89.9, 95.0, "c"]]
+    t = tl.frame_times(s)
+    assert t == sorted(set(t)) and t[0] == 0.0 and all(0 <= x < 90 for x in t)
+    assert {2.0, 2.6, 5.1, 89.9} <= set(t)                 # caption edges, CAP_HOLD past the end
+    assert s["out"]["reveal_at"] in t and all(r["at"] in t for r in s["score"]["rows"])
+    assert len(t) < 20                                      # not one per second
+    page = (ROOT / "assets" / "trials" / "trials.html").read_text(encoding="utf-8")
+    assert f"CAP_HOLD = {tl.CAP_HOLD}" in page
+
+
+def test_t1_page_waits_for_its_fonts_before_it_says_ready():
+    page = (ROOT / "assets" / "trials" / "trials.html").read_text(encoding="utf-8")
+    assert "window.__ready = true" in page and "document.fonts.load" in page
+    assert page.index("document.fonts.load") > page.index("function ready()")
+
+
+def test_t1_sheet_starts_the_reason_with_a_capital():
+    plan = _t1_plan()
+    clip = plan["set"]["clips"][0]
+    r = dict(_t1_scored(clip), why="every check passed", clip=clip["id"])
+    ep = {"id": plan["id"], "date": plan["date"], "slot": plan["slot"], "tool": plan["tool"],
+          "maker": "k2-fsa", "space": plan["space"], "space_sha": "d9d0c7b", "repo": "", "model": "",
+          "hardware": "cpu-basic", "pins": [], "settings": {}, "fixture_set": plan["fixture_set"],
+          "set": plan["set"], "question": plan["question"], "question_short": plan["question_short"],
+          "signals": {}, "preflight": r, "tests": [r], "repeat": None, "verdict": "PASS",
+          "tally": tr.tally([r]), "branch_why": "x", "narration_source": "template",
+          "started_at": "2026-11-07T18:45:00+00:00", "sheet_url": ""}
+    assert "Every check passed." in tr.render_sheet(ep)
+
+
+def test_t1_the_count_keeps_its_colour_in_all_three_end_windows():
+    import trials_live as tl
+    plan = _t1_plan()
+    res = [_t1_scored(c) for c in plan["set"]["clips"]]
+    for v, cls in (("PASS", "pass"), ("PARTIAL_FAIL", "fail"), ("TIMEOUT", "na"), ("INCONCLUSIVE", "na")):
+        for s in (tl.spec_verdict(plan, res, None, v), tl.spec_files(plan, res, None, v),
+                  tl.spec_limits(plan, res, v)):
+            assert s["score"]["big_cls"] == cls
+
+
+def test_t1_page_measures_the_total_while_it_is_visible():
+    page = (ROOT / "assets" / "trials" / "trials.html").read_text(encoding="utf-8")
+    load = page[page.index("window.__load"):page.index("window.__seek = ")]
+    assert load.index('$("tot").style.display = "block"') < load.index('fit($("bigsub")')
+
+
 def test_t1_wait_and_late_start():
     import trials_live as tl
     now = dt.datetime(2026, 11, 7, 18, 30, tzinfo=dt.timezone.utc)
