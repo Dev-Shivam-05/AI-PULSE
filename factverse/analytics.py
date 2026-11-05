@@ -349,6 +349,25 @@ def collect(yta=None, ytr=None) -> dict:
             snap["ledger_headers"] = [h["name"] for h in led.get("columnHeaders", [])]
     except Exception as e:  # noqa: BLE001
         print(f"  ⚠️ ledger query skipped: {e}")
+    # v3-P.2: Pilot A per-video retention at publication age 7 / 14 / 28 (the
+    # audience-retention report, video==ONE id). Own try + kill switch: a refused
+    # report must cost only the pilot reads, never the snapshot.
+    if fv.flag("pilot_retention", False):
+        try:
+            from factverse import pilot
+            prior = []
+            if OUT.exists():
+                for line in OUT.read_text(encoding="utf-8").splitlines():
+                    try:
+                        prior.append(json.loads(line))
+                    except ValueError:
+                        continue
+            reads = pilot.collect_reads(yta, learn.read_runs(), prior, today)
+            if reads:
+                snap["pilot_reads"] = reads
+                print(f"  🧪 Pilot A: {len(reads)} retention read(s)")
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ pilot reads skipped: {e}")
     # v3-G.3 #10: impressions + CTR; its own seam, kill switch `reach_report`
     if fv.flag("reach_report", False):
         reach = collect_reach(ytr)
@@ -370,6 +389,12 @@ def main() -> int:
         # never fail the pipeline over analytics
         print(f"  ⚠️ analytics skipped: {e}")
     learn.main()  # the v3-D scoreboard in the CI log; fail-soft, always 0
+    if fv.flag("pilot_retention", False):
+        try:
+            from factverse import pilot
+            pilot.main([])          # the Pilot A readout in the CI log; never raises
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ pilot readout skipped: {e}")
     return 0
 
 

@@ -822,6 +822,33 @@ def test_p1_run_with_a_non_tool_script_writes_empty_evidence_fields(monkeypatch,
     assert built["clips"][0] == ["stock.mp4"]
 
 
+# ================================================ integration: K.1 family on the ledger
+def test_p1_k1_ledger_row_carries_the_task_family_for_tool_rows_only(monkeypatch, tmp_path):
+    """The north-star and memory counters read `task_family` off PUBLISHED ledger
+    rows; K.1 only wrote it to the catalog, so they read 0 for ever."""
+    s = _p1_tool_script(tmp_path, "Transcribe audio with Demo ASR", "")
+    s["signal_title"] = "acme/demo-asr"
+    rows, _ = _p1_run(monkeypatch, tmp_path, s)
+    assert rows[-1]["task_family"] == "speech-to-text"
+    e = _p1_tool_script(tmp_path, "Transcribe audio with Demo ASR", "")
+    e["format"] = "evergreen"
+    rows, _ = _p1_run(monkeypatch, tmp_path, e)
+    assert rows[-1]["task_family"] == ""
+
+
+def test_p1_k1_ledger_family_is_fail_soft_and_coerced(monkeypatch):
+    assert ap._ledger_family(None) == "" and ap._ledger_family("tool") == ""
+    assert ap._ledger_family({"format": "tool", "title": 7, "signal_title": None}) == ""
+    from factverse import tasks
+
+    def boom(entry):
+        raise RuntimeError("classifier broke")
+    monkeypatch.setattr(tasks, "task_family", boom)
+    assert ap._ledger_family({"format": "tool", "title": "Transcribe audio"}) == ""
+    monkeypatch.setattr(tasks, "task_family", lambda entry: ["not", "a", "string"])
+    assert ap._ledger_family({"format": "tool", "title": "Transcribe audio"}) == ""
+
+
 # ================================================================ catalog
 def test_p1_site_catalog_entry_carries_the_evidence_without_its_clip(monkeypatch, tmp_path):
     saved = []

@@ -163,11 +163,13 @@ def splice(video: str, segment: str, at: float) -> str | None:
     return None
 
 
-def inject(video: str, insight_at: float | None):
+def inject(video: str, insight_at: float | None, cold_open: bool = True):
     """Inject this week's cold open (at the very start) and insight block (before
-    the final scene). Returns (video, record) — record goes to the run ledger."""
+    the final scene). Returns (video, record) — record goes to the run ledger.
+    v3-P.2: `cold_open=False` (Pilot A) leaves frame 0 to the opening contract;
+    the clip is then not consumed and waits for the next ordinary video."""
     record = {"cold_open": None, "insight": None}
-    co = next_clip("cold_open")
+    co = next_clip("cold_open") if cold_open else None
     if co:
         seg = build_human_segment(co, str(fv.TEMP / "l2_cold.mp4"), label=fv.CHANNEL_NAME.upper())
         if seg:

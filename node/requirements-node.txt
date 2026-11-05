@@ -1,0 +1,10 @@
+# ToolDojo Node (v3-N.1) - only what the node's jobs import. The daily video pipeline
+# (Kokoro, whisper, OpenCV, rembg, the YouTube API) runs on GitHub Actions, never here:
+# a smaller venv is a faster install and less to break (requirement 2: lowest load).
+# A new job adds its own lines here; the import check (config.json node_import_check)
+# catches a missing one before the job's slot.
+
+# Radar Live (scripts/radar_live.py -> factverse.radar / captions / storyboard / llm)
+requests>=2.31
+edge-tts>=7.3.1  # 7.2.8 answered 403 on 2026-11-01 (v3-L.6)
+playwright==1.60.0

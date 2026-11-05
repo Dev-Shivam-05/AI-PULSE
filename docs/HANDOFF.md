@@ -1,70 +1,136 @@
-# HANDOFF — ToolDojo — Phases v3-B.5 + v3-L.6 — 2026-11-01
+# HANDOFF — ToolDojo — Growth programme (P.1, P.2, S.1, M.1, K.1, N.1; T.1 in progress) — 2026-11-04
 
 ## Done
-- **One branch carries everything: `v3-integration-1101`.** It merges `v3-phase-b5` and
-  `v3-phase-l6` plus the docs. The two phase branches are also pushed on their own.
-- **Background.** The morning session ran the ChatGPT review
-  (`docs/debate/2026-11-01-radar-live-growth-review/RESULT.md`); the owner answered "go for
-  all". It built L.6 itself and B.5 through a subagent, then ended before committing anything:
-  no commit, no spec, no board row. This session committed that work unchanged as `wip:`
-  commits, then tested, fixed, verified and documented it.
-- **v3-B.5: daily lane mix + no-loop recordings.**
-  - Automatic runs: Mon/Tue/Thu/Fri tool (else evergreen), Wed debate, Sat evergreen, Sun
-    roundup. News only replaces a slot, at most once per ISO week. Kill switch `lane_mix_v2`.
-  - Evergreen subject screen: on the real ledger all 8 named LLM/hardware repeats are caught.
-  - Recordings browse README → releases → issues → commits, scroll down only, and are recut
-    after the narration timings. Real recut on removemacai: 6 pieces at their exact shares,
-    **0 loops**, frames read.
-  - Fixed: 2 older tests went red because the new screen reads the real ledger.
-  - **426/426.**
-- **v3-L.6: Radar Live viewer + inventory.**
-  - A local 5-min session was received and read: **445 tools** (was ≤ 100), 8 segments,
-    0 standby, 316 s, 0 decode errors, **−19.8 LUFS / −4.8 dBTP**.
-  - Frames read: two source boards, NEXT cue, subscribe line at 166 s, true end card.
-  - 3 defects found and fixed: label wording, subscribe line wording, and two text-overflow
-    bugs seen only in rendered frames (the line under SOURCE DELAYED, a benefit line cut
-    mid-word).
-  - **419/419.**
+- **One branch carries everything: `v3-growth-1104`.** It contains `v3-integration-1101` (B.5, L.6), which was never merged, so the owner opens ONE PR from it and the 11-01 PR is superseded.
+  - Suite: **736 passed** on the merged tree.
+  - A read-only `git merge-tree` against `origin/main` is clean, `state/*` included.
+  - Each phase branch is also pushed on its own: `v3-phase-{p1,p2,s1,m1,k1,n1}`.
+- **What happened this session:**
+  - A read-only YouTube Studio extraction covering 311 videos.
+  - A 4-round ChatGPT growth review with `prompts/yt-02-11.xml`, with Claude playing the owner. It produced 18 points, and the owner answered "go for all".
+  - Five build phases, each in its own worktree, then integration.
+  - A 3-round ChatGPT live-stream concept round.
+  - The owner then supplied a dedicated PC for live work, which became N.1 and T.1.
+- **v3-P.1 (rows 3, 4, 17): a tool video now shows real evidence of the tool working.**
+  - Hosted demos: a Hugging Face Gradio demo is driven headless with its own example, with a 120 s deadline and an independent visible-result check.
+  - Author demos: a GIF/MP4 committed in the repo under MIT/Apache-2.0, with a rights record and an attribution line in the description.
+  - The evidence leads scene 1, with a "Hosted test" / "Author demo" label and five statuses with verbatim wording.
+  - A candidate without admissible evidence is skipped.
+  - Unobserved outcome claims in a title or thumbnail become "Claimed …" or are dropped.
+  - Live on 11-04: 3 of 27 trending candidates had admissible evidence.
+- **v3-P.2 (rows 5, 6, 13): opening contract, Pilot A, query-map packaging.**
+  - The opening contract is checked on the ENCODED file:
+    - result at 0.00 s covering ≥ 40% of the frame;
+    - speech by 0.5 s;
+    - first sentence ≤ 16 words, finished by 6.5 s;
+    - limitation by 0:15;
+    - first step by 0:25;
+    - no sting and no L2 cold open;
+    - duration 150-210 s.
+
+    One repair is attempted, then the lane falls back.
+  - A context-first arm exists for comparison.
+  - Pilot A: 6 pre-assigned pairs, with retention read via `audienceWatchRatio`. The frozen AVD baseline is **72.0 s**.
+  - Packaging: query-map titles, a first description sentence of tool + task + evidence status, and descriptive chapters.
+  - Frames read: 0:00 shows the hosted result with "Hosted test · 2026-11-04"; 0:15 shows the starting-step card.
+- **v3-S.1 (rows 7, 8, 15): native concept Short and Pilot B.**
+  - A native concept Short replaces the storyboard Short. Rendered and frames read: 24.5 s, speech at 0.18 s, answer at 3.6 s, 61 words, 60 px text, the full diagram at frame 0.
+  - Pilot B: native vs crop, 6 day-pairs, slots 18:45 / 01:30 alternated. Stayed-to-watch is in no public API, so the readout reads a Studio CSV export.
+  - Reels carry the native Short only.
+- **v3-M.1 (rows 9, 10, 16, 18): memory, north star, shadow queue.**
+  - A per-video memory record; the writer now outputs `question_answered` / `questions_open`.
+  - Per-video search terms. A follow-up candidate fires at ≥ 50 search views in 28 days, with a 14-day cooldown.
+  - North-star ladder (12.11 h → 1,211 h) and search capture by age band.
+  - A 14-day shadow queue for a second daily slot.
+  - learn's long-form comparison now starts 2026-08-28.
+- **v3-K.1 (rows 11, 12, 14, 15): task catalogue and distribution.**
+  - `task_family` on every tool entry and ledger row.
+  - A hub page per family, only when ≥ 2 hosted tests share an identical input (max 1 hub).
+  - "Follow this task" alerts, only on a material change.
+  - Useful tool pages, X off by default, Search Console meta-tag support, and the Challenger spec (K.2, queued).
+  - The first family by evidence supply is speech-to-text: ≥ 3 comparable CPU Spaces.
+- **v3-N.1: the dedicated live PC ("node").**
+  - A ZIP plus `install.ps1` creates a hidden user and a startup task that runs in session 0, so no window ever appears.
+  - `supervisor.py` runs the job table: power-cut resume, hang kill, backoff, disk guard, self-update with rollback, and a Telegram alert.
+  - The preflight picks the stream profile.
+  - Verified only by a 130 s supervisor run with fake jobs and an installer `-DryRun`. NOT run on the real node.
+- **Docs:**
+  - Board rows: P.1, P.2, S.1, M.1, K.1, K.2 (queued), N.1, and T.1 (in progress).
+  - X fixed in Now #1.4.
+  - Decisions for the growth review, the live round and N.1.
+  - 12 new traps in CLAUDE.md.
+- **ChatGPT round folders (local only, never committed, because they hold Studio analytics and the repo is public):**
+  - `docs/debate/2026-11-04-tooldojo-channel-growth/`
+  - `docs/debate/2026-11-04-tooldojo-live-stream-ideas/`, which picked **Live Trials**.
 
 ## Files changed
-- B.5: `factverse/screencap.py`, `factverse/ai_pipeline.py`, `config.json`,
-  `config.example.json`, `tests/test_b5_daily.py` (new), `tests/test_pipeline_logic.py`,
-  `docs/spec/ai-pulse-v3b5.md` (new).
-- L.6: `factverse/radar.py`, `scripts/radar_live.py`, `assets/radar/radar.html`,
-  `requirements.txt` + `requirements-ci.txt` (edge-tts ≥ 7.3.1; 7.2.8 answered 403),
-  `tests/test_l6_radar.py` (new), `tests/test_radar.py`, `docs/spec/ai-pulse-v3l6.md` (new).
-- Docs: `docs/PHASES.md` (B.5, L.6 rows; L.7, L.8, L.9 queued; Next 3), `docs/DECISIONS.md`,
-  `CLAUDE.md` (1 trap: a picker reading the real ledger).
+- **New factverse modules:** `evidence.py` (P.1); `opening.py`, `pilot.py`, `querymap.py` (P.2); `native_short.py`, `pilot_b.py` (S.1); `memory.py`, `northstar.py`, `shadow.py` (M.1); `tasks.py` (K.1).
+- **New node files (N.1):** `node/` (supervisor, preflight, install/uninstall/status ps1, requirements-node.txt, README) and `scripts/build_node_bundle.py`.
+- **`factverse/ai_pipeline.py`:**
+  - evidence in `script_tool`;
+  - `_CARRY` and the pop list;
+  - the render block extracted to `_render_longform` / `_make_extras`;
+  - the opening gate;
+  - one merged experiment dict in `record_run`;
+  - memory fields and `task_family`.
+- **Other edits:**
+  - `factverse/gates.py`: substantiation.
+  - `site.py`: catalog evidence and hubs.
+  - `notify.py`: task alerts, X off by default.
+  - `shorts.py`, `storyboard.py`, `scheduling.py`, `reels.py`, `analytics.py`, `learn.py`, `l2.py`, `state_merge.py`.
+  - `scripts/radar_live.py`: small and env-gated.
+  - `.github/workflows/publish.yml` and `notify.yml`: stash lists.
+  - Both config files.
+- **New tracked state:** `state/pilot_a.json`, `pilot_b.json`, `first_seen.json`, `shadow_queue.jsonl`, `notified_tasks.json`. All are in `state_merge.FILES` (18 entries) and in the stash lists.
+- **Tests:**
+  - New: `tests/test_{p1_evidence,p2_opening,s1_native,m1_memory,k1_catalogue,n1_node}.py`.
+  - `tests/conftest.py` pins every new default-on switch OFF.
+  - Small edits in `test_pipeline_logic.py`.
+- **Specs:** `docs/spec/ai-pulse-v3-growth.md` (the programme and the shared evidence interface), plus `ai-pulse-v3p1/p2/s1/m1/k1/n1.md`.
+- **Docs:** `docs/PHASES.md`, `docs/DECISIONS.md`, `CLAUDE.md`, this file.
 
 ## Decisions made
-- The owner delegated the review's open choices ("whatever you think will be best"). They are
-  recorded in DECISIONS (2026-11-01).
-- Agreed wording is used verbatim. When it did not fit the slot, the slot changed, not the words.
-- A recording holds its last frame rather than loop.
-- `UPDATED` is not built: nothing in the data can verify a change, and the review gives no
-  threshold.
-- One integration branch, so the owner opens one PR.
+- **Every value the debate did not fix was delegated.** Each is recorded in its phase spec as "delegated — default chosen: X, because Y". Counts: P.1 26, P.2 32, S.1 21, M.1 20, N.1 25, and several in K.1. The owner has not confirmed them.
+- **Evidence beats coverage.** A tool day without evidence falls back to another lane, and most days will until supply grows.
+- **Source (b), running candidate code, is not built anywhere.** Its containment gates cannot be met on GitHub runners or on Windows Home. That is also why T.1 tests HOSTED demos rather than local CPU runs, which changes the ChatGPT round's plan and is pending the owner's confirmation.
+- **When both pilots run on the same day,** Pilot A owns the long-form row's experiment fields.
+- **X is off by default** because it is now pay-per-use ($0.20 per post with a URL).
+- **The node runs as a hidden standard user in session 0,** not as SYSTEM and not with S4U.
+- **One integration branch,** so the owner opens one PR.
 
 ## Known broken / deliberately skipped
-- **A short README is ~69% held frame** in a tool video (68.7 s of recording for 302.5 s of
-  slots). It no longer loops, but it is static. The fix needs a decision: more pages, other
-  footage, or fewer recording slots.
-- **L.7 (CI broadcast + analytics), L.8 (seam lags + ramp) and L.9 (show wheel) are not
-  built.** Each is its own phase. L.6 already reads the manifest L.7 will write.
-- The end card's pill still says "Subscribe to ToolDojo for practical AI tools". Review point 8
-  fixed the wording of the on-stream line only.
-- The pre-existing L.3 seam lags are untouched; they are L.8's first job.
-- **Leftover worktrees:** `E:/YOUTUBE/AI-PULSE-{b4,b5,g3,g4b,gf,int,int1101,l3,l6,live,wt-main}`.
-  Remove them after the merge with `git worktree remove <path>`, never `--force`.
-- **`E:\YOUTUBE\AI-PULSE` is still on the stale `v3-gemini-fallback` branch.** Its untracked
-  `docs/debate/`, `prompts/`, `assets/music/radar/` and `output/*` files were left alone; the
-  review folder is not committed.
+- **v3-T.1 Live Trials is NOT finished.**
+  - At session end the agent had 5 commits on `v3-phase-t1`: `d5ee39c` trials, `8a3e680` trials_live, `7a33d1a` pipeline hooks, `3313c3d` tests, `25998d5` 720p/heartbeat.
+  - It was running its local 12-minute RTMP verification.
+  - Its spec, push and merge may be incomplete. It is not in `v3-growth-1104`.
+- **Never exercised live:**
+  - the LLM writer on the new prompts (no keys locally);
+  - all 5 new Analytics API queries;
+  - the opening repair against the real model;
+  - Kokoro timings (word budgets assume about 2.5 words/s);
+  - the node on real hardware.
+- **Not built:**
+  - the "before you install" verdict (the row 17 exception);
+  - the source (b) sandbox;
+  - Radar Challenger (K.2);
+  - the second upload slot (only its shadow queue exists);
+  - "documented requirement changed" alerts (there is no requirements field).
+- **Evidence supply is thin:** 3 of 27 candidates, so the tool lane will mostly fall back.
+- **Studio CSV column names for Pilot B are unverified** until the first export on D+8.
+- **The Studio login profile, which holds cookies, is still in the scratchpad:** `C:\Users\shiva\AppData\Local\Temp\claude\e--YOUTUBE-AI-PULSE\01a5917a-a008-4b2c-b488-d75f3ce6ed07\scratchpad\yt-studio-profile`. Delete it if it is not needed.
+- **Leftover worktrees:** `E:/YOUTUBE/AI-PULSE-{gw,p1,p2,s1,m1,k1,n1,t1}` from this session, plus the older `-{b4,b5,g3,g4b,gf,int,int1101,l3,l6,live,wt-main}`. Remove them after the merge with `git worktree remove <path>`, never `--force`.
+- **The main checkout `E:\YOUTUBE\AI-PULSE` is still on the stale `v3-gemini-fallback`.** Its untracked `docs/debate/`, `prompts/`, `assets/music/` and `output/*` were left alone.
 
 ## Next session starts here
-- **Phase:** v3-L.7, after the owner merges
-  https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-integration-1101?expand=1.
-- **First command:** `/boot`. Then read the first post-merge run's log for `🧰 Tool day` /
-  `🗓️` lines and confirm there is NO `⚠️ recording recut failed`.
-- **Watch out for:** L.7 adds a workflow and `state/live_broadcast.json`, so the
-  both-halves trap applies: the stash list AND `state_merge.FILES`. Check the granted OAuth
-  scope before building the insert/bind calls.
+- **Phase:** finish v3-T.1 and merge it into `v3-growth-1104`.
+  1. Read the T.1 worktree's log and status, and `docs/spec/ai-pulse-v3t1.md` if present.
+  2. Complete one real hosted episode, streamed for 12 min to a LOCAL RTMP receiver. Read its frames and measure loudness.
+  3. Push it.
+  4. Merge it with the node job row disabled, and run the suite in the background.
+  5. Push, and give the owner the single PR link: https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-growth-1104?expand=1
+- **First command:** `/boot`, then `git -C E:/YOUTUBE/AI-PULSE-t1 status --short; git -C E:/YOUTUBE/AI-PULSE-t1 log --oneline origin/v3-growth-1104..HEAD`
+- **Watch out for:** T.1 must honour N.1's job contract.
+  - Exit 0 = done.
+  - Heartbeat to `logs/trials_live.log` at least every 300 s.
+  - Read `TOOLDOJO_STREAM_PROFILE` and scale to 720×1280 on 720p.
+  - Never stream to YouTube, and never install the node on the laptop.
