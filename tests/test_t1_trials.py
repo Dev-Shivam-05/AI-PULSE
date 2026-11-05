@@ -576,6 +576,11 @@ def test_t1_sheet_starts_the_reason_with_a_capital():
           "tally": tr.tally([r]), "branch_why": "x", "narration_source": "template",
           "started_at": "2026-11-07T18:45:00+00:00", "sheet_url": ""}
     assert "Every check passed." in tr.render_sheet(ep)
+    # the 2026-11-05 run: a timed-out test has no result, so no upload-to-result time
+    timed = dict(r, branch="TIMEOUT", transcript="", seconds=39.5, why="no result within the window")
+    page = tr.render_sheet(dict(ep, tests=[timed]))
+    assert "from upload to result" not in page and "No result within the window." in page
+    assert "2.5 s from upload to result" in tr.render_sheet(dict(ep, tests=[dict(r, seconds=2.5)]))
 
 
 def test_t1_the_count_keeps_its_colour_in_all_three_end_windows():

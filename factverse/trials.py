@@ -1312,7 +1312,9 @@ def render_sheet(ep: dict) -> str:
                 for k in r.get("checks") or []) + "</table>"
             f"<p class=\"l\">{e(c.get('what'))} Voice {e(c.get('voice'))}, rate {e(c.get('rate'))}. "
             f"Ran {e(r.get('ran_at'))}"
-            + (f", {e(r.get('seconds'))} s from upload to result" if r.get("seconds") is not None else "")
+            # a run with no transcript has no "upload to result" time to report
+            + (f", {e(r.get('seconds'))} s from upload to result"
+               if r.get("seconds") is not None and r.get("transcript") else "")
             + f". {e(str(r.get('why') or '')[:1].upper() + str(r.get('why') or '')[1:])}."
             + (f" <a href=\"{e(wav)}\">Download the clip</a>" if wav else "") + "</p></div>")
     parts += ["<h2>Repeat it yourself</h2><ol>",
