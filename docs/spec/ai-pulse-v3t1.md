@@ -140,13 +140,73 @@ when a comparison cannot fit honestly, B does not run (R3 §2).
 
 ## Verification
 
-See the session report (filled in below after the local run).
+Measured 2026-11-05 on the laptop, against a local RTMP listener (ffmpeg). Nothing reached YouTube.
+
+**Run 1 (before the fixes below):** 730 s, 13 windows, 1 hold, 0 restarts, exit 0. Its frames found
+the defects listed under "Found by reading the frames".
+
+**Run 2 (`1a8c85a`, the verification run):**
+
+| Check | Result |
+|---|---|
+| Airtime | 720 s exactly: 13/13 windows, **0 holds, 0 restarts**, exit 0 |
+| Received stream | 1080×1920, 21,600 frames, decode 0 errors |
+| Timestamps | 1 anomaly: a 56 ms video step at 599.99 s (the verdict → files seam), keyframe gaps 1,977 / 2,000 / 2,023 ms |
+| Bitrate | 561 kbps (static pages); the profile's ceiling is 14,000 kbps |
+| Loudness | whole show −23.5 LUFS, peak −3.9 dBFS, LRA 20.2 LU. Most-voiced windows −19.9 to −21.4 LUFS; music alone −36.9 LUFS (run 1's hold) |
+| Real runs | 5 on `k2-fsa/automatic-speech-recognition`: 4 PASS, **1 real TIMEOUT** (test 3: no result inside 60 s; the same clip took 2.5 s in run 1) |
+| Branch shown, with its reason | TIMEOUT, 6/8: "No check failed, but test(s) 3 did not finish within 60 s." on the sheet; "6/8 CHECKS PASSED; ONE TIMED OUT" on air |
+| Results sheet at 390 px | scrollWidth 390, read in full. Not published (local run) |
+| Heartbeat | longest gap between log lines 60 s (N.1's hang limit is 300 s) |
+| 720p profile | the real encoder with a capture overlay gives 720×1280, frame read. Not timed on the node |
+
+**All four result branches, through the real segment path (no stream):** one mixed episode (PASS,
+PARTIAL/FAIL, TIMEOUT, INCONCLUSIVE, repeat of the failed test) rendered through
+`Producer.render_window`; frames read; `unfit` empty for all 10 windows. PARTIAL/FAIL and
+INCONCLUSIVE have never aired, and the test-incomplete ending is verified by logic only.
+
+**Found by reading the frames, fixed and test-pinned:**
+
+1. A check's value ("KEY WORDS 2/2", "ERRORS 0") and the running score were on screen before the
+   replay, so the show announced each result before running it.
+2. The first segment rendered was fitted before the fonts had loaded, then drawn in the real font:
+   the hold card's disclosure lost its last characters.
+3. Fit was measured on `display:none` elements, which measure 0 and always "fit": the repeat's
+   sub-line was clipped while reporting no problem.
+4. A 10 s hold card aired at 1:30, every episode. 21 of the 38 s a 90 s window took to render were
+   per-second screenshots of a page with no moving clock. `frame_times` draws only the moments the
+   page can change (107 → 31 shots; 90 s window now ~24 s).
+5. A timed-out test's sheet entry said "39.5 s from upload to result", when there was no result.
+6. The final count changed colour between the verdict and the files/limits windows.
+
+## Open: the show is mostly still (v3-T.1b, not built, needs the owner's word)
+
+Measured on run 2, PASS narration: **182 s of voice in 720 s (25%)**, and **401 s of the show sit in
+stretches of 15 s or more where nothing on screen changes**; the longest is 62 s (`repeat`), and
+each run window ends on 49-60 s of one static frame. **The viewer also never hears a clip**: the
+input is shown as text only. The show is stable, but this is likely to cost the L11 retention
+target (archive AVD > 1:02). Proposed, keeping the locked 12-minute grid:
+
+| # | Change | Value |
+|---|---|---|
+| 1 | Play the real fixture in every run window, after its narration | the committed WAV at the speech level, −19.8 LUFS (L6 row 10), bed unchanged |
+| 2 | Narrate up to the budgets already in `WINDOW_SPEECH` | run 40 s (today 17-20 s), repeat intro 26 s (today 10 s) |
+| 3 | Reveal the transcript word by word beside the reference, each word marked as it lands | one word every 0.5 s |
+
+Target: voice ≥ 50% of the show, no unchanged stretch over 15 s.
 
 ## Known limits
 
 - **Two fixture sets = two episodes.** The third show is refused until a new set is committed.
-- Every test so far PASSES on both drivable Spaces (16/16 runs): the fixtures may be too easy to
-  separate tools. Harder fixtures must still be fair; that is an editorial call for the owner.
+- Every completed test so far PASSES on both drivable Spaces (the only non-pass in the verification
+  runs was a timeout): the fixtures may be too easy to separate tools. Harder fixtures must still
+  be fair; that is an editorial call for the owner.
+- `repeat_choice` repeats the first PARTIAL/FAIL, else the control, per R3's wording. So a TIMEOUT is
+  not repeated; run 2 re-ran the control instead of the clip that timed out.
+- The render headroom is measured on the laptop only. On the node's i3 a window may land late, and
+  a hold card then airs; more than 120 s of holds ends the show.
+- 561 kbps is far below the profile's ceiling. Whether YouTube warns about it is unknown until the
+  private rehearsal.
 - `istupakov/onnx-asr` is listed but not drivable: its simple tab returns a dataframe (headless
   Chromium crashed on it in the prototype) and the generic plan picks its VAD tab, whose button
   is hidden behind a tab. Its preflight fails (INCONCLUSIVE in 49 s) and the next candidate runs.

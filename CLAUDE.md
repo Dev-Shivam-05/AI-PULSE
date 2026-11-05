@@ -295,6 +295,21 @@ name that is not written there. If a decision is missing, add a row and get one 
   - A node-wide env var reaches every job that imports your module.
   - Never test the installer for real on the owner's laptop: `-DryRun` only.
 
+- **A fit loop has two ways to report success while the text is clipped.** A `display:none`
+  element measures 0, so it always fits; and text measured before `@font-face` has loaded is
+  fitted in the fallback font, then drawn in the real one. `trials.html` makes every state visible
+  while measuring and sets `__ready` only after `document.fonts.load`. Both were found by reading
+  frames, with `unfit` empty.
+- **A timed reveal must hide the value, not only the tick.** The Live Trials rows ticked on time
+  while "KEY WORDS 2/2" and the top score were already on screen before the replay. When checking a
+  reveal, read a frame from BEFORE it.
+- **`/boot` reads whichever branch the checkout is on.** While work sits on an unmerged integration
+  branch, the main checkout's handoff is stale: on 2026-11-05 it was 5 weeks old and reported no
+  phase to build. Before trusting it, compare `git branch -r --no-merged origin/main` and each
+  branch's `docs/HANDOFF.md` title.
+- **A clean stream is not a watchable show.** The first full Live Trials run had 0 decode errors
+  and 75% of its time without voice. List each window's longest unchanged frame from `list.txt`.
+
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
 frames, read the PDF, print the assembled description. "The code runs" is not evidence.

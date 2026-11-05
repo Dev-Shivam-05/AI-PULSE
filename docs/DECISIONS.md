@@ -680,3 +680,16 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   Otherwise the next self-update would overwrite one machine's measurement with another's.
 - **Before the node streams, the laptop's radar schedule must be removed**, so two PCs never
   stream to one key.
+
+## 2026-11-05 — v3-T.1: verified, merged, still time left open
+
+- **T.1 is merged into `v3-growth-1104` switched off** (`trials_live: false`, node row disabled).
+  It was verified by a real 720 s episode to a local RTMP listener. It has not streamed to YouTube
+  or run on the node.
+- **The still time is a proposal, not a fix made in this phase.** Voice is 25% of the show, and
+  401 of 720 s are stretches of 15 s+ where nothing changes. Fixing it needs new values, so it is
+  row v3-T.1b, awaiting the owner's word. The locked 12-minute grid was not touched.
+- **Rendering draws only the moments the page can change.** Radar's per-second frames exist for
+  its moving clock; here they cost the time that put a hold card at 1:30.
+- **`repeat_choice` stays on R3's wording** (first PARTIAL/FAIL, else the control). A timed-out
+  test is not repeated unless the owner says otherwise.
