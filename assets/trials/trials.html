@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>trials</title>
+<!-- v3-T.1 ToolDojo Live Trials (docs/spec/ai-pulse-v3t1.md). Rendered by
+     scripts/trials_live.py in headless Chromium at 1080x1920 (vertical, Stacked):
+     __load(segment) once per segment, then one screenshot per __seek(t).
+     Every value is set with textContent, never parsed as markup; the page loads no
+     script and no network URL; fonts come from assets/fonts.
+     Text is fitted by MEASURING it (CLAUDE.md), with the round's floors: 64 px for
+     essential text, 80 px for headings, 96 px for the principal score. Labels
+     (brand, disclosure, card headers) are the 32-40 px source-label tier (P.1 D12).
+     Hide with display/opacity only - a child's `visibility: visible` overrides a
+     hidden parent (the storyboard trap). The capture replay is composited by ffmpeg
+     into #vbox's rectangle; the page only draws the frame around it. -->
+<style>
+@font-face { font-family: "Inter"; font-weight: 900; src: url("../fonts/Inter-Black.ttf"); }
+@font-face { font-family: "JetBrains Mono"; src: url("../fonts/JetBrainsMono-Regular.ttf"); }
+:root {
+  --bg: #090D18; --text: #F4F7FF; --subt: #96AACD; --cyan: #22D3EE; --yellow: #FFD60A;
+  --card-top: #0D1426; --card-bot: #182E5C; --pass: #3FB950; --fail: #FF5A5F; --na: #F0A92E;
+}
+html, body { margin: 0; padding: 0; width: 1080px; height: 1920px; background: var(--bg);
+  overflow: hidden; }
+body { font-family: "Inter", "Segoe UI", sans-serif; font-weight: 900; color: var(--text); }
+.mono { font-family: "JetBrains Mono", "Consolas", monospace; font-weight: 400; }
+.abs { position: absolute; left: 40px; width: 1000px; box-sizing: border-box; }
+#top { top: 36px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+#brand { font-size: 40px; letter-spacing: 1px; white-space: nowrap; }
+#brand span { color: var(--cyan); }
+#tscore { font-size: 40px; color: var(--yellow); white-space: nowrap; }
+#disc { top: 104px; height: 48px; font-size: 36px; line-height: 48px; color: var(--subt);
+  overflow: hidden; white-space: nowrap; }
+#tool { top: 196px; height: 96px; font-size: 80px; line-height: 96px; white-space: nowrap;
+  overflow: hidden; color: var(--cyan); }
+#q { top: 296px; height: 148px; font-size: 64px; line-height: 74px; overflow: hidden; }
+.card { border-radius: 20px; background: linear-gradient(var(--card-top), var(--card-bot));
+  overflow: hidden; }
+#ev { top: 456px; height: 474px; }
+#out { top: 946px; height: 396px; }
+.head { position: absolute; left: 28px; right: 28px; top: 8px; height: 48px;
+  display: flex; align-items: center; gap: 16px; }
+.badge { flex: none; font-size: 32px; line-height: 44px; padding: 0 16px; border-radius: 999px;
+  background: var(--bg); color: var(--text); border: 3px solid var(--fail); white-space: nowrap; }
+.hl { flex: 1; min-width: 0; font-size: 34px; line-height: 44px; color: var(--subt);
+  white-space: nowrap; overflow: hidden; }
+.body { position: absolute; left: 32px; right: 32px; top: 64px; bottom: 20px; overflow: hidden; }
+.line { font-size: 64px; line-height: 74px; overflow-wrap: anywhere; }
+.line.url { font-family: "JetBrains Mono", "Consolas", monospace; font-weight: 400; color: var(--cyan); }
+.line.sub { color: var(--subt); }
+.line.yel { color: var(--yellow); }
+.line.cyan { color: var(--cyan); }
+#vbox { position: absolute; left: 140px; top: 56px; width: 720px; height: 404px;
+  background: #000; display: none; }
+#vbox div { position: absolute; left: 0; right: 0; top: 180px; text-align: center;
+  font-size: 40px; color: var(--subt); }
+#tx { font-size: 64px; line-height: 74px; }
+#tx .sub { background: rgba(255, 90, 95, 0.35); border-bottom: 6px solid var(--fail); }
+#tx .ins { background: rgba(240, 169, 46, 0.30); border-bottom: 6px solid var(--na); }
+#pend { font-size: 64px; line-height: 74px; color: var(--yellow); display: none; }
+#score { top: 1354px; height: 180px; }
+.row { display: flex; align-items: center; gap: 20px; height: 84px; }
+.mark { flex: none; width: 76px; height: 76px; border-radius: 16px; font-size: 56px;
+  line-height: 76px; text-align: center; background: var(--card-top); color: var(--subt); }
+.mark.pass { background: var(--pass); color: var(--bg); }
+.mark.fail { background: var(--fail); color: var(--bg); }
+.mark.na { background: var(--na); color: var(--bg); }
+.rtext { flex: 1; min-width: 0; font-size: 64px; line-height: 76px; white-space: nowrap;
+  overflow: hidden; }
+#big { font-size: 96px; line-height: 104px; white-space: nowrap; overflow: hidden; }
+#bigsub { font-size: 64px; line-height: 76px; white-space: nowrap; overflow: hidden; }
+.pass { color: var(--pass); } .fail { color: var(--fail); } .na { color: var(--na); }
+#cap { top: 1540px; height: 152px; display: flex; align-items: center; justify-content: center;
+  text-align: center; font-size: 64px; line-height: 74px; overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="top" class="abs"><div id="brand">TOOLDOJO <span>LIVE TRIALS</span></div>
+  <div id="tscore" class="mono"></div></div>
+<div id="disc" class="abs mono"></div>
+<div id="tool" class="abs"></div>
+<div id="q" class="abs"></div>
+<div id="ev" class="abs card">
+  <div class="head"><div id="evb" class="badge"></div><div id="evh" class="hl mono"></div></div>
+  <div id="evl" class="body"></div>
+  <div id="vbox"><div class="mono">REPLAY</div></div>
+</div>
+<div id="out" class="abs card">
+  <div class="head"><div id="outh" class="hl mono"></div></div>
+  <div id="outb" class="body"><div id="tx"></div><div id="pend"></div><div id="outl"></div></div>
+</div>
+<div id="score" class="abs">
+  <div id="rows"></div>
+  <div id="tot" style="display:none"><div id="big"></div><div id="bigsub"></div></div>
+</div>
+<div id="cap" class="abs"></div>
+<script>
+(function () {
+  "use strict";
+  var seg = null;
+  var CAP_HOLD = 0.6;
+  var MARK = {pass: "✓", fail: "✗", na: "?", wait: "…"};
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = String(text);
+    return e;
+  }
+  function clear(e) { while (e.firstChild) e.removeChild(e.firstChild); }
+  function over(e) { return e.scrollHeight > e.clientHeight + 1 || e.scrollWidth > e.clientWidth + 1; }
+  // Shrink until it fits; false when it still does not fit at the floor.
+  function fit(e, max, min) {
+    var s = max;
+    e.style.fontSize = s + "px";
+    while (over(e) && s > min) { s -= 2; e.style.fontSize = s + "px"; }
+    return !over(e);
+  }
+  function lines(target, list, unfit, name) {
+    clear(target);
+    (list || []).forEach(function (l) { target.appendChild(el("div", "line " + (l.cls || ""), l.text)); });
+    // a line list that does not fit at 64 px loses its LAST lines, never shrinks below the floor
+    var cut = false;
+    while (over(target) && target.children.length > 1) { target.removeChild(target.lastChild); cut = true; }
+    if (over(target) || cut) unfit.push(name);
+  }
+  // The transcript is fitted at the 64 px floor; when the tool's output is longer than
+  // the card, words are dropped from the end and an ellipsis says so (the full output
+  // is on the results sheet). Measured, never counted.
+  function transcript(tokens) {
+    var tx = $("tx"), box = $("outb");
+    clear(tx);
+    var spans = [];
+    (tokens || []).forEach(function (t, i) {
+      if (i) tx.appendChild(document.createTextNode(" "));
+      var s = el("span", t[1] === "sub" ? "sub" : t[1] === "ins" ? "ins" : "", t[0]);
+      tx.appendChild(s); spans.push(s);
+    });
+    var cut = false;
+    while (over(box) && spans.length > 1) {
+      var last = spans.pop();
+      tx.removeChild(last.previousSibling); tx.removeChild(last);
+      cut = true;
+    }
+    if (cut) tx.appendChild(document.createTextNode(" …"));
+    while (over(box) && spans.length > 1) {           // the ellipsis itself may wrap
+      var l2 = spans.pop(); tx.removeChild(l2.previousSibling); tx.removeChild(l2);
+    }
+    return cut;
+  }
+
+  window.__load = function (s) {
+    seg = s;
+    var unfit = [];
+    $("disc").textContent = s.disclosure || "";
+    if (!fit($("disc"), 36, 30)) unfit.push("disclosure");
+    $("tscore").textContent = s.top_score || "";
+    $("tool").textContent = s.tool || "";
+    if (!fit($("tool"), 80, 64)) unfit.push("tool");
+    // the full question when it fits at the 64 px floor, else the episode's short form
+    $("q").textContent = s.question || "";
+    if (!fit($("q"), 64, 64) && s.question_short) {
+      $("q").textContent = s.question_short;
+      if (!fit($("q"), 64, 64)) unfit.push("question");
+    }
+    var ev = s.ev || {};
+    $("evb").textContent = ev.badge || "";
+    $("evb").style.display = ev.badge ? "block" : "none";
+    $("evh").textContent = ev.header || "";
+    fit($("evh"), 34, 26);
+    lines($("evl"), ev.lines, unfit, "evidence");
+    var out = s.out || {};
+    $("outh").textContent = out.header || "";
+    fit($("outh"), 34, 26);
+    clear($("outl"));
+    (out.lines || []).forEach(function (l) { $("outl").appendChild(el("div", "line " + (l.cls || ""), l.text)); });
+    $("pend").textContent = out.pending || "";
+    var sc = s.score || {};
+    var rows = $("rows");
+    clear(rows);
+    (sc.rows || []).forEach(function (r) {
+      var row = el("div", "row");
+      row.appendChild(el("div", "mark", MARK.wait));
+      row.appendChild(el("div", "rtext", r.text));
+      rows.appendChild(row);
+    });
+    $("big").textContent = sc.big || "";
+    $("big").className = sc.big_cls || "";
+    $("bigsub").textContent = sc.sub || "";
+    window.__seek(0);
+    // measure every state once, each one VISIBLE: a display:none element measures 0 and
+    // "fits" (the repeat's sub-line was clipped at 64 px while reporting no problem)
+    $("pend").style.display = "none";
+    $("outl").style.display = "block";
+    $("rows").style.display = "block";
+    $("tot").style.display = "block";
+    if (out.tokens && out.tokens.length) {
+      $("tx").style.display = "block";
+      if (transcript(out.tokens)) unfit.push("transcript_cut");
+    }
+    if (over($("outb"))) unfit.push("output");
+    // measured with the RESULT text: a row only says its value once its check ticks
+    Array.prototype.forEach.call(rows.querySelectorAll(".rtext"), function (r, i) {
+      r.textContent = sc.rows[i].text;
+      if (!fit(r, 64, 52)) unfit.push("score_row");
+    });
+    if (!fit($("big"), 96, 80)) unfit.push("score");
+    if (!fit($("bigsub"), 64, 52)) unfit.push("score_sub");
+    window.__seek(0);
+    return unfit;
+  };
+
+  window.__seek = function (t) {
+    if (!seg) return;
+    var cap = $("cap"), text = "";
+    var ph = seg.phrases || [];
+    for (var i = 0; i < ph.length; i++) {
+      var nextStart = i + 1 < ph.length ? ph[i + 1][0] : Infinity;
+      if (t >= ph[i][0] && t < Math.min(nextStart, ph[i][1] + CAP_HOLD)) { text = ph[i][2]; break; }
+    }
+    cap.textContent = text;
+    if (text) fit(cap, 64, 56);
+    var ev = seg.ev || {};
+    var vid = ev.video_from != null && t >= ev.video_from && t < ev.video_to;
+    $("vbox").style.display = vid ? "block" : "none";
+    $("evl").style.opacity = vid ? "0" : "1";
+    var out = seg.out || {};
+    var shown = out.reveal_at == null || t >= out.reveal_at;
+    var hasTx = !!(out.tokens && out.tokens.length);
+    $("tx").style.display = shown && hasTx ? "block" : "none";
+    $("outl").style.display = shown ? "block" : "none";
+    $("pend").style.display = shown ? "none" : "block";
+    var sc = seg.score || {};
+    var total = sc.mode === "total" && (sc.total_at == null || t >= sc.total_at);
+    $("rows").style.display = total ? "none" : "block";
+    $("tot").style.display = total ? "block" : "none";
+    var marks = $("rows").querySelectorAll(".mark");
+    var texts = $("rows").querySelectorAll(".rtext");
+    (sc.rows || []).forEach(function (r, i) {
+      var on = r.at == null || t >= r.at;
+      var st = on ? (r.state || "wait") : "wait";
+      marks[i].textContent = MARK[st] || MARK.wait;
+      marks[i].className = "mark " + (st === "wait" ? "" : st);
+      // no spoilers: until a check ticks, its row names the check, not the value
+      texts[i].textContent = on || !r.pending ? r.text : r.pending;
+    });
+    // the running count moves when the test's branch lands, not when the window opens
+    var early = seg.top_score_at != null && t < seg.top_score_at;
+    $("tscore").textContent = (early ? seg.top_score_before : seg.top_score) || "";
+  };
+
+  // The first __load measures text, so the faces must be in first. A segment fitted in
+  // the fallback face and then drawn in the real one is clipped (the first hold card's
+  // disclosure lost its last characters).
+  function ready() { window.__ready = true; }
+  Promise.all([document.fonts.load('900 64px "Inter"'),
+               document.fonts.load('400 36px "JetBrains Mono"')]).then(ready, ready);
+})();
+</script>
+</body>
+</html>

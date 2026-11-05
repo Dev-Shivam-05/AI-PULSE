@@ -1,0 +1,183 @@
+{
+  "family": "speech-to-text",
+  "spec": "docs/spec/ai-pulse-v3t1.md",
+  "provenance": "Self-generated for ToolDojo Live Trials: the sentences were written by ToolDojo, voiced with Microsoft Edge TTS (the voices named per clip) and resampled to 16 kHz mono 16-bit WAV; the background noise is ffmpeg's anoisesrc with the fixed seed named per clip. No third-party recording is used.",
+  "format": "WAV, 16 kHz, mono, 16-bit PCM",
+  "sets": [
+    {
+      "id": "voice-notes",
+      "title": "Short voice notes",
+      "question": "Can {tool} turn short voice notes into text you can use?",
+      "question_short": "Voice notes into usable text?",
+      "limitation": "The clips are four short synthetic voices reading one sentence each. Real voice notes with crosstalk, music or long pauses were not tested.",
+      "takeaway_pass": "if your voice notes are short and clear like these, it is worth a try",
+      "takeaway_fail": "check names, times and numbers by hand before you trust its notes",
+      "clips": [
+        {
+          "id": "c1",
+          "role": "control",
+          "file": "voice-notes/c1-control.wav",
+          "name": "The control",
+          "text": "Please send the final report to the design team before Friday afternoon.",
+          "terms": [
+            "report",
+            "Friday"
+          ],
+          "voice": "en-US-AriaNeural",
+          "rate": "+0%",
+          "noise": null,
+          "what": "A clear American voice at a normal pace.",
+          "why": "This is the control: if it fails here, nothing harder will work.",
+          "sha256": "d92d710422ea71f5cffbb77177d55badb69c5daa67deff3ddaab9f386714ab52",
+          "seconds": 4.71
+        },
+        {
+          "id": "c2",
+          "role": "ordinary",
+          "file": "voice-notes/c2-details.wav",
+          "name": "Name, time and room",
+          "text": "Call Maria at nine fifteen and move the budget meeting to room four.",
+          "terms": [
+            "Maria",
+            "four"
+          ],
+          "voice": "en-US-AndrewNeural",
+          "rate": "+0%",
+          "noise": null,
+          "what": "A name, a time and a room number in one sentence.",
+          "why": "These are the details a voice note exists to keep. Room four must not become room for.",
+          "sha256": "e7d8dc54899fa75aaef744741726d6291f7bed8b9e2090a5483e20889005deba",
+          "seconds": 4.13
+        },
+        {
+          "id": "c3",
+          "role": "complication",
+          "file": "voice-notes/c3-fast.wav",
+          "name": "Fast British speech",
+          "text": "The client wants three changes: a darker logo, shorter headlines and a new contact page.",
+          "terms": [
+            "logo",
+            "headlines"
+          ],
+          "voice": "en-GB-RyanNeural",
+          "rate": "+35%",
+          "noise": null,
+          "what": "A British voice speaking about a third faster than normal.",
+          "why": "People record voice notes in a hurry, and accents vary.",
+          "sha256": "b12dae06463b11ec0975ccbef9a2da4afed22a4050b6b307922b8972169b5311",
+          "seconds": 4.68
+        },
+        {
+          "id": "c4",
+          "role": "boundary",
+          "file": "voice-notes/c4-noise.wav",
+          "name": "Speech under noise",
+          "text": "Remember to back up the laptop and change the password before the trip.",
+          "terms": [
+            "laptop",
+            "password"
+          ],
+          "voice": "en-IN-NeerjaNeural",
+          "rate": "+0%",
+          "noise": {
+            "color": "pink",
+            "seed": 7,
+            "snr_db": 5
+          },
+          "what": "An Indian English voice under steady background hiss, only five decibels quieter than the speech.",
+          "why": "This is the boundary case: a noisy room is where transcription usually breaks.",
+          "sha256": "6057253b54d0821508db36929372d94365f6dde580a8af62c10265625258446a",
+          "seconds": 5.33
+        }
+      ]
+    },
+    {
+      "id": "dev-commands",
+      "title": "Developer jargon",
+      "question": "Can {tool} transcribe developer jargon without mangling it?",
+      "question_short": "Developer jargon, word for word?",
+      "limitation": "The clips are four short synthetic voices reading one instruction each. Long technical recordings, code spelled out letter by letter and mixed languages were not tested.",
+      "takeaway_pass": "if you dictate short technical notes like these, it is worth a try",
+      "takeaway_fail": "check technical terms by hand before you paste its output anywhere",
+      "clips": [
+        {
+          "id": "c1",
+          "role": "control",
+          "file": "dev-commands/c1-control.wav",
+          "name": "The control",
+          "text": "Open the terminal, pull the latest changes and run the tests again.",
+          "terms": [
+            "terminal",
+            "tests"
+          ],
+          "voice": "en-US-EmmaNeural",
+          "rate": "+0%",
+          "noise": null,
+          "what": "A clear American voice giving one plain instruction.",
+          "why": "This is the control: everyday developer words at a normal pace.",
+          "sha256": "d6056db961c6db79d20ab42420b3ff72c50c5c24f075f0f368f3f5ed1eaf360c",
+          "seconds": 4.08
+        },
+        {
+          "id": "c2",
+          "role": "ordinary",
+          "file": "dev-commands/c2-numbers.wav",
+          "name": "Settings with numbers",
+          "text": "Set the timeout to thirty seconds and retry the request five times.",
+          "terms": [
+            "timeout",
+            "thirty"
+          ],
+          "voice": "en-US-BrianNeural",
+          "rate": "+0%",
+          "noise": null,
+          "what": "A configuration change with two numbers in it.",
+          "why": "A wrong number in a setting is worse than a missing word.",
+          "sha256": "ee541c85e99ea172c5df20daef23159321ad49a214a33d589420e953da2a5275",
+          "seconds": 4.39
+        },
+        {
+          "id": "c3",
+          "role": "complication",
+          "file": "dev-commands/c3-fast.wav",
+          "name": "Fast Australian jargon",
+          "text": "The database migration failed because the schema version was older than expected.",
+          "terms": [
+            "migration",
+            "schema"
+          ],
+          "voice": "en-AU-NatashaNeural",
+          "rate": "+35%",
+          "noise": null,
+          "what": "An Australian voice reading dense jargon about a third faster than normal.",
+          "why": "Words like schema and migration are rare in everyday speech, so models guess.",
+          "sha256": "4b54b33b8475b261bb5e405ee7bc76a720175851417a918899aacb8034acb7b2",
+          "seconds": 4.01
+        },
+        {
+          "id": "c4",
+          "role": "boundary",
+          "file": "dev-commands/c4-quiet.wav",
+          "name": "Quiet speech in a noisy room",
+          "text": "Restart the server, clear the cache and check the error log for warnings.",
+          "terms": [
+            "cache",
+            "log"
+          ],
+          "voice": "en-IE-ConnorNeural",
+          "rate": "+0%",
+          "noise": {
+            "color": "brown",
+            "seed": 11,
+            "snr_db": 5,
+            "gain_db": -18
+          },
+          "what": "An Irish voice recorded far too quietly, with a low rumble five decibels under it.",
+          "why": "This is the boundary case: a quiet laptop microphone in a busy room. Cache must not become cash.",
+          "sha256": "04d86dac7853830aed6166098927b6f9e366016e210d5b3c3960da4f2f9e8642",
+          "seconds": 4.83
+        }
+      ]
+    }
+  ]
+}

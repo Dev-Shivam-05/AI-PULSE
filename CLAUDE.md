@@ -147,6 +147,11 @@ name that is not written there. If a decision is missing, add a row and get one 
   `def` silently replaced the earlier one and 16 Telegram/X tests failed with a TypeError in
   code nobody touched. Grep `^def <name>` before adding a helper; prefix it with the phase's
   subject (`_ledger_row`).
+- **A picker that reads the REAL ledger makes every older test of it depend on what was
+  published.** v3-B.5's evergreen subject screen calls `learn.read_runs(RUNS_LOG)`; two older
+  tests went red the day it landed because the live ledger's "The Chip Revolution" and LLM
+  evergreens blocked their fixture ideas. Stub the reader as the consumer sees it
+  (`ap.learn.read_runs`) in every test that reaches the picker, not just the new ones.
 - **A learning metric needs the numbers per VIDEO, not the top-N.** The collector's top-25
   report is crowded out by Shorts; 11 of the first 33 v3 long-forms never appeared in any
   snapshot. `analytics.ledger_query_args` asks for the ledger's own ids. And `json.loads`
@@ -252,6 +257,58 @@ name that is not written there. If a decision is missing, add a row and get one 
   TS scene segments start at pts 1.4 s, so every input needs
   `setpts=PTS-STARTPTS,…,settb=AVTB` or xfade fails "timebase do not match". Count frames
   with `ffprobe -count_frames`; the audio-trimmed duration hides it.
+
+- **Mixed colour tags inside a scene make the dissolve join drop frames.** v3-P.2's untagged
+  stills next to recording pieces lost 9 s and fell back to hard cuts. Opening clips are tagged
+  `bt470bg`; tag any new generated clip the same way.
+- **Wording fixed by contract is recomputed where it is RENDERED, never carried in a dict.**
+  The evidence `label` / status `wording`, and every catalog href, are rebuilt at render time.
+  A clean merge of P.1 into K.1 silently swapped K.1's recompute for P.1's pass-through, so a
+  planted "Best tool ever" label would have reached the public catalog. A test now pins it.
+- **A hosted demo's frame 0 is not a settled page, and a changed page is not a visible
+  result.** Some Spaces pre-load their first example's output, and Gradio 6 puts no element ids
+  on components. A quota error shows in a toast, not on the red "Error" badge.
+  `evidence.py` checks a visible pixel change in the output region; keep it that way.
+- **Whisper clamps the first word to 0.00 s.** Any "speech starts by N s" gate needs the
+  measured audio onset (`silencedetect`); take the later of the two.
+- **Word budgets are a property of the voice.** edge-tts reads ~3.1 words/s and Kokoro ~2.5,
+  so a 150-210 s band in words is only right for one of them. The opening gate measures the
+  encoded duration; re-tune the budgets from CI's first pilot day.
+- **Experiment fields reach `record_run` as ONE merged dict** (`{**_s1_ledger, **_p2_ledger}`).
+  A second `experiment=` keyword is a TypeError inside the double-publish window. AST-check
+  the PUBLISHED call for duplicate keywords after any merge.
+- **`creatorContentType` is a dimension, never a filter**, in the YouTube Analytics API. Filter
+  the on-demand rows in code.
+- **Shorts "stayed to watch" and feed impressions are in NO public API** (Analytics or
+  Reporting, checked 2026-11-04). Pilot B reads a Studio CSV export instead.
+- **Screen candidates BEFORE cutting to N.** The shadow queue's first live pass spent all 3
+  slots on Product Hunt pages that the free screen rejects anyway, and never reached the
+  eligible repo.
+- **A kill switch that defaults ON reaches every older test that walks that path.**
+  `tests/conftest.py` pins the new growth switches OFF, and each phase's own tests turn them on.
+  A new default-on switch belongs in that fixture too.
+- **The node runs jobs as another user in session 0.** Its consequences:
+  - A per-user Python/git install is invisible to that user, so `install.ps1` requires
+    machine-wide installs.
+  - A child started with `DETACHED_PROCESS` flashes a console; use `CREATE_NO_WINDOW`.
+  - A `.env` saved with a BOM breaks its first key.
+  - A node-wide env var reaches every job that imports your module.
+  - Never test the installer for real on the owner's laptop: `-DryRun` only.
+
+- **A fit loop has two ways to report success while the text is clipped.** A `display:none`
+  element measures 0, so it always fits; and text measured before `@font-face` has loaded is
+  fitted in the fallback font, then drawn in the real one. `trials.html` makes every state visible
+  while measuring and sets `__ready` only after `document.fonts.load`. Both were found by reading
+  frames, with `unfit` empty.
+- **A timed reveal must hide the value, not only the tick.** The Live Trials rows ticked on time
+  while "KEY WORDS 2/2" and the top score were already on screen before the replay. When checking a
+  reveal, read a frame from BEFORE it.
+- **`/boot` reads whichever branch the checkout is on.** While work sits on an unmerged integration
+  branch, the main checkout's handoff is stale: on 2026-11-05 it was 5 weeks old and reported no
+  phase to build. Before trusting it, compare `git branch -r --no-merged origin/main` and each
+  branch's `docs/HANDOFF.md` title.
+- **A clean stream is not a watchable show.** The first full Live Trials run had 0 decode errors
+  and 75% of its time without voice. List each window's longest unchanged frame from `list.txt`.
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the

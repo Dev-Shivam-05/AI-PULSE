@@ -316,9 +316,17 @@ def fact_sources(script: dict) -> str:
     Facts go FIRST so fact_check's [:12000] cut can never drop them."""
     grounding = str(script.get("grounding") or "")
     lines = facts_lines(script.get("verified_facts"))
-    if not lines:
-        return grounding
-    return "VERIFIED FACTS (official API):\n" + lines + "\n\n" + grounding
+    # v3-P.1: the writer is ordered to state the evidence's observed result, so the
+    # checker must read it too ("the checker reads what the writer was ordered to
+    # use"). Imported here to keep the module graph one-way.
+    from factverse import evidence as _ev
+    ev_lines = _ev.fact_lines(script.get("evidence"))
+    head = ""
+    if lines:
+        head += "VERIFIED FACTS (official API):\n" + lines + "\n\n"
+    if ev_lines:
+        head += "EVIDENCE (captured by the channel):\n" + ev_lines + "\n\n"
+    return head + grounding if head else grounding
 
 
 def fact_check(script: dict, hook_texts: list[str], sources_text: str) -> dict:
@@ -428,6 +436,229 @@ def longform_title_screen(script: dict) -> dict:
     if alt:
         script["title"] = alt
     return {"terms": terms, "alt": bool(alt)}
+
+
+# --------------------------------------------------------------- substantiation (v3-P.1 row 3)
+# A STANDARD, not a test (review 2026-11-04 row 3): an outcome claim in the long-form
+# title or thumbnail that ToolDojo did not observe is attributed ("Claimed 2× …") or
+# dropped. "Observed" = the claim is in evidence.supported_claims of a
+# PASSED_FIXED_TEST. "Double Your AI Speed" (10-31) is the case that started it.
+TITLE_MAX = 95             # _validate_script's own title cap
+THUMB_MAX_CHARS = 26       # _validate_script's own thumb cap
+THUMB_MAX_WORDS = 4        # make_tool_thumb burns the first 4 words only
+_N = r"\d+(?:[.,]\d+)?\+?"
+_GAIN = (r"faster|quicker|cheaper|smaller|lighter|better|more|less|fewer|bigger|larger|boost|"
+         r"boosts|gain|gains|cut|cuts|reduction|reduced|lower|higher|improvement|speedup|"
+         r"speed-?up|savings?|saved|increase|drop|accuracy")
+_CLAIM_RES = [
+    # 2x / 2× / 1.5X — not "2x2", not "RTX 4090"
+    re.compile(rf"(?<![\w.]){_N}\s?[x×](?![\w×])", re.I),
+    # 3 times faster
+    re.compile(rf"(?<![\w.]){_N}\s+times\s+(?:{_GAIN})\b", re.I),
+    # Double / Triple / Halve (your|the|its) …  — a multiplier said as a verb
+    re.compile(r"\b(?:doubles?|doubled|doubling|triples?|tripled|quadruples?|halves|halve|halved)"
+               r"(?!-)\b(?:\s+(?:your|the|its|their))?", re.I),
+    # 60% Sales Boost / 56% GPU Cost Cut / 40% faster
+    re.compile(rf"(?<![\w.]){_N}\s?%(?:\s+[\w-]+){{0,2}}?\s+(?:{_GAIN})\b", re.I),
+    # the verb-first form: cuts costs by 40%
+    re.compile(rf"\b(?:cuts?|slash(?:es)?|boosts?|reduces?|saves?|improves?|speeds?\s+up)"
+               rf"(?:\s+[\w-]+){{0,2}}?\s+(?:by\s+)?{_N}\s?%", re.I),
+    # 75+ Hrs Saved / saves 10 hours
+    re.compile(rf"(?<![\w.]){_N}\s?(?:hrs?|hours?|minutes?|mins?|days?)\s+(?:[\w-]+\s+)?saved\b", re.I),
+    re.compile(rf"\bsaves?\s+(?:you\s+)?{_N}\s?(?:hrs?|hours?|minutes?|mins?|days?)\b", re.I),
+    # in 10 seconds / under 200 ms
+    re.compile(rf"\b(?:in|under)\s+{_N}\s?(?:s|secs?|seconds?|ms|milliseconds?)\b", re.I),
+]
+_VERB_MULT = {"double": "2×", "doubles": "2×", "doubled": "2×", "doubling": "2×",
+              "triple": "3×", "triples": "3×", "tripled": "3×",
+              "quadruple": "4×", "quadruples": "4×",
+              "halve": "Half the", "halves": "Half the", "halved": "Half the"}
+_CLAUSE_DELIM = re.compile(r"[:;,|?!—–]|\s-\s|\.\s")
+
+
+def outcome_claims(text: str) -> list[dict]:
+    """Outcome claims in a packaging string: [{"start","end","text"}], in order,
+    overlapping matches merged. Deterministic, never raises."""
+    t = str(text or "")
+    spans = []
+    for rx in _CLAIM_RES:
+        for m in rx.finditer(t):
+            spans.append([m.start(), m.end()])
+    spans.sort()
+    merged = []
+    for s, e in spans:
+        if merged and s <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], e)
+        else:
+            merged.append([s, e])
+    return [{"start": s, "end": e, "text": t[s:e]} for s, e in merged]
+
+
+def _claim_key(text: str) -> str:
+    t = str(text or "").lower().replace("×", "x")
+    for verb, mult in _VERB_MULT.items():
+        t = re.sub(rf"\b{verb}\b(\s+(your|the|its|their))?", mult.lower().replace("×", "x"), t)
+    return re.sub(r"[^a-z0-9%.x ]+", " ", re.sub(r"\s+", " ", t)).strip()
+
+
+def claim_observed(claim: str, ev) -> bool:
+    """True only when a PASSED_FIXED_TEST lists a supported claim containing this
+    claim (normalised). An author demo (NOT_RUN) supports nothing."""
+    if not isinstance(ev, dict) or ev.get("status") != "PASSED_FIXED_TEST":
+        return False
+    sup = ev.get("supported_claims")
+    if not isinstance(sup, (list, tuple)):
+        return False
+    key = _claim_key(claim)
+    return bool(key) and any(key in _claim_key(s) for s in sup if isinstance(s, str))
+
+
+def _attribute(text: str, claims: list[dict], word: str) -> str | None:
+    """Insert `word` before every claim, converting a verb multiplier to its noun
+    ("Double Your AI Speed" -> "Claimed 2× AI Speed"). None when a claim does not
+    START its clause — "Make Llama Claimed 3x Faster" is not a sentence, so that
+    title is dropped, never mangled."""
+    out = text
+    for c in sorted(claims, key=lambda c: -c["start"]):
+        head = out[:c["start"]]
+        last = max([m.end() for m in _CLAUSE_DELIM.finditer(head)] or [0])
+        if head[last:].strip() and not re.fullmatch(r"\s*(?:&|and)\s*", head[last:], re.I):
+            return None
+        span = out[c["start"]:c["end"]]
+        m = re.match(r"(?i)(doubles?|doubled|doubling|triples?|tripled|quadruples?|halves|halve|halved)"
+                     r"(\s+(?:your|the|its|their))?", span)
+        if m:
+            span = _VERB_MULT[m.group(1).lower()] + span[m.end():]
+        out = out[:c["start"]] + f"{word} " + span + out[c["end"]:]
+    return re.sub(r"\s{2,}", " ", out).strip()
+
+
+def _drop_claims(text: str, claims: list[dict]) -> str:
+    """Remove every colon segment that carries a claim; inside a single segment,
+    remove the claim clause (to the next delimiter)."""
+    segs = [s.strip() for s in str(text).split(":")]
+    keep = [s for s in segs if s and not outcome_claims(s)]
+    if keep and len(keep) < len(segs):
+        return ": ".join(keep).strip(" ,;:—-")
+    out = text
+    for c in sorted(claims, key=lambda c: -c["start"]):
+        m = _CLAUSE_DELIM.search(out, c["end"])
+        end = m.start() if m else len(out)
+        out = out[:c["start"]] + out[end:]
+    return re.sub(r"\s{2,}", " ", out).strip(" ,;:—-.")
+
+
+def thumb_fits(text: str) -> bool:
+    """Burned text is MEASURED, never sized by character count (CLAUDE.md trap):
+    the thumb must keep every word through make_tool_thumb's 4-word cut and fit
+    both composers' measured budgets at their own fonts."""
+    t = " ".join(str(text or "").split())
+    if not t:
+        return True
+    if len(t) > THUMB_MAX_CHARS or len(t.split()) > THUMB_MAX_WORDS:
+        return False
+    try:
+        from PIL import Image, ImageDraw
+        from factverse import branding as _br
+        from factverse import thumbnail as _th
+        lines = _th._wrap_two(t)
+        d = ImageDraw.Draw(Image.new("L", (8, 8)))
+        budget = _th.W - 2 * 48 - 2 * 28            # make_tool_thumb's own box
+        _size, f = _br.fit_font(_th._tool_font, lines, 130, budget,
+                                floor=_th._FIT_FLOOR, step=_th._FIT_STEP)
+        if max(d.textlength(l, font=f) for l in lines) > budget:
+            return False
+        _size, f = _th._headline_font(lines)
+        return max(d.textlength(l, font=f) for l in lines) <= _th.W - 2 * _th.X_EDGE
+    except Exception:
+        return True          # the char/word caps above already held
+
+
+def _fix_thumb(thumb: str, ev) -> tuple[str, list[str]]:
+    """(new thumb, unsupported claims). Thumb parts are "."-separated ("2X AI SPEED.
+    FREE."). A claim part is attributed if that fits; other parts are shed from the
+    end until it fits; if the attributed claim cannot fit, the claim part is dropped
+    instead and the rest kept ("" lets the composers fall back to the title)."""
+    parts = [p.strip() for p in re.split(r"\.\s*", str(thumb or "")) if p.strip()]
+    bad_all, attributed, clean, ok = [], [], [], True
+    for p in parts:
+        bad = [c for c in outcome_claims(p) if not claim_observed(c["text"], ev)]
+        if not bad:
+            attributed.append(p)
+            clean.append(p)
+            continue
+        bad_all += [c["text"] for c in bad]
+        a = _attribute(p, bad, "CLAIMED" if p.upper() == p else "Claimed")
+        if a is None:
+            ok = False
+        else:
+            attributed.append(a)
+    if not bad_all:
+        return thumb, []
+    dot = str(thumb).rstrip().endswith(".")
+
+    def join(ps):
+        return (". ".join(ps) + ("." if dot and ps else "")).strip()
+    if ok:
+        cand = list(attributed)
+        while cand and not thumb_fits(join(cand)):
+            drop = next((i for i in range(len(cand) - 1, -1, -1) if cand[i] in clean), None)
+            if drop is None:
+                break
+            cand.pop(drop)
+        if cand and thumb_fits(join(cand)):
+            return join(cand), bad_all
+    rest = list(clean)
+    while rest and not thumb_fits(join(rest)):
+        rest.pop()
+    return join(rest), bad_all
+
+
+def substantiate_claims(script: dict) -> dict:
+    """spec v3-P.1 row 3: attribute or drop every unobserved outcome claim in the
+    long-form title and thumb_text. Mutates in place, deterministic, never raises.
+    Title order: attribute (fits TITLE_MAX and the claim starts its clause) →
+    a clean alternate from `titles` → drop the claim's clause. Returns
+    {"claims": [...], "fixed": [...], "evidence": [...]}; flag off → no-op."""
+    res = {"claims": [], "fixed": [], "evidence": []}
+    try:
+        if not fv.flag("claim_substantiation", False) or not isinstance(script, dict):
+            return res
+        ev = script.get("evidence")
+        title = str(script.get("title") or "")
+        bad = [c for c in outcome_claims(title) if not claim_observed(c["text"], ev)]
+        if bad:
+            res["claims"] += [c["text"] for c in bad]
+            new = _attribute(title, bad, "Claimed")
+            how = "attributed"
+            if not new or len(new) > TITLE_MAX:
+                new, how = "", ""
+                for alt in title_options(script):
+                    if alt != title and not hype_terms(alt) and not [
+                            c for c in outcome_claims(alt) if not claim_observed(c["text"], ev)]:
+                        new, how = alt[:TITLE_MAX], "alternate"
+                        break
+            if not new:
+                new, how = _drop_claims(title, bad), "dropped"
+                if len(new.split()) < 3 and script.get("format") == "tool":
+                    tool = str(script.get("signal_title") or title).split(":")[0]
+                    tool = tool.split("/")[-1].strip() or "this tool"
+                    new = f"How to use {tool} (free)"[:TITLE_MAX]
+            if new and new != title:
+                script["title"] = new
+                res["fixed"].append("title")
+                res["evidence"].append(f"title {how}: {title!r} -> {new!r}")
+        thumb = str(script.get("thumb_text") or "")
+        new_thumb, tbad = _fix_thumb(thumb, ev)
+        if tbad:
+            res["claims"] += tbad
+            if new_thumb != thumb:
+                script["thumb_text"] = new_thumb
+                res["fixed"].append("thumb_text")
+                res["evidence"].append(f"thumb: {thumb!r} -> {new_thumb!r}")
+    except Exception as e:
+        res["evidence"].append(f"error: {type(e).__name__}")
+    return res
 
 
 # --------------------------------------------------------------- hook rotation

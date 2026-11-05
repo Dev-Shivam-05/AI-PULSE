@@ -1,107 +1,53 @@
-# HANDOFF — ToolDojo — Phases v3-B.4 + v3-G.3 + v3-G.4b + gemini cleanup — 2026-10-10
+# HANDOFF — ToolDojo — Phase v3-T.1 Live Trials — 2026-11-05
 
 ## Done
-- **One branch carries everything: `v3-integration-1010`.** It merges B.4, G.3, G.4b and the
-  gemini-fallback cleanup, plus the docs. Suite: **396 passed** on the combined tree, and
-  `merge-tree` against main (937c4b2) is clean. The four phase branches are also pushed on
-  their own.
-- **v3-B.4: the tool lane gets real candidates again.**
-  - Since 10-07 the lane failed 3/3 candidates daily and silently fell through to
-    news/evergreen. Product Hunt items are now skipped before a writer call.
-  - The README is fetched at 20,000 chars, and the first code block past the 5,000-char writer
-    window is appended.
-  - Live check today: the 3 eligible candidates (embeddinggemma-2, coucou, RemoveMacAI) all
-    carry a real install command in their grounding.
-- **v3-G.3: packaging.**
-  - The viral judge and the critique pass no longer reward fear/outrage, and the contract now
-    asks for "what you can DO".
-  - A stripped leftover title is replaced by the model's own clean alternate. 8 of 78 published
-    titles were leftovers; 6 now get an alternate, and 2 had lost `titles` to the `_CARRY` bug
-    this phase fixes.
-  - The ledger records `thumb_text`, `title_alt` and `title_terms`.
-  - Impressions and CTR are collected from the YouTube Reporting API into `analytics.jsonl` and
-    the scoreboard. Not exercised live yet, because there is no token locally.
-- **v3-G.4b: production basics.**
-  - 0.5 s dissolves between scenes. Total duration is identical, and the dissolve frames were
-    read.
-  - `amix normalize=0` fix: the voice measured −19.7 LUFS with a bed vs −19.8 without. The old
-    mix would have given −25.7.
-  - The bed comes from `assets/music/bed/` (CC0 only, currently empty).
-  - The outro line is now "for AI you can use". Both outros were re-rendered and read.
-- **gemini-fallback:** the shut-down `gemini-2.0-flash` is removed from the chain.
-- **Measured from main's state:**
-  - Storyboard A/B: 9 pairs, storyboard won 1, so G.2 is not built.
-  - The longest CI publish run in 14 days took 37.4 of 90 min, so 1080p is safe.
+- **`v3-growth-1104` now carries everything, T.1 included.** The owner opens ONE PR from it: https://github.com/Dev-Shivam-05/AI-PULSE/compare/main...v3-growth-1104?expand=1
+  - It contains `v3-integration-1101` (B.5, L.6), P.1, P.2, S.1, M.1, K.1, N.1 and T.1, so the 11-01 PR is superseded.
+  - Suite: **787 passed** on the T.1 tree.
+  - A read-only `git merge-tree` against `origin/main` is clean.
+- **Live Trials runs a real 12-minute episode, end to end, against a local RTMP listener.** Nothing reached YouTube.
+  - Airtime 720 s exactly: 13/13 windows, 0 holds, 0 restarts, exit 0, 0 decode errors at 1080×1920.
+  - Whole show −23.5 LUFS, peak −3.9 dBFS.
+  - It hit a real TIMEOUT on test 3 and aired the correct branch: "6/8 CHECKS PASSED; ONE TIMED OUT".
+  - The results sheet reads correctly at 390 px, with no sideways scroll.
+- **All four result branches render through the real segment path,** and their frames were read. PARTIAL/FAIL and INCONCLUSIVE were rendered, not aired.
+- **Six defects were found by reading frames, then fixed and test-pinned.** All six are listed in `docs/spec/ai-pulse-v3t1.md` § Verification. The two viewers would notice most:
+  - results were on screen before the replay that "revealed" them;
+  - a 10 s hold card aired at 1:30 in every episode.
+- **The show is shipped switched off:** `trials_live: false`, and the node row `enabled: false`.
 
 ## Files changed
-- `factverse/ai_pipeline.py`:
-  - B.4: tool eligibility, the 20,000 fetch with the code-block append, and a log line on the
-    writer-failure path.
-  - G.3: judge, contract, critique, retention rules, `titles` in `_CARRY`, and the ledger
-    fields.
-- `factverse/gates.py` — clean alternate in `packaging_payoff`, the long-form hype screen,
-  `FEAR_TERMS`/`title_terms`.
-- `factverse/analytics.py`, `factverse/learn.py` — Reporting API reach collection, plus the
-  impressions/CTR scoreboard block.
-- `scripts/factverse_engine.py` — the xfade join with concat fallback, the `bed/` pick, and
-  `mux_args` (normalize=0 and fades).
-- `factverse/branding.py`, `factverse/shorts.py`, `assets/outro.mp4`, `assets/outro_v.mp4` —
-  the outro line.
-- `factverse/llm.py` — `gemini-2.0-flash` dropped from the chain.
-- `config.json`, `config.example.json` — kill switches `reach_report`, `transitions`,
-  `music_bed`.
-- `assets/music/bed/SOURCES.txt` — the CC0-only rule. No audio was committed.
-- Tests:
-  - New modules: `tests/test_b4_tool_supply.py`, `tests/test_g3_packaging.py`,
-    `tests/test_g4b_production.py`.
-  - `tests/test_llm.py` is updated.
-  - `tests/test_pipeline_logic.py`: one URL added to the MarkItDown fixture.
-- Specs: `docs/spec/ai-pulse-v3b4.md`, `docs/spec/ai-pulse-v3g3.md`,
-  `docs/spec/ai-pulse-v3g4b.md`.
-- Docs:
-  - `docs/PHASES.md`, `docs/DECISIONS.md` — the board and the decisions.
-  - `docs/STRATEGY.md` — the thumbnail line now follows v3-E #5.
-  - `CLAUDE.md` — 4 traps.
+- `assets/trials/trials.html` — check values and the running score stay hidden until their moment; fonts load before the first fit; fit measures every state while visible.
+- `scripts/trials_live.py` — `frame_times` draws only the moments the page can change (this removed the hold); `pending` row text; `top_score_at`; `verdict_cls`.
+- `scripts/radar_live.py` — `Renderer.frames` accepts a caller's `spec["times"]`; Radar's own behaviour is unchanged.
+- `factverse/trials.py` — sheet wording: reason capitalised, and no upload-to-result time on a run with no result.
+- `tests/test_t1_trials.py` — 7 new tests.
+- `config.json`, `config.example.json` — merge conflict resolved: N.1's node block wins, plus T.1's `trials_live` and the `live_trials` pulse file.
+- `docs/spec/ai-pulse-v3t1.md` — Verification filled in, the T.1b proposal, new known limits.
+- `docs/PHASES.md`, `docs/DECISIONS.md`, `CLAUDE.md`, this file.
 
 ## Decisions made
-- **All values were approved by the owner with one `go`** on a 5-row spec-lock table. They are
-  in DECISIONS (2026-10-10).
-- **G.2 is not built.** The pre-registered A/B rule is already decided (≤ 5 wins).
-- **Live work is excluded:** L.4, L.5, the seam lags and the schedule. The owner assigned it to
-  a separate background session, and it shares `radar_live.py`.
-- **Music in git must be CC0.** The repo is public and the Reels re-upload the bed, so the
-  Audio Library tracks stay local.
-- **HELD candidates re-rolling on the retry cron stays as is.**
-- **One integration branch, so the owner opens one PR instead of four.**
+- **The grid stays as the owner locked it.** The still-time fix has new values, so it became a proposal (v3-T.1b), not part of this phase.
+- **`repeat_choice` keeps R3's wording:** it repeats the first PARTIAL/FAIL, else the control. Repeating a timed-out clip is an owner question.
+- **WER threshold stays at the 0.15 default** until the owner gives a word.
 
 ## Known broken / deliberately skipped
-- **Mermaid fences** — the first code block can be a diagram (OpenDots), which would ship as
-  "the command". Needs one word: skip `mermaid` fences.
-- **The fear-term list catches 13 of 78 titles, not ~21** — "hacked/danger/risks/worries/
-  backlash" are missing. A fear-framed alternate can still win the title fallback. Both need an
-  owner word before the list changes.
-- **Ranking still favours Product Hunt** (`feed_max` is computed before the used filter, and
-  Atom `updated` is read before `published`). Eligibility now protects the lane; a ranking
-  phase would fix the root cause.
-- **The music bed is silent until the owner adds CC0 tracks.** The bed also restarts after the
-  sting; that predates this work.
-- **Reach and CTR are unverified live** — that needs the Reporting API enabled, and possibly a
-  re-minted token.
-- **The exact gate behind the 10-07..09 tool failures is inferred** — the CI logs need auth.
-- **Leftover worktrees:** `E:/YOUTUBE/AI-PULSE-{b4,g3,g4b,gf,int,wt-main}`. Remove them after
-  the merge with `git worktree remove <path>`, never `--force`.
-- **Still untracked in `E:\YOUTUBE\AI-PULSE`:** `output/demo/storyboard/sample/*`,
-  `docs/BROWSER_AI_AGENTS_AND_MCP_GUIDE.md`, `output/brand/`. That checkout is still on the
-  stale `v3-gemini-fallback` branch.
+- **The show is stable but mostly still (v3-T.1b, needs the owner's word).** Measured on the PASS narration: 182 s of voice in 720 s (25%), and 401 s in stretches of 15 s+ where nothing on screen changes. Each run window ends on 49-60 s of one static frame, and the viewer never hears a clip. This is likely to hurt the L11 retention target. Do it before `trials_live` goes on.
+- **Never run:** a YouTube stream, the real node (i3 render headroom is unmeasured; only the 720×1280 encode was checked), the LLM narration, the published-sheet path (Contents API), and the test-incomplete ending on air.
+- **561 kbps received bitrate** on these static pages. Whether YouTube warns about it is unknown until the private rehearsal.
+- **Two fixture sets = two episodes.** The third show is refused until a new set is committed. Every completed test so far has passed, so the fixtures may be too easy.
+- **Carried over, still true:**
+  - Never exercised live: the LLM writer on the new prompts, all 5 new Analytics API queries, the opening repair against the real model, Kokoro timings, the node on real hardware.
+  - Not built: the "before you install" verdict, the source (b) sandbox, Radar Challenger (K.2), the second upload slot, "documented requirement changed" alerts.
+  - Evidence supply is thin (3 of 27 candidates), so the tool lane will mostly fall back.
+  - Studio CSV column names for Pilot B are unverified until the first export on D+8.
+  - The 2026-11-04 delegated values in the phase specs are unconfirmed by the owner.
+- **The Studio login profile, which holds cookies, is still in a scratchpad:** `C:\Users\shiva\AppData\Local\Temp\claude\e--YOUTUBE-AI-PULSE\01a5917a-a008-4b2c-b488-d75f3ce6ed07\scratchpad\yt-studio-profile`. Delete it if it is not needed.
+- **Disk: E: has 2.5 GB free (96% used).** This session left 98 MB in `AI-PULSE-t1/output/trials/verify` and 611 MB in `AI-PULSE-t1/temp/trials`. Both are gitignored and were not deleted.
+- **Leftover worktrees:** `E:/YOUTUBE/AI-PULSE-{gw,p1,p2,s1,m1,k1,n1,t1,b4,b5,g3,g4b,gf,int,int1101,l3,l6,live,wt-main}`. Remove them after the merge with `git worktree remove <path>`, never `--force`.
+- **The main checkout `E:\YOUTUBE\AI-PULSE` is still on the stale `v3-gemini-fallback`,** with 10-01 docs. Its untracked `docs/debate/`, `prompts/`, `assets/music/` and `output/*` were left alone.
 
 ## Next session starts here
-- Phase: none to build. The owner merges
-  https://github.com/Dev-Shivam-05/AI-PULSE/pull/new/v3-integration-1010, enables the YouTube
-  Reporting API in GCP, adds CC0 tracks to `assets/music/bed/`, and answers the mermaid and
-  fear-list words.
-- First command: `/boot`. Then read the first post-merge run: the ledger `format` (expect a
-  `tool` row) and the log lines `⏭️ Skipping tool candidate`, `📎 first code block`,
-  `transitions:`, `music:` and `↷ reach report`.
-- Watch out for: the first post-merge CI run's duration and the `transitions:` line. If the
-  xfade join misbehaves on the 4-vCPU runner, flip `"transitions": false` in config.json. That
-  is one flag, not a rewrite.
+- Phase v3-T.1b: fill the show's still time, only after the owner approves the table in `docs/spec/ai-pulse-v3t1.md`. Owner steps first: open the ONE PR and answer the one-word list in `docs/PHASES.md` § Next 3 item 1.
+- First command: `/boot`, run from `E:\YOUTUBE\AI-PULSE-gw` until the PR is merged.
+- Watch out for: `/boot` in the main checkout reads stale docs. It is on an old branch whose handoff is from 10-01, so it reported no phase to build.

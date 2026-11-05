@@ -1,0 +1,114 @@
+{
+  "experiment": "pilot_a",
+  "batch": 1,
+  "seed": 1015367535,
+  "frozen_at": "2026-11-04",
+  "pairs": [
+    {
+      "pair_id": "B1P1",
+      "first_arm": "context"
+    },
+    {
+      "pair_id": "B1P2",
+      "first_arm": "context"
+    },
+    {
+      "pair_id": "B1P3",
+      "first_arm": "context"
+    },
+    {
+      "pair_id": "B1P4",
+      "first_arm": "context"
+    },
+    {
+      "pair_id": "B1P5",
+      "first_arm": "context"
+    },
+    {
+      "pair_id": "B1P6",
+      "first_arm": "proof"
+    }
+  ],
+  "members": [],
+  "avd_baseline": {
+    "status": "frozen",
+    "value_s": 72.0,
+    "n": 7,
+    "videos": [
+      {
+        "video": "-zMkp0hnACk",
+        "published": "2026-10-02",
+        "snapshot": "2026-10-09T19:51:58",
+        "views": 40,
+        "avd_s": 72.0
+      },
+      {
+        "video": "yjgtYZdEWH8",
+        "published": "2026-10-03",
+        "snapshot": "2026-10-10T19:32:53",
+        "views": 12,
+        "avd_s": 90.0
+      },
+      {
+        "video": "JQbzwDs_zgM",
+        "published": "2026-10-04",
+        "snapshot": "2026-10-11T19:13:34",
+        "views": 29,
+        "avd_s": 43.0
+      },
+      {
+        "video": "xm2GvY4QttA",
+        "published": "2026-10-12",
+        "snapshot": "2026-10-19T20:16:03",
+        "views": 151,
+        "avd_s": 50.0
+      },
+      {
+        "video": "wwI1rTpmnrg",
+        "published": "2026-10-13",
+        "snapshot": "2026-10-20T18:47:31",
+        "views": 38,
+        "avd_s": 65.0
+      },
+      {
+        "video": "0PXRcVZ6ls4",
+        "published": "2026-10-24",
+        "snapshot": "2026-10-31T18:50:45",
+        "views": 8,
+        "avd_s": 171.0
+      },
+      {
+        "video": "-oCxU6iIDak",
+        "published": "2026-10-24",
+        "snapshot": "2026-10-31T18:50:45",
+        "views": 2,
+        "avd_s": 81.0
+      }
+    ],
+    "excluded": [
+      {
+        "video": "FHfd45OkoRE",
+        "published": "2026-10-06",
+        "why": "views=3 avd=0 at age 7 (watch time not processed)"
+      },
+      {
+        "video": "4MTEDi4MdnQ",
+        "published": "2026-10-30",
+        "why": "no snapshot collected on 2026-11-06"
+      },
+      {
+        "video": "QFKGh9DhDW4",
+        "published": "2026-11-01",
+        "why": "no snapshot collected on 2026-11-08"
+      },
+      {
+        "video": "Q-P_P-Y1-to",
+        "published": "2026-11-03",
+        "why": "no snapshot collected on 2026-11-10"
+      }
+    ],
+    "rule": "unweighted median of first-7-day averageViewDuration; per video the last state/analytics.jsonl snapshot collected on publish_date+7 (ledger_videos, cumulative from DATA_FLOOR = the first 7 days); views>0 and AVD>0",
+    "frozen_at": "2026-11-04",
+    "source": "origin/main state/runs.jsonl (238 rows) + state/analytics.jsonl (207 snapshots, last collected 2026-11-03T20:41:04), read 2026-11-04"
+  }
+}

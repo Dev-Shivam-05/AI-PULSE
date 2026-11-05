@@ -316,7 +316,8 @@ def test_estimate_video_seconds_tracks_words_and_clamps():
 
 # --------------------------------------------------------------- ffmpeg args (built, never run)
 def test_trim_args_seek_past_blank_head():
-    args = screencap._trim_args("in.webm", "out.mp4")
+    # v3-B.5: one input per visited page, each seeked past its OWN page-load blank
+    args = screencap._join_args([("in.webm", screencap.HEAD_TRIM)], "out.mp4")
     assert args.index("-ss") < args.index("-i")          # page-load blank is removed
     assert args[args.index("-ss") + 1] == str(screencap.HEAD_TRIM)
 
@@ -337,16 +338,16 @@ def test_capture_fails_soft_when_recorder_dies(monkeypatch, tmp_path):
     def boom(*a, **k):
         raise RuntimeError("browser gone")
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page", boom)
+    monkeypatch.setattr(screencap, "_record_pages", boom)
     s = {"scenes": [{"narration": "n"}] * 6, "source_url": "https://github.com/x/y"}
     assert screencap.capture(s) is None                  # caller falls back to stock
 
 
 def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page",
-                        lambda url, out, t: (str(Path(out) / "rec.webm"),
-                                             str(Path(out) / "page.png"), 3.1))
+    monkeypatch.setattr(screencap, "_record_pages",
+                        lambda urls, out, t: ([(str(Path(out) / "rec.webm"), 3.1)],
+                                              str(Path(out) / "page.png")))
     seen = []
     def fake_ffmpeg(args, timeout=600):
         seen.append(args)
@@ -365,8 +366,8 @@ def test_capture_maps_chunks_onto_scenes(monkeypatch, tmp_path):
 
 def test_capture_shares_chunks_when_recording_is_short(monkeypatch, tmp_path):
     monkeypatch.setattr(screencap.fv, "TEMP", tmp_path)
-    monkeypatch.setattr(screencap, "_record_page",
-                        lambda url, out, t: (str(Path(out) / "rec.webm"), "", 2.5))
+    monkeypatch.setattr(screencap, "_record_pages",
+                        lambda urls, out, t: ([(str(Path(out) / "rec.webm"), 2.5)], ""))
     def fake_ffmpeg(args, timeout=600):
         Path(args[-1]).write_bytes(b"0" * 2000)
         return True
@@ -1088,6 +1089,8 @@ def test_evergreen_topic_rejects_a_reworded_repeat(monkeypatch):
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
         {"title_idea": "How Large Language Models Actually Work", "search_question": "q"},
         {"title_idea": "Why AI Chips Cost So Much", "search_question": "q"}]})
+    # v3-B.5: keep the live ledger's subject screen out of this used-topics test
+    monkeypatch.setattr(ap.learn, "read_runs", lambda path=None: [])
     t = ap.pick_evergreen_topic([])
     assert t["title_idea"] == "Why AI Chips Cost So Much"
 
@@ -1194,6 +1197,8 @@ def test_evergreen_dedup_separates_a_reword_from_a_new_subject(monkeypatch):
     monkeypatch.setattr(ap, "too_many_failures", lambda t: False)
     monkeypatch.setattr(ap.llm, "generate_json", lambda *a, **k: {"topics": [
         {"title_idea": "How Transformers Actually Work", "search_question": "q"}]})
+    # v3-B.5: keep the live ledger's subject screen out of this used-topics test
+    monkeypatch.setattr(ap.learn, "read_runs", lambda path=None: [])
     assert ap.pick_evergreen_topic([])["title_idea"] == "How Transformers Actually Work"
 
 
@@ -3327,6 +3332,10 @@ def test_x_is_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys):
     calls = []
     monkeypatch.setattr(notify.requests, "post", lambda *a, **k: calls.append(1))
     _no_x(monkeypatch)
+    # v3-K.1 row 17: X is OFF by default now (pay-per-use, no free tier). This test
+    # is about the seam once the owner switches it on, so it switches it on through
+    # CONFIG, which keeps the env-var override below working.
+    monkeypatch.setattr(notify.fv, "CONFIG", dict(notify.fv.CONFIG, twitter=True))
     notify._post_x()
     assert calls == [] and "X not configured" in capsys.readouterr().out
 
@@ -3628,9 +3637,12 @@ def test_resolve_short_splits_on_both_separators_and_bounds_the_size(tmp_path):
     assert reels.resolve_short("output/shorts/empty.mp4", tmp_path) is None
 
 
-def test_pick_entry_only_ever_considers_the_last_run(tmp_path):
+def test_pick_entry_only_ever_considers_the_last_run(monkeypatch, tmp_path):
     """#3: an older row is another day's video whose file left with its runner.
-    Posting one on a retry firing is how a week-old Short lands as today's Reel."""
+    Posting one on a retry firing is how a week-old Short lands as today's Reel.
+    v3-S.1: this is the pre-S.1 "first Short" rule (reels_native_only off); the
+    native-only rule is tests/test_s1_native.py."""
+    monkeypatch.setattr(reels, "native_only", lambda: False)
     _short_at(tmp_path)
     url = "https://youtube.com/watch?v=ABCDEFGHIJK"
     assert reels.pick_entry([_log_row()], [], tmp_path)[0]["title"] == "A Tool"
@@ -3940,6 +3952,7 @@ def test_reels_are_a_no_op_when_switched_off_or_unconfigured(monkeypatch, capsys
 def test_reels_record_a_url_only_after_a_successful_post(monkeypatch, tmp_path, capsys):
     """The idempotence contract, per surface: post once, remember it, never post
     it twice — and on a failure remember NOTHING, so tomorrow may still try."""
+    monkeypatch.setattr(reels, "native_only", lambda: False)   # v3-S.1: posting mechanics only
     _short_at(tmp_path)
     log = tmp_path / "production_log.json"
     log.write_text(json.dumps([_log_row()]), encoding="utf-8")
@@ -3979,6 +3992,7 @@ def test_reels_record_a_url_only_after_a_successful_post(monkeypatch, tmp_path, 
 
 
 def test_one_broken_surface_never_takes_the_other_down(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(reels, "native_only", lambda: False)   # v3-S.1: posting mechanics only
     _short_at(tmp_path)
     log = tmp_path / "production_log.json"
     log.write_text(json.dumps([_log_row(format="news")]), encoding="utf-8")
@@ -4289,7 +4303,9 @@ def test_every_gate_uses_the_fallback_helper():
     inline condition would silently bypass the tool-first rule."""
     src = (Path(__file__).resolve().parents[1] / "factverse" / "ai_pipeline.py").read_text(encoding="utf-8")
     # policy, advice, fact-check (v3-B.1) + the debate quote gate (v3-H #9)
-    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 4
+    # + the evidence overclaim gate (v3-P.1)
+    # + the opening contract (v3-P.2): pre-render lint, gate after the repair, refused repair
+    assert src.count("return _fall_back(publish, fmt, force_format, fallback, attempt)") == 8
     assert 'force_format="evergreen")' not in src
 
 

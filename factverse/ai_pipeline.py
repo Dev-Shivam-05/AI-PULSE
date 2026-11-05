@@ -57,9 +57,16 @@ from factverse import debate
 from factverse import site
 from factverse import scheduling
 from factverse import gates
+from factverse import evidence
 from factverse import learn
+from factverse import memory
 from factverse import l2
+from factverse import opening
+from factverse import pilot
+from factverse import querymap
 from factverse import shorts as shorts_mod
+from factverse import native_short
+from factverse import pilot_b
 from factverse.intelligence import signal_engine
 
 # Reuse the proven render/publish steps from the original engine (lives in scripts/).
@@ -335,7 +342,16 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # would put words in a model's mouth that the quote gate then trusts.
     # v3-B.2: "verified_facts" is support for fact_check and packaging_payoff — a
     # planted one would license the model's own invented numbers past both.
-    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts"):
+    # v3-P.1: "evidence" is what the channel may SHOW and CLAIM — a planted one
+    # would put "Passed this specific test." on an untested tool, license any
+    # outcome claim past the substantiation gate, and burn a source label on
+    # footage nobody vetted. script_tool sets the real one; _carry_over returns it.
+    # v3-M.1: "followup" (parent id, family, question) is build_script's, from the
+    # follow-up rule — a planted one would forge search demand into the ledger.
+    # v3-P.2: "pilot" (the Pilot A slot) and "query_map" are run()'s too — a planted
+    # slot would put a video into an experiment arm nobody drew for it.
+    for planted in ("receipts", "cheat_sheet", "debate", "verified_facts", "evidence",
+                    "followup", "pilot", "query_map"):
         s.pop(planted, None)
     # read the per-scene "filter" marker BEFORE the rebuild below strips it
     had_filter = any(sc.get("filter") for sc in s["scenes"])
@@ -388,6 +404,10 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     s["titles"] = [t for t in s["titles"] if t]
     s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
+    # v3-M.1 row 9: model-written memory fields — carried, not popped; coerced
+    # because raw LLM output is never type-safe (a string, a dict, null).
+    s["question_answered"] = memory.coerce_question(s.get("question_answered"))
+    s["questions_open"] = memory.coerce_questions(s.get("questions_open"))
     # v3 tool-format contract: the concrete thing the viewer leaves with
     dl = s.get("deliverable")
     if isinstance(dl, dict) and str(dl.get("text", "")).strip():
@@ -430,6 +450,14 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False)
     # v3-G.3 #2: the title tells a builder what they get. The tool lane adds the
     # formula because its whole video is one usable thing.
     formula = ("\n  TOOL VIDEO title formula: [what you can do] + [tool name]." if tool else "")
+    # v3-M.1 row 9: the memory record's viewer-need fields, for every lane
+    mem, mem_json = "", ""
+    if fv.flag("memory_fields", False):
+        mem = ("\n- question_answered: ONE sentence, the main question a viewer has that this "
+               "video answers.\n- questions_open: 1-3 specific, useful questions a viewer will "
+               "still have AFTER this video and that it does NOT answer (a setup case, a limit, "
+               "a comparison). Never a question the video answers.")
+        mem_json = '"question_answered":"...","questions_open":["..."],\n'
     return f"""OUTPUT FIELDS:
 - titles: 3 DIFFERENT title options, each <=60 chars, the key ENTITY (model/company/tool name)
   in the first 30 chars, ONE concrete number where honest, consequence framing over event
@@ -446,12 +474,12 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False)
   NOT stated in any source. This is mandatory; a video without genuine synthesis is not ready.
 - scenes: {scene_range} scenes, {words_per_scene} words each. Each scene: scene_num, narration,
   visual_query. Include one mid-video FILTER segment (what does NOT matter and why) — mark that
-  scene with "filter": true.
+  scene with "filter": true.{mem}
 
 Return ONLY JSON:
 {{"titles":["..."],"title":"...","thumb_text":"...","description":"...","tags":["..."],
 "synthesis_claim":"...",
-"scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
+{mem_json}"scenes":[{{"scene_num":1,"narration":"...","visual_query":"...","speaker":"a"}}]}}"""
 
 
 # --------------------------------------------------------------- candidate kinds
@@ -678,6 +706,38 @@ def script_tool(item: dict) -> dict | None:
     if unsuitable:
         print(f"     ↻ tool is not something this channel teaches ({term!r}) — skipped.")
         return None
+    # spec v3-P.1: functional evidence — hosted demo first, then the author's demo —
+    # gathered AFTER the screen (never record what we would refuse) and BEFORE the
+    # writer, which is told what the evidence lets it claim and what it does not.
+    ev, ev_brief = None, ""
+    if fv.flag("evidence_engine", False):
+        ev = evidence.gather(item, probe_result=item.get("_evidence_probe"))
+        if evidence.admissible(ev):
+            ev_brief = evidence.writer_brief(ev)
+            print(f"     🎞️ Evidence: {ev['label']} — {ev['wording']}")
+        elif fv.flag("evidence_required", True):
+            # review row 17: no admissible evidence = skip by default. The "before you
+            # install" verdict is the only allowed exception and is NOT built (spec).
+            why = "could not look" if ev is None else (ev.get("note") or "none found")
+            print(f"     ↻ no admissible evidence ({why[:120]}) — skipped (row 17).")
+            return None
+        else:
+            ev = ev if isinstance(ev, dict) else evidence.empty("gather failed")
+    # spec v3-P.2: the first admissible evidence is one of the ledger's three
+    # timestamps (row 13); Pilot A draws its slot HERE, before the writer, because
+    # the two arms are different scripts. Arrival order only — never performance.
+    pilot_slot = None
+    if evidence.admissible(ev):
+        if fv.flag("query_map", False):
+            querymap.note_seen([url], field="evidence")
+        if fv.flag("pilot_a", False):
+            try:
+                pilot_slot = pilot.assign(ev, grounding, pilot.load(), _ledger_rows())
+            except Exception as e:  # noqa: BLE001 — a bad state file costs the pilot, not the day
+                print(f"     ⚠️ pilot assignment skipped ({type(e).__name__}: {e})")
+            if pilot_slot:
+                print(f"     🧪 Pilot A: pair {pilot_slot['pair_id']}, {pilot_slot['arm']}-first "
+                      f"(slot {pilot_slot['slot']}, {pilot_slot['stratum']})")
     # spec v3-E #1/#4: hand the writer REAL numbers and REAL complaints. Both are
     # fail-soft — an API miss costs the block, never the video.
     facts = _verified_facts(url)
@@ -695,17 +755,7 @@ def script_tool(item: dict) -> dict | None:
         lim_rule = ('- ONE honest limitation scene — mark it "filter": true. Base it ONLY on '
                     "these real open issues from the tool's own tracker, or on limits stated "
                     "in the SOURCE EXCERPT: " + "; ".join(issues))
-    prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
-Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
-DO something concrete in the next ten minutes — that is the entire point of the video.
-
-TOOL: {title}
-SOURCE: {source}  ({url})
-
-{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
-{grounding}
-
-STRUCTURE (a transaction, not a broadcast):
+    structure = f"""STRUCTURE (a transaction, not a broadcast):
 - Scene 1 HOOK: the specific thing the viewer will be able to do by the end, plus the most
   surprising concrete detail (stars, size, speed, price=free). No greetings.
 - What it actually is and who built it (1-2 scenes, attributed).
@@ -715,14 +765,40 @@ STRUCTURE (a transaction, not a broadcast):
 {lim_rule}
 - Final scene: the single next action + "the exact command is in the description" + ONE question
   to the audience + subscribe, all in two sentences.
-{_RETENTION_RULES}
+{_RETENTION_RULES}"""
+    scene_range, per_scene = "10-14", "50-70"
+    if pilot_slot:
+        # spec v3-P.2: the Pilot A architecture replaces the lane's structure — the
+        # renderer and the opening gate rely on these scene roles being in order.
+        structure = (opening.writer_block(pilot_slot["arm"], ev, pilot_slot.get("intent", ""))
+                     + (f"- The limitation scene: {lim_rule[2:]}\n" if issues else ""))
+        scene_range, per_scene = opening.scene_count_rule()
+        if pilot_slot["arm"] == "context":
+            # the evidence brief puts the result in scene 1; context-first moves it to 2
+            ev_brief = (ev_brief.replace("Scene 1 must open by stating",
+                                         "Scene 2 (the result scene) must open by stating")
+                        .replace("Scene 1 must begin with", "Scene 2 (the result scene) must begin with"))
+    task_field = ('\n"task": "the task this tool does, 2-5 words, no numbers (e.g. Rotate Images)"'
+                  if (pilot_slot or fv.flag("query_map", False)) else "")
+    prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
+Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
+DO something concrete in the next ten minutes — that is the entire point of the video.
+
+TOOL: {title}
+SOURCE: {source}  ({url})
+{memory.followup_prompt(item)}
+
+{ev_brief}{facts_block}SOURCE EXCERPT (ground every claim in this; never copy prose sentences verbatim):
+{grounding}
+
+{structure}
 {_VISUAL_RULES}
 
-{_output_contract("10-14", "50-70", tool=True)}
+{_output_contract(scene_range, per_scene, tool=True)}
 
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
-"url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video."""
+"url":"{url}"}} — the concrete thing the description will carry. No deliverable = no video.{task_field}"""
     s = llm.generate_json(prompt, max_tokens=8192, model=fv.WRITER_MODEL)
     s = _validate_script(s, title, url)
     if not s:
@@ -751,7 +827,19 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
         s["format"] = "tool"
         if facts:
             s["verified_facts"] = facts
+        if ev is not None:
+            s["evidence"] = ev
+        if pilot_slot:
+            s["pilot"] = pilot_slot
     return s
+
+
+def _ledger_rows() -> list[dict]:
+    """The run ledger, or [] — Pilot A reads its published members from it."""
+    try:
+        return learn.read_runs(RUNS_LOG)
+    except Exception:  # noqa: BLE001
+        return []
 
 
 # --------------------------------------------------------------- format: evergreen
@@ -763,15 +851,110 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
 # scores 1.0 (spec v3-C.2 #1).
 EVERGREEN_DUP_OVERLAP = 0.7
 
+# spec v3-B.5 #3: the 0.7 token overlap above only catches a re-WORDING. In the 30
+# published before 2026-11-01, 8 of 13 evergreens were two SUBJECTS re-titled
+# ("LLM Explained: Your AI Brain Decoded" / "LLM Mechanics: How AI Learns to Think").
+# A subject screen compares what is left once the lane's generic words are gone.
+EVERGREEN_SUBJECT_DAYS = 30
+# Generic words: the brief's list, this lane's own title templates ("how does X
+# actually work", "why is X such a big deal", "X vs Y, honestly" — without them every
+# topic would share a word with every other), and filler measured on the ledger.
+EVERGREEN_STOP = frozenset("""
+ai the a an of to in on for and or with without at by from into is are be it its
+this that they them their you your can how why what when where who which
+explained explain explainer inside beyond revolution decoded mechanics mechanic
+works work working workings thinking think thinks learn learns learning
+actually really truly real does do happens happen big deal honestly vs versus
+human secret guide unlock understand making faster future gone gains inner unseen
+impact winner million billion trillion
+""".split())
+# Families: different words for ONE subject. "language model" is matched as a phrase.
+EVERGREEN_FAMILIES = {
+    "llm": {"llm", "transformer", "large language model", "language model"},
+    "hardware": {"cpu", "gpu", "chip", "hardware", "npu", "tpu"},
+}
+
+
+def _eg_stem(w: str) -> str:
+    """Simple plural stem: llms -> llm, industries -> industry, chips -> chip."""
+    if len(w) > 4 and w.endswith("ies"):
+        return w[:-3] + "y"
+    if len(w) > 3 and w.endswith("s") and not w.endswith(("ss", "ous")):
+        return w[:-1]
+    return w
+
+
+def subject_terms(title: str) -> set:
+    """The subject of an evergreen title: family ids for any family word, plus
+    every other non-generic content word (stemmed, 3+ letters)."""
+    t = str(title or "").lower().replace("’", "'")
+    t = re.sub(r"'s\b", "", t)
+    raw = re.findall(r"[a-z0-9]+", t)
+    words = [_eg_stem(w) for w in raw]
+    joined = " " + " ".join(words) + " "
+    terms = set()
+    # a phrase member ("large language model") is the family, and its words are
+    # consumed — "language" alone must not become a second, accidental subject
+    for fam, members in EVERGREEN_FAMILIES.items():
+        for m in sorted((m for m in members if " " in m), key=len, reverse=True):
+            if (" " + m + " ") in joined:
+                terms.add(fam)
+                joined = joined.replace(" " + m + " ", " ")
+    for w0, w in zip(raw, words):
+        if (" " + w + " ") not in joined:
+            continue
+        fam = next((f for f, ms in EVERGREEN_FAMILIES.items() if w in ms), None)
+        if fam:
+            terms.add(fam)
+        elif (w0 not in EVERGREEN_STOP and w not in EVERGREEN_STOP
+              and len(w) >= 3 and not w.isdigit()):
+            terms.add(w)
+    return terms
+
+
+def recent_evergreen_titles(rows: list, day: _dt.date,
+                            days: int = EVERGREEN_SUBJECT_DAYS) -> list[str]:
+    """Titles of evergreens PUBLISHED in the `days` before `day` (by ledger format)."""
+    out = []
+    for r in rows or []:
+        if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or r.get("format") != "evergreen":
+            continue
+        try:
+            stamped = _dt.date.fromisoformat(str(r.get("timestamp", ""))[:10])
+        except ValueError:
+            continue
+        if 0 <= (day - stamped).days <= days and r.get("title"):
+            out.append(str(r["title"]))
+    return out
+
+
+def subject_clash(idea: str, recent: list[str]) -> tuple[str, str] | None:
+    """(shared subject term, recent title) when `idea` repeats a recent subject."""
+    mine = subject_terms(idea)
+    for t in reversed(recent):          # report the most recent clash
+        shared = mine & subject_terms(t)
+        if shared:
+            return sorted(shared)[0], t
+    return None
+
 
 def pick_evergreen_topic(signals: list[dict]) -> dict | None:
     """Turn current signal themes into a durable, search-driven question topic."""
     used = _read_json(USED_TOPICS, [])[-60:]
     themes = "; ".join(i["title"][:70] for i in signals[:10]) or "large language models, AI agents, AI chips"
+    try:
+        recent = recent_evergreen_titles(learn.read_runs(RUNS_LOG), _dt.date.today())
+    except Exception:
+        recent = []
+    # spec v3-B.5 #3: name the recent SUBJECTS so the 5 proposals are not all re-titles
+    # of them — the screen below rejects those, and 5 rejections is no topic at all
+    # (build_script then falls through to news).
+    avoid = (f"\nRECENT SUBJECTS (choose a DIFFERENT subject entirely, not a new angle on "
+             f"these): {'; '.join(t[:60] for t in recent)}" if recent else "")
     prompt = f"""You are the strategist for {fv.CHANNEL_NAME}, an AI/tech education YouTube channel.
 
 Current AI news themes (for relevance only): {themes}
-ALREADY COVERED (never repeat or near-repeat): {"; ".join(t[:60] for t in used)}
+ALREADY COVERED (never repeat or near-repeat): {"; ".join(t[:60] for t in used)}{avoid}
 
 Propose 5 EVERGREEN video topics a general tech audience actively SEARCHES for — "how does X
 actually work", "why is X such a big deal", "what happens when X", "X vs Y, honestly". They must
@@ -789,10 +972,17 @@ type","angle":"1-2 sentences on the unique take"}}]}}"""
     # which is how two near-identical uploads happened once before.
     used_norm = {signal_engine._norm(t) for t in used}
     for t in d["topics"]:
+        if not isinstance(t, dict):
+            continue
         idea = str(t.get("title_idea", "")).strip()
         if (idea and not too_many_failures(idea)
                 and not signal_engine._is_used(idea, used_norm,
                                                threshold=EVERGREEN_DUP_OVERLAP)):
+            clash = subject_clash(idea, recent)
+            if clash:
+                print(f"  ⏭️ Evergreen {idea[:60]!r} repeats a recent subject "
+                      f"({clash[0]!r}: {clash[1][:50]!r}) — skipped.")
+                continue
             return t
     return None
 
@@ -948,7 +1138,14 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "verified_facts",  # v3-E #1: fetched numbers must survive every rewrite pass
           "receipts",        # v3-E.2 #6: the measured check must survive them too
           "debate",          # v3-H #13: the transcript the quotes and cards are checked against
-          "titles")          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
+          "evidence",        # v3-P.1: the clip, status and rights record (popped by _validate_script)
+          "pilot",           # v3-P.2: the Pilot A slot (popped by _validate_script)
+          "query_map",       # v3-P.2: name/alias/task the packaging used (popped too)
+          "task",            # v3-P.2: the writer's task phrase — the query-map title reads it
+          "titles",          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
+          # v3-M.1 row 9: the rewrite prompts never show them, so every pass would
+          # reset them to empty; "followup" is run()'s and is popped in _validate_script
+          "question_answered", "questions_open", "followup")
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1013,6 +1210,11 @@ def place_description_blocks(script: dict) -> None:
     (spec v3-C decisions 7/8) — links above the fold, where the transaction happens.
     Idempotent: the advice-gate rewrite regenerates the description, so this runs twice."""
     desc = str(script.get("description", ""))
+    # spec v3-P.2 row 13: the FIRST sentence names the tool, the task and the
+    # evidence status — its own paragraph, so the deliverable block below lands
+    # directly under it (the manufactured "\n\nSource:" line is further down).
+    if fv.flag("query_map", False) and isinstance(script.get("query_map"), dict):
+        desc = querymap.lead_description(desc, script)
     promo = str(fv.setting("promo_block", "") or "").strip()
     dl = script.get("deliverable")
     if (dl or promo) and _DL_MARK not in desc and (not promo or promo not in desc):
@@ -1048,6 +1250,20 @@ def place_description_blocks(script: dict) -> None:
             desc = desc[:end] + "\n\n" + promo + desc[end:]
         else:                                       # other formats: after the hook paragraph
             desc = _insert_after_hook(desc, promo)
+    # spec v3-P.1: author footage carries its licence material in ONE line, right
+    # under the deliverable block (else under the hook). Idempotent; a rewrite that
+    # mangled the line has every stale copy cut before the true one goes back in.
+    ev_line = evidence.attribution_line(script.get("evidence"))
+    if ev_line and ev_line not in desc:
+        desc = "\n".join(l for l in desc.split("\n")
+                         if not l.startswith(evidence.AUTHOR_MARK)).strip()
+        i = desc.find(_DL_MARK)
+        end = desc.find("\n\n", i) if i >= 0 else -1
+        if i >= 0:
+            end = len(desc) if end < 0 else end
+            desc = desc[:end] + "\n\n" + ev_line + desc[end:]
+        else:
+            desc = _insert_after_hook(desc, ev_line)
     # v3-H #12: who debated, and how — under the hook, once
     if (script.get("format") == "debate" and isinstance(script.get("debate"), dict)
             and debate.PANEL_MARK not in desc):
@@ -1342,6 +1558,8 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
     day = today or _dt.date.today()
     if day.weekday() == 6:
         return "roundup", None
+    if fv.flag("lane_mix_v2", False):
+        return _lane_mix_v2(ranked, day)
     viral = viral_pick(ranked)
     if viral and viral[1] >= VIRAL_THRESHOLD:
         print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
@@ -1358,6 +1576,82 @@ def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None 
     print(f"  🌤️  No breakout story today"
           f"{f' (best scored {viral[1]:.0f}/10)' if viral else ''} — banking an evergreen.")
     return "evergreen", None
+
+
+# spec v3-B.5 #2 (4-week test): the daily lane mix. Sunday stays the roundup (above).
+LANE_SATURDAY = 5            # weekday(): Saturday is the evergreen day
+NEWS_PER_ISO_WEEK = 1        # a hot story may take a slot at most once per ISO week
+
+
+def news_published_this_week(day: _dt.date, rows: list | None = None) -> bool:
+    """True when the ledger already holds a PUBLISHED news video in `day`'s ISO
+    week. Reads the format the ledger stamped (the script's own, re-bound in run())
+    — never a log line: an "evergreen" fallback can publish news (09-29)."""
+    if rows is None:
+        try:
+            rows = learn.read_runs(RUNS_LOG)
+        except Exception:
+            rows = []
+    week = day.isocalendar()[:2]
+    n = 0
+    for r in rows or []:
+        if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or r.get("format") != "news":
+            continue
+        try:
+            stamped = _dt.date.fromisoformat(str(r.get("timestamp", ""))[:10])
+        except ValueError:
+            continue
+        if stamped.isocalendar()[:2] == week:
+            n += 1
+    return n >= NEWS_PER_ISO_WEEK
+
+
+def _lane_mix_v2(ranked: list[dict], day: _dt.date):
+    """Mon/Tue/Thu/Fri tool (else evergreen), Wed debate (else the tool rule),
+    Sat evergreen. News is no longer a daily contender: a >= VIRAL_THRESHOLD story
+    may take any of these slots, once per ISO week. The week check runs FIRST so a
+    week that already had its news day spends no viral-judge call."""
+    if not news_published_this_week(day):
+        viral = viral_pick(ranked)
+        if viral and viral[1] >= VIRAL_THRESHOLD:
+            print(f"  🔥 Hot story (viral score {viral[1]:.0f}/10): {viral[0]['title'][:70]}")
+            return "news", viral
+    else:
+        print("  🗓️  This ISO week already had its news day — no viral check.")
+    wd = day.weekday()
+    if wd == LANE_SATURDAY:
+        print("  🌲 Saturday — the evergreen slot.")
+        return "evergreen", None
+    if (wd == debate.DEBATE_WEEKDAY and fv.flag("debate_format", False)
+            and len(debate.panel()) >= debate.MIN_SEATS):
+        print("  🥊 Debate day — the AI panel takes the question.")
+        return "debate", None
+    if fv.flag("tool_format", False) and any(i.get("kind") == "tool" for i in ranked):
+        print("  🧰 Tool day — running the utility lane (tool video).")
+        return "tool", None
+    print("  🌤️  No tool signal today — banking an evergreen.")
+    return "evergreen", None
+
+
+def _trials_skip_short(slot) -> bool:
+    """v3-T.1 row 8 (docs/spec/ai-pulse-v3t1.md): True for the Short slotted at the
+    Live Trials time on a live Saturday, with `trials_live` on. Called in the
+    post-upload zone: imported lazily and never raises."""
+    try:
+        from factverse import trials
+        return trials.skip_short_slot(slot)
+    except Exception:
+        return False
+
+
+def _trials_recap_blocked(item: dict) -> bool:
+    """v3-T.1 row 9: a tool candidate that would recap a Live Trials episode inside
+    its archive's first 72 h. Never raises; no episodes recorded = never blocks."""
+    try:
+        from factverse import trials
+        return trials.recap_blocked(item)
+    except Exception:
+        return False
 
 
 def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
@@ -1405,12 +1699,17 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         return None
     if fmt == "tool":
         tools = []
-        for c in ranked:
+        # v3-M.1 row 9: a follow-up candidate goes first and passes every gate below
+        for c in [f for f in memory.followup_items() if not too_many_failures(f["title"])] + ranked:
             if c.get("kind") != "tool":
                 continue
             blocked, term = gates.tool_unsuitable(c["title"])
             if blocked:
                 print(f"  ⛔ Skipping tool candidate ({term!r}): {c['title'][:60]}")
+                continue
+            # v3-T.1 row 9: no recap of a Live Trials episode in its archive's first 72 h
+            if _trials_recap_blocked(c):
+                print(f"  ⏭️ Skipping tool candidate (Live Trials archive < 72 h): {c['title'][:60]}")
                 continue
             # spec v3-B.4: filtered HERE, before the [:3] cut, so "3 candidates
             # tried" means 3 that can actually ground a tool video. 6 of the 9
@@ -1420,11 +1719,29 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
                       f"{c['title'][:60]}")
                 continue
             tools.append(c)
-        for cand in tools[:3]:
+        # spec v3-P.1: with evidence required, a candidate whose cheap probe finds no
+        # possible evidence source is skipped HERE, before it takes one of the three
+        # slots — the probe is seconds, a gather + writer call is minutes. A probe that
+        # could not look (None) keeps the candidate: gather decides.
+        probe_gate = fv.flag("evidence_engine", False) and fv.flag("evidence_required", True)
+        picked = []
+        for c in tools:
+            if len(picked) >= 3:
+                break
+            if probe_gate:
+                pr = evidence.probe(c)
+                if pr is not None and pr.get("source") == "none":
+                    print(f"  ⏭️ Skipping tool candidate (no evidence source): {c['title'][:60]}")
+                    continue
+                c = dict(c, _evidence_probe=pr)
+            picked.append(c)
+        for cand in picked:
             print(f"  🧰 Trying tool: {cand['title'][:70]}  (fit={cand.get('fit_score')})")
             s = script_tool(cand)
             if s:
                 s["signal_title"] = cand["title"]
+                if memory.followup_of(cand):
+                    s["followup"] = memory.followup_of(cand)
                 return s
             mark_failed(cand["title"])
             print("     ↻ tool script failed, trying next...")
@@ -1562,6 +1879,56 @@ def normalize_shorts_meta(meta, n: int, script: dict, hooks: list | None = None)
     return out
 
 
+def _s1_native_day(script: dict, crops: list, hooks: list) -> dict | None:
+    """v3-S.1: render the native concept Short and put the day's pair in slot order
+    (index 0 = 18:45 UTC). Before any upload, but it still never raises: a broken
+    native path must cost only the native Short. None = keep the crops as rendered."""
+    try:
+        windows = list(shorts_mod.last_windows)
+        nat = native_short.make(script, hook=(hooks[0] if hooks else ""),
+                                excerpt=(windows[0] if windows else ""))
+        day = scheduling.long_slot()[:10]
+        return pilot_b.plan_day(
+            day, crops, hooks, nat, native_short.last_skip,
+            pilot=fv.flag("pilot_b", False),
+            max_batches=int(float(fv.setting("pilot_b_batches", 1) or 1)),
+            parity_index=shorts_mod.sb.engine_index(_dt.date.fromisoformat(day)))
+    except Exception as e:  # noqa: BLE001
+        print(f"  ⚠️ native Short day failed ({type(e).__name__}) — crop Shorts only.")
+        return None
+
+
+def _ledger_family(script) -> str:
+    """The K.1 task family for the ledger row, so the north-star and memory
+    counters (which read `task_family` off PUBLISHED rows) see it. Tool videos
+    only; K.1's deterministic classifier over the same fields `site.entry_for`
+    feeds it (title + the signal's tool name). The cheat sheet's `what`, which the
+    catalog also reads, does not exist before the upload. Computed before the
+    upload, so it never raises: "" on anything unexpected."""
+    try:
+        if not isinstance(script, dict) or script.get("format") != "tool":
+            return ""
+        from factverse import tasks
+        fam = tasks.task_family({"title": str(script.get("title") or ""),
+                                 "tool": str(script.get("signal_title") or "")})
+        return fam if isinstance(fam, str) else ""
+    except Exception:  # noqa: BLE001 — the ledger row matters more than the family
+        return ""
+
+
+def _s1_native_title(plan: dict | None, shorts: list, meta: list) -> None:
+    """The native Short is titled from its OWN script (validated in native_short),
+    not from step8_meta, which only knows the long-form."""
+    try:
+        if not plan or not plan.get("native_ok") or not plan.get("native_title"):
+            return
+        for i, p in enumerate(shorts):
+            if shorts_mod.sb.engine_of(p) == "native" and i < len(meta):
+                meta[i]["title"] = plan["native_title"]
+    except Exception:  # noqa: BLE001
+        return
+
+
 def already_published_today() -> bool:
     """Idempotence guard: exactly ONE published video per UTC day, no matter how
     many times the workflow fires (late cron + retry cron, re-runs, manual runs).
@@ -1625,6 +1992,10 @@ def _fallback_format(fmt: str, force_format: str | None, fallback: bool,
 # bounded it, and a kill in the post-upload zone is the double-publish window.
 MAX_DAY_ATTEMPTS = 3
 
+# v3-M.1 row 16: the first attempt's ranked signals, for shadow.after_run. A list
+# mutated in place, because under `python -m` this module runs as __main__.
+LAST_RANKED: list = []
+
 
 def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool,
                attempt: int = 1):
@@ -1639,6 +2010,269 @@ def _fall_back(publish: bool, fmt: str, force_format: str | None, fallback: bool
     return run(publish=publish, force_format=nxt, fallback=True, attempt=attempt + 1)
 
 
+# --------------------------------------------------------------- v3-P.2 pilot helpers
+def _pilot_arm(script: dict) -> str | None:
+    """The Pilot A arm this script was written for, or None. Only a tool video
+    with admissible evidence and a drawn slot is a pilot video."""
+    p = script.get("pilot") if isinstance(script, dict) else None
+    if not (fv.flag("pilot_a", False) and isinstance(p, dict) and p.get("arm") in opening.ARMS
+            and script.get("format") == "tool" and evidence.admissible(script.get("evidence"))):
+        return None
+    return p["arm"]
+
+
+# A lint issue the encoded gate cannot catch later (content, not timing) blocks.
+_LINT_HARD = ("scene_count", "first_sentence_long", "first_sentence_content", "limitation_missing")
+
+
+def _pilot_lint(script: dict, arm: str) -> tuple[dict, list[str]]:
+    """(script, hard issues left). One writer fix pass when the pre-render lint
+    finds anything; only content issues block here — timing is the gate's job."""
+    issues = opening.lint(script, arm)
+    if issues:
+        print(f"  ✍️  Pilot script lint: {issues} — one fix pass")
+        fixed = _pilot_fix(script, issues, arm)
+        if fixed:
+            script = fixed
+            issues = opening.lint(script, arm)
+    return script, [i for i in issues if i in _LINT_HARD]
+
+
+def _pilot_fix(script: dict, failures: list[str], arm: str) -> dict | None:
+    """One writer repair of the narration (and task). Only `scenes` and `task` are
+    adopted: title, packaging and every run()-computed key stay as they were."""
+    try:
+        raw = llm.generate_json(opening.fix_prompt(script, failures, arm), max_tokens=8192,
+                                temperature=0.3)
+        task = raw.get("task") if isinstance(raw, dict) else None
+        fixed = _validate_script(raw, script["title"], script.get("source_url", ""))
+        if not fixed:
+            return None
+        out = dict(script)
+        out["scenes"] = fixed["scenes"]
+        if task:
+            out["task"] = str(task)[:60]
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"   ⚠️ pilot fix pass failed: {e}")
+        return None
+
+
+def _recheck_fixed(script: dict) -> str:
+    """The gates a rewritten narration must pass again ("" = clean): the evidence
+    overclaim screen, the verbatim-overlap policy gate, advice framing, and the
+    fact check — a repair must never be a way around them."""
+    try:
+        narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+        if evidence.overclaims(script):
+            return "overclaim"
+        if verbatim_overlap(narration, script.get("grounding", "")) > MAX_OVERLAP:
+            return "overlap"
+        if gates.advice_framing(narration).get("advice"):
+            return "advice"
+        fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
+                              gates.fact_sources(script))
+        return "" if fc.get("passed", True) else "factcheck"
+    except Exception as e:  # noqa: BLE001
+        return f"recheck error {type(e).__name__}"
+
+
+def _trim_lead(audio: str, words: list) -> tuple[str, list]:
+    """Round 3: first speech by 0.50 s. A voice that starts later than 0.35 s is
+    trimmed to start 0.15 s before its first word; the word timings shift with it.
+    Fail soft: the untouched pair."""
+    try:
+        lead = float(words[0][0]) - 0.15
+        if float(words[0][0]) <= 0.35 or lead <= 0:
+            return audio, words
+        out = str(Path(audio).with_name("voice_trim" + Path(audio).suffix))
+        import subprocess
+        r = subprocess.run([fv.FFMPEG or "ffmpeg", "-y", "-ss", f"{lead:.3f}", "-i", str(audio),
+                            str(out)], capture_output=True, text=True, timeout=120)
+        if r.returncode != 0 or not Path(out).exists():
+            return audio, words
+        return out, [(max(0.0, a - lead), max(0.0, b - lead), w) for a, b, w in words]
+    except Exception:  # noqa: BLE001
+        return audio, words
+
+
+def _make_extras(video: str, script: dict, words, starts, src_domain: str, tool_shot: str):
+    """Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
+    Person-first thumbnail mined from this run's own footage; engine design is the fallback."""
+    thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
+    thumb = None
+    if tool_shot:
+        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
+        thumb = thumbnail.make_tool_thumb(
+            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
+    thumb = (thumb
+             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
+                               title=script["title"])
+             or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
+    # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
+    # units freed, one fewer templated upload in the channel-level pattern.
+    # Revisit only if Shorts→long CTR sustains >6% for 30 days.
+    shorts_n = int(fv.setting("shorts_per_day", 2))
+    # v3-S.1: the native concept Short replaces the storyboard engine's Short, so
+    # with it on both rendered Shorts are crop excerpts (the control + a spare).
+    native_on = fv.flag("native_shorts", False)
+    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
+                                    max_count=min(shorts_n, 4), source_domain=src_domain,
+                                    storyboard=(False if native_on else None))
+    return thumb, shorts
+
+
+def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = None) -> dict | None:
+    """Clips -> voice -> word timing -> build -> captions -> branding -> L2 -> QA.
+    Returns what run() needs downstream, or None after recording why (the
+    statuses are the ones this block always wrote). `arm` (Pilot A) swaps in the
+    opening contract: no receipts card or small code card, no sting, no cold
+    open at 0:00, and the thumbnail/Shorts wait for the gate (run() makes them)."""
+    # v3-B: a tool video is illustrated by the tool itself — a screen recording
+    # of its real page — never stock. capture() fails soft; stock is the fallback.
+    scene_clips, tool_shot, cap = None, "", None
+    if script.get("format") == "tool":
+        cap = screencap.capture(script)
+        if cap:
+            scene_clips = cap["scene_clips"]
+            tool_shot = cap.get("screenshot") or ""
+            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        else:
+            print("  ⚠️ Screen capture failed — stock visuals for this run.")
+    if scene_clips is None:
+        scene_clips = eng.step3_download(script)
+
+    src_domain, src_chip = source_chip(script)
+
+    print("\n[4/10] 🎙️ Voiceover...")
+    audio, edge_words = synthesize_voice(narration, script)
+    if not audio:
+        print("  ❌ Voice step failed.")
+        record_run(status="VOICE_FAILED", format=fmt, title=script["title"])
+        return None
+    words = captions.transcribe_words(audio) or edge_words
+    if not words:
+        print("  ❌ Caption timing failed.")
+        record_run(status="TIMING_FAILED", format=fmt, title=script["title"])
+        return None
+    # v3: captions must show the SCRIPT's spelling — whisper mishears proper
+    # nouns ("Haapoja" -> "Hoppogja") and those typos were burned on screen
+    words = captions.correct_words(words, narration)
+    if arm:
+        audio, words = _trim_lead(audio, words)
+    audio_dur = eng.dur(audio)
+    durs = scene_durations(script, words, audio_dur)
+    starts = None
+    if durs:
+        starts = [0.0]
+        for d in durs[:-1]:
+            starts.append(starts[-1] + d)
+    print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
+          f"scene sync: {'ON' if durs else 'uniform fallback'}")
+    shares = durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips)
+
+    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
+    # AFTER the timings exist — step5_build splits a scene's time equally between
+    # its clips, so a card rendered to a fixed length either loops (replaying the
+    # count-up mid-scene) or is cut before the number reaches its real value.
+    infographics.inject_cards(script, scene_clips, source_domain=src_domain, scene_durs=shares)
+    if script.get("format") == "debate":
+        # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
+        # _lead_with replaces a stat card rather than stacking a third clip
+        debate.inject_cards(script, scene_clips)
+    if script.get("format") == "tool" and not arm:
+        # the deliverable, on screen as a terminal card, in the scenes that speak it.
+        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
+        # leading the scene, so that a third clip cannot squeeze the command below
+        # readable length. It is a still, so it stays duration-agnostic.
+        screencap.inject_code_card(script, scene_clips)
+        # spec v3-E.2 #11: real terminal footage of the check leads the install
+        # scene, replacing the still card there (the final scene keeps it).
+        # Animated, so it must render to its exact slot share — the C.3 law.
+        receipts.inject_receipt_clip(script, scene_clips, shares)
+    meta = None
+    if arm:
+        # spec v3-P.2: the opening contract owns scenes 1-4 (result / context / step /
+        # sequence), rendered to their exact shares — needs the REAL timings.
+        meta = opening.place_opening(script, scene_clips, durs, arm) if durs else None
+        if meta is None:
+            print("  ⚠️ opening contract could not be placed — the gate will refuse this render.")
+    elif script.get("format") == "tool" and fv.flag("evidence_engine", False):
+        # spec v3-P.1: the evidence clip LEADS scene 1, replacing its recording/stock
+        # clip (never stacking), rendered to its exact slot share now that the timings
+        # exist (the C.3 law). After every inject_*, BEFORE recut: recut then skips the
+        # replaced slot.
+        if evidence.admissible(script.get("evidence")) and evidence.place_clip(
+                script, scene_clips, shares) is None:
+            print("  ⚠️ evidence clip could not be placed — scene 1 keeps its recording.")
+    if cap:
+        # spec v3-B.5: the recording was chunked before the narration existed, so
+        # step5_build looped every chunk shorter than its slot. Recut it now, to the
+        # exact share each recording clip gets — LAST, after every inject_* call has
+        # settled how many clips each scene holds. Fail soft: provisional clips stay.
+        if screencap.recut(cap, scene_clips, shares) is None:
+            print("  ⚠️ recording recut failed — provisional clips (may loop) this run.")
+
+    video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
+    if not video:
+        print("  ❌ Build step failed.")
+        mark_failed(script.get("signal_title", script["title"]))
+        record_run(status="BUILD_FAILED", format=fmt, title=script["title"])
+        return None
+
+    thumb, shorts, clean = None, [], ""
+    if arm:
+        import shutil as _sh
+        clean = str(Path(video).with_name(Path(video).stem + "_clean.mp4"))
+        try:
+            _sh.copy(video, clean)
+        except OSError:
+            clean = ""
+    else:
+        thumb, shorts = _make_extras(video, script, words, starts, src_domain, tool_shot)
+
+    print("  📝 Burning live word-by-word captions...")
+    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
+    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
+                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
+    # on-screen source chips during fact delivery (content timeline; frames carry
+    # the overlay through the cold-open re-order untouched)
+    cites = []
+    if starts and len(starts) >= 6 and src_chip:
+        for i in (1, len(starts) // 2, len(starts) - 2):
+            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
+    video = captions.burn_ass(video, ass, citations=cites)
+
+    if arm:
+        # round 3 §2: NO brand-only sting anywhere in a pilot video, and the human
+        # cold open must not displace frame 0 — it is not spliced in at all.
+        print("\n  🎬 Branding: none (Pilot A — no sting, no cold open at 0:00)")
+        intro_shift = 0.0
+        insight_at = starts[-1] if starts else None
+        video, l2_rec = l2.inject(video, insight_at, cold_open=False)
+    else:
+        print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
+        video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
+        # L2 human editorial injection: real cold open at 0:00, insight block before
+        # the final scene — the policy's "creator's original insight", batched weekly.
+        intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
+        insight_at = (starts[-1] + intro_shift) if starts else None
+        video, l2_rec = l2.inject(video, insight_at)
+    if fv.flag("require_insight_block", False) and not l2_rec.get("insight"):
+        print("  🛑 O1 GATE: insight block required and missing. Publishing nothing is better.")
+        record_run(status="INSIGHT_MISSING", format=fmt, title=script["title"])
+        return None
+
+    if not qa_video(video, audio_dur):
+        mark_failed(script.get("signal_title", script["title"]))
+        record_run(status="QA_FAILED", format=fmt, title=script["title"])
+        return None
+    return {"video": video, "clean": clean, "words": words, "durs": durs, "starts": starts,
+            "audio_dur": audio_dur, "scene_clips": scene_clips, "l2_rec": l2_rec,
+            "intro_shift": intro_shift, "src_domain": src_domain, "tool_shot": tool_shot,
+            "thumb": thumb, "shorts": shorts, "opening": meta}
+
+
 def run(publish: bool = False, force_format: str | None = None,
         fallback: bool = False, attempt: int = 1) -> dict | None:
     print("=" * 70)
@@ -1648,6 +2282,11 @@ def run(publish: bool = False, force_format: str | None = None,
         record_run(status="SKIPPED_DUPLICATE_DAY", format="-")
         return {"status": "SKIPPED_DUPLICATE_DAY"}
     ranked = [i for i in signal_engine.rank(limit=20) if not too_many_failures(i["title"])]
+    if attempt == 1:
+        LAST_RANKED[:] = ranked      # v3-M.1 row 16: read by the shadow queue in __main__
+    if fv.flag("query_map", False):
+        # spec v3-P.2 row 13: the FIRST time each tool signal was seen (earliest wins)
+        querymap.note_seen([c.get("url") for c in ranked if c.get("kind") == "tool"])
     fmt, viral = decide_format(force_format, ranked)
     print(f"  🧭 Format today: {fmt.upper()}")
 
@@ -1673,11 +2312,31 @@ def run(publish: bool = False, force_format: str | None = None,
     # docs/ — measured, not theorised. _CARRY still preserves the real one afterwards.
     script.pop("cheat_sheet", None)
 
-    # critique first (it now cuts repetition), then the floor (sanity only),
-    # then the CAP — padding is the enemy, not brevity
-    script = critique_pass(script)
-    script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
-    script = enforce_max_length(script, MAX_WORDS)
+    # spec v3-P.2: a Pilot A script keeps its scene architecture — the critique and
+    # length passes restructure scenes freely, which would move the result, the
+    # limitation and the step out of the slots the renderer and the gate rely on.
+    arm = _pilot_arm(script)
+    if arm:
+        script, hard = _pilot_lint(script, arm)
+        if hard:
+            print(f"  🛑 OPENING CONTRACT: the script breaks it before render: {hard}")
+            record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                       opening={"passed": False, "failures": hard, "stage": "script"},
+                       **pilot.ledger_fields(script))
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+    else:
+        # critique first (it now cuts repetition), then the floor (sanity only),
+        # then the CAP — padding is the enemy, not brevity
+        script = critique_pass(script)
+        script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+        script = enforce_max_length(script, MAX_WORDS)
+
+    # spec v3-P.2 row 13: query-map packaging for a tool video with admissible evidence
+    if (fv.flag("query_map", False) and script.get("format") == "tool"
+            and evidence.admissible(script.get("evidence"))):
+        if querymap.apply(script):
+            print(f"  🔎 Query-map title: {script['title']!r}")
 
     # v3: the deliverable is the whole point of a tool video
     place_description_blocks(script)
@@ -1730,6 +2389,17 @@ def run(publish: bool = False, force_format: str | None = None,
             mark_failed(script.get("signal_title", script["title"]))
             return _fall_back(publish, fmt, force_format, fallback, attempt)
 
+    # spec v3-P.1: after every rewrite pass, the narration may claim only what the
+    # evidence allows — never "we tested" over an author demo, never "works offline"
+    # or "on your hardware" over a hosted test. A day lost beats a false claim.
+    if fv.flag("evidence_engine", False):
+        _oc = evidence.overclaims(script)
+        if _oc:
+            print(f"  🛑 EVIDENCE GATE: narration claims more than the evidence shows: {_oc[:3]}")
+            record_run(status="OVERCLAIM_BLOCKED", format=fmt, title=script["title"])
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+
     # Accuracy gate: claim-level fact check against the bound sources. A hook/
     # thumbnail claim that cannot be traced to a source is a hard fail.
     fc = gates.fact_check(script, [script.get("title", ""), script.get("thumb_text", "")],
@@ -1759,7 +2429,7 @@ def run(publish: bool = False, force_format: str | None = None,
     # after every gate that could still reject the video (3 min of network must not
     # precede a veto) and before the payoff gate, so the beat's numbers can support
     # the packaging. install_scene_idx first: an unbeatable script costs zero minutes.
-    if script.get("format") == "tool" and fv.flag("receipts_check", True):
+    if script.get("format") == "tool" and fv.flag("receipts_check", True) and not arm:
         if receipts.install_scene_idx(script) is not None:
             _rc_plan = receipts.check_plan(
                 (script.get("deliverable") or {}).get("text", ""),
@@ -1786,131 +2456,97 @@ def run(publish: bool = False, force_format: str | None = None,
               f"{script['title']!r}")
     elif _hs["terms"]:
         print(f"  ✂️ Long-form title had hype ({', '.join(_hs['terms'])}) — kept: no clean alternate")
+    # spec v3-P.1 row 3: an outcome claim on the packaging that the channel did not
+    # observe is attributed ("Claimed 2× …") or dropped. LAST of the title passes —
+    # an alternate promoted above could carry a claim — and before the ledger fields.
+    _sb = gates.substantiate_claims(script)
+    if _sb["fixed"]:
+        print(f"  ✂️ Unobserved outcome claim(s) {_sb['claims']} — {'; '.join(_sb['evidence'])}")
     # spec v3-G.3 #9: the ledger's packaging fields, computed and coerced HERE — the
     # title is final from this line on, and nothing new may raise past the upload.
     _ledger_thumb = str(script.get("thumb_text") or "")
     _ledger_title_alt = bool(_pk.get("title_alt") or _hs["alt"])
     _ledger_title_terms = [str(t) for t in gates.title_terms(script["title"])]
-    # v3-B: a tool video is illustrated by the tool itself — a screen recording
-    # of its real page — never stock. capture() fails soft; stock is the fallback.
-    scene_clips, tool_shot = None, ""
-    if script.get("format") == "tool":
-        cap = screencap.capture(script)
-        if cap:
-            scene_clips = cap["scene_clips"]
-            tool_shot = cap.get("screenshot") or ""
-            print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
-        else:
-            print("  ⚠️ Screen capture failed — stock visuals for this run.")
-    if scene_clips is None:
-        scene_clips = eng.step3_download(script)
-
-    src_domain, src_chip = source_chip(script)
-
-    print("\n[4/10] 🎙️ Voiceover...")
-    audio, edge_words = synthesize_voice(narration, script)
-    if not audio:
-        print("  ❌ Voice step failed.")
-        record_run(status="VOICE_FAILED", format=fmt, title=script["title"])
-        return None
-    words = captions.transcribe_words(audio) or edge_words
-    if not words:
-        print("  ❌ Caption timing failed.")
-        record_run(status="TIMING_FAILED", format=fmt, title=script["title"])
-        return None
-    # v3: captions must show the SCRIPT's spelling — whisper mishears proper
-    # nouns ("Haapoja" -> "Hoppogja") and those typos were burned on screen
-    words = captions.correct_words(words, narration)
-    audio_dur = eng.dur(audio)
-    durs = scene_durations(script, words, audio_dur)
-    starts = None
-    if durs:
-        starts = [0.0]
-        for d in durs[:-1]:
-            starts.append(starts[-1] + d)
-    print(f"  ✅ Voice {Path(audio).suffix} | {audio_dur:.0f}s | {len(words)} timed words | "
-          f"scene sync: {'ON' if durs else 'uniform fallback'}")
-
-    # info-dense motion graphics: stat scenes lead with a generated card, not stock.
-    # AFTER the timings exist — step5_build splits a scene's time equally between
-    # its clips, so a card rendered to a fixed length either loops (replaying the
-    # count-up mid-scene) or is cut before the number reaches its real value.
-    infographics.inject_cards(script, scene_clips, source_domain=src_domain,
-                              scene_durs=durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
-    if script.get("format") == "debate":
-        # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
-        # _lead_with replaces a stat card rather than stacking a third clip
-        debate.inject_cards(script, scene_clips)
-    if script.get("format") == "tool":
-        # the deliverable, on screen as a terminal card, in the scenes that speak it.
-        # Must stay AFTER inject_cards: _lead_with REPLACES a stat card already
-        # leading the scene, so that a third clip cannot squeeze the command below
-        # readable length. It is a still, so it stays duration-agnostic.
-        screencap.inject_code_card(script, scene_clips)
-        # spec v3-E.2 #11: real terminal footage of the check leads the install
-        # scene, replacing the still card there (the final scene keeps it).
-        # Animated, so it must render to its exact slot share — the C.3 law.
-        receipts.inject_receipt_clip(script, scene_clips,
-                                     durs or [audio_dur / max(1, len(scene_clips))] * len(scene_clips))
-
-    video = eng.step5_build(script, scene_clips, audio, None, scene_durs=durs)
-    if not video:
-        print("  ❌ Build step failed.")
-        mark_failed(script.get("signal_title", script["title"]))
-        record_run(status="BUILD_FAILED", format=fmt, title=script["title"])
-        return None
-
-    # Thumbnail + Shorts from the CLEAN content (before long-form captions are burned).
-    # Person-first thumbnail mined from this run's own footage; engine design is the fallback.
-    thumb_name = str(fv.THUMBS / f"thumb_{_dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg")
-    thumb = None
-    if tool_shot:
-        # v3 spec decision 6: tool thumbs show the real UI, not a person cutout
-        thumb = thumbnail.make_tool_thumb(
-            tool_shot, script.get("thumb_text", "") or script["title"], thumb_name)
-    thumb = (thumb
-             or thumbnail.make(video, fv.TEMP, script.get("thumb_text", ""), thumb_name,
-                               title=script["title"])
-             or eng.step7_thumb(video, script["title"], thumb_text=script.get("thumb_text", "")))
-    # 2 funnel Shorts/day (reduced from 3): zero watch-hour loss, 1,600 quota
-    # units freed, one fewer templated upload in the channel-level pattern.
-    # Revisit only if Shorts→long CTR sustains >6% for 30 days.
-    shorts_n = int(fv.setting("shorts_per_day", 2))
-    shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
-                                    max_count=min(shorts_n, 4), source_domain=src_domain)
-
-    print("  📝 Burning live word-by-word captions...")
-    # the LAYOUT space, not the 1080p canvas: libass scales it (v3-G.4 decision 3)
-    ass = captions.build_ass(words, str(fv.TEMP / "captions.ass"),
-                             play_w=captions.LAYOUT_W, play_h=captions.LAYOUT_H)
-    # on-screen source chips during fact delivery (content timeline; frames carry
-    # the overlay through the cold-open re-order untouched)
-    cites = []
-    if starts and len(starts) >= 6 and src_chip:
-        for i in (1, len(starts) // 2, len(starts) - 2):
-            cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
-    video = captions.burn_ass(video, ass, citations=cites)
-
-    print("\n  🎬 Branding (cold-open: hook first, then the sting)...")
-    video = branding.add_intro_outro(video, split_at=(durs[0] if durs else None))
-
-    # L2 human editorial injection: real cold open at 0:00, insight block before
-    # the final scene — the policy's "creator's original insight", batched weekly.
-    intro_shift = eng.dur(str(fv.ASSETS / "intro.mp4")) or 2.6
-    insight_at = (starts[-1] + intro_shift) if starts else None
-    video, l2_rec = l2.inject(video, insight_at)
-    if fv.flag("require_insight_block", False) and not l2_rec.get("insight"):
-        print("  🛑 O1 GATE: insight block required and missing. Publishing nothing is better.")
-        record_run(status="INSIGHT_MISSING", format=fmt, title=script["title"])
-        return None
-
-    if not qa_video(video, audio_dur):
-        mark_failed(script.get("signal_title", script["title"]))
-        record_run(status="QA_FAILED", format=fmt, title=script["title"])
-        return None
+    _ledger_ev_source, _ledger_ev_status = evidence.ledger_fields(script)
+    # spec v3-P.2 row 13: first signal / first admissible evidence (publication is
+    # added at record time); computed HERE, before the upload, and never raises
+    _ledger_ts = (querymap.timestamps(script, None)
+                  if fv.flag("query_map", False) and script.get("format") == "tool" else {})
+    # ---- render, and for a Pilot A video the opening gate on the ENCODED file ----
+    gate, repairs = None, 0
+    while True:
+        r = _render_longform(script, narration, fmt, arm)
+        if r is None:
+            return None                         # its status is already on the ledger
+        if not arm:
+            break
+        gate = (opening.measure(r["video"], r["opening"], script, r["words"], r["audio_dur"],
+                                (script.get("pilot") or {}).get("partner_seconds"))
+                if r.get("opening") else {"passed": False, "failures": ["placement"]})
+        gate["attempts"] = repairs + 1
+        print(f"  📏 Opening gate ({arm}-first, attempt {repairs + 1}): "
+              f"{'PASS' if gate['passed'] else 'FAIL ' + str(gate['failures'])}")
+        if gate["passed"]:
+            break
+        if repairs >= 1:                        # one automatic repair, then skip
+            print("  🛑 OPENING CONTRACT: still failing after one repair — skipping like the lane does.")
+            record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                       opening=opening.ledger_view(gate), **pilot.ledger_fields(script))
+            mark_failed(script.get("signal_title", script["title"]))
+            return _fall_back(publish, fmt, force_format, fallback, attempt)
+        repairs += 1
+        if opening.repair_kind(gate["failures"]) == "script":
+            fixed = _pilot_fix(script, gate["failures"], arm)
+            blocked = _recheck_fixed(fixed) if fixed else "no repair"
+            if blocked:
+                print(f"  🛑 OPENING CONTRACT: the repair was refused ({blocked}).")
+                record_run(status="OPENING_BLOCKED", format=fmt, title=script["title"],
+                           opening=opening.ledger_view(gate), **pilot.ledger_fields(script))
+                mark_failed(script.get("signal_title", script["title"]))
+                return _fall_back(publish, fmt, force_format, fallback, attempt)
+            script = fixed
+            narration = " . . . ".join(sc["narration"] for sc in script["scenes"])
+            words_total = sum(len(sc["narration"].split()) for sc in script["scenes"])
+            place_description_blocks(script)
+        print(f"  🔁 Opening repair ({opening.repair_kind(gate['failures'])}) — re-rendering once.")
+    video, words, durs, starts = r["video"], r["words"], r["durs"], r["starts"]
+    audio_dur, scene_clips, l2_rec = r["audio_dur"], r["scene_clips"], r["l2_rec"]
+    intro_shift, src_domain = r["intro_shift"], r["src_domain"]
+    thumb, shorts = r["thumb"], r["shorts"]
+    if arm:
+        # the clean copy (no captions) is what the thumbnail and the Shorts are cut
+        # from — made only now, so a failed gate never pays for them
+        thumb, shorts = _make_extras(r["clean"], script, words, starts, src_domain, r["tool_shot"])
+    # v3-S.1: the native concept Short and the day's pair, read right after the
+    # thumbnail/Shorts call on BOTH paths (_make_extras ran inside _render_longform
+    # for a non-pilot video, just above for a Pilot A one). shorts_mod.last_hooks
+    # belongs to that last make_shorts call. Before any upload; never raises.
+    native_on = fv.flag("native_shorts", False)
+    short_hooks = list(shorts_mod.last_hooks)
+    s1_plan = _s1_native_day(script, shorts, short_hooks) if (native_on and shorts) else None
+    if s1_plan:
+        shorts, short_hooks = s1_plan["shorts"], s1_plan["hooks"]
+    # spec v3-P.2: every Pilot A / query-map ledger field as ONE dict, computed here,
+    # before the upload — the published record_run splats it once (a second
+    # `experiment=` keyword would be a TypeError inside the double-publish window).
+    _p2_ledger = dict(pilot.ledger_fields(script), opening=opening.ledger_view(gate),
+                      duration_s=(gate or {}).get("duration_s"),
+                      pilot_task=str((script.get("query_map") or {}).get("task") or ""),
+                      **_ledger_ts)
+    # AFTER the opening repair loop, which may replace `script`: the ledger reads
+    # the script that is actually uploaded. Both never raise.
+    _ledger_memory = memory.ledger_fields(script)   # v3-M.1 row 9
+    _ledger_task_family = _ledger_family(script)    # v3-K.1 family on the ledger row
 
     # chapters on the FINAL timeline (brand sting after scene 1 + any human cold open)
-    if starts:
+    if starts and arm:
+        # spec v3-P.2 row 13: descriptive chapters, only for sections that exist
+        chapters = (querymap.chapters(opening.chapter_candidates(script, starts, r["opening"]))
+                    if fv.flag("query_map", False) else "")
+        if chapters:
+            script["description"] = script["description"].rstrip() + "\n\n" + chapters
+            print(f"  📑 {chapters.count(chr(10))} descriptive chapters added to description")
+    elif starts:
         cold_shift = l2._dur(fv.TEMP / "l2_cold.mp4") if l2_rec.get("cold_open") else 0.0
         chapters = (tool_chapters(script, starts, intro_shift + cold_shift)
                     or build_chapters(script, starts, intro_shift + cold_shift))
@@ -1919,7 +2555,8 @@ def run(publish: bool = False, force_format: str | None = None,
             print(f"  📑 {chapters.count(chr(10))} chapters added to description")
 
     meta = normalize_shorts_meta(eng.step8_meta(script, len(shorts)), len(shorts), script,
-                                 hooks=list(shorts_mod.last_hooks))
+                                 hooks=short_hooks)
+    _s1_native_title(s1_plan, shorts, meta)
     # Trip the re-hook tripwire HERE, while nothing is uploaded and aborting is
     # still free. It used to run after the long-form was already on YouTube.
     if shorts:
@@ -1957,6 +2594,8 @@ def run(publish: bool = False, force_format: str | None = None,
         print("\n  📤 Publishing...")
         # decouple render from publish: upload private, publish at the fixed slot
         long_publish_at = scheduling.long_slot()
+        if _ledger_ts:
+            _p2_ledger["t_publication"] = str(long_publish_at or "")
         # chain design: the description carries a watch-next link to the previous
         # episode; comments stitch the chain in both directions after upload
         prev_url = _last_published_url()
@@ -1991,7 +2630,18 @@ def run(publish: bool = False, force_format: str | None = None,
         except Exception as e:
             print(f"  ⚠️ Shorts scheduling failed ({e}) — publishing them unscheduled.")
             slots = []
+        # v3-S.1 Pilot B: exactly 18:45 UTC on D and 01:30 UTC on D+1 (never raises)
+        s1_slots_ok = False
+        if s1_plan and s1_plan.get("assignment") and len(shorts) == 2:
+            _ps = scheduling.pilot_b_slots(long_publish_at)
+            if _ps and str(long_publish_at)[:10] == s1_plan["assignment"].get("day"):
+                slots, s1_slots_ok = _ps, True
         for i, sp in enumerate(shorts):
+            # v3-T.1 row 8: on a Live Trials Saturday the live takes the 18:45 slot, so
+            # that Short is not uploaded (3 notifications / 24 h). Never raises.
+            if _trials_skip_short(slots[i] if i < len(slots) else None):
+                print(f"  📺 Short {i + 1} skipped: the Live Trials stream takes its 18:45 UTC slot.")
+                continue
             mi = meta[i] if i < len(meta) else (meta[0] if meta else {})
             sd = f"🎬 FULL VIDEO: {yt_url}\n\n{mi.get('description', '')}"
             u = eng.yt_upload(sp, mi.get("title", script["title"] + " #Shorts"),
@@ -2001,11 +2651,15 @@ def run(publish: bool = False, force_format: str | None = None,
                 yt_shorts.append(u)
                 # v3-G.1 row 13: which arm drew this Short (post-upload zone:
                 # storyboard.engine_of is a substring test on our own name, cannot raise)
-                short_rows.append({"url": u, "engine": shorts_mod.sb.engine_of(sp)})
+                short_rows.append({"url": u, "engine": shorts_mod.sb.engine_of(sp),
+                                   # v3-S.1: "HH:MM" UTC; slot_label cannot raise
+                                   "slot": scheduling.slot_label(slots[i] if i < len(slots) else None)})
                 # visible path from the Short to the full video (description links
                 # are hidden on the Shorts player; a channel comment is tappable)
                 eng.yt_comment(u, f"▶️ Full breakdown: {yt_url}")
         status = "PUBLISHED"
+        # v3-S.1: every assigned pair is recorded, a skipped native included. Never raises.
+        pilot_b.record(s1_plan, short_rows, yt_url, s1_slots_ok)
     else:
         print("\n  ⏸️  Render-only (publish skipped).")
 
@@ -2037,15 +2691,28 @@ def run(publish: bool = False, force_format: str | None = None,
 
         # asset store: the small artifacts that make dubbing/re-cuts/appeals possible
         _save_asset_record(script, fc, syn, rep, conf, l2_rec)
+        if arm and yt_url:
+            pilot.record_member(script, learn.video_id(yt_url) or "", long_publish_at,
+                                (gate or {}).get("duration_s"))
 
         report = eng.save_report(script, video, shorts, thumb, meta, yt_url, yt_shorts, status=status)
     except Exception as e:
         print(f"  ⚠️ Post-publish bookkeeping failed ({type(e).__name__}: {e}) — "
               f"recording the run anyway so today cannot publish twice.")
+    # v3-S.1: experiment / pair_id / arm / slot on a PUBLISHED long-form row only.
+    # Merge any other experiment's fields into THIS dict: a second `experiment=`
+    # keyword beside `**_s1_ledger` is a TypeError in the double-publish window.
+    _s1_ledger = pilot_b.ledger_fields(s1_plan) if status == "PUBLISHED" else {}
     record_run(status=status, format=fmt, title=script["title"], words=words_total,
                packaging=_pk["fixed"],
                thumb_text=_ledger_thumb, title_alt=_ledger_title_alt,
                title_terms=_ledger_title_terms,
+               evidence_source=_ledger_ev_source, evidence_status=_ledger_ev_status,
+               claims_fixed=list(_sb["fixed"]),
+               # Pilot B and Pilot A share experiment/pair_id/arm/slot: ONE splat, and
+               # P.2's keys win on a day both pilots run (they are absent otherwise).
+               **{**_s1_ledger, **_p2_ledger},
+               task_family=_ledger_task_family,
                video=eng._rel(video), youtube_url=yt_url, shorts_published=len(yt_shorts),
                shorts=short_rows,
                shorts_rendered=len(shorts),
@@ -2061,7 +2728,8 @@ def run(publish: bool = False, force_format: str | None = None,
                tool_page=bool(tool_page),
                insight_block=l2_rec.get("insight"), cold_open=l2_rec.get("cold_open"),
                publish_at=long_publish_at,
-               quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0)
+               quota_units=1600 * (1 + len(yt_shorts)) + 250 if yt_url else 0,
+               **_ledger_memory)
     eng.cleanup()
     print(f"\n  ✅ DONE [{status}] → {video}")
     # save_report may have been the thing that failed above; a published video
@@ -2073,5 +2741,15 @@ if __name__ == "__main__":
     args = [a.lower() for a in sys.argv[1:]]
     do_publish = "publish" in args
     forced = next((a for a in args if a in ("news", "evergreen", "roundup", "tool", "debate")), None)
+    import time as _time
+    _t0 = _time.monotonic()
     ok = run(publish=do_publish, force_format=forced)
+    # v3-M.1 row 16: AFTER run() — the ledger row is written, nothing is in the
+    # double-publish window. Fail-soft and bounded inside; this try is the backstop.
+    try:
+        from factverse import shadow
+        shadow.after_run(LAST_RANKED, sys.modules[__name__], publish=do_publish,
+                         forced=forced, run_s=_time.monotonic() - _t0)
+    except Exception as _e:  # noqa: BLE001
+        print(f"  ⚠️ shadow queue skipped: {_e}")
     sys.exit(0 if ok else 1)

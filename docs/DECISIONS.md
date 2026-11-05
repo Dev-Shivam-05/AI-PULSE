@@ -565,3 +565,131 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   deprecations page). 3.5 flash-lite/flash stay at the end of the chain.
 - **HELD candidates are re-rolled by the retry cron** (no `mark_failed` on HELD). Left as is:
   10-05's hold was followed by a clean publish of the same tool.
+
+## 2026-11-01 — Radar Live + channel growth review (owner: `go for all`)
+
+- The owner delegated the review's open choices ("whatever you think will be best"). Review
+  table: `docs/debate/2026-11-01-radar-live-growth-review/RESULT.md`. Built so far: points 3, 4,
+  5, 7, 8, 14 (L.6) and 16 (B.5). Points 9-12 are L.7, 1 and 13 are L.8, 6 is L.9.
+- The session that built L.6 and B.5 ended before committing; a second session on the same
+  day committed its work unchanged as `wip:` commits, then verified, fixed and documented it.
+
+## 2026-11-01 — v3-B.5: daily lane mix + no-loop recordings
+
+- News is no longer a daily contender; a hot story may replace one slot per ISO week. Judged
+  from the ledger's `format`, never from a log line (the 09-29 "evergreen" fallback published news).
+- A recording never loops: it is recut after the timings exist, stretched at most 1.35×, then
+  held. A held frame was chosen over a loop; the cost (≈ 69% still frame on a short README) is
+  recorded as a known limit, not tuned away.
+- Evergreen repeats are screened by SUBJECT, not wording: the re-word check (0.7) missed all 8
+  LLM/hardware repeats because their words differed.
+
+## 2026-11-01 — v3-L.6: Radar Live viewer + inventory
+
+- Labels and the subscribe line use the review's exact words. The built code had "NEW / BACK ON
+  THE RADAR" and a shorter subscribe line; both were corrected to the agreed text.
+- The verbatim subscribe line does not fit the 900 px centre slot at a readable size (it shrank
+  to 18 px and ran under "SOURCE DELAYED" — rendered and seen). For its 5 s it takes the as-of
+  slot too and spans the bar at 28 px. Hiding the as-of text for 5 s every 15 min was preferred
+  over shortening agreed wording.
+- `UPDATED` is not built: nothing in the radar's data can verify a change, and the review gives
+  no threshold.
+
+## 2026-11-04 — Channel growth review, 4 rounds (owner: `go for all`)
+
+- Review table: `docs/debate/2026-11-04-tooldojo-channel-growth/RESULT.md`. It stays local, like
+  every review folder: it holds Studio analytics and this repo is public.
+  - Claude played the owner inside the rounds. The owner then answered the 18-row table with
+    "go for all … do not stop until everything is done".
+  - Programme spec: `docs/spec/ai-pulse-v3-growth.md`.
+- **Row 1 diagnosis:** ToolDojo wins the click for exact-tool searches: 82% of long-form views in
+  the 28 days to 2026-11-03 came from search. But no tool video ever showed the tool working.
+  - The lane recorded a README page, and the command came last.
+  - Retention on every tool video fell from 95% to 55-60% by 0:07.
+  - gpu-unlock's "Get The Commands" chapter started at 4:42, with 12% of viewers left.
+- **Row 2 bottleneck order:** proof → Shorts opening → memory → lane allocation → no reason to
+  return → originality risk.
+- **Row 18 data corrections:**
+  - Studio's country watch-time rows exceed the channel total (US 155.2M ms + IN 202.5M ms >
+    275.2M ms), so geography watch time is not used.
+  - Long-form views across 2026-08-24/27 are not comparable: Studio flags a counting change
+    ending 08-27. learn's long-form comparison now starts 2026-08-28; the 08-24 self-view
+    cutoff is unchanged.
+  - The storyboard/crop split was observational, not an A/B test.
+- **North star:** on-demand long-form watch time per rolling 28 days, from **12.11 h** (Oct 7 -
+  Nov 3) to 100× = 1,211 h.
+  - Ladder: 2× by day 30, 5× by day 60, 10× by day 90. Day 0 = the first Pilot A publication.
+  - Live and archived-live watch time are counted separately.
+- **Evidence beats coverage.** A tool day with no admissible evidence falls back to another lane.
+  On 2026-11-04 only 3 of 27 trending candidates had admissible evidence, so most tool days will
+  fall back until supply grows. This is the agreed rule, not a defect.
+- **Source (b), running candidate code, is not built.** Its containment gates (a gVisor-class
+  sandbox, zero network, 2 CPU / 2 GiB / 120 s) cannot be met on GitHub runners or on a Windows
+  Home PC. They are written in `ai-pulse-v3p1.md` as a later phase.
+- **X is pay-per-use.** docs.x.com, checked 2026-11-04: $0.015 per post, $0.20 per post with a
+  URL, and no free tier. `twitter` now defaults to false. Paying is the owner's decision.
+- **Delegated values:** every value the rounds did not fix is listed in its phase spec as
+  "delegated - default chosen: X, because Y". Counts: P.1 26, P.2 32, S.1 21, M.1 20. K.1's are
+  the task families, "comparable" = identical fixed input, and 30 days to outdated. Owner
+  confirmation pending.
+- **On a day both pilots run, Pilot A owns the long-form row's `experiment` / `pair_id` / `arm` /
+  `slot`.** Pilot B's slot lives in `state/pilot_b.json` and on each Short row.
+
+## 2026-11-04 — Live-stream concept round (3 rounds, ChatGPT proposed freely)
+
+- Folder: `docs/debate/2026-11-04-tooldojo-live-stream-ideas/RESULT.md` (local only). ChatGPT was
+  told nothing about automation or Radar.
+- Its bet, and Claude's: **ToolDojo Live Trials**.
+  - One named tool, 12 min, fixed inputs, deterministic checks, a count scorecard.
+  - Narration prepared in 4 branches, with the line "Prepared narration • Tool execution and
+    scores live".
+  - Saturday 18:45-18:57 UTC, vertical.
+  - A 14-day test of 2 episodes, measured against an archive AVD of 1:02.
+- **The integrator changed one thing.** The round wanted local CPU execution first. T.1 instead
+  tests the tool's HOSTED demo through the P.1 engine, so no candidate code ever runs on the
+  owner's PC. Running it locally would need the source-(b) containment the growth contract
+  requires. Owner to confirm.
+- **The owner supplied a dedicated PC for live work** (i3 5th gen, 8 GB, ~256 GB). Its
+  requirements:
+  - starts itself after a power cut, with zero manual steps;
+  - nothing blocks;
+  - the lowest possible load;
+  - no AI assistant on the box;
+  - never shows a window while the owner uses it;
+  - setup is a ZIP, a few commands and the credentials once.
+
+  This is phase v3-N.1.
+
+## 2026-11-04 — v3-N.1: the node runtime
+
+- **Account model:** a hidden local standard user `tooldojo`, not SYSTEM and not S4U.
+  - Its random password is generated by the installer and never shown.
+  - The startup task uses Password logon, so it runs in session 0 and can never show a window.
+  - Not SYSTEM: Chromium renders third-party README text, so it must not run with system
+    rights.
+  - Not S4U: Chromium needs DPAPI keys, which S4U lacks.
+- **Every child process** is CREATE_NO_WINDOW + SW_HIDE + BelowNormal, enforced on the whole
+  tree by a Job Object. DETACHED_PROCESS is deliberately not used: it flashes console windows.
+- **Hardware verdict:** the i3-5005U class scores 2,009 on PassMark. 720p30 x264 is expected;
+  1080p30 is not safe.
+  - Quick Sync on the HD 5500 most likely fails with current libvpl ffmpeg builds (MFX -9).
+  - The node measures itself at install, and that measurement decides.
+  - Upgrade, only if 1080p is wanted: a refurbished i5-8500T mini PC (M720q/M920q,
+    PassMark 7,729), about ₹20-31k.
+- **The measured stream profile lives in `data\node.local.json`**, never in a tracked file.
+  Otherwise the next self-update would overwrite one machine's measurement with another's.
+- **Before the node streams, the laptop's radar schedule must be removed**, so two PCs never
+  stream to one key.
+
+## 2026-11-05 — v3-T.1: verified, merged, still time left open
+
+- **T.1 is merged into `v3-growth-1104` switched off** (`trials_live: false`, node row disabled).
+  It was verified by a real 720 s episode to a local RTMP listener. It has not streamed to YouTube
+  or run on the node.
+- **The still time is a proposal, not a fix made in this phase.** Voice is 25% of the show, and
+  401 of 720 s are stretches of 15 s+ where nothing changes. Fixing it needs new values, so it is
+  row v3-T.1b, awaiting the owner's word. The locked 12-minute grid was not touched.
+- **Rendering draws only the moments the page can change.** Radar's per-second frames exist for
+  its moving clock; here they cost the time that put a hold card at 1:30.
+- **`repeat_choice` stays on R3's wording** (first PARTIAL/FAIL, else the control). A timed-out
+  test is not repeated unless the owner says otherwise.

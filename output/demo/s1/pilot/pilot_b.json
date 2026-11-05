@@ -1,0 +1,228 @@
+{
+ "batches": {
+  "1": {
+   "drawn_at": "2026-11-04T14:27:03+00:00",
+   "first_native_slot": "18:45",
+   "method": "random.SystemRandom().choice(('18:45', '01:30'))"
+  }
+ },
+ "days": {
+  "2026-11-05": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "01:30",
+    "url": "https://youtube.com/shorts/CRP00000000"
+   },
+   "crop_slot": "01:30",
+   "evaluable_by_design": true,
+   "index": 0,
+   "long_url": "https://youtube.com/watch?v=LONG0000000",
+   "match": "same_question",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "18:45",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000000",
+    "words": 61
+   },
+   "native_slot": "18:45",
+   "pair_id": "B1-01",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  },
+  "2026-11-06": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "18:45",
+    "url": "https://youtube.com/shorts/CRP00000001"
+   },
+   "crop_slot": "18:45",
+   "evaluable_by_design": true,
+   "index": 1,
+   "long_url": "https://youtube.com/watch?v=LONG0000001",
+   "match": "same_question",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "01:30",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000001",
+    "words": 61
+   },
+   "native_slot": "01:30",
+   "pair_id": "B1-02",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  },
+  "2026-11-07": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "01:30",
+    "url": "https://youtube.com/shorts/CRP00000002"
+   },
+   "crop_slot": "01:30",
+   "evaluable_by_design": true,
+   "index": 2,
+   "long_url": "https://youtube.com/watch?v=LONG0000002",
+   "match": "concept_family",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "18:45",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000002",
+    "words": 61
+   },
+   "native_slot": "18:45",
+   "pair_id": "B1-03",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  },
+  "2026-11-08": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "18:45",
+    "url": "https://youtube.com/shorts/CRP00000003"
+   },
+   "crop_slot": "18:45",
+   "evaluable_by_design": true,
+   "index": 3,
+   "long_url": "https://youtube.com/watch?v=LONG0000003",
+   "match": "same_question",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "01:30",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000003",
+    "words": 61
+   },
+   "native_slot": "01:30",
+   "pair_id": "B1-04",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  },
+  "2026-11-09": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "01:30",
+    "url": "https://youtube.com/shorts/CRP00000004"
+   },
+   "crop_slot": "01:30",
+   "evaluable_by_design": true,
+   "index": 4,
+   "long_url": "https://youtube.com/watch?v=LONG0000004",
+   "match": "same_question",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "18:45",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000004",
+    "words": 61
+   },
+   "native_slot": "18:45",
+   "pair_id": "B1-05",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  },
+  "2026-11-10": {
+   "batch": 1,
+   "crop": {
+    "hook": "crop hook",
+    "slot": "18:45",
+    "url": "https://youtube.com/shorts/CRP00000005"
+   },
+   "crop_slot": "18:45",
+   "evaluable_by_design": true,
+   "index": 5,
+   "long_url": "https://youtube.com/watch?v=LONG0000005",
+   "match": "same_question",
+   "native": {
+    "attempts": 1,
+    "duration": 24.5,
+    "first_speech": 0.18,
+    "headline": "fixture",
+    "min_px": null,
+    "question": "",
+    "sentence_ends": [
+     3.6,
+     7.9
+    ],
+    "slot": "01:30",
+    "status": "published",
+    "template": "",
+    "timed_by": "asr",
+    "url": "https://youtube.com/shorts/NAT00000005",
+    "words": 61
+   },
+   "native_slot": "01:30",
+   "pair_id": "B1-06",
+   "recorded_at": "2026-11-04T14:27:03+00:00",
+   "slots_ok": true,
+   "unevaluable_reason": ""
+  }
+ },
+ "experiment": "pilot_b"
+}

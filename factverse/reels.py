@@ -133,7 +133,13 @@ def pick_entry(entries: list[dict], notified: list[str] | None = None,
     PUBLISHED, carry the YouTube URL that is this surface's idempotence key, and
     have a first Short still on disk.
 
-    `notified` is the caller's own list, so IG and FB retry independently."""
+    `notified` is the caller's own list, so IG and FB retry independently.
+
+    v3-S.1 (review row 15): with `reels_native_only` on, the Reel is the day's
+    NATIVE concept Short only — ToolDojo's own diagram, voice and script. A day
+    without one posts nothing: never a crop excerpt (stock/recorded footage) and
+    never author-demo footage. The marker is a substring test on our own file
+    name (`storyboard.engine_of`), never a path split."""
     rows = [e for e in (entries or []) if isinstance(e, dict)]
     if not rows:
         return None
@@ -146,8 +152,21 @@ def pick_entry(entries: list[dict], notified: list[str] | None = None,
     shorts = row.get("shorts") if isinstance(row.get("shorts"), list) else []
     if not shorts:
         return None
-    video = resolve_short(shorts[0], base)          # spec #3: the first Short, only
+    if native_only():
+        native = [s for s in shorts if isinstance(s, str) and NATIVE_MARK in s]
+        if not native:
+            return None
+        video = resolve_short(native[0], base)
+    else:
+        video = resolve_short(shorts[0], base)      # spec #3: the first Short, only
     return (row, video) if video else None
+
+
+NATIVE_MARK = "_nv_"     # storyboard.NATIVE_MARK; repeated so reels stays import-light
+
+
+def native_only() -> bool:
+    return fv.flag("reels_native_only", True)
 
 
 # --------------------------------------------------------------- caption (pure)
@@ -395,7 +414,7 @@ def _post_ig() -> None:
         notified = notify.load_notified(NOTIFIED_IG)
         picked = pick_entry(load_log(), notified)
         if not picked:
-            print("  ↷ Instagram: no Short from today's run to post.")
+            print("  ↷ Instagram: no Short from today's run to post" + (" (Reels carry the native Short only)." if native_only() else "."))
             return
         row, video = picked
         url = str(row.get("youtube_url") or "").strip()
@@ -430,7 +449,7 @@ def _post_fb() -> None:
         notified = notify.load_notified(NOTIFIED_FB)
         picked = pick_entry(load_log(), notified)
         if not picked:
-            print("  ↷ Facebook: no Short from today's run to post.")
+            print("  ↷ Facebook: no Short from today's run to post" + (" (Reels carry the native Short only)." if native_only() else "."))
             return
         row, video = picked
         url = str(row.get("youtube_url") or "").strip()

@@ -16,6 +16,8 @@ output/videos/
 output/shorts/
 output/thumbnails/
 output/samples/
+# v3-T.1: the Live Trials node's own episode copies, sheets and rehearsals
+output/trials/
 # v3-D: rewritten by every run's analytics step — a runtime artifact, not a fixture
 output/demo/learn/scoreboard.txt
 logs/

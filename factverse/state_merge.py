@@ -14,7 +14,11 @@ This module knows the merge semantics of every state file:
   * state/stock_ledger.json            -> ordered line/entry union
   * output/production_log.json         -> union of entries by (timestamp, title)
   * state/runs.jsonl / analytics.jsonl -> ordered line union
+  * state/shadow_queue.jsonl           -> ordered line union
   * state/tools_index.json             -> union by page name, later entry wins
+  * state/pilot_b.json                 -> dict: origin/main's draw wins, days unioned
+  * state/pilot_a.json                 -> frozen design from main; members union, first wins
+  * state/first_seen.json              -> per url, earliest signal / evidence time
 
 Usage (from the repo root, typically in CI after `git checkout -B main origin/main`):
     python -m factverse.state_merge <incoming_dir>
@@ -60,6 +64,21 @@ FILES = (
     # the video for the other, which would then never post it at all.
     "state/notified_ig.json",
     "state/notified_fb.json",
+    # v3-M.1 row 16: the second-slot shadow queue, one line per automatic run. A
+    # .jsonl, so the ordered line union below is already its merge semantics.
+    "state/shadow_queue.jsonl",
+    # v3-S.1: Pilot B's assignment and pairs. A DICT, so the generic list union
+    # would raise on it; pilot_b.merge keeps origin/main's random draw (earlier days
+    # were assigned under it) and unions the days, later `recorded_at` winning.
+    "state/pilot_b.json",
+    # v3-K.1: task alerts, the fifth surface and its own list (event ids, not video
+    # URLs). Written by notify.yml; stashed by publish.yml too, like its siblings.
+    "state/notified_tasks.json",
+    # v3-P.2: the Pilot A design (frozen once: pairs, arm order, AVD baseline) plus
+    # the members run() appends after an upload, and the first-seen timestamps.
+    # Both are dicts — the generic list union would RAISE on them under bash -e.
+    "state/pilot_a.json",
+    "state/first_seen.json",
 )
 
 
@@ -163,6 +182,40 @@ def _merge_index(a, b) -> list:
     return [out[k] for k in order]
 
 
+def _merge_pilot(a, b) -> dict:
+    """state/pilot_a.json. The design is frozen: origin/main's copy wins whenever it
+    has one (a run can never redraw the assignment). Members are unioned by
+    (pair_id, arm); the FIRST record of a slot is the true one."""
+    a = a if isinstance(a, dict) else {}
+    b = b if isinstance(b, dict) else {}
+    base = dict(a) if a.get("pairs") else dict(b)
+    seen, mem = set(), []
+    for m in list(a.get("members") or []) + list(b.get("members") or []):
+        if not isinstance(m, dict):
+            continue
+        key = (str(m.get("pair_id")), str(m.get("arm")))
+        if key not in seen:
+            seen.add(key)
+            mem.append(m)
+    base["members"] = mem
+    return base
+
+
+def _merge_first_seen(a, b) -> dict:
+    """state/first_seen.json: url -> {signal, evidence}; the EARLIEST of each wins."""
+    out: dict = {}
+    for side in (a if isinstance(a, dict) else {}, b if isinstance(b, dict) else {}):
+        for url, e in side.items():
+            if not isinstance(e, dict):
+                continue
+            cur = out.setdefault(url, {})
+            for k in ("signal", "evidence"):
+                v = e.get(k)
+                if v and (not cur.get(k) or str(v) < str(cur[k])):
+                    cur[k] = v
+    return out
+
+
 def _merge_jsonl(a: str | None, b: str | None) -> str:
     seen, out = set(), []
     for text in (a, b):
@@ -202,6 +255,14 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         merged = _merge_seen(theirs, ours)
     elif rel == "state/tools_index.json":
         merged = _merge_index(theirs, ours)
+    elif rel == "state/pilot_b.json":
+        from factverse import pilot_b  # noqa: PLC0415
+        merged = pilot_b.merge(theirs, ours)
+    elif rel == "state/pilot_a.json":
+        merged = _merge_pilot(theirs, ours)
+        return json.dumps(merged, ensure_ascii=False, indent=2) + "\n"
+    elif rel == "state/first_seen.json":
+        merged = _merge_first_seen(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))
