@@ -1,0 +1,39 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": [
+      {
+        "text": "ToolDojo",
+        "type": "name",
+        "critical": false,
+        "verdict": "unsupported"
+      }
+    ]
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "By providing a highly controlled and automatable simulation environment, ToyBlocks addresses the critical gap in robotics research between complex real-world tasks and the ability to systematically study and improve AI learning processes."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline introduces a new framework called FoundationWorlds and its first instance, ToyBlocks, as a solution to the limitations of current robot learning research. It highlights ToyBlocks' ability "
+  },
+  "confidence": {
+    "score": 0.836,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 0.8,
+      "packaging": 0.63,
+      "policy": 0.8
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

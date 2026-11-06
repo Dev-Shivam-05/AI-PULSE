@@ -6017,5 +6017,54 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-06T20:00:20.206593",
+    "title": "Robot Learning: ToyBlocks Simplifies Testing",
+    "description": "Robot learning is advancing rapidly, but understanding *how* robots learn and *why* they fail has been a major hurdle. Today, we're diving into ToyBlocks, a new framework designed to create controlled, simulated environments for robotics research. This system allows for the automatic generation of countless tasks and training demonstrations, making it easier to study complex robot behaviors. Imagine training robots with thousands of simulated scenarios without needing a single human operator. This innovation could significantly accelerate the development of robots that can handle more complex, real-world tasks, from sorting objects to assisting in manufacturing. We'll explore how ToyBlocks is built, the challenges it addresses, and what this means for the future of AI and automation. #AI #Robotics #MachineLearning #ToolDojo #TechExplained #Simulation #FoundationWorld\n\nSource: https://huggingface.co/blog/allenai/toyblocks\n\nChapters:\n0:00 Robot Learning Explained\n1:42 Automatic Demonstration Generation\n2:50 Robot Task Learning\n4:11 Simulation Challenges\n5:19 ToyBlocks Benchmark\n\n▶ Watch next: https://youtube.com/watch?v=hczQwyNDIgE",
+    "tags": [
+      "ToyBlocks",
+      "Robot Learning",
+      "AI",
+      "Robotics Simulation",
+      "Machine Learning",
+      "FoundationWorld",
+      "Hugging Face",
+      "Allen Institute for AI",
+      "Robotics Research",
+      "AI Development",
+      "artificial intelligence",
+      "ai news",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Robot_Learning_ToyBlocks_Simplifies_Testing_20261106_194048_final.mp4",
+    "shorts": [
+      "output/shorts/short_2_20261106_194802.mp4",
+      "output/shorts/short_1_20261106_194711.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261106_194543.jpg",
+    "youtube_url": "https://youtube.com/watch?v=AElFaAW9mkw",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=xWoRg6Son2U",
+      "https://youtube.com/watch?v=Yl6mVl6XVRM"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Robot Learning with ToyBlocks #Shorts",
+        "description": "Demonstration of ToyBlocks, a tool simplifying robot learning testing. Shows the ToyBlocks environment and a robot interacting with blocks.",
+        "instagram_caption": "🤖 See how robot learning is being simplified with ToyBlocks. This tool makes testing easier for robotic systems. Follow @tooldojo! #robotics #learning #ai #automation #tech #engineering #machinelearning #innovation #robots #toyblocks #testing #software #development #simulations #robotarm #future #technology #research #opensource #developer"
+      },
+      {
+        "title": "ToyBlocks for Robot Testing #Shorts",
+        "description": "A look at the ToyBlocks framework for testing robot learning algorithms. Features a robot manipulating virtual blocks in a simulated environment.",
+        "instagram_caption": "⚙️ Testing robot learning algorithms just got simpler with ToyBlocks. Watch a robot interact with virtual blocks in this setup. Follow @tooldojo! #robotlearning #toydojo #robotictesting #artificialintelligence #ml #simulatortesting #roboticsengineering #techdemo #codereview #datascience #roboticsindustry #robotsoftware #learningenvironment #manipulation #blockstacking #aiinrobotics #roboticslab #futureoftech #engineeringlife #softwaretesting"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
