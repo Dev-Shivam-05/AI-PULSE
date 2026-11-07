@@ -1,0 +1,175 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.58,Live,,0,0,0,{\k40}Imagine {\k36}this {\k40}{\k10}the {\k32}US
+Dialogue: 0,0:00:01.58,0:00:02.98,Live,,0,0,0,{\k50}government {\k30}is {\k28}green {\k32}lighting
+Dialogue: 0,0:00:02.98,0:00:04.06,Live,,0,0,0,{\k28}the {\k28}sale {\k20}of {\k32}cutting
+Dialogue: 0,0:00:04.06,0:00:05.64,Live,,0,0,0,{\k36}edge {\k32}AI {\k52}chips {\k38}from
+Dialogue: 0,0:00:05.64,0:00:07.22,Live,,0,0,0,{\k52}Nvidia {\k34}to {\k42}companies {\k30}in
+Dialogue: 0,0:00:07.22,0:00:08.84,Live,,0,0,0,{\k38}China {\k46}{\k34}But {\k34}here's {\k10}the
+Dialogue: 0,0:00:08.84,0:00:10.22,Live,,0,0,0,{\k38}kicker {\k54}{\k12}some {\k12}of {\k22}these
+Dialogue: 0,0:00:10.22,0:00:11.82,Live,,0,0,0,{\k46}approved {\k56}recipients {\k36}might {\k22}not
+Dialogue: 0,0:00:11.82,0:00:12.68,Live,,0,0,0,{\k26}even {\k20}have {\k14}a {\k26}proper
+Dialogue: 0,0:00:12.68,0:00:14.44,Live,,0,0,0,{\k40}office {\k70}{\k12}We're {\k26}talking {\k28}about
+Dialogue: 0,0:00:14.44,0:00:16.02,Live,,0,0,0,{\k32}empty {\k30}shells {\k44}and {\k52}questionable
+Dialogue: 0,0:00:16.02,0:00:17.52,Live,,0,0,0,{\k48}connections {\k56}{\k10}By {\k12}the {\k24}end
+Dialogue: 0,0:00:17.52,0:00:18.80,Live,,0,0,0,{\k12}of {\k24}this {\k36}{\k14}you'll {\k42}understand
+Dialogue: 0,0:00:18.80,0:00:20.42,Live,,0,0,0,{\k22}the {\k40}serious {\k66}implications {\k34}of
+Dialogue: 0,0:00:20.42,0:00:22.50,Live,,0,0,0,{\k20}this {\k40}complex {\k66}situation {\k46}{\k36}According
+Dialogue: 0,0:00:22.50,0:00:24.38,Live,,0,0,0,{\k28}to {\k24}news {\k44}reports {\k56}{\k36}concerns
+Dialogue: 0,0:00:24.38,0:00:25.90,Live,,0,0,0,{\k34}are {\k60}surfacing {\k26}that {\k32}neither
+Dialogue: 0,0:00:25.90,0:00:27.48,Live,,0,0,0,{\k26}the {\k34}Commerce {\k64}Department {\k34}nor
+Dialogue: 0,0:00:27.48,0:00:29.20,Live,,0,0,0,{\k82}Nvidia {\k18}are {\k32}doing {\k40}thorough
+Dialogue: 0,0:00:29.20,0:00:31.10,Live,,0,0,0,{\k44}checks {\k34}on {\k48}Chinese {\k64}firms
+Dialogue: 0,0:00:31.10,0:00:32.10,Live,,0,0,0,{\k30}cleared {\k20}to {\k16}get {\k34}these
+Dialogue: 0,0:00:32.10,0:00:34.06,Live,,0,0,0,{\k40}high {\k52}powered {\k32}H {\k72}200
+Dialogue: 0,0:00:34.06,0:00:36.26,Live,,0,0,0,{\k40}AI {\k62}chips {\k34}{\k48}It {\k36}suggests
+Dialogue: 0,0:00:36.26,0:00:37.64,Live,,0,0,0,{\k34}a {\k48}potential {\k32}gap {\k24}in
+Dialogue: 0,0:00:37.64,0:00:39.04,Live,,0,0,0,{\k62}oversight {\k50}that {\k14}could {\k14}have
+Dialogue: 0,0:00:39.04,0:00:41.60,Live,,0,0,0,{\k56}significant {\k82}consequences {\k52}{\k30}One {\k36}company
+Dialogue: 0,0:00:41.60,0:00:43.18,Live,,0,0,0,{\k58}mentioned {\k28}is {\k20}New {\k42}Matrix
+Dialogue: 0,0:00:43.90,0:00:45.18,Live,,0,0,0,{\k26}Reports {\k56}indicate {\k28}that {\k18}when
+Dialogue: 0,0:00:45.18,0:00:47.24,Live,,0,0,0,{\k56}investigators {\k52}looked {\k44}{\k10}its {\k44}offices
+Dialogue: 0,0:00:47.24,0:00:48.78,Live,,0,0,0,{\k24}were {\k48}described {\k36}as {\k36}empty
+Dialogue: 0,0:00:49.14,0:00:50.16,Live,,0,0,0,{\k24}just {\k16}a {\k24}gray {\k38}shell
+Dialogue: 0,0:00:50.16,0:00:51.76,Live,,0,0,0,{\k38}with {\k34}wires {\k40}hanging {\k38}down
+Dialogue: 0,0:00:52.34,0:00:54.14,Live,,0,0,0,{\k32}This {\k48}raises {\k46}immediate {\k54}questions
+Dialogue: 0,0:00:54.14,0:00:55.90,Live,,0,0,0,{\k48}about {\k20}its {\k42}actual {\k66}operational
+Dialogue: 0,0:00:55.90,0:00:58.72,Live,,0,0,0,{\k64}capacity {\k86}Further {\k90}investigation {\k42}found
+Dialogue: 0,0:00:58.72,0:01:00.56,Live,,0,0,0,{\k40}very {\k34}little {\k36}public {\k74}information
+Dialogue: 0,0:01:00.56,0:01:02.42,Live,,0,0,0,{\k36}about {\k28}New {\k46}Matrix {\k34}{\k42}which
+Dialogue: 0,0:01:02.42,0:01:04.40,Live,,0,0,0,{\k22}was {\k48}reportedly {\k102}established {\k26}about
+Dialogue: 0,0:01:04.40,0:01:06.16,Live,,0,0,0,{\k64}17 {\k38}months {\k54}prior {\k20}to
+Dialogue: 0,0:01:06.16,0:01:08.26,Live,,0,0,0,{\k24}these {\k50}reports {\k68}{\k44}Even {\k24}at
+Dialogue: 0,0:01:08.26,0:01:09.76,Live,,0,0,0,{\k10}the {\k32}address {\k52}listed {\k48}{\k8}a
+Dialogue: 0,0:01:09.76,0:01:11.20,Live,,0,0,0,{\k36}company {\k64}directory {\k30}within {\k14}the
+Dialogue: 0,0:01:11.20,0:01:12.42,Live,,0,0,0,{\k36}building {\k40}didn't {\k26}show {\k20}the
+Dialogue: 0,0:01:12.42,0:01:14.44,Live,,0,0,0,{\k38}firm {\k46}{\k18}and {\k38}property {\k62}management
+Dialogue: 0,0:01:14.44,0:01:15.52,Live,,0,0,0,{\k26}had {\k26}no {\k40}record {\k16}of
+Dialogue: 0,0:01:15.52,0:01:16.34,Live,,0,0,0,{\k16}it {\k24}{\k20}And {\k10}it {\k12}gets
+Dialogue: 0,0:01:16.34,0:01:17.32,Live,,0,0,0,{\k32}more {\k56}concerning
+Dialogue: 0,0:01:17.96,0:01:18.70,Live,,0,0,0,{\k12}The {\k30}owners {\k20}of {\k12}New
+Dialogue: 0,0:01:18.70,0:01:20.52,Live,,0,0,0,{\k42}Matrix {\k64}reportedly {\k42}have {\k34}ties
+Dialogue: 0,0:01:20.52,0:01:21.78,Live,,0,0,0,{\k32}to {\k6}a {\k36}Chinese {\k52}private
+Dialogue: 0,0:01:21.78,0:01:23.18,Live,,0,0,0,{\k38}equity {\k44}firm {\k42}that {\k16}has
+Dialogue: 0,0:01:23.18,0:01:24.20,Live,,0,0,0,{\k24}been {\k32}on {\k12}the {\k34}US
+Dialogue: 0,0:01:24.20,0:01:26.80,Live,,0,0,0,{\k66}government's {\k44}blacklist {\k46}since {\k94}2024
+Dialogue: 0,0:01:27.78,0:01:28.58,Live,,0,0,0,{\k22}This {\k24}is {\k22}not {\k12}a
+Dialogue: 0,0:01:28.58,0:01:30.42,Live,,0,0,0,{\k28}minor {\k46}detail {\k54}{\k10}it {\k46}directly
+Dialogue: 0,0:01:30.42,0:01:31.48,Live,,0,0,0,{\k30}links {\k18}the {\k32}company {\k26}to
+Dialogue: 0,0:01:31.48,0:01:33.22,Live,,0,0,0,{\k40}entities {\k52}facing {\k42}US {\k40}trade
+Dialogue: 0,0:01:33.22,0:01:35.80,Live,,0,0,0,{\k50}restrictions {\k42}{\k42}This {\k52}pattern {\k34}{\k38}according
+Dialogue: 0,0:01:35.80,0:01:37.50,Live,,0,0,0,{\k20}to {\k46}reports {\k58}{\k32}isn't {\k14}an
+Dialogue: 0,0:01:37.50,0:01:40.00,Live,,0,0,0,{\k68}isolated {\k70}incident {\k68}{\k14}It {\k30}appears
+Dialogue: 0,0:01:40.00,0:01:40.80,Live,,0,0,0,{\k20}to {\k12}be {\k10}a {\k38}troubling
+Dialogue: 0,0:01:40.80,0:01:42.50,Live,,0,0,0,{\k46}trend {\k38}where {\k48}companies {\k38}linked
+Dialogue: 0,0:01:42.50,0:01:43.94,Live,,0,0,0,{\k22}to {\k42}entities {\k30}with {\k50}national
+Dialogue: 0,0:01:43.94,0:01:46.26,Live,,0,0,0,{\k74}security {\k52}related {\k40}trade {\k66}restrictions
+Dialogue: 0,0:01:46.26,0:01:47.96,Live,,0,0,0,{\k62}are {\k26}being {\k44}approved {\k38}to
+Dialogue: 0,0:01:47.96,0:01:49.88,Live,,0,0,0,{\k42}purchase {\k34}these {\k50}crucial {\k66}Nvidia
+Dialogue: 0,0:01:49.88,0:01:51.22,Live,,0,0,0,{\k40}chips {\k36}{\k28}Why {\k12}does {\k18}this
+Dialogue: 0,0:01:51.22,0:01:53.16,Live,,0,0,0,{\k26}matter {\k78}Well {\k42}{\k24}these {\k24}high
+Dialogue: 0,0:01:53.16,0:01:54.98,Live,,0,0,0,{\k52}performance {\k38}AI {\k60}chips {\k32}are
+Dialogue: 0,0:01:54.98,0:01:56.58,Live,,0,0,0,{\k14}the {\k34}engines {\k46}behind {\k66}advancements
+Dialogue: 0,0:01:56.58,0:01:57.96,Live,,0,0,0,{\k22}in {\k46}everything {\k28}from {\k42}artificial
+Dialogue: 0,0:01:57.96,0:01:59.98,Live,,0,0,0,{\k76}intelligence {\k50}research {\k28}and {\k48}development
+Dialogue: 0,0:01:59.98,0:02:02.02,Live,,0,0,0,{\k64}to {\k52}sophisticated {\k78}computing
+Dialogue: 0,0:02:02.63,0:02:03.94,Live,,0,0,0,{\k39}Allowing {\k28}them {\k18}to {\k46}potentially
+Dialogue: 0,0:02:03.94,0:02:04.86,Live,,0,0,0,{\k38}fall {\k22}into {\k12}the {\k20}wrong
+Dialogue: 0,0:02:04.86,0:02:06.44,Live,,0,0,0,{\k50}hands {\k46}{\k16}or {\k16}be {\k30}used
+Dialogue: 0,0:02:06.44,0:02:07.82,Live,,0,0,0,{\k18}by {\k38}entities {\k34}with {\k48}questionable
+Dialogue: 0,0:02:07.82,0:02:10.70,Live,,0,0,0,{\k96}affiliations {\k48}{\k22}creates {\k76}significant {\k46}national
+Dialogue: 0,0:02:10.70,0:02:12.62,Live,,0,0,0,{\k54}security {\k40}risks {\k38}{\k34}Think {\k26}about
+Dialogue: 0,0:02:12.62,0:02:13.94,Live,,0,0,0,{\k26}it {\k46}{\k26}these {\k20}are {\k14}the
+Dialogue: 0,0:02:13.94,0:02:15.36,Live,,0,0,0,{\k34}same {\k42}chips {\k22}that {\k44}power
+Dialogue: 0,0:02:15.36,0:02:17.98,Live,,0,0,0,{\k70}advanced {\k40}AI {\k66}models {\k86}If
+Dialogue: 0,0:02:17.98,0:02:18.78,Live,,0,0,0,{\k16}they {\k28}end {\k20}up {\k16}with
+Dialogue: 0,0:02:18.78,0:02:19.84,Live,,0,0,0,{\k40}entities {\k28}that {\k12}are {\k26}linked
+Dialogue: 0,0:02:19.84,0:02:21.68,Live,,0,0,0,{\k24}to {\k56}blacklisted {\k48}groups {\k34}{\k22}it
+Dialogue: 0,0:02:21.68,0:02:23.50,Live,,0,0,0,{\k16}could {\k62}accelerate {\k32}their {\k72}capabilities
+Dialogue: 0,0:02:23.50,0:02:25.02,Live,,0,0,0,{\k32}in {\k46}areas {\k32}that {\k42}pose
+Dialogue: 0,0:02:25.02,0:02:26.14,Live,,0,0,0,{\k14}a {\k34}threat {\k26}to {\k38}US
+Dialogue: 0,0:02:26.14,0:02:28.28,Live,,0,0,0,{\k74}interests {\k38}{\k20}The {\k48}restrictions {\k34}on
+Dialogue: 0,0:02:28.28,0:02:29.42,Live,,0,0,0,{\k36}selling {\k30}these {\k24}chips {\k24}to
+Dialogue: 0,0:02:29.42,0:02:30.58,Live,,0,0,0,{\k36}China {\k56}have {\k14}been {\k10}a
+Dialogue: 0,0:02:30.58,0:02:32.72,Live,,0,0,0,{\k30}point {\k24}of {\k62}contention {\k70}{\k28}During
+Dialogue: 0,0:02:32.72,0:02:34.58,Live,,0,0,0,{\k16}the {\k26}Biden {\k76}administration {\k50}{\k18}these
+Dialogue: 0,0:02:34.58,0:02:35.64,Live,,0,0,0,{\k28}limits {\k24}were {\k14}in {\k30}place
+Dialogue: 0,0:02:36.24,0:02:37.86,Live,,0,0,0,{\k30}However {\k44}{\k10}the {\k18}Trump {\k60}administration
+Dialogue: 0,0:02:37.86,0:02:40.14,Live,,0,0,0,{\k44}had {\k38}relaxed {\k40}them {\k34}{\k62}reportedly
+Dialogue: 0,0:02:40.16,0:02:41.54,Live,,0,0,0,{\k24}after {\k52}Nvidia {\k40}agreed {\k22}to
+Dialogue: 0,0:02:41.54,0:02:43.04,Live,,0,0,0,{\k12}a {\k40}15% {\k42}{\k36}cut {\k20}of
+Dialogue: 0,0:02:43.04,0:02:43.82,Live,,0,0,0,{\k14}its {\k32}sales {\k22}to {\k10}the
+Dialogue: 0,0:02:43.82,0:02:46.00,Live,,0,0,0,{\k38}government {\k68}This {\k44}situation {\k68}also
+Dialogue: 0,0:02:46.00,0:02:47.70,Live,,0,0,0,{\k48}highlights {\k28}the {\k44}intense {\k50}lobbying
+Dialogue: 0,0:02:47.70,0:02:49.18,Live,,0,0,0,{\k50}efforts {\k56}involved {\k30}in {\k12}the
+Dialogue: 0,0:02:49.18,0:02:52.82,Live,,0,0,0,{\k40}semiconductor {\k118}industry {\k60}{\k80}Nvidia's {\k56}CEO
+Dialogue: 0,0:02:53.52,0:02:54.30,Live,,0,0,0,{\k38}Jensen {\k30}Huang
+Dialogue: 0,0:02:54.94,0:02:55.82,Live,,0,0,0,{\k12}has {\k18}been {\k14}a {\k44}prominent
+Dialogue: 0,0:02:55.82,0:02:57.82,Live,,0,0,0,{\k52}figure {\k60}{\k8}and {\k32}reports {\k48}even
+Dialogue: 0,0:02:57.82,0:02:59.24,Live,,0,0,0,{\k50}suggest {\k28}he {\k14}was {\k50}targeted
+Dialogue: 0,0:02:59.24,0:03:00.32,Live,,0,0,0,{\k24}in {\k8}a {\k40}spying {\k36}plot
+Dialogue: 0,0:03:00.32,0:03:01.84,Live,,0,0,0,{\k28}by {\k62}China's {\k42}Ministry {\k20}of
+Dialogue: 0,0:03:01.84,0:03:04.42,Live,,0,0,0,{\k24}State {\k70}Security {\k70}{\k26}This {\k68}underscores
+Dialogue: 0,0:03:04.42,0:03:06.88,Live,,0,0,0,{\k24}the {\k82}geopolitical {\k62}sensitivity {\k78}surrounding
+Dialogue: 0,0:03:06.88,0:03:09.56,Live,,0,0,0,{\k56}AI {\k50}chip {\k76}technology {\k40}{\k36}Now
+Dialogue: 0,0:03:09.64,0:03:10.60,Live,,0,0,0,{\k20}some {\k24}might {\k32}wonder {\k20}if
+Dialogue: 0,0:03:10.60,0:03:11.62,Live,,0,0,0,{\k16}this {\k24}is {\k22}just {\k40}about
+Dialogue: 0,0:03:11.62,0:03:13.24,Live,,0,0,0,{\k62}Nvidia {\k62}But {\k12}the {\k26}broader
+Dialogue: 0,0:03:13.24,0:03:15.32,Live,,0,0,0,{\k48}context {\k42}is {\k38}crucial {\k54}{\k26}It's
+Dialogue: 0,0:03:15.32,0:03:16.26,Live,,0,0,0,{\k16}not {\k22}just {\k28}about {\k28}one
+Dialogue: 0,0:03:16.26,0:03:17.96,Live,,0,0,0,{\k60}company's {\k22}sales {\k54}{\k20}It's {\k14}about
+Dialogue: 0,0:03:17.96,0:03:19.12,Live,,0,0,0,{\k16}the {\k44}integrity {\k22}of {\k34}export
+Dialogue: 0,0:03:19.12,0:03:21.82,Live,,0,0,0,{\k50}controls {\k52}{\k28}national {\k52}security {\k78}implications
+Dialogue: 0,0:03:22.08,0:03:23.06,Live,,0,0,0,{\k22}and {\k10}the {\k30}global {\k36}race
+Dialogue: 0,0:03:23.06,0:03:24.50,Live,,0,0,0,{\k30}for {\k34}AI {\k70}supremacy
+Dialogue: 0,0:03:25.18,0:03:26.74,Live,,0,0,0,{\k40}Focusing {\k46}solely {\k24}on {\k46}Nvidia
+Dialogue: 0,0:03:26.74,0:03:28.30,Live,,0,0,0,{\k34}misses {\k26}the {\k42}larger {\k54}systemic
+Dialogue: 0,0:03:28.30,0:03:29.84,Live,,0,0,0,{\k38}issues {\k28}at {\k26}play {\k40}{\k22}The
+Dialogue: 0,0:03:29.84,0:03:31.38,Live,,0,0,0,{\k30}core {\k40}issue {\k34}is {\k50}effective
+Dialogue: 0,0:03:31.38,0:03:33.54,Live,,0,0,0,{\k34}due {\k54}diligence {\k68}{\k22}When {\k38}approval
+Dialogue: 0,0:03:33.54,0:03:35.50,Live,,0,0,0,{\k74}processes {\k54}allow {\k32}for {\k36}sales
+Dialogue: 0,0:03:35.50,0:03:36.60,Live,,0,0,0,{\k28}to {\k40}entities {\k28}that {\k14}are
+Dialogue: 0,0:03:36.60,0:03:38.30,Live,,0,0,0,{\k40}difficult {\k28}to {\k50}verify {\k52}and
+Dialogue: 0,0:03:38.30,0:03:40.46,Live,,0,0,0,{\k24}have {\k60}concerning {\k54}ties {\k66}{\k12}it
+Dialogue: 0,0:03:40.46,0:03:42.12,Live,,0,0,0,{\k72}undermines {\k16}the {\k32}very {\k46}purpose
+Dialogue: 0,0:03:42.12,0:03:44.14,Live,,0,0,0,{\k26}of {\k42}export {\k72}controls {\k62}designed
+Dialogue: 0,0:03:44.14,0:03:46.30,Live,,0,0,0,{\k36}to {\k32}protect {\k60}national {\k78}security
+Dialogue: 0,0:03:46.52,0:03:47.54,Live,,0,0,0,{\k26}For {\k14}the {\k34}average {\k28}tech
+Dialogue: 0,0:03:47.54,0:03:49.50,Live,,0,0,0,{\k94}enthusiast {\k28}{\k20}this {\k24}means {\k30}that
+Dialogue: 0,0:03:49.50,0:03:50.76,Live,,0,0,0,{\k16}the {\k30}rapid {\k62}advancements {\k18}you
+Dialogue: 0,0:03:50.76,0:03:52.38,Live,,0,0,0,{\k24}see {\k28}in {\k36}AI {\k74}might
+Dialogue: 0,0:03:52.38,0:03:54.08,Live,,0,0,0,{\k16}be {\k54}influenced {\k20}by {\k80}geopolitical
+Dialogue: 0,0:03:54.08,0:03:55.80,Live,,0,0,0,{\k38}decisions {\k68}that {\k26}aren't {\k40}always
+Dialogue: 0,0:03:55.80,0:03:56.60,Live,,0,0,0,{\k70}transparent
+Dialogue: 0,0:03:57.24,0:03:58.18,Live,,0,0,0,{\k26}The {\k32}tools {\k18}you {\k18}might
+Dialogue: 0,0:03:58.18,0:03:59.42,Live,,0,0,0,{\k24}use {\k44}tomorrow {\k40}could {\k16}be
+Dialogue: 0,0:03:59.42,0:04:00.98,Live,,0,0,0,{\k40}indirectly {\k68}shaped {\k26}by {\k22}these
+Dialogue: 0,0:04:00.98,0:04:03.48,Live,,0,0,0,{\k48}complex {\k54}international {\k78}regulations {\k70}and
+Dialogue: 0,0:04:03.48,0:04:05.48,Live,,0,0,0,{\k22}their {\k60}enforcement {\k72}This {\k46}raises
+Dialogue: 0,0:04:05.48,0:04:07.24,Live,,0,0,0,{\k38}critical {\k66}questions {\k40}about {\k32}who
+Dialogue: 0,0:04:07.24,0:04:09.02,Live,,0,0,0,{\k68}truly {\k50}benefits {\k32}from {\k28}these
+Dialogue: 0,0:04:09.02,0:04:10.72,Live,,0,0,0,{\k28}chip {\k48}sales {\k42}{\k28}and {\k24}whether
+Dialogue: 0,0:04:10.72,0:04:12.46,Live,,0,0,0,{\k16}the {\k34}current {\k58}oversight {\k66}mechanisms
+Dialogue: 0,0:04:12.46,0:04:14.14,Live,,0,0,0,{\k40}are {\k58}robust {\k44}enough {\k26}to
+Dialogue: 0,0:04:14.14,0:04:15.56,Live,,0,0,0,{\k32}prevent {\k22}the {\k58}diversion {\k30}of
+Dialogue: 0,0:04:15.56,0:04:17.96,Live,,0,0,0,{\k32}advanced {\k92}technology {\k56}to {\k60}potentially
+Dialogue: 0,0:04:17.96,0:04:20.80,Live,,0,0,0,{\k86}adversarial {\k50}actors {\k36}{\k70}Ultimately {\k32}{\k10}the
+Dialogue: 0,0:04:20.80,0:04:22.56,Live,,0,0,0,{\k52}approvals {\k22}for {\k76}Nvidia's {\k26}AI
+Dialogue: 0,0:04:22.56,0:04:24.30,Live,,0,0,0,{\k52}chips {\k42}to {\k50}potentially {\k30}non
+Dialogue: 0,0:04:24.30,0:04:26.50,Live,,0,0,0,{\k68}existent {\k46}or {\k62}dubiously {\k44}linked
+Dialogue: 0,0:04:26.50,0:04:28.62,Live,,0,0,0,{\k48}Chinese {\k72}companies {\k68}highlight {\k24}a
+Dialogue: 0,0:04:28.62,0:04:30.34,Live,,0,0,0,{\k36}critical {\k60}vulnerability {\k42}in {\k34}US
+Dialogue: 0,0:04:30.34,0:04:32.58,Live,,0,0,0,{\k54}export {\k36}control {\k60}policy {\k74}demanding
+Dialogue: 0,0:04:32.58,0:04:34.88,Live,,0,0,0,{\k58}greater {\k70}transparency {\k60}and {\k42}stricter
+Dialogue: 0,0:04:34.88,0:04:36.86,Live,,0,0,0,{\k58}enforcement {\k48}to {\k42}safeguard {\k50}national
+Dialogue: 0,0:04:36.86,0:04:38.00,Live,,0,0,0,{\k58}security {\k46}interests

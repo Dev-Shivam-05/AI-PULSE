@@ -1,0 +1,32 @@
+{
+  "factcheck": {
+    "passed": true,
+    "checked": 12,
+    "critical_failures": [],
+    "soft_failures": []
+  },
+  "synthesis": {
+    "present": true,
+    "verified": false,
+    "claim": "The approval process for US AI chip sales to China appears to prioritize transactional revenue over rigorous national security vetting, creating a potential backdoor for restricted technologies through entities with dubious legitimacy."
+  },
+  "replication": {
+    "passed": true,
+    "distinct": "The outline uses rhetorical questions and direct address ('Imagine this:', 'Think about it:') to engage the viewer, which are not present in the source text. It also frames the information as a narrat"
+  },
+  "confidence": {
+    "score": 0.904,
+    "components": {
+      "format": 1.0,
+      "novelty": 0.9,
+      "facts": 1.0,
+      "packaging": 0.9,
+      "policy": 0.44000000000000006
+    },
+    "routing": "auto"
+  },
+  "l2": {
+    "cold_open": null,
+    "insight": null
+  }
+}

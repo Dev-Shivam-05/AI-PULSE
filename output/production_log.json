@@ -6066,5 +6066,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-07T18:06:59.870738",
+    "title": "Nvidia's China Chip Sales: Empty Offices, Blacklisted Ties",
+    "description": "The US government is allowing Nvidia to sell powerful AI chips to Chinese companies, but disturbing questions are emerging about who's actually receiving them. According to news reports, some approved recipients appear to be shell companies with troubling connections to blacklisted entities. This raises serious concerns about national security and the effectiveness of export controls. We break down the situation, what it means for the AI industry, and why this oversight lapse is so significant.  What changes for AI development when chip sales aren't properly vetted?\n\n#AI #Nvidia #China #TechPolicy #ExportControls #ArtificialIntelligence #NationalSecurity\n\nSource: https://www.theverge.com/ai-artificial-intelligence/1029483/nvidia-ai-chips-china-blacklist-government\n\nChapters:\n0:00 Nvidia Chip Deal\n0:54 New Matrix Mystery\n1:46 AI Chip Power\n3:01 Beyond Nvidia’s Chips\n3:55 Who Benefits?\n\n▶ Watch next: https://youtube.com/watch?v=AElFaAW9mkw",
+    "tags": [
+      "Nvidia",
+      "AI chips",
+      "China",
+      "US export controls",
+      "national security",
+      "tech policy",
+      "artificial intelligence",
+      "semiconductors",
+      "blacklisted companies",
+      "due diligence",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/Nvidias_China_Chip_Sales_Empty_Offices_Blacklisted_20261107_175310_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261107_175804.mp4",
+      "output/shorts/short_2_20261107_175901.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261107_175613.jpg",
+    "youtube_url": "https://youtube.com/watch?v=uBlU-laxaY0",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=PshZClxcRG4",
+      "https://youtube.com/watch?v=Vpm3-UkiCJo"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Nvidia China Offices, Blacklisted Suppliers #Shorts",
+        "description": "Nvidia's operations in China are shown with empty offices and mentions of blacklisted suppliers.",
+        "instagram_caption": "Empty offices and blacklisted suppliers paint a picture of Nvidia's China chip sales.  See the reality of these operations. Follow @tooldojo! #Nvidia #China #ChipSales #SupplyChain #Technology #Business #Semiconductors #Geopolitics #EmptyOffices #Blacklist #Manufacturing #TechNews #GlobalTrade #ExportControls #AIChips #Hardware #Industry #Economics #Innovation #FutureOfTech"
+      },
+      {
+        "title": "Nvidia China: Empty Offices, Ties #Shorts",
+        "description": "A look at Nvidia's presence in China, featuring empty offices and details on blacklisted supplier relationships.",
+        "instagram_caption": "Insights into Nvidia's China operations reveal empty offices and strained relationships with blacklisted suppliers.  Discover the current landscape. Follow @tooldojo! #Nvidia #China #Semiconductor #TechIndustry #BusinessNews #GlobalMarkets #TradeWar #ExportBan #ManufacturingSector #TechUpdates #CorporateNews #EconomicImpact #Sanctions #HighTech #Chips #DigitalEconomy #InternationalRelations #SupplyChainIssues #HardwareManufacturing #MarketTrends"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
