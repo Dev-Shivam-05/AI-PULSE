@@ -6116,5 +6116,53 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-08T18:25:48.206514",
+    "title": "OpenAI $1.25T Valuation: AI's New King?",
+    "description": "The AI landscape is shifting, and this week brought seismic news. OpenAI has shattered expectations, reaching an astonishing $1.25 trillion valuation. We're diving deep into what this means for the company, its rivals like Anthropic, and the broader tech industry. Plus, explore the intriguing vulnerabilities found in OpenAI's systems and the unexpected espionage allegations targeting Nvidia's CEO. Finally, see how AI is making strides in global accessibility with new language support. This is the AI ROUNDUP you can't afford to miss.\n#AI #OpenAI #TechNews #Valuation #ArtificialIntelligence\nSubscribe to ToolDojo.\n\nSource: https://www.theverge.com/ai-artificial-intelligence/1029380/openai-1-25-trillion-investment-valuation\n\n🔗 Sources:\n1. OpenAI valued at $1.25 trillion, as rival Anthropic nears its IPO — https://www.theverge.com/ai-artificial-intelligence/1029380/openai-1-25-trillion-investment-valuation\n2. Partnering with Hacktron to find vulnerabilities in OpenAI’s systems — https://openai.com/index/partnering-with-hacktron\n3. Launch HN: Kino AI (YC S23) – AI media manager and video editor — https://news.ycombinator.com/item?id=50368804\n4. Megaspeed exec was recruited to spy on Nvidia CEO, according to US intelligence memo — https://techcrunch.com/2026/11/07/chinese-exec-was-recruited-to-spy-on-nvidia-ceo-according-to-us-intelligence-memo/\n5. Egyptian and Nigerian English join the Open ASR Leaderboard — https://huggingface.co/blog/open-asr-leaderboard-liva\n\nChapters:\n0:00 AI Financial Earthquake\n1:18 Growth Challenges Ahead\n2:17 Spy Allegations Surface\n4:03 Democratizing Video Editing\n5:02 Improving Automation Benchmarks\n\n▶ Watch next: https://youtube.com/watch?v=uBlU-laxaY0",
+    "tags": [
+      "AI",
+      "OpenAI",
+      "Valuation",
+      "Artificial Intelligence",
+      "Tech News",
+      "Nvidia",
+      "Cybersecurity",
+      "ASR",
+      "Anthropic",
+      "Kino AI",
+      "ai news",
+      "machine learning",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/OpenAI_125T_Valuation_AIs_New_King_20261108_180611_final.mp4",
+    "shorts": [
+      "output/shorts/short_2_20261108_181344.mp4",
+      "output/shorts/short_1_20261108_181227.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261108_181054.jpg",
+    "youtube_url": "https://youtube.com/watch?v=n-fW0Gby0OI",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=r59UZWj4jOs",
+      "https://youtube.com/watch?v=Mu7fkVfuqN8"
+    ],
+    "shorts_meta": [
+      {
+        "title": "OpenAI $1.25T Valuation #Shorts",
+        "description": "OpenAI reaches a $1.25 trillion valuation. This video discusses the implications of this significant financial milestone for the company and the AI industry.",
+        "instagram_caption": "💰 OpenAI has hit a $1.25 trillion valuation. This massive financial milestone signals a major shift in the AI landscape. Follow @tooldojo! #OpenAI #AI #Valuation #TechNews #ArtificialIntelligence #Business #Investment #Startup #Technology #Innovation #FutureofAI #AIRevolution #MachineLearning #DeepLearning #BigTech #VentureCapital #Funding #SiliconValley #AIIndustry #Tech"
+      },
+      {
+        "title": "AI Company OpenAI Valuation #Shorts",
+        "description": "A look at OpenAI's current valuation of $1.25 trillion. The video explores what this valuation means for the company's position in the artificial intelligence market.",
+        "instagram_caption": "🚀 OpenAI is now valued at $1.25 trillion. This significant figure marks a new chapter for the AI leader. Follow @tooldojo! #OpenAI #AI #Valuation #Tech #ArtificialIntelligence #BusinessNews #StartupLife #Investment #Technology #Innovation #FutureTech #AIdevelopment #MachineLearning #DeepLearning #BigTechNews #VentureCapital #FundingNews #SiliconValleyTech #AIsector #TechTrends"
+      }
+    ],
+    "format": "roundup",
+    "status": "PUBLISHED"
   }
 ]
