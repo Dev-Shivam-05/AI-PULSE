@@ -6164,5 +6164,51 @@
     ],
     "format": "roundup",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-09T22:55:46.792717",
+    "title": "Claude Fable 5.2: Solves Black Hole Physics",
+    "description": "Anthropic's Claude Fable 5.2 is here, pushing the boundaries of AI capabilities. If you're building with AI, this means more powerful tools for complex technical challenges. We dive into what these new models can do, from solving theoretical physics problems to revolutionizing software engineering.  Discover how Claude 5.2 can tackle 'daunting' tasks, improve coding and reasoning, and even generate outputs faster than its predecessors. Learn about the specific breakthroughs, like solving open problems in black hole physics and formalizing mathematical proofs.  Understand who gets access to these cutting-edge models and what it signifies for the future of AI-assisted problem-solving.  This isn't just an upgrade; it's a leap forward in what AI can achieve.  #AI #ArtificialIntelligence #Claude #LLM #TechNews\n\nSource: https://www.theverge.com/ai-artificial-intelligence/1030005/anthropic-claude-fable-mythos-5-2\n\nChapters:\n0:00 New AI Capabilities\n0:53 Mind-Bending Problems Solved\n1:43 Available Now\n2:55 Speed Boost\n3:54 Physics Breakthroughs\n\n▶ Watch next: https://youtube.com/watch?v=n-fW0Gby0OI",
+    "tags": [
+      "AI",
+      "Artificial Intelligence",
+      "Claude",
+      "Anthropic",
+      "LLM",
+      "Large Language Models",
+      "Tech News",
+      "AI Models",
+      "Machine Learning",
+      "Deep Learning",
+      "ai news",
+      "ai explained",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/Claude_Fable_52_Solves_Black_Hole_Physics_20261109_223912_final.mp4",
+    "shorts": [
+      "output/shorts/short_1_20261109_224336.mp4",
+      "output/shorts/short_2_20261109_224504.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261109_224327.jpg",
+    "youtube_url": "https://youtube.com/watch?v=1WjTgUKfG2M",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=a7yGDyQeI-A",
+      "https://youtube.com/watch?v=oe4Epc2nmVk"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Claude Fable 5.2: Black Hole Physics #Shorts",
+        "description": "Demonstration of Claude Fable 5.2's capabilities in solving black hole physics problems.",
+        "instagram_caption": "✨ Witness the application of Claude Fable 5.2 in tackling complex black hole physics. See how this model addresses fundamental questions in astrophysics. Follow @tooldojo! #ClaudeFable #AI #BlackHoles #Physics #Astrophysics #Science #Technology #MachineLearning #DeepLearning #AIResearch #FutureTech #Innovation #ScienceExplained #Cosmology #Space #Universe #Research #AIModel #ComputationalPhysics #AstrophysicalPhenomena"
+      },
+      {
+        "title": "AI Solves Black Hole Physics: Claude Fable #Shorts",
+        "description": "An example of Claude Fable 5.2 being used to analyze and solve black hole physics concepts.",
+        "instagram_caption": "🔬 Explore the power of Claude Fable 5.2 as it addresses intricate black hole physics scenarios. This AI demonstrates its capacity for scientific problem-solving. Follow @tooldojo! #AIforScience #BlackHolePhysics #ClaudeAI #Fable52 #ScienceAndTech #AIinPhysics #AstrophysicsResearch #PhysicsProblems #MachineLearningApplications #DeepLearningInScience #AIbreakthrough #ScientificDiscovery #CosmicPhysics #SpaceScience #UniverseExploration #AItools #ResearchAndDevelopment #TechInnovation #PhysicsExplained #AIcommunity"
+      }
+    ],
+    "format": "news",
+    "status": "PUBLISHED"
   }
 ]
