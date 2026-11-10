@@ -6210,5 +6210,55 @@
     ],
     "format": "news",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-10T20:15:37.635397",
+    "title": "AI in Schools: Bridging the Learning Divide",
+    "description": "How is AI changing education? This is the AI Guidance Gap.  A billion students worldwide are on the cusp of a learning revolution. AI promises personalized education, tailored to every student's pace and style. It can empower educators, freeing them from administrative burdens to focus on what truly matters: teaching. But a critical divide is widening. Students and teachers alike are unprepared for this AI-driven future, creating an AI literacy gap that could leave many behind.  We'll explore the immense opportunities, the stark challenges, and the urgent solutions needed to ensure AI serves as a bridge, not a barrier, in the pursuit of knowledge. Understand how to navigate this transformation and equip the next generation for success. #AI #Education #FutureOfLearning\n\nChapters:\n0:00 Personalized Learning Pace\n1:16 AI Grading Essays\n2:28 AI Information Literacy\n3:26 Teacher AI Training\n4:26 AI Education Future\n\n▶ Watch next: https://youtube.com/watch?v=1WjTgUKfG2M",
+    "tags": [
+      "AI in Education",
+      "Personalized Learning",
+      "AI Literacy",
+      "EdTech",
+      "Future of Education",
+      "Artificial Intelligence",
+      "Teacher Tools",
+      "Student Learning",
+      "Digital Divide",
+      "AI Skills",
+      "ai",
+      "ai news",
+      "machine learning",
+      "tech news",
+      "ai explained",
+      "technology",
+      "deep learning",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_in_Schools_Bridging_the_Learning_Divide_20261110_195927_final.mp4",
+    "shorts": [
+      "output/shorts/short_2_20261110_200550.mp4",
+      "output/shorts/short_1_20261110_200447.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261110_200313.jpg",
+    "youtube_url": "https://youtube.com/watch?v=nlkSz-5zhyo",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=7faiwBv2JpA",
+      "https://youtube.com/watch?v=gzQMbtJS-ww"
+    ],
+    "shorts_meta": [
+      {
+        "title": "AI tool helps students with writing #Shorts",
+        "description": "This short shows an AI tool assisting students with their writing assignments by providing suggestions and feedback.",
+        "instagram_caption": "🚀 See how AI is giving students a writing boost! This tool offers personalized suggestions to improve essays and stories. Follow @tooldojo!"
+      },
+      {
+        "title": "AI tutors support personalized learning #Shorts",
+        "description": "This clip demonstrates how AI-powered tutors can offer individualized support and explanations to students struggling with specific concepts.",
+        "instagram_caption": "📚 AI tutors are here to personalize your learning journey! Get help with tough subjects and learn at your own pace. Follow @tooldojo!"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]

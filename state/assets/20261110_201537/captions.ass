@@ -1,0 +1,207 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.34,Live,,0,0,0,{\k38}Imagine {\k20}a {\k46}classroom {\k30}where
+Dialogue: 0,0:00:01.34,0:00:02.56,Live,,0,0,0,{\k34}every {\k32}student {\k32}learns {\k24}at
+Dialogue: 0,0:00:02.56,0:00:03.94,Live,,0,0,0,{\k14}their {\k24}own {\k38}perfect {\k52}pace
+Dialogue: 0,0:00:04.24,0:00:05.92,Live,,0,0,0,{\k28}tackling {\k46}subjects {\k62}exactly {\k32}when
+Dialogue: 0,0:00:05.92,0:00:06.48,Live,,0,0,0,{\k16}they're {\k30}ready
+Dialogue: 0,0:00:07.08,0:00:08.58,Live,,0,0,0,{\k20}This {\k40}isn't {\k32}science {\k48}fiction
+Dialogue: 0,0:00:09.18,0:00:11.26,Live,,0,0,0,{\k52}Artificial {\k58}intelligence {\k46}is {\k52}rapidly
+Dialogue: 0,0:00:11.26,0:00:13.72,Live,,0,0,0,{\k64}transforming {\k76}education {\k48}{\k40}offering {\k18}the
+Dialogue: 0,0:00:13.72,0:00:16.48,Live,,0,0,0,{\k48}potential {\k40}for {\k70}unprecedented {\k108}personalization
+Dialogue: 0,0:00:16.72,0:00:18.14,Live,,0,0,0,{\k12}But {\k16}this {\k82}transformation {\k32}comes
+Dialogue: 0,0:00:18.14,0:00:19.72,Live,,0,0,0,{\k30}with {\k10}a {\k50}significant {\k58}challenge
+Dialogue: 0,0:00:20.08,0:00:21.28,Live,,0,0,0,{\k18}a {\k60}widening {\k16}gap {\k26}in
+Dialogue: 0,0:00:21.28,0:00:23.84,Live,,0,0,0,{\k60}understanding {\k46}and {\k56}preparation {\k66}{\k28}By
+Dialogue: 0,0:00:23.84,0:00:24.60,Live,,0,0,0,{\k12}the {\k16}end {\k14}of {\k24}this
+Dialogue: 0,0:00:24.80,0:00:25.74,Live,,0,0,0,{\k12}you'll {\k30}grasp {\k28}the {\k24}core
+Dialogue: 0,0:00:25.74,0:00:27.00,Live,,0,0,0,{\k22}of {\k20}this {\k30}AI {\k54}guidance
+Dialogue: 0,0:00:27.00,0:00:28.08,Live,,0,0,0,{\k34}gap {\k48}and {\k14}what {\k12}it
+Dialogue: 0,0:00:28.08,0:00:29.76,Live,,0,0,0,{\k16}means {\k26}for {\k36}students {\k48}{\k32}teachers
+Dialogue: 0,0:00:30.02,0:00:30.76,Live,,0,0,0,{\k8}and {\k10}the {\k32}future {\k24}of
+Dialogue: 0,0:00:30.76,0:00:32.62,Live,,0,0,0,{\k32}learning {\k60}{\k30}At {\k20}its {\k34}heart
+Dialogue: 0,0:00:32.92,0:00:34.34,Live,,0,0,0,{\k26}AI {\k32}in {\k32}education {\k52}is
+Dialogue: 0,0:00:34.34,0:00:36.38,Live,,0,0,0,{\k22}about {\k64}unlocking {\k62}potential {\k42}{\k14}Think
+Dialogue: 0,0:00:36.38,0:00:37.40,Live,,0,0,0,{\k14}of {\k30}AI {\k48}as {\k10}an
+Dialogue: 0,0:00:37.40,0:00:39.44,Live,,0,0,0,{\k50}infinitely {\k50}patient {\k40}tutor {\k46}{\k18}able
+Dialogue: 0,0:00:39.44,0:00:41.06,Live,,0,0,0,{\k14}to {\k58}identify {\k64}precisely {\k26}where
+Dialogue: 0,0:00:41.06,0:00:42.46,Live,,0,0,0,{\k14}a {\k24}student {\k44}struggles {\k58}and
+Dialogue: 0,0:00:42.46,0:00:44.46,Live,,0,0,0,{\k32}provide {\k62}targeted {\k66}explanations {\k40}or
+Dialogue: 0,0:00:44.46,0:00:44.96,Live,,0,0,0,{\k40}practice
+Dialogue: 0,0:00:45.62,0:00:46.36,Live,,0,0,0,{\k16}It {\k12}can {\k26}adapt {\k20}the
+Dialogue: 0,0:00:46.36,0:00:47.72,Live,,0,0,0,{\k48}difficulty {\k16}of {\k42}problems {\k30}in
+Dialogue: 0,0:00:47.72,0:00:49.58,Live,,0,0,0,{\k20}real {\k40}time {\k46}{\k48}ensuring {\k32}no
+Dialogue: 0,0:00:49.58,0:00:50.70,Live,,0,0,0,{\k22}one {\k20}is {\k20}left {\k50}behind
+Dialogue: 0,0:00:50.70,0:00:51.46,Live,,0,0,0,{\k38}or {\k28}bored
+Dialogue: 0,0:00:52.08,0:00:54.32,Live,,0,0,0,{\k28}For {\k56}educators {\k60}{\k20}AI {\k60}offers
+Dialogue: 0,0:00:54.32,0:00:55.72,Live,,0,0,0,{\k24}a {\k48}powerful {\k28}co {\k40}pilot
+Dialogue: 0,0:00:55.72,0:00:57.16,Live,,0,0,0,{\k50}It {\k12}can {\k44}automate {\k38}grading
+Dialogue: 0,0:00:57.16,0:00:59.34,Live,,0,0,0,{\k36}of {\k30}routine {\k66}assignments {\k54}{\k32}analyze
+Dialogue: 0,0:00:59.34,0:01:01.06,Live,,0,0,0,{\k50}student {\k52}performance {\k42}data {\k28}to
+Dialogue: 0,0:01:01.06,0:01:02.48,Live,,0,0,0,{\k30}flag {\k38}those {\k24}needing {\k50}extra
+Dialogue: 0,0:01:02.48,0:01:04.18,Live,,0,0,0,{\k42}attention {\k64}and {\k26}even {\k38}suggest
+Dialogue: 0,0:01:04.18,0:01:07.00,Live,,0,0,0,{\k90}differentiated {\k32}learning {\k52}materials {\k52}{\k56}This
+Dialogue: 0,0:01:07.00,0:01:08.50,Live,,0,0,0,{\k44}frees {\k10}up {\k46}valuable {\k50}teacher
+Dialogue: 0,0:01:08.50,0:01:10.08,Live,,0,0,0,{\k40}time {\k46}{\k34}allowing {\k22}them {\k16}to
+Dialogue: 0,0:01:10.08,0:01:12.00,Live,,0,0,0,{\k32}focus {\k30}on {\k50}mentorship {\k60}{\k20}critical
+Dialogue: 0,0:01:12.00,0:01:14.24,Live,,0,0,0,{\k44}thinking {\k36}{\k24}and {\k42}emotional {\k68}support
+Dialogue: 0,0:01:14.34,0:01:15.90,Live,,0,0,0,{\k48}Consider {\k38}this {\k28}{\k10}a {\k32}teacher
+Dialogue: 0,0:01:15.90,0:01:17.26,Live,,0,0,0,{\k24}might {\k30}spend {\k42}hours {\k40}each
+Dialogue: 0,0:01:17.26,0:01:19.28,Live,,0,0,0,{\k24}week {\k40}grading {\k46}essays {\k68}{\k24}An
+Dialogue: 0,0:01:19.28,0:01:20.86,Live,,0,0,0,{\k26}AI {\k56}system {\k46}after {\k30}proper
+Dialogue: 0,0:01:20.86,0:01:22.60,Live,,0,0,0,{\k44}training {\k54}can {\k32}provide {\k44}initial
+Dialogue: 0,0:01:22.60,0:01:24.56,Live,,0,0,0,{\k40}feedback {\k44}on {\k36}grammar {\k36}{\k40}structure
+Dialogue: 0,0:01:24.56,0:01:26.40,Live,,0,0,0,{\k46}and {\k26}even {\k50}factual {\k62}accuracy
+Dialogue: 0,0:01:26.40,0:01:27.16,Live,,0,0,0,{\k20}in {\k8}a {\k34}fraction {\k14}of
+Dialogue: 0,0:01:27.16,0:01:28.80,Live,,0,0,0,{\k14}that {\k40}time {\k56}{\k28}This {\k26}isn't
+Dialogue: 0,0:01:28.80,0:01:30.56,Live,,0,0,0,{\k16}about {\k50}replacing {\k56}teachers {\k54}but
+Dialogue: 0,0:01:30.56,0:01:32.10,Live,,0,0,0,{\k70}augmenting {\k16}their {\k58}capabilities
+Dialogue: 0,0:01:32.78,0:01:34.52,Live,,0,0,0,{\k44}However {\k36}{\k8}a {\k28}critical {\k58}problem
+Dialogue: 0,0:01:34.52,0:01:36.08,Live,,0,0,0,{\k22}is {\k46}emerging {\k60}As {\k28}AI
+Dialogue: 0,0:01:36.08,0:01:37.84,Live,,0,0,0,{\k56}tools {\k36}become {\k28}more {\k56}sophisticated
+Dialogue: 0,0:01:37.84,0:01:39.76,Live,,0,0,0,{\k50}and {\k50}integrated {\k42}{\k20}a {\k30}vast
+Dialogue: 0,0:01:39.76,0:01:40.72,Live,,0,0,0,{\k24}number {\k18}of {\k28}students {\k26}and
+Dialogue: 0,0:01:40.72,0:01:42.54,Live,,0,0,0,{\k52}educators {\k50}lack {\k22}the {\k58}foundational
+Dialogue: 0,0:01:42.54,0:01:44.14,Live,,0,0,0,{\k46}knowledge {\k30}to {\k46}effectively {\k38}use
+Dialogue: 0,0:01:44.14,0:01:45.70,Live,,0,0,0,{\k20}them {\k64}{\k26}This {\k32}isn't {\k14}just
+Dialogue: 0,0:01:45.70,0:01:46.72,Live,,0,0,0,{\k30}about {\k28}knowing {\k28}how {\k16}to
+Dialogue: 0,0:01:46.72,0:01:47.98,Live,,0,0,0,{\k22}log {\k32}in {\k42}{\k16}it's {\k14}about
+Dialogue: 0,0:01:47.98,0:01:50.50,Live,,0,0,0,{\k60}understanding {\k20}the {\k58}capabilities {\k56}{\k48}limitations
+Dialogue: 0,0:01:50.92,0:01:52.40,Live,,0,0,0,{\k12}and {\k30}ethical {\k68}implications {\k38}of
+Dialogue: 0,0:01:52.40,0:01:54.42,Live,,0,0,0,{\k36}AI {\k67}{\k35}This {\k42}is {\k22}the
+Dialogue: 0,0:01:54.42,0:01:56.18,Live,,0,0,0,{\k38}AI {\k48}Guidance {\k34}Gap {\k38}{\k18}It's
+Dialogue: 0,0:01:56.18,0:01:57.20,Live,,0,0,0,{\k12}the {\k40}chasm {\k34}between {\k16}the
+Dialogue: 0,0:01:57.20,0:01:58.50,Live,,0,0,0,{\k36}power {\k28}of {\k30}AI {\k36}in
+Dialogue: 0,0:01:58.50,0:02:00.26,Live,,0,0,0,{\k52}education {\k64}and {\k10}the {\k50}preparedness
+Dialogue: 0,0:02:00.26,0:02:01.18,Live,,0,0,0,{\k28}of {\k10}the {\k30}people {\k24}who
+Dialogue: 0,0:02:01.18,0:02:01.88,Live,,0,0,0,{\k14}are {\k16}meant {\k18}to {\k22}use
+Dialogue: 0,0:02:01.88,0:02:03.60,Live,,0,0,0,{\k26}it {\k56}{\k22}Without {\k46}bridging {\k22}this
+Dialogue: 0,0:02:03.60,0:02:05.54,Live,,0,0,0,{\k24}gap {\k48}{\k22}AI {\k36}could {\k64}inadvertently
+Dialogue: 0,0:02:05.54,0:02:08.38,Live,,0,0,0,{\k78}exacerbate {\k46}existing {\k74}inequalities {\k60}{\k26}creating
+Dialogue: 0,0:02:08.38,0:02:09.84,Live,,0,0,0,{\k26}a {\k20}new {\k40}digital {\k50}divide
+Dialogue: 0,0:02:10.38,0:02:11.78,Live,,0,0,0,{\k20}The {\k32}stakes {\k42}are {\k36}immense
+Dialogue: 0,0:02:12.40,0:02:13.78,Live,,0,0,0,{\k48}Globally {\k36}{\k16}over {\k10}a {\k28}billion
+Dialogue: 0,0:02:13.78,0:02:15.40,Live,,0,0,0,{\k44}students {\k20}are {\k50}currently {\k48}enrolled
+Dialogue: 0,0:02:15.40,0:02:17.08,Live,,0,0,0,{\k38}in {\k22}K {\k32}12 {\k66}education
+Dialogue: 0,0:02:17.38,0:02:18.72,Live,,0,0,0,{\k44}Imagine {\k32}if {\k10}a {\k48}significant
+Dialogue: 0,0:02:18.72,0:02:20.26,Live,,0,0,0,{\k40}portion {\k18}of {\k28}them {\k68}graduate
+Dialogue: 0,0:02:20.26,0:02:21.76,Live,,0,0,0,{\k36}without {\k12}a {\k34}basic {\k68}understanding
+Dialogue: 0,0:02:21.76,0:02:23.12,Live,,0,0,0,{\k32}of {\k16}how {\k28}AI {\k60}works
+Dialogue: 0,0:02:23.12,0:02:24.56,Live,,0,0,0,{\k66}or {\k30}how {\k16}to {\k32}critically
+Dialogue: 0,0:02:24.56,0:02:26.32,Live,,0,0,0,{\k50}engage {\k36}with {\k30}AI {\k60}generated
+Dialogue: 0,0:02:26.32,0:02:28.56,Live,,0,0,0,{\k56}information {\k60}{\k58}This {\k30}lack {\k20}of
+Dialogue: 0,0:02:28.56,0:02:30.40,Live,,0,0,0,{\k22}AI {\k58}literacy {\k60}means {\k44}students
+Dialogue: 0,0:02:30.40,0:02:31.52,Live,,0,0,0,{\k26}may {\k36}struggle {\k20}to {\k30}discern
+Dialogue: 0,0:02:31.52,0:02:33.46,Live,,0,0,0,{\k42}reliable {\k82}information {\k32}from {\k38}AI
+Dialogue: 0,0:02:33.46,0:02:35.58,Live,,0,0,0,{\k58}generated {\k46}content {\k86}or {\k22}be
+Dialogue: 0,0:02:35.58,0:02:36.96,Live,,0,0,0,{\k44}unable {\k20}to {\k32}leverage {\k42}AI
+Dialogue: 0,0:02:36.96,0:02:38.16,Live,,0,0,0,{\k48}tools {\k36}for {\k12}their {\k24}own
+Dialogue: 0,0:02:38.16,0:02:39.76,Live,,0,0,0,{\k40}learning {\k26}and {\k32}future {\k52}careers
+Dialogue: 0,0:02:39.98,0:02:41.18,Live,,0,0,0,{\k22}They {\k16}could {\k32}become {\k50}passive
+Dialogue: 0,0:02:41.18,0:02:43.14,Live,,0,0,0,{\k52}consumers {\k22}of {\k62}technology {\k60}rather
+Dialogue: 0,0:02:43.14,0:02:44.62,Live,,0,0,0,{\k24}than {\k32}active {\k58}creators {\k34}and
+Dialogue: 0,0:02:44.62,0:02:47.22,Live,,0,0,0,{\k40}critical {\k44}thinkers {\k62}{\k52}filter {\k40}{\k22}true
+Dialogue: 0,0:02:47.22,0:02:48.32,Live,,0,0,0,{\k18}Some {\k26}worry {\k30}about {\k36}AI
+Dialogue: 0,0:02:48.32,0:02:50.12,Live,,0,0,0,{\k62}replacing {\k34}human {\k58}interaction {\k26}in
+Dialogue: 0,0:02:50.12,0:02:51.40,Live,,0,0,0,{\k42}classrooms {\k76}entirely
+Dialogue: 0,0:02:52.04,0:02:53.24,Live,,0,0,0,{\k18}This {\k40}narrative {\k38}misses {\k24}the
+Dialogue: 0,0:02:53.24,0:02:54.94,Live,,0,0,0,{\k26}point {\k64}{\k10}The {\k22}most {\k48}effective
+Dialogue: 0,0:02:54.94,0:02:56.10,Live,,0,0,0,{\k26}use {\k20}of {\k18}AI {\k52}is
+Dialogue: 0,0:02:56.10,0:02:56.80,Live,,0,0,0,{\k14}as {\k10}a {\k26}tool {\k20}to
+Dialogue: 0,0:02:56.80,0:02:58.72,Live,,0,0,0,{\k38}enhance {\k38}{\k26}not {\k28}erase {\k46}{\k16}the
+Dialogue: 0,0:02:58.72,0:03:00.38,Live,,0,0,0,{\k26}human {\k40}element {\k42}{\k26}AI {\k32}can
+Dialogue: 0,0:03:00.38,0:03:02.40,Live,,0,0,0,{\k30}handle {\k52}repetitive {\k54}tasks {\k46}{\k20}but
+Dialogue: 0,0:03:02.40,0:03:03.56,Live,,0,0,0,{\k8}it {\k30}cannot {\k56}replicate {\k22}a
+Dialogue: 0,0:03:03.56,0:03:06.14,Live,,0,0,0,{\k60}teacher's {\k34}empathy {\k52}{\k52}creativity {\k28}{\k32}or
+Dialogue: 0,0:03:06.14,0:03:07.46,Live,,0,0,0,{\k42}ability {\k30}to {\k50}inspire
+Dialogue: 0,0:03:08.10,0:03:09.50,Live,,0,0,0,{\k20}The {\k50}solution {\k40}lies {\k30}in
+Dialogue: 0,0:03:09.50,0:03:12.04,Live,,0,0,0,{\k74}comprehensive {\k42}AI {\k58}literacy {\k70}education
+Dialogue: 0,0:03:12.38,0:03:14.00,Live,,0,0,0,{\k20}This {\k22}means {\k72}integrating {\k48}AI
+Dialogue: 0,0:03:14.00,0:03:15.68,Live,,0,0,0,{\k56}concepts {\k36}into {\k56}curricula {\k20}from
+Dialogue: 0,0:03:15.68,0:03:17.32,Live,,0,0,0,{\k12}an {\k32}early {\k50}age {\k70}teaching
+Dialogue: 0,0:03:17.32,0:03:18.60,Live,,0,0,0,{\k52}students {\k36}not {\k28}just {\k12}how
+Dialogue: 0,0:03:18.60,0:03:20.04,Live,,0,0,0,{\k16}to {\k26}use {\k22}AI {\k58}{\k22}but
+Dialogue: 0,0:03:20.04,0:03:21.24,Live,,0,0,0,{\k20}how {\k20}it {\k20}works {\k34}{\k26}its
+Dialogue: 0,0:03:21.24,0:03:23.04,Live,,0,0,0,{\k48}potential {\k40}biases {\k62}{\k10}and {\k20}how
+Dialogue: 0,0:03:23.04,0:03:24.36,Live,,0,0,0,{\k18}to {\k20}use {\k14}it {\k70}responsibly
+Dialogue: 0,0:03:24.92,0:03:26.78,Live,,0,0,0,{\k24}For {\k58}educators {\k46}{\k10}this {\k48}requires
+Dialogue: 0,0:03:26.78,0:03:29.46,Live,,0,0,0,{\k64}robust {\k62}professional {\k66}development {\k44}{\k32}Teachers
+Dialogue: 0,0:03:29.46,0:03:30.44,Live,,0,0,0,{\k30}need {\k16}to {\k10}be {\k42}trained
+Dialogue: 0,0:03:30.44,0:03:31.58,Live,,0,0,0,{\k16}on {\k22}how {\k22}to {\k54}effectively
+Dialogue: 0,0:03:31.58,0:03:33.20,Live,,0,0,0,{\k62}integrate {\k26}AI {\k50}tools {\k24}into
+Dialogue: 0,0:03:33.20,0:03:35.06,Live,,0,0,0,{\k18}their {\k34}teaching {\k66}strategies {\k42}{\k26}how
+Dialogue: 0,0:03:35.06,0:03:36.46,Live,,0,0,0,{\k20}to {\k30}assess {\k44}AI {\k46}assisted
+Dialogue: 0,0:03:36.46,0:03:37.68,Live,,0,0,0,{\k34}work {\k46}{\k6}and {\k18}how {\k18}to
+Dialogue: 0,0:03:37.68,0:03:38.70,Live,,0,0,0,{\k22}guide {\k46}students {\k22}in {\k12}their
+Dialogue: 0,0:03:38.70,0:03:41.16,Live,,0,0,0,{\k38}AI {\k102}explorations {\k62}{\k30}Think {\k14}of
+Dialogue: 0,0:03:41.16,0:03:42.02,Live,,0,0,0,{\k10}it {\k20}like {\k34}learning {\k22}to
+Dialogue: 0,0:03:42.02,0:03:43.46,Live,,0,0,0,{\k30}drive {\k64}{\k16}You {\k14}don't {\k20}just
+Dialogue: 0,0:03:43.46,0:03:44.18,Live,,0,0,0,{\k14}get {\k10}in {\k12}the {\k26}car
+Dialogue: 0,0:03:44.50,0:03:45.32,Live,,0,0,0,{\k20}you {\k20}learn {\k16}the {\k26}rules
+Dialogue: 0,0:03:45.32,0:03:46.34,Live,,0,0,0,{\k20}of {\k10}the {\k30}road {\k42}how
+Dialogue: 0,0:03:46.34,0:03:47.62,Live,,0,0,0,{\k16}the {\k30}engine {\k32}works {\k46}{\k4}and
+Dialogue: 0,0:03:47.62,0:03:48.80,Live,,0,0,0,{\k18}how {\k16}to {\k38}navigate {\k46}traffic
+Dialogue: 0,0:03:48.80,0:03:50.80,Live,,0,0,0,{\k56}safely {\k38}{\k22}AI {\k48}literacy {\k36}is
+Dialogue: 0,0:03:50.80,0:03:51.94,Live,,0,0,0,{\k16}the {\k22}new {\k34}driving {\k42}manual
+Dialogue: 0,0:03:51.94,0:03:53.20,Live,,0,0,0,{\k22}for {\k10}the {\k30}digital {\k54}age
+Dialogue: 0,0:03:53.60,0:03:55.32,Live,,0,0,0,{\k22}The {\k58}strangest {\k32}part {\k42}{\k18}Many
+Dialogue: 0,0:03:55.32,0:03:56.70,Live,,0,0,0,{\k62}institutions {\k30}are {\k26}aware {\k20}of
+Dialogue: 0,0:03:56.70,0:03:58.02,Live,,0,0,0,{\k22}this {\k16}gap {\k46}{\k10}yet {\k38}progress
+Dialogue: 0,0:03:58.02,0:03:59.16,Live,,0,0,0,{\k30}is {\k40}often {\k34}slow
+Dialogue: 0,0:03:59.80,0:04:00.78,Live,,0,0,0,{\k12}The {\k32}rapid {\k30}pace {\k24}of
+Dialogue: 0,0:04:00.78,0:04:02.66,Live,,0,0,0,{\k28}AI {\k70}development {\k74}outstrips {\k16}the
+Dialogue: 0,0:04:02.66,0:04:03.84,Live,,0,0,0,{\k34}speed {\k20}at {\k14}which {\k50}educational
+Dialogue: 0,0:04:03.84,0:04:05.88,Live,,0,0,0,{\k74}systems {\k16}can {\k30}adapt {\k62}{\k22}This
+Dialogue: 0,0:04:05.88,0:04:07.04,Live,,0,0,0,{\k30}creates {\k18}a {\k42}constant {\k26}race
+Dialogue: 0,0:04:07.04,0:04:08.40,Live,,0,0,0,{\k22}to {\k28}catch {\k22}up {\k34}{\k30}Bridging
+Dialogue: 0,0:04:08.40,0:04:09.74,Live,,0,0,0,{\k18}the {\k36}AI {\k42}Guidance {\k38}Gap
+Dialogue: 0,0:04:09.74,0:04:11.32,Live,,0,0,0,{\k38}isn't {\k20}just {\k28}about {\k62}technology
+Dialogue: 0,0:04:11.84,0:04:13.10,Live,,0,0,0,{\k22}it's {\k20}about {\k54}foresight {\k30}and
+Dialogue: 0,0:04:13.10,0:04:15.26,Live,,0,0,0,{\k54}strategic {\k46}planning {\k40}{\k40}It {\k36}requires
+Dialogue: 0,0:04:15.26,0:04:17.62,Live,,0,0,0,{\k88}collaboration {\k40}between {\k30}AI {\k68}developers
+Dialogue: 0,0:04:18.08,0:04:20.74,Live,,0,0,0,{\k44}educators {\k60}{\k54}policymakers {\k50}{\k24}and {\k34}parents
+Dialogue: 0,0:04:20.74,0:04:22.34,Live,,0,0,0,{\k40}to {\k34}create {\k48}frameworks {\k38}that
+Dialogue: 0,0:04:22.34,0:04:24.02,Live,,0,0,0,{\k40}ensure {\k38}AI {\k60}serves {\k30}all
+Dialogue: 0,0:04:24.02,0:04:26.16,Live,,0,0,0,{\k36}students {\k64}equitably {\k56}{\k26}The {\k32}future
+Dialogue: 0,0:04:26.16,0:04:27.78,Live,,0,0,0,{\k20}of {\k52}education {\k34}will {\k56}undoubtedly
+Dialogue: 0,0:04:27.78,0:04:29.48,Live,,0,0,0,{\k32}be {\k74}intertwined {\k22}with {\k32}AI
+Dialogue: 0,0:04:29.88,0:04:31.42,Live,,0,0,0,{\k12}By {\k66}proactively {\k50}addressing {\k26}the
+Dialogue: 0,0:04:31.42,0:04:33.08,Live,,0,0,0,{\k28}AI {\k46}Guidance {\k32}Gap {\k54}{\k6}we
+Dialogue: 0,0:04:33.08,0:04:34.84,Live,,0,0,0,{\k14}can {\k28}harness {\k78}AI's {\k56}transformative
+Dialogue: 0,0:04:34.84,0:04:36.28,Live,,0,0,0,{\k46}power {\k44}to {\k34}create {\k20}a
+Dialogue: 0,0:04:36.28,0:04:38.64,Live,,0,0,0,{\k20}more {\k62}inclusive {\k50}{\k44}effective {\k40}{\k20}and
+Dialogue: 0,0:04:38.64,0:04:40.42,Live,,0,0,0,{\k46}engaging {\k38}learning {\k64}environment {\k30}for
+Dialogue: 0,0:04:40.42,0:04:42.58,Live,,0,0,0,{\k40}everyone {\k64}{\k34}The {\k30}AI {\k48}Guidance
+Dialogue: 0,0:04:42.58,0:04:43.74,Live,,0,0,0,{\k32}Gap {\k28}is {\k12}a {\k44}solvable
+Dialogue: 0,0:04:43.74,0:04:45.68,Live,,0,0,0,{\k66}problem {\k28}{\k36}It {\k38}requires {\k26}a
+Dialogue: 0,0:04:45.68,0:04:47.58,Live,,0,0,0,{\k34}commitment {\k24}to {\k66}education {\k56}{\k10}a
+Dialogue: 0,0:04:47.58,0:04:49.14,Live,,0,0,0,{\k32}willingness {\k30}to {\k32}adapt {\k58}{\k4}and
+Dialogue: 0,0:04:49.14,0:04:50.12,Live,,0,0,0,{\k10}a {\k24}clear {\k38}vision {\k26}for
+Dialogue: 0,0:04:50.12,0:04:51.40,Live,,0,0,0,{\k22}how {\k32}AI {\k38}can {\k36}elevate
+Dialogue: 0,0:04:51.40,0:04:53.46,Live,,0,0,0,{\k40}human {\k54}potential {\k42}{\k32}Equipping {\k38}students
+Dialogue: 0,0:04:53.46,0:04:54.82,Live,,0,0,0,{\k28}and {\k36}teachers {\k38}with {\k34}AI
+Dialogue: 0,0:04:54.82,0:04:56.26,Live,,0,0,0,{\k50}literacy {\k54}is {\k24}not {\k16}an
+Dialogue: 0,0:04:56.26,0:04:57.88,Live,,0,0,0,{\k40}option {\k52}{\k22}it's {\k2}a {\k46}necessity
+Dialogue: 0,0:04:57.88,0:04:59.18,Live,,0,0,0,{\k28}for {\k48}navigating {\k34}the {\k20}world
+Dialogue: 0,0:04:59.18,0:05:01.04,Live,,0,0,0,{\k34}ahead {\k68}{\k20}The {\k24}key {\k40}takeaway
+Dialogue: 0,0:05:01.04,0:05:02.28,Live,,0,0,0,{\k40}is {\k14}that {\k40}AI {\k30}in
+Dialogue: 0,0:05:02.28,0:05:03.84,Live,,0,0,0,{\k32}education {\k48}is {\k22}here {\k42}{\k12}and
+Dialogue: 0,0:05:03.84,0:05:05.04,Live,,0,0,0,{\k16}its {\k36}impact {\k36}will {\k32}only
+Dialogue: 0,0:05:05.04,0:05:05.44,Live,,0,0,0,{\k30}grow
+Dialogue: 0,0:05:06.04,0:05:07.26,Live,,0,0,0,{\k14}The {\k30}critical {\k48}challenge {\k30}is
+Dialogue: 0,0:05:07.26,0:05:08.82,Live,,0,0,0,{\k54}ensuring {\k50}everyone {\k34}has {\k18}the
+Dialogue: 0,0:05:08.82,0:05:10.26,Live,,0,0,0,{\k34}skills {\k20}to {\k34}benefit {\k56}What
+Dialogue: 0,0:05:10.26,0:05:11.18,Live,,0,0,0,{\k14}is {\k14}the {\k34}single {\k30}most
+Dialogue: 0,0:05:11.18,0:05:12.58,Live,,0,0,0,{\k52}important {\k32}step {\k28}your {\k28}local
+Dialogue: 0,0:05:12.58,0:05:13.84,Live,,0,0,0,{\k38}school {\k48}can {\k22}take {\k18}to
+Dialogue: 0,0:05:13.84,0:05:15.24,Live,,0,0,0,{\k38}address {\k42}AI {\k50}literacy
