@@ -6260,5 +6260,52 @@
     ],
     "format": "evergreen",
     "status": "PUBLISHED"
+  },
+  {
+    "timestamp": "2026-11-11T20:00:09.958054",
+    "title": "AI Explained: Generative vs. Traditional",
+    "description": "Generative AI vs. Traditional AI: It's time for a no-nonsense comparison.  We cut through the hype to show you the real differences between these two powerful forms of artificial intelligence.  Understand their unique functions, where they excel, and their limitations.  By the end, you'll grasp how each type of AI works and what it means for the future.  We explore how traditional AI automates tasks and makes predictions, while generative AI creates entirely new content.  Discover their distinct strengths, from diagnosing diseases to writing poetry.  This isn't about which is 'better,' but about understanding their specific roles.  Learn how these technologies are shaping our world, one algorithm at a time.  Get the clear, unbiased facts you need to navigate the evolving AI landscape.  #AI #ArtificialIntelligence #TechExplained #MachineLearning #GenerativeAI #TraditionalAI #FutureTech #ToolDojo\n\nSubscribe to ToolDojo.\n\nChapters:\n0:00 Generative AI Future\n1:14 AI Powers World\n2:15 Machine Learning Basis\n3:19 Traditional AI Limits\n4:22 AI Decision Mystery\n\n▶ Watch next: https://youtube.com/watch?v=nlkSz-5zhyo",
+    "tags": [
+      "Generative AI",
+      "Traditional AI",
+      "AI Explained",
+      "Machine Learning",
+      "Deep Learning",
+      "AI Comparison",
+      "Artificial Intelligence",
+      "Tech Trends",
+      "AI Applications",
+      "AI Basics",
+      "ai",
+      "ai news",
+      "tech news",
+      "technology",
+      "tooldojo"
+    ],
+    "video": "output/videos/AI_Explained_Generative_vs_Traditional_20261111_194913_final.mp4",
+    "shorts": [
+      "output/shorts/short_2_20261111_195313.mp4",
+      "output/shorts/short_1_20261111_195239.mp4"
+    ],
+    "thumbnail": "output/thumbnails/thumb_20261111_195129.jpg",
+    "youtube_url": "https://youtube.com/watch?v=1Nj7vJF_GvY",
+    "youtube_shorts": [
+      "https://youtube.com/watch?v=mXQn2s__HXs",
+      "https://youtube.com/watch?v=f32IvBBkC3Q"
+    ],
+    "shorts_meta": [
+      {
+        "title": "Generative AI vs Traditional AI #Shorts",
+        "description": "Explains the difference between generative and traditional AI models. Shows how each type of AI functions.",
+        "instagram_caption": "🤔 Generative AI creates new content, while traditional AI analyzes existing data. Learn the key differences in this quick explainer. Follow @tooldojo! #AI #GenerativeAI #TraditionalAI #MachineLearning #DeepLearning #AIDifference #TechExplained #ArtificialIntelligence #AIExplained #AIChatbots #AIArt #AIGenerated #TechTrends #FutureTech #LearnAI #DigitalTransformation #Innovation #AItools #AItechnology #DataScience"
+      },
+      {
+        "title": "How Generative AI Works #Shorts",
+        "description": "Illustrates the process of generative AI creating new outputs. Compares its output to traditional AI.",
+        "instagram_caption": "✨ See how generative AI builds something new from scratch, unlike traditional AI. This short video breaks down the creation process. Follow @tooldojo! #GenerativeAI #AIcreation #AIoutput #MachineLearning #DeepLearning #AIDevelopment #TechEducation #ArtificialIntelligence #AIexplained #AICreationProcess #DigitalArt #AIwriting #TechInsights #FutureofAI #LearnTech #AIcommunity #Innovate #AItools #AItechnology #CreativeAI"
+      }
+    ],
+    "format": "evergreen",
+    "status": "PUBLISHED"
   }
 ]

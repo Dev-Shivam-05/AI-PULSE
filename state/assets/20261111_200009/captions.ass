@@ -1,0 +1,203 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Live,Arial,50,&H0000D7FF,&H00FFFFFF,&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,4,1,2,80,80,70,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.34,Live,,0,0,0,{\k40}Imagine {\k28}an {\k28}AI {\k38}that
+Dialogue: 0,0:00:01.34,0:00:02.42,Live,,0,0,0,{\k16}can {\k20}write {\k22}a {\k40}novel
+Dialogue: 0,0:00:02.64,0:00:04.26,Live,,0,0,0,{\k26}compose {\k50}music {\k28}{\k24}or {\k34}design
+Dialogue: 0,0:00:04.26,0:00:05.50,Live,,0,0,0,{\k20}a {\k30}product {\k30}from {\k34}scratch
+Dialogue: 0,0:00:05.96,0:00:08.02,Live,,0,0,0,{\k50}That's {\k46}generative {\k34}AI {\k60}{\k16}But
+Dialogue: 0,0:00:08.02,0:00:08.76,Live,,0,0,0,{\k18}it's {\k14}not {\k14}the {\k28}only
+Dialogue: 0,0:00:08.76,0:00:09.86,Live,,0,0,0,{\k24}kind {\k18}of {\k24}AI {\k44}out
+Dialogue: 0,0:00:09.86,0:00:11.88,Live,,0,0,0,{\k16}there {\k62}{\k10}For {\k38}decades {\k38}{\k38}another
+Dialogue: 0,0:00:11.88,0:00:13.28,Live,,0,0,0,{\k62}powerful {\k34}form {\k12}of {\k32}AI
+Dialogue: 0,0:00:13.28,0:00:14.74,Live,,0,0,0,{\k44}has {\k16}been {\k44}quietly {\k42}running
+Dialogue: 0,0:00:14.74,0:00:16.60,Live,,0,0,0,{\k18}our {\k34}world {\k56}{\k54}Understanding {\k24}the
+Dialogue: 0,0:00:16.60,0:00:18.48,Live,,0,0,0,{\k44}distinction {\k28}is {\k34}crucial {\k46}{\k36}Traditional
+Dialogue: 0,0:00:18.48,0:00:20.32,Live,,0,0,0,{\k56}AI {\k38}{\k40}also {\k30}known {\k20}as
+Dialogue: 0,0:00:20.32,0:00:22.44,Live,,0,0,0,{\k46}analytical {\k42}or {\k68}discriminative {\k46}AI
+Dialogue: 0,0:00:22.86,0:00:23.84,Live,,0,0,0,{\k18}is {\k20}built {\k20}to {\k40}analyze
+Dialogue: 0,0:00:23.84,0:00:25.54,Live,,0,0,0,{\k58}existing {\k46}data {\k50}and {\k16}make
+Dialogue: 0,0:00:25.54,0:00:27.30,Live,,0,0,0,{\k54}decisions {\k38}or {\k42}predictions {\k42}based
+Dialogue: 0,0:00:27.30,0:00:28.36,Live,,0,0,0,{\k30}on {\k40}patterns {\k24}it {\k12}has
+Dialogue: 0,0:00:28.36,0:00:29.84,Live,,0,0,0,{\k26}learned {\k58}{\k38}Think {\k16}of {\k10}it
+Dialogue: 0,0:00:29.84,0:00:31.08,Live,,0,0,0,{\k28}as {\k12}a {\k38}highly {\k46}skilled
+Dialogue: 0,0:00:31.08,0:00:32.98,Live,,0,0,0,{\k50}analyst {\k50}{\k38}incredibly {\k36}good {\k16}at
+Dialogue: 0,0:00:32.98,0:00:34.66,Live,,0,0,0,{\k34}finding {\k56}specific {\k44}answers {\k34}in
+Dialogue: 0,0:00:34.66,0:00:35.88,Live,,0,0,0,{\k8}a {\k38}vast {\k20}data {\k46}set
+Dialogue: 0,0:00:36.22,0:00:37.76,Live,,0,0,0,{\k34}Its {\k24}core {\k50}strength {\k46}lies
+Dialogue: 0,0:00:37.76,0:00:39.82,Live,,0,0,0,{\k32}in {\k56}classification {\k66}and {\k42}regression
+Dialogue: 0,0:00:40.20,0:00:41.46,Live,,0,0,0,{\k10}It {\k20}learns {\k26}to {\k70}categorize
+Dialogue: 0,0:00:41.46,0:00:43.28,Live,,0,0,0,{\k28}things {\k50}like {\k64}identifying {\k40}spam
+Dialogue: 0,0:00:43.28,0:00:45.62,Live,,0,0,0,{\k60}emails {\k50}{\k36}recognizing {\k60}faces {\k28}in
+Dialogue: 0,0:00:45.62,0:00:47.42,Live,,0,0,0,{\k40}photos {\k36}{\k26}or {\k44}predicting {\k34}stock
+Dialogue: 0,0:00:47.42,0:00:49.58,Live,,0,0,0,{\k52}prices {\k64}{\k26}It’s {\k14}about {\k60}understanding
+Dialogue: 0,0:00:49.58,0:00:51.22,Live,,0,0,0,{\k28}what {\k54}asterisk {\k14}is {\k68}asterisk
+Dialogue: 0,0:00:51.22,0:00:52.46,Live,,0,0,0,{\k38}and {\k18}what {\k58}asterisk {\k10}will
+Dialogue: 0,0:00:52.46,0:00:53.62,Live,,0,0,0,{\k10}be {\k58}asterisk {\k22}based {\k26}on
+Dialogue: 0,0:00:53.62,0:00:55.26,Live,,0,0,0,{\k16}what {\k58}asterisk {\k12}was {\k68}asterisk
+Dialogue: 0,0:00:55.62,0:00:57.08,Live,,0,0,0,{\k30}A {\k32}classic {\k54}example {\k30}is
+Dialogue: 0,0:00:57.08,0:00:58.98,Live,,0,0,0,{\k10}a {\k38}medical {\k56}diagnostic {\k76}system
+Dialogue: 0,0:00:59.28,0:01:00.58,Live,,0,0,0,{\k28}It's {\k28}trained {\k26}on {\k48}thousands
+Dialogue: 0,0:01:00.58,0:01:01.86,Live,,0,0,0,{\k24}of {\k20}x {\k18}rays {\k66}learning
+Dialogue: 0,0:01:01.86,0:01:03.44,Live,,0,0,0,{\k24}to {\k26}spot {\k54}anomalies {\k44}{\k10}When
+Dialogue: 0,0:01:03.44,0:01:04.14,Live,,0,0,0,{\k8}a {\k14}new {\k30}x {\k18}ray
+Dialogue: 0,0:01:04.14,0:01:05.66,Live,,0,0,0,{\k28}comes {\k26}in {\k36}{\k6}it {\k56}classifies
+Dialogue: 0,0:01:05.66,0:01:06.82,Live,,0,0,0,{\k26}it {\k22}as {\k38}normal {\k30}or
+Dialogue: 0,0:01:06.82,0:01:08.58,Live,,0,0,0,{\k38}potential {\k54}issue {\k36}{\k30}alerting {\k18}a
+Dialogue: 0,0:01:08.58,0:01:10.38,Live,,0,0,0,{\k38}doctor {\k60}{\k24}It {\k28}doesn't {\k30}create
+Dialogue: 0,0:01:10.38,0:01:11.30,Live,,0,0,0,{\k18}a {\k14}new {\k30}x {\k20}ray
+Dialogue: 0,0:01:11.58,0:01:12.80,Live,,0,0,0,{\k10}it {\k56}interprets {\k10}an {\k46}existing
+Dialogue: 0,0:01:12.80,0:01:14.60,Live,,0,0,0,{\k36}one {\k64}{\k30}This {\k28}type {\k22}of
+Dialogue: 0,0:01:14.60,0:01:15.94,Live,,0,0,0,{\k26}AI {\k52}powers {\k40}much {\k16}of
+Dialogue: 0,0:01:15.94,0:01:17.64,Live,,0,0,0,{\k12}our {\k42}automated {\k42}world {\k52}{\k22}fraud
+Dialogue: 0,0:01:17.64,0:01:19.72,Live,,0,0,0,{\k52}detection {\k20}in {\k36}banking {\k56}{\k44}personalized
+Dialogue: 0,0:01:19.72,0:01:21.98,Live,,0,0,0,{\k84}recommendations {\k44}on {\k36}streaming {\k62}services
+Dialogue: 0,0:01:21.98,0:01:23.58,Live,,0,0,0,{\k62}and {\k12}the {\k50}algorithms {\k36}that
+Dialogue: 0,0:01:23.58,0:01:24.94,Live,,0,0,0,{\k26}route {\k20}your {\k36}delivery {\k44}trucks
+Dialogue: 0,0:01:25.20,0:01:26.38,Live,,0,0,0,{\k16}It’s {\k16}about {\k40}efficiency {\k46}and
+Dialogue: 0,0:01:26.38,0:01:28.42,Live,,0,0,0,{\k48}accuracy {\k36}within {\k66}predefined {\k44}tasks
+Dialogue: 0,0:01:28.94,0:01:30.60,Live,,0,0,0,{\k36}Then {\k52}we {\k20}have {\k58}generative
+Dialogue: 0,0:01:30.60,0:01:32.22,Live,,0,0,0,{\k34}AI {\k58}{\k34}This {\k20}is {\k16}the
+Dialogue: 0,0:01:32.22,0:01:33.34,Live,,0,0,0,{\k40}AI {\k30}that {\k32}creates
+Dialogue: 0,0:01:33.94,0:01:35.12,Live,,0,0,0,{\k16}It {\k24}doesn't {\k20}just {\k48}analyze
+Dialogue: 0,0:01:35.50,0:01:37.40,Live,,0,0,0,{\k18}it {\k70}synthesizes {\k56}{\k20}It {\k26}learns
+Dialogue: 0,0:01:37.40,0:01:38.94,Live,,0,0,0,{\k24}the {\k56}underlying {\k50}patterns {\k24}of
+Dialogue: 0,0:01:38.94,0:01:40.06,Live,,0,0,0,{\k22}data {\k42}so {\k24}well {\k24}that
+Dialogue: 0,0:01:40.06,0:01:41.42,Live,,0,0,0,{\k10}it {\k18}can {\k44}generate {\k64}entirely
+Dialogue: 0,0:01:41.42,0:01:42.88,Live,,0,0,0,{\k46}new {\k24}data {\k40}points {\k36}that
+Dialogue: 0,0:01:42.88,0:01:44.28,Live,,0,0,0,{\k44}resemble {\k18}the {\k26}training {\k42}data
+Dialogue: 0,0:01:44.52,0:01:45.50,Live,,0,0,0,{\k28}Instead {\k16}of {\k28}telling {\k26}you
+Dialogue: 0,0:01:45.50,0:01:46.22,Live,,0,0,0,{\k18}if {\k16}an {\k20}x {\k18}ray
+Dialogue: 0,0:01:46.22,0:01:48.14,Live,,0,0,0,{\k26}is {\k42}abnormal {\k58}a {\k66}generative
+Dialogue: 0,0:01:48.14,0:01:50.06,Live,,0,0,0,{\k32}AI {\k38}could {\k52}potentially {\k70}asterisk
+Dialogue: 0,0:01:50.06,0:01:51.96,Live,,0,0,0,{\k36}create {\k78}asterisk {\k22}{\k6}a {\k48}realistic
+Dialogue: 0,0:01:51.96,0:01:53.08,Live,,0,0,0,{\k34}looking {\k36}x {\k16}ray {\k26}of
+Dialogue: 0,0:01:53.08,0:01:54.42,Live,,0,0,0,{\k10}a {\k38}specific {\k30}rare {\k46}condition
+Dialogue: 0,0:01:54.92,0:01:56.24,Live,,0,0,0,{\k20}or {\k34}write {\k14}a {\k64}radiology
+Dialogue: 0,0:01:56.24,0:01:57.86,Live,,0,0,0,{\k36}report {\k32}for {\k20}it {\k48}{\k26}It’s
+Dialogue: 0,0:01:57.86,0:01:59.52,Live,,0,0,0,{\k16}about {\k58}creation {\k42}{\k24}not {\k26}just
+Dialogue: 0,0:01:59.52,0:02:00.32,Live,,0,0,0,{\k70}classification
+Dialogue: 0,0:02:01.00,0:02:01.80,Live,,0,0,0,{\k26}Think {\k14}of {\k12}the {\k28}difference
+Dialogue: 0,0:02:01.80,0:02:02.92,Live,,0,0,0,{\k36}between {\k14}a {\k26}critic {\k36}who
+Dialogue: 0,0:02:02.92,0:02:04.28,Live,,0,0,0,{\k30}reviews {\k18}a {\k36}painting {\k52}and
+Dialogue: 0,0:02:04.28,0:02:05.28,Live,,0,0,0,{\k14}an {\k30}artist {\k30}who {\k26}paints
+Dialogue: 0,0:02:05.28,0:02:07.22,Live,,0,0,0,{\k34}it {\k30}{\k42}Traditional {\k40}AI {\k48}is
+Dialogue: 0,0:02:07.22,0:02:08.96,Live,,0,0,0,{\k12}the {\k26}critic {\k48}{\k36}analyzing {\k52}and
+Dialogue: 0,0:02:08.96,0:02:09.42,Live,,0,0,0,{\k36}judging
+Dialogue: 0,0:02:10.10,0:02:11.52,Live,,0,0,0,{\k48}Generative {\k36}AI {\k46}is {\k12}the
+Dialogue: 0,0:02:11.52,0:02:13.24,Live,,0,0,0,{\k36}artist {\k54}{\k18}bringing {\k36}something {\k28}new
+Dialogue: 0,0:02:13.24,0:02:15.50,Live,,0,0,0,{\k28}into {\k58}existence {\k49}{\k43}The {\k48}underlying
+Dialogue: 0,0:02:15.50,0:02:17.38,Live,,0,0,0,{\k86}technology {\k20}for {\k24}both {\k58}often
+Dialogue: 0,0:02:17.38,0:02:19.12,Live,,0,0,0,{\k42}involves {\k44}machine {\k42}learning {\k46}and
+Dialogue: 0,0:02:19.12,0:02:21.44,Live,,0,0,0,{\k30}neural {\k52}networks {\k46}{\k26}However {\k44}{\k34}generative
+Dialogue: 0,0:02:21.44,0:02:23.20,Live,,0,0,0,{\k30}AI {\k58}typically {\k60}employs {\k28}more
+Dialogue: 0,0:02:23.20,0:02:25.52,Live,,0,0,0,{\k46}complex {\k84}architectures {\k40}like {\k62}Generative
+Dialogue: 0,0:02:25.52,0:02:26.74,Live,,0,0,0,{\k64}Adversarial {\k48}Networks
+Dialogue: 0,0:02:27.34,0:02:29.72,Live,,0,0,0,{\k72}GANs {\k24}{\k22}or {\k54}Transformer {\k56}models
+Dialogue: 0,0:02:30.02,0:02:31.20,Live,,0,0,0,{\k34}allowing {\k26}for {\k20}more {\k38}nuanced
+Dialogue: 0,0:02:31.20,0:02:32.62,Live,,0,0,0,{\k52}output {\k42}{\k10}But {\k30}here's {\k8}the
+Dialogue: 0,0:02:32.62,0:02:34.58,Live,,0,0,0,{\k44}problem {\k62}{\k10}while {\k42}traditional {\k38}AI
+Dialogue: 0,0:02:34.58,0:02:36.20,Live,,0,0,0,{\k48}is {\k34}focused {\k34}on {\k46}predictable
+Dialogue: 0,0:02:36.20,0:02:38.54,Live,,0,0,0,{\k54}outcomes {\k46}and {\k60}verifiable {\k64}accuracy
+Dialogue: 0,0:02:39.06,0:02:40.64,Live,,0,0,0,{\k40}generative {\k58}AI {\k24}{\k18}by {\k18}its
+Dialogue: 0,0:02:40.64,0:02:42.30,Live,,0,0,0,{\k26}very {\k42}nature {\k62}can {\k36}produce
+Dialogue: 0,0:02:42.30,0:02:44.34,Live,,0,0,0,{\k76}unexpected {\k34}and {\k46}sometimes {\k48}even
+Dialogue: 0,0:02:44.34,0:02:46.96,Live,,0,0,0,{\k68}nonsensical {\k58}results {\k62}{\k16}Its {\k58}creativity
+Dialogue: 0,0:02:46.96,0:02:47.82,Live,,0,0,0,{\k34}can {\k16}be {\k10}a {\k26}double
+Dialogue: 0,0:02:47.82,0:02:49.54,Live,,0,0,0,{\k34}edged {\k32}sword {\k68}{\k14}The {\k24}key
+Dialogue: 0,0:02:49.54,0:02:51.08,Live,,0,0,0,{\k34}difference {\k22}in {\k42}application {\k56}is
+Dialogue: 0,0:02:51.08,0:02:53.56,Live,,0,0,0,{\k34}stark {\k48}{\k44}Traditional {\k34}AI {\k88}optimizes
+Dialogue: 0,0:02:53.56,0:02:56.12,Live,,0,0,0,{\k64}processes {\k58}{\k34}automates {\k56}repetitive {\k34}tasks
+Dialogue: 0,0:02:56.52,0:02:58.68,Live,,0,0,0,{\k24}and {\k30}provides {\k64}insights {\k60}{\k38}It’s
+Dialogue: 0,0:02:58.68,0:02:59.94,Live,,0,0,0,{\k10}the {\k30}engine {\k28}for {\k58}efficiency
+Dialogue: 0,0:02:59.94,0:03:01.60,Live,,0,0,0,{\k32}and {\k54}intelligent {\k48}decision {\k32}making
+Dialogue: 0,0:03:01.60,0:03:03.06,Live,,0,0,0,{\k26}in {\k42}structured {\k68}environments
+Dialogue: 0,0:03:03.76,0:03:05.40,Live,,0,0,0,{\k64}Generative {\k50}AI {\k26}{\k12}on {\k12}the
+Dialogue: 0,0:03:05.40,0:03:06.58,Live,,0,0,0,{\k14}other {\k42}hand {\k40}is {\k22}about
+Dialogue: 0,0:03:06.58,0:03:09.18,Live,,0,0,0,{\k74}augmenting {\k28}human {\k70}creativity {\k88}generating
+Dialogue: 0,0:03:09.18,0:03:11.38,Live,,0,0,0,{\k60}content {\k26}for {\k44}marketing {\k50}{\k40}assisting
+Dialogue: 0,0:03:11.38,0:03:12.96,Live,,0,0,0,{\k22}in {\k38}design {\k30}{\k30}or {\k38}even
+Dialogue: 0,0:03:12.96,0:03:14.28,Live,,0,0,0,{\k30}writing {\k42}code {\k28}{\k26}It’s {\k6}a
+Dialogue: 0,0:03:14.28,0:03:15.72,Live,,0,0,0,{\k26}tool {\k26}for {\k68}ideation {\k24}and
+Dialogue: 0,0:03:15.72,0:03:17.24,Live,,0,0,0,{\k36}production {\k34}of {\k28}novel {\k44}assets
+Dialogue: 0,0:03:17.88,0:03:19.56,Live,,0,0,0,{\k24}One {\k62}significant {\k60}limitation {\k22}of
+Dialogue: 0,0:03:19.56,0:03:21.14,Live,,0,0,0,{\k42}traditional {\k32}AI {\k72}is {\k12}its
+Dialogue: 0,0:03:21.14,0:03:22.78,Live,,0,0,0,{\k50}dependence {\k34}on {\k32}vast {\k48}amounts
+Dialogue: 0,0:03:22.78,0:03:24.54,Live,,0,0,0,{\k30}of {\k38}labeled {\k36}{\k24}structured {\k38}data
+Dialogue: 0,0:03:25.10,0:03:25.90,Live,,0,0,0,{\k20}If {\k10}the {\k26}data {\k24}is
+Dialogue: 0,0:03:25.90,0:03:27.88,Live,,0,0,0,{\k34}biased {\k44}or {\k56}incomplete {\k56}{\k8}the
+Dialogue: 0,0:03:27.88,0:03:29.30,Live,,0,0,0,{\k56}AI’s {\k36}decisions {\k34}will {\k16}be
+Dialogue: 0,0:03:29.30,0:03:31.08,Live,,0,0,0,{\k26}too {\k66}{\k14}It {\k36}struggles {\k36}with
+Dialogue: 0,0:03:31.08,0:03:33.14,Live,,0,0,0,{\k48}ambiguity {\k42}and {\k32}novel {\k74}situations
+Dialogue: 0,0:03:33.34,0:03:34.36,Live,,0,0,0,{\k18}not {\k28}seen {\k16}in {\k40}training
+Dialogue: 0,0:03:34.36,0:03:36.66,Live,,0,0,0,{\k106}Generative {\k26}AI {\k68}faces {\k30}its
+Dialogue: 0,0:03:36.66,0:03:37.98,Live,,0,0,0,{\k24}own {\k32}unique {\k66}challenges
+Dialogue: 0,0:03:38.68,0:03:40.18,Live,,0,0,0,{\k76}hallucinations {\k22}where {\k18}it {\k34}invents
+Dialogue: 0,0:03:40.18,0:03:41.80,Live,,0,0,0,{\k46}facts {\k32}{\k14}the {\k50}difficulty {\k20}in
+Dialogue: 0,0:03:41.80,0:03:43.42,Live,,0,0,0,{\k54}controlling {\k26}its {\k38}output {\k44}to
+Dialogue: 0,0:03:43.42,0:03:45.06,Live,,0,0,0,{\k34}ensure {\k46}ethical {\k40}or {\k44}factual
+Dialogue: 0,0:03:45.06,0:03:46.80,Live,,0,0,0,{\k74}correctness {\k28}{\k24}and {\k12}the {\k36}immense
+Dialogue: 0,0:03:46.80,0:03:49.12,Live,,0,0,0,{\k84}computational {\k52}power {\k60}required {\k36}for
+Dialogue: 0,0:03:49.12,0:03:50.48,Live,,0,0,0,{\k40}training {\k30}and {\k56}operation
+Dialogue: 0,0:03:51.16,0:03:52.06,Live,,0,0,0,{\k26}Think {\k24}about {\k14}a {\k26}self
+Dialogue: 0,0:03:52.06,0:03:53.60,Live,,0,0,0,{\k38}driving {\k34}car {\k50}That {\k32}relies
+Dialogue: 0,0:03:53.60,0:03:55.34,Live,,0,0,0,{\k58}heavily {\k26}on {\k48}traditional {\k42}AI
+Dialogue: 0,0:03:55.34,0:03:58.00,Live,,0,0,0,{\k86}recognizing {\k58}pedestrians {\k62}{\k22}predicting {\k38}other
+Dialogue: 0,0:03:58.00,0:03:59.92,Live,,0,0,0,{\k30}cars {\k22}{\k24}movements {\k54}{\k8}and {\k44}navigating
+Dialogue: 0,0:04:00.56,0:04:01.32,Live,,0,0,0,{\k24}It {\k20}needs {\k22}to {\k10}be
+Dialogue: 0,0:04:01.32,0:04:03.66,Live,,0,0,0,{\k38}precise {\k50}and {\k38}predictable {\k70}{\k38}Now
+Dialogue: 0,0:04:03.66,0:04:05.18,Live,,0,0,0,{\k56}imagine {\k24}an {\k28}AI {\k44}that
+Dialogue: 0,0:04:05.18,0:04:06.52,Live,,0,0,0,{\k40}designs {\k26}the {\k50}asterisk {\k18}next
+Dialogue: 0,0:04:06.52,0:04:08.42,Live,,0,0,0,{\k56}generation {\k74}asterisk {\k28}of {\k32}self
+Dialogue: 0,0:04:08.42,0:04:10.12,Live,,0,0,0,{\k38}driving {\k30}car {\k38}models {\k64}or
+Dialogue: 0,0:04:10.12,0:04:11.38,Live,,0,0,0,{\k34}writes {\k22}the {\k36}safety {\k34}manual
+Dialogue: 0,0:04:11.38,0:04:12.88,Live,,0,0,0,{\k32}for {\k20}it {\k48}{\k36}That's {\k14}where
+Dialogue: 0,0:04:12.88,0:04:14.68,Live,,0,0,0,{\k54}generative {\k36}AI {\k64}enters {\k26}the
+Dialogue: 0,0:04:14.68,0:04:16.38,Live,,0,0,0,{\k34}picture {\k38}{\k18}It's {\k18}about {\k62}innovation
+Dialogue: 0,0:04:16.38,0:04:18.06,Live,,0,0,0,{\k26}and {\k48}creation {\k46}beyond {\k48}current
+Dialogue: 0,0:04:18.06,0:04:20.20,Live,,0,0,0,{\k68}paradigms {\k56}{\k22}And {\k12}the {\k56}strangest
+Dialogue: 0,0:04:20.20,0:04:22.10,Live,,0,0,0,{\k38}part {\k56}{\k10}While {\k44}traditional {\k42}AI
+Dialogue: 0,0:04:22.10,0:04:23.42,Live,,0,0,0,{\k38}can {\k18}tell {\k18}you {\k58}asterisk
+Dialogue: 0,0:04:23.42,0:04:24.56,Live,,0,0,0,{\k24}why {\k62}asterisk {\k10}it {\k18}made
+Dialogue: 0,0:04:24.56,0:04:25.42,Live,,0,0,0,{\k12}a {\k42}decision {\k24}with {\k8}a
+Dialogue: 0,0:04:25.42,0:04:27.24,Live,,0,0,0,{\k22}degree {\k18}of {\k72}transparency {\k50}{\k20}the
+Dialogue: 0,0:04:27.24,0:04:28.70,Live,,0,0,0,{\k42}internal {\k50}workings {\k14}of {\k40}complex
+Dialogue: 0,0:04:28.70,0:04:30.30,Live,,0,0,0,{\k58}generative {\k44}models {\k46}can {\k12}be
+Dialogue: 0,0:04:30.30,0:04:32.28,Live,,0,0,0,{\k56}incredibly {\k54}opaque {\k68}making {\k20}it
+Dialogue: 0,0:04:32.28,0:04:33.56,Live,,0,0,0,{\k22}hard {\k22}to {\k38}pinpoint {\k46}exactly
+Dialogue: 0,0:04:33.56,0:04:35.50,Live,,0,0,0,{\k86}asterisk {\k36}how {\k56}asterisk {\k16}they
+Dialogue: 0,0:04:35.50,0:04:36.60,Live,,0,0,0,{\k34}arrive {\k30}at {\k8}a {\k38}specific
+Dialogue: 0,0:04:36.60,0:04:38.76,Live,,0,0,0,{\k48}creative {\k48}output {\k44}{\k12}So {\k64}traditional
+Dialogue: 0,0:04:38.76,0:04:40.12,Live,,0,0,0,{\k38}AI {\k46}is {\k14}your {\k38}expert
+Dialogue: 0,0:04:40.12,0:04:41.84,Live,,0,0,0,{\k50}analyst {\k32}and {\k42}automated {\k48}worker
+Dialogue: 0,0:04:41.84,0:04:43.90,Live,,0,0,0,{\k80}mastering {\k64}existing {\k52}knowledge
+Dialogue: 0,0:04:44.52,0:04:45.96,Live,,0,0,0,{\k46}Generative {\k36}AI {\k48}is {\k14}your
+Dialogue: 0,0:04:45.96,0:04:47.96,Live,,0,0,0,{\k64}imaginative {\k56}creator {\k60}pushing {\k20}the
+Dialogue: 0,0:04:47.96,0:04:49.44,Live,,0,0,0,{\k36}boundaries {\k28}of {\k28}what’s {\k46}possible
+Dialogue: 0,0:04:50.04,0:04:51.32,Live,,0,0,0,{\k18}Both {\k24}are {\k40}vital {\k46}but
+Dialogue: 0,0:04:51.32,0:04:53.30,Live,,0,0,0,{\k20}serve {\k54}fundamentally {\k60}different {\k54}purposes
+Dialogue: 0,0:04:53.68,0:04:55.28,Live,,0,0,0,{\k52}Understanding {\k34}this {\k22}core {\k52}difference
+Dialogue: 0,0:04:55.28,0:04:57.50,Live,,0,0,0,{\k54}isn't {\k28}just {\k64}academic {\k76}it
+Dialogue: 0,0:04:57.50,0:04:58.56,Live,,0,0,0,{\k20}helps {\k24}you {\k36}leverage {\k26}the
+Dialogue: 0,0:04:58.56,0:04:59.46,Live,,0,0,0,{\k18}right {\k38}tool {\k22}for {\k12}the
+Dialogue: 0,0:04:59.46,0:05:01.10,Live,,0,0,0,{\k18}right {\k36}job {\k54}and {\k56}anticipate
+Dialogue: 0,0:05:01.10,0:05:02.64,Live,,0,0,0,{\k34}how {\k22}these {\k68}technologies {\k30}will
+Dialogue: 0,0:05:02.64,0:05:04.12,Live,,0,0,0,{\k40}continue {\k24}to {\k34}reshape {\k50}industries
+Dialogue: 0,0:05:04.12,0:05:05.72,Live,,0,0,0,{\k62}and {\k14}our {\k28}daily {\k46}lives
+Dialogue: 0,0:05:06.22,0:05:07.48,Live,,0,0,0,{\k26}The {\k22}true {\k36}power {\k42}isn't
+Dialogue: 0,0:05:07.48,0:05:08.52,Live,,0,0,0,{\k14}in {\k34}choosing {\k32}one {\k24}over
+Dialogue: 0,0:05:08.52,0:05:09.60,Live,,0,0,0,{\k16}the {\k26}other {\k42}{\k12}but {\k12}in
+Dialogue: 0,0:05:09.60,0:05:11.54,Live,,0,0,0,{\k56}recognizing {\k34}their {\k36}distinct {\k68}strengths
+Dialogue: 0,0:05:11.54,0:05:13.04,Live,,0,0,0,{\k28}and {\k46}potential {\k28}for {\k38}synergy
+Dialogue: 0,0:05:13.34,0:05:14.66,Live,,0,0,0,{\k38}Subscribe {\k28}to {\k22}Tool {\k44}Dojo
+Dialogue: 0,0:05:14.66,0:05:15.82,Live,,0,0,0,{\k42}for {\k20}more {\k16}known {\k38}nonsense
+Dialogue: 0,0:05:15.82,0:05:16.92,Live,,0,0,0,{\k48}AI {\k52}insights
