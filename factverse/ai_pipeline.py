@@ -1440,6 +1440,12 @@ def place_description_blocks(script: dict) -> None:
                  for i, it in enumerate(script.get("roundup_items") or [], 1) if it.get("url")]
         if lines:
             desc = desc[:_MAX_DESC].rstrip() + "\n\n" + _SRC_MARK + "\n" + "\n".join(lines)
+    # spec v3-R D11: the one-line answer + its evidence status is the FIRST line.
+    # LAST here, so every block above lands below it; idempotent (called twice).
+    line = cohort_answer_line(script)
+    if line and not desc.startswith(line):
+        desc = "\n".join(l for l in desc.split("\n") if l.strip() != line).strip()
+        desc = f"{line}\n\n{desc}"
     script["description"] = desc
 
 
@@ -1643,18 +1649,38 @@ def tool_chapters(script: dict, starts: list, shift: float) -> str:
     return "\n".join(rows)
 
 
+def cohort_answer_line(script) -> str:
+    """spec v3-R D11: "<one-line answer> — <evidence status>" for a cohort video with an
+    answer_line, else "". The status is the evidence label (the docs route's "From the
+    docs — not tested by ToolDojo"), or "Not tested by <channel>" when there is none."""
+    try:
+        if not cohort_on() or not isinstance(script, dict):
+            return ""
+        ans = str(script.get("answer_line") or "").strip()
+        if not ans:
+            return ""
+        ev = script.get("evidence") if isinstance(script.get("evidence"), dict) else {}
+        status = evidence.label(str(ev.get("source") or "")) or f"Not tested by {fv.CHANNEL_NAME}"
+        return f"{ans} — {status}"
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 def pinned_comment(script: dict, prev_url: str = "") -> str:
     """spec v3-E #7: the auto-comment is the only API-writable engagement surface.
     Under a tool video it carries the two things a viewer opens the comments for —
     the exact command and the cheat sheet — instead of a news question."""
+    # spec v3-R D11: a cohort video's channel comment leads with the one-line answer
+    lead = cohort_answer_line(script)
+    lead = f"{lead}\n\n" if lead else ""
     if script.get("format") == "tool" and script.get("deliverable"):
-        txt = "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
+        txt = lead + "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
         if script.get("cheat_sheet"):
             # same promise as the description, so the same destination (v3-F.1 #5)
             txt += ("\n📄 Free cheat sheet: "
                     + site.public_url(site.page_name(script["cheat_sheet"])))
         return txt + "\nWhat should I test next?"
-    base = ("Sources are in the description. What's your take — hype or turning point? 👇")
+    base = lead + ("Sources are in the description. What's your take — hype or turning point? 👇")
     if prev_url:
         base += f"\n\nMissed the last one: {prev_url}"
     return base
