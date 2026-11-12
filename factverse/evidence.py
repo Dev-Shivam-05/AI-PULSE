@@ -39,7 +39,7 @@ from urllib.parse import urljoin, urlparse
 from factverse import config as fv
 
 # ------------------------------------------------------------- the contract
-SOURCES = ("hosted", "author", "sandbox", "none")
+SOURCES = ("hosted", "author", "sandbox", "none", "docs")
 STATUSES = ("NOT_RUN", "PASSED_FIXED_TEST", "FAILED_FIXED_TEST", "TIMED_OUT", "INCONCLUSIVE")
 # viewer wording, verbatim from review round 3 (03_chatgpt.md §1)
 WORDING = {
@@ -49,7 +49,15 @@ WORDING = {
     "TIMED_OUT": "Did not complete within our 120-second execution limit.",
     "INCONCLUSIVE": "We could not establish a result.",
 }
-LABELS = {"hosted": "Hosted test", "author": "Author demo", "sandbox": "Sandbox test", "none": ""}
+LABELS = {"hosted": "Hosted test", "author": "Author demo", "sandbox": "Sandbox test", "none": "",
+          # spec v3-R D4: the documentation route that replaced row 17's skip
+          "docs": f"From the docs — not tested by {fv.CHANNEL_NAME}"}
+# spec v3-R D4 (docs/spec/ai-pulse-v3r.md): while the recovery cohort is on, the
+# on-screen labels are the owner's locked wording. Scoped to the cohort so the
+# Live Trials show and the K.1 site keep the P.1 contract they were built on.
+COHORT_LABELS = {"hosted": f"Tested by {fv.CHANNEL_NAME} — hosted demo",
+                 "author": f"Author's demo — not tested by {fv.CHANNEL_NAME}",
+                 "docs": LABELS["docs"]}
 
 # ------------------------------------------------------------- locked values
 CAPTURE_DEADLINE = 120.0            # round 3 §3(a): total hosted-demo capture deadline
@@ -92,7 +100,10 @@ def wording(status: str) -> str:
 
 
 def label(source: str) -> str:
-    return LABELS.get(str(source or ""), "")
+    src = str(source or "")
+    if src in COHORT_LABELS and fv.flag("recovery_cohort", False):
+        return COHORT_LABELS[src]
+    return LABELS.get(src, "")
 
 
 def empty(note: str = "") -> dict:
@@ -595,7 +606,11 @@ def modification(plan: dict, asset_seconds: float) -> str:
 def attribution_line(ev) -> str:
     """The ONE description line an author demo must carry: pinned asset link,
     licence, copyright notice, NOTICE material, modification disclosure. "" for
-    anything that is not an admissible-shaped author record. PURE."""
+    anything that is not an admissible-shaped author record. PURE.
+    v3-R D4: a docs-route video carries its label as one line too."""
+    if isinstance(ev, dict) and ev.get("source") == "docs":
+        return (f"{DOCS_MARK} {LABELS['docs']}. Features and figures in this video are the "
+                f"project's own claims.")
     if not isinstance(ev, dict) or ev.get("source") != "author":
         return ""
     r = ev.get("rights")
@@ -1204,7 +1219,7 @@ def writer_brief(ev) -> str:
     ch = fv.CHANNEL_NAME
     if ev["source"] == "hosted":
         return (f"EVIDENCE (the video OPENS on this footage; these rules override STRUCTURE):\n"
-                f"- Source label on screen: \"Hosted test\" ({ev['captured_at']}). {ch}'s pipeline "
+                f"- Source label on screen: \"{label('hosted')}\" ({ev['captured_at']}). {ch}'s pipeline "
                 f"opened the tool's own hosted demo ({ev['url']}) in a clean browser and ran it "
                 f"with {ev['input']}.\n"
                 f"- Observed: {ev['observed']}\n"
@@ -1218,7 +1233,7 @@ def writer_brief(ev) -> str:
                 f"attribute it (\"the authors claim …\").\n\n")
     r = ev["rights"]
     return (f"EVIDENCE (the video OPENS on this footage; these rules override STRUCTURE):\n"
-            f"- Source label on screen: \"Author demo\". The footage is the repository's own demo "
+            f"- Source label on screen: \"{label('author')}\". The footage is the repository's own demo "
             f"media ({r['path']}), published by its authors. {ch} did NOT run this tool.\n"
             f"- What the source says the demo shows: {ev['observed']}\n"
             f"- Status: {ev['wording']}\n"
@@ -1228,6 +1243,43 @@ def writer_brief(ev) -> str:
             f"says {ch} ran the tool. Say it is not independently tested by scene 2.\n"
             f"- Any speed, size or cost figure is the authors' claim: attribute it "
             f"(\"the authors claim …\").\n\n")
+
+
+# ------------------------------------------------------------ v3-R D4: the docs route
+DOCS_MARK = "📘"
+
+
+def docs_record(prev=None) -> dict:
+    """spec v3-R D4: the evidence record for a video built from the project's own
+    documentation — what replaced row 17's skip while the recovery cohort is on.
+    Not admissible (nothing was run, no clip): the label is burned as a chip, the
+    writer is told it may not claim a test. `prev` is gather()'s answer, kept only
+    for its log note. PURE."""
+    note = prev.get("note", "") if isinstance(prev, dict) else ""
+    ev = empty(note or "documentation route")
+    ev.update(source="docs", label=LABELS["docs"])
+    return ev
+
+
+def docs_brief() -> str:
+    """The writer's evidence block for a docs-route video. PURE."""
+    ch = fv.CHANNEL_NAME
+    return (f"EVIDENCE ROUTE: documentation only. On-screen label: \"{LABELS['docs']}\". "
+            f"{ch} did NOT run, install or test this tool.\n"
+            f"CLAIM RULES:\n"
+            f"- Everything the tool does, supports or achieves is the authors' claim: attribute it "
+            f"(\"the README says …\", \"the authors claim …\").\n"
+            f"- Never write \"we tested\", \"we tried\", \"we ran\", \"in our test\", or that it "
+            f"works on the viewer's machine.\n"
+            f"- Say plainly, by scene 3, that {ch} has not tested it.\n\n")
+
+
+def screen_label(ev) -> str:
+    """The label a docs-route video carries as an on-screen chip from 0:00 (D4/D5);
+    "" for every other record (an admissible clip burns its own label). PURE."""
+    if isinstance(ev, dict) and ev.get("source") == "docs":
+        return LABELS["docs"]
+    return ""
 
 
 _OVERCLAIM_AUTHOR = re.compile(
@@ -1248,13 +1300,16 @@ def overclaims(script) -> list[str]:
     if not isinstance(script, dict) or not isinstance(script.get("evidence"), dict):
         return []
     src = script["evidence"].get("source")
-    rx = _OVERCLAIM_AUTHOR if src == "author" else _OVERCLAIM_HOSTED if src == "hosted" else None
-    if rx is None:
-        return []
+    # v3-R D4: a docs-route video ran nothing — both the testing and the
+    # your-hardware claims are over-claims
+    rxs = ([_OVERCLAIM_AUTHOR] if src == "author" else [_OVERCLAIM_HOSTED] if src == "hosted"
+           else [_OVERCLAIM_AUTHOR, _OVERCLAIM_HOSTED] if src == "docs" else [])
     hits = []
     for sc in script.get("scenes") or []:
-        for m in rx.finditer(str((sc or {}).get("narration", "") if isinstance(sc, dict) else "")):
-            hits.append(m.group(0))
+        text = str((sc or {}).get("narration", "") if isinstance(sc, dict) else "")
+        for rx in rxs:
+            for m in rx.finditer(text):
+                hits.append(m.group(0))
     return hits
 
 
