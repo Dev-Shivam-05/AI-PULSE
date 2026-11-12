@@ -25,7 +25,7 @@
   - The docs chip frame was rendered and read.
   - The assembled prompt and description were read.
   - An independent review found 9 issues; all were fixed and test-pinned, or recorded below.
-- **Commits:** 17 on `v3-phase-r2`. **Not pushed:** the Claude OS guard hook blocked `git push`, so the owner pushes.
+- **Commits:** 17 on `v3-phase-r2` (including this handoff fix). **Not pushed:** the Claude OS guard hook blocked `git push`, so the owner pushes.
 
 ## Files changed
 - `factverse/ai_pipeline.py` — cohort schedule, lanes, queue, docs route, prompt contract, rewrite-pass handling, render, Shorts slot and cooldown, answer line, packaging fixer, README sections, concrete queries.
