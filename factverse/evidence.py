@@ -1300,10 +1300,12 @@ def overclaims(script) -> list[str]:
     if not isinstance(script, dict) or not isinstance(script.get("evidence"), dict):
         return []
     src = script["evidence"].get("source")
-    # v3-R D4: a docs-route video ran nothing — both the testing and the
-    # your-hardware claims are over-claims
-    rxs = ([_OVERCLAIM_AUTHOR] if src == "author" else [_OVERCLAIM_HOSTED] if src == "hosted"
-           else [_OVERCLAIM_AUTHOR, _OVERCLAIM_HOSTED] if src == "docs" else [])
+    # v3-R D4: a docs-route video ran nothing, so a first-person testing claim is an
+    # over-claim — the author-demo rule. The hosted rule is NOT applied: it matches
+    # attributed sentences ("the model card says it works offline"), which is exactly
+    # the wording docs_brief asks for, and D8 lets only truth failures block.
+    rxs = ([_OVERCLAIM_AUTHOR] if src in ("author", "docs") else [_OVERCLAIM_HOSTED] if src == "hosted"
+           else [])
     hits = []
     for sc in script.get("scenes") or []:
         text = str((sc or {}).get("narration", "") if isinstance(sc, dict) else "")

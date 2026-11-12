@@ -410,7 +410,10 @@ def cohort_packaging(s: dict, tool_title: str) -> dict:
         tool = str(tool_title or "").split(":")[0].split("/")[-1].strip()
         norm = lambda t: re.sub(r"[^a-z0-9]", "", str(t).lower())  # noqa: E731
         title = str(s.get("title") or "")
-        if tool and norm(tool) not in norm(title):
+        words = [w for w in re.split(r"[^a-z]+", tool.lower()) if len(w) >= 4]
+        named = (norm(tool) in norm(title)
+                 or (words and sum(1 for w in words if w in title.lower()) * 2 >= len(words)))
+        if tool and not named:
             new = f"{tool}: {title}".strip(": ")
             if len(new) <= gates.TITLE_MAX:
                 print(f"     🏷️ D6: the title names the tool — {new!r}")
@@ -1421,7 +1424,7 @@ def place_description_blocks(script: dict) -> None:
     ev_line = evidence.attribution_line(script.get("evidence"))
     if ev_line and ev_line not in desc:
         desc = "\n".join(l for l in desc.split("\n")
-                         if not l.startswith(evidence.AUTHOR_MARK)).strip()
+                         if not l.startswith((evidence.AUTHOR_MARK, evidence.DOCS_MARK))).strip()
         i = desc.find(_DL_MARK)
         end = desc.find("\n\n", i) if i >= 0 else -1
         if i >= 0:
@@ -1763,6 +1766,16 @@ def cohort_day(day: _dt.date) -> str:
     if start and day < start:
         return "rest"
     return "long" if day.weekday() in COHORT_LONG_WEEKDAYS else "rest"
+
+
+def _cohort_slot_day() -> _dt.date:
+    """The day today's long-form would go PUBLIC: scheduling.long_slot rolls to
+    tomorrow when the run is within 15 min of (or past) the slot, so a late retry
+    on a Monday would otherwise publish on a Tuesday."""
+    try:
+        return _dt.date.fromisoformat(scheduling.long_slot()[:10])
+    except Exception:  # noqa: BLE001
+        return _dt.datetime.utcnow().date()
 
 
 def cohort_short_slot(long_publish_at) -> str | None:
@@ -2492,6 +2505,12 @@ def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = N
             scene_clips = cap["scene_clips"]
             tool_shot = cap.get("screenshot") or ""
             print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        elif cohort_on():
+            # spec v3-R D8/D9: readable evidence is render integrity, and the cohort
+            # forbids unrelated stock — no readable page, no video (the 14:53 cron retries)
+            print("  🛑 No readable page visuals — publishing nothing (cohort D8/D9).")
+            record_run(status="VISUALS_BLOCKED", format=fmt, title=script["title"])
+            return None
         else:
             print("  ⚠️ Screen capture failed — stock visuals for this run.")
     if scene_clips is None:
@@ -2650,7 +2669,7 @@ def run(publish: bool = False, force_format: str | None = None,
         # spec v3-R D1: long-forms on Mon/Wed/Fri only. A scheduled run on any other
         # day exits clean (no failure issue, nothing published); a forced tool run is
         # the owner's own supervised call and is not held back.
-        if publish and not force_format and cohort_day(_dt.datetime.utcnow().date()) != "long":
+        if publish and not force_format and cohort_day(_cohort_slot_day()) != "long":
             print("  🗓️ Recovery cohort rest day (D1: long-forms Mon/Wed/Fri) — publishing nothing.")
             record_run(status="COHORT_REST_DAY", format="-")
             return {"status": "COHORT_REST_DAY"}
@@ -2704,13 +2723,26 @@ def run(publish: bool = False, force_format: str | None = None,
     else:
         # critique first (it now cuts repetition), then the floor (sanity only),
         # then the CAP — padding is the enemy, not brevity
-        script = critique_pass(script)
-        script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
-        script = enforce_max_length(script, MAX_WORDS)
+        if cohort_on():
+            # spec v3-R D5/D6: critique_pass judges scene 1, the titles and the thumbnail
+            # by the generic hook rules (its rule 5 wants a number or FREE on the thumb)
+            # and rewrote "LINUX ONLY" into a star count. A cohort script skips it, as a
+            # Pilot A script does; the length passes still run, and the packaging the
+            # writer produced under the cohort contract is put back after them.
+            keep = {k: script.get(k) for k in ("title", "titles", "thumb_text", "answer_line")
+                    if script.get(k)}
+            script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+            script = enforce_max_length(script, MAX_WORDS)
+            script.update(keep)
+            cohort_packaging(script, script.get("signal_title") or script["title"])
+        else:
+            script = critique_pass(script)
+            script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+            script = enforce_max_length(script, MAX_WORDS)
 
     # spec v3-P.2 row 13: query-map packaging for a tool video with admissible evidence
     if (fv.flag("query_map", False) and script.get("format") == "tool"
-            and evidence.admissible(script.get("evidence"))):
+            and evidence.admissible(script.get("evidence")) and not cohort_on()):
         if querymap.apply(script):
             print(f"  🔎 Query-map title: {script['title']!r}")
 
@@ -2889,13 +2921,9 @@ def run(publish: bool = False, force_format: str | None = None,
     audio_dur, scene_clips, l2_rec = r["audio_dur"], r["scene_clips"], r["l2_rec"]
     intro_shift, src_domain = r["intro_shift"], r["src_domain"]
     thumb, shorts = r["thumb"], r["shorts"]
-    if arm or (r["clean"] and thumb is None and not shorts):
+    if arm:
         # the clean copy (no captions) is what the thumbnail and the Shorts are cut
-        # from — made only now, so a failed gate never pays for them.
-        # v3-R: a NON-pilot tool video with evidence_engine on also takes the
-        # clean-copy branch in _render_longform and used to stop there — it would have
-        # been uploaded with YouTube's auto thumbnail and no Shorts (latent since
-        # v3-P.1; no tool video was published after that merge, so it never showed).
+        # from — made only now, so a failed gate never pays for them
         thumb, shorts = _make_extras(r["clean"], script, words, starts, src_domain, r["tool_shot"])
     # v3-S.1: the native concept Short and the day's pair, read right after the
     # thumbnail/Shorts call on BOTH paths (_make_extras ran inside _render_longform

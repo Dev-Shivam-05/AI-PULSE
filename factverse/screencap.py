@@ -432,6 +432,9 @@ def capture(script: dict) -> dict | None:
         rec_dir.mkdir(parents=True, exist_ok=True)
         readable = _readable_recording(browse_plan(url), rec_dir,
                                        estimate_video_seconds(script)) if readable_mode() else None
+        if readable_mode() and not readable:
+            # D9: a full-desktop scroll is what the cohort forbids — no fallback to it
+            return None
         if readable:
             trimmed, shot, n_pages = readable
             print(f"  📖 Readable stills (D9): {n_pages} stills at {STILL_VIEW_W}x{STILL_VIEW_H} "
