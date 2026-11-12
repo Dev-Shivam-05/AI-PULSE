@@ -38,6 +38,8 @@
     "debate_format": true,
     "lane_mix_v2": true,
     "recovery_cohort": true,
+    "comment_replies": true,
+    "cohort_reads": true,
     "cohort_start": "2026-11-16",
     "cohort_queue": [
         {"parent": "4MTEDi4MdnQ", "family": "gpu-unlocking", "title": "Zagitta/gpu-unlock", "url": "https://github.com/Zagitta/gpu-unlock", "question": "Which GPUs and operating systems does gpu-unlock support, and what about Windows and RTX 50 cards?"},

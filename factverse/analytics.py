@@ -368,6 +368,25 @@ def collect(yta=None, ytr=None) -> dict:
                 print(f"  🧪 Pilot A: {len(reads)} retention read(s)")
         except Exception as e:  # noqa: BLE001
             print(f"  ⚠️ pilot reads skipped: {e}")
+    # spec v3-R.4: first-7-day retention curves for the cohort long-forms and, once,
+    # the 11 frozen baseline videos (R0). Own try + kill switch `cohort_reads`: a
+    # refused report costs only these reads, never the snapshot.
+    if fv.flag("cohort_reads", False):
+        try:
+            from factverse import cohort
+            prior = []
+            if OUT.exists():
+                for line in OUT.read_text(encoding="utf-8").splitlines():
+                    try:
+                        prior.append(json.loads(line))
+                    except ValueError:
+                        continue
+            cr = cohort.collect(yta, learn.read_runs(), prior, today)
+            if cr:
+                snap["cohort_reads"] = cr
+                print(f"  📈 Cohort: {len(cr)} first-7-day retention read(s)")
+        except Exception as e:  # noqa: BLE001
+            print(f"  ⚠️ cohort reads skipped: {e}")
     # v3-G.3 #10: impressions + CTR; its own seam, kill switch `reach_report`
     if fv.flag("reach_report", False):
         reach = collect_reach(ytr)
