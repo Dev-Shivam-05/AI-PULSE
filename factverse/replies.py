@@ -37,6 +37,12 @@ MAX_THREADS = 100             # two pages of commentThreads.list
 SOURCE_CHARS = 8000           # source text handed to the model
 REPLY_MAX = 450               # characters in a posted reply
 STATUSES = ("answered", "not_question", "no_source", "failed")
+# a domain written without a scheme ("evil-example.com/win") — the model is told
+# "no links", but the text is posted as the channel, so it is enforced here too
+_DOMAIN = re.compile(r"\b(?:[a-z0-9-]+\.)+(?:com|net|org|io|ai|co|xyz|ru|cn|tk|info|biz|site|online|"
+                     r"top|click|link|app|dev|me|gg|ly|to|in|us|uk)\b(?:/\S*)?", re.I)
+_BAIT = re.compile(r"@\w|\b(?:dm|telegram|whatsapp|giveaway|crypto|wallet|airdrop|invest|"
+                   r"discount code|promo code)\b", re.I)
 
 
 def enabled() -> bool:
@@ -156,6 +162,8 @@ def clean_reply(text) -> str:
     (a model-written URL is not ours to publish), no markdown emphasis."""
     t = str(text or "") if not isinstance(text, (list, dict)) else ""
     t = re.sub(r"https?://\S+", "", t)
+    t = re.sub(r"\bwww\.\S+", "", t, flags=re.I)
+    t = _DOMAIN.sub("", t)
     t = re.sub(r"[*`#]", "", t)
     t = re.sub(r"\s+", " ", t).strip()
     if len(t) > REPLY_MAX:
@@ -168,12 +176,16 @@ def decide(raw) -> tuple[str, str, bool]:
     """(status, reply, settled) from the model's answer."""
     if not isinstance(raw, dict):
         return "failed", "", False
-    if not raw.get("question") or not raw.get("on_topic"):
+    if raw.get("question") is not True or raw.get("on_topic") is not True:
         return "not_question", "", False
     reply = clean_reply(raw.get("reply"))
     if not reply:
         return "failed", "", False
-    return "answered", reply, bool(raw.get("settled"))
+    if _BAIT.search(reply):
+        # a viewer comment can carry instructions; the channel never posts contact
+        # bait, handles or money talk, whatever the model was talked into
+        return "not_question", "", False
+    return "answered", reply, raw.get("settled") is True
 
 
 # ------------------------------------------------------------------ the API seams

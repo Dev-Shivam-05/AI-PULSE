@@ -42,6 +42,9 @@ SHORTS_MIN_IMPRESSIONS = 50
 DELIVERY_DAY, OUTCOME_DAY = 14, 21
 PLANNED_LONG, PLANNED_SHORTS = 6, 6
 READ_LAG_DAYS = 2             # Analytics data lag before a 7-day window is complete
+COHORT_DAYS = 14              # D1: the six long-forms fall inside days 0..13
+LONG_WEEKDAYS = (0, 2, 4)     # D1: Mon, Wed, Fri (ai_pipeline.COHORT_LONG_WEEKDAYS)
+MAX_READ_ATTEMPTS = 5         # a curve still unusable after this many reads is given up
 USABLE_POINTS = 10            # a curve with fewer points is not a curve (pilot.USABLE_POINTS)
 REPLY_HOURS = 24              # D11
 OUT_DIR = fv.BASE / "output" / "cohort"
@@ -67,16 +70,33 @@ def _date(v) -> dt.date | None:
 
 # ---------------------------------------------------------------- the cohort itself
 def cohort_rows(rows: list, start: dt.date | None) -> list[dict]:
-    """PUBLISHED long-forms whose publish day is on/after the cohort start."""
+    """PUBLISHED long-forms whose publish day falls inside the cohort's 14 days."""
     if not start:
         return []
+    end = start + dt.timedelta(days=COHORT_DAYS)
     out = []
     for r in rows or []:
         if not isinstance(r, dict) or r.get("status") != "PUBLISHED":
             continue
         d = _date(r.get("publish_at") or r.get("timestamp"))
-        if d and d >= start and learn.video_id(r.get("youtube_url") or ""):
+        if d and start <= d < end and learn.video_id(r.get("youtube_url") or ""):
             out.append(r)
+    return out
+
+
+def missed_days(rows: list, start: dt.date | None, today: dt.date) -> list[str]:
+    """Scheduled long-form days (Mon/Wed/Fri inside the window, up to yesterday) with
+    no PUBLISHED long-form going public that day — however the day was lost."""
+    if not start:
+        return []
+    published = {_date(r.get("publish_at") or r.get("timestamp")) for r in cohort_rows(rows, start)}
+    out = []
+    for i in range(COHORT_DAYS):
+        d = start + dt.timedelta(days=i)
+        if d >= today:
+            break
+        if d.weekday() in LONG_WEEKDAYS and d not in published:
+            out.append(d.isoformat())
     return out
 
 
@@ -85,9 +105,10 @@ def window(published: dt.date) -> tuple[dt.date, dt.date]:
     return published, published + dt.timedelta(days=6)
 
 
-def due(videos: dict, stored: dict, today: dt.date) -> list[tuple[str, dt.date, dt.date]]:
+def due(videos: dict, stored: dict, today: dt.date,
+        attempts: dict | None = None) -> list[tuple[str, dt.date, dt.date]]:
     """(video, start, end) for every video whose 7-day window has closed (plus the data
-    lag) and which has no usable curve stored yet. PURE."""
+    lag), with no usable curve stored yet and fewer than MAX_READ_ATTEMPTS reads. PURE."""
     out = []
     for vid, pub in sorted(videos.items()):
         if not pub:
@@ -95,9 +116,19 @@ def due(videos: dict, stored: dict, today: dt.date) -> list[tuple[str, dt.date, 
         start, end = window(pub)
         if today < end + dt.timedelta(days=READ_LAG_DAYS):
             continue
-        if usable(stored.get(vid)):
+        if usable(stored.get(vid)) or (attempts or {}).get(vid, 0) >= MAX_READ_ATTEMPTS:
             continue
         out.append((vid, start, end))
+    return out
+
+
+def read_attempts(snapshots: list) -> dict:
+    """video -> how many snapshots carry a read for it."""
+    out: dict = {}
+    for s in snapshots or []:
+        reads = s.get("cohort_reads") if isinstance(s, dict) else None
+        for vid in (reads or {}) if isinstance(reads, dict) else []:
+            out[vid] = out.get(vid, 0) + 1
     return out
 
 
@@ -137,7 +168,7 @@ def collect(yta, rows: list, snapshots: list, today: dt.date | None = None) -> d
     videos.update({learn.video_id(r.get("youtube_url") or ""): _date(r.get("publish_at") or r.get("timestamp"))
                    for r in cohort_rows(rows, start_date())})
     out = {}
-    for vid, start, end in due(videos, stored_reads(snapshots), today):
+    for vid, start, end in due(videos, stored_reads(snapshots), today, read_attempts(snapshots)):
         rd = {"start": start.isoformat(), "end": end.isoformat(), "read_on": today.isoformat(),
               "curve": []}
         try:
@@ -200,7 +231,7 @@ def _median(xs: list):
     return round(statistics.median(xs), 2) if xs else None
 
 
-def delivery(rows: list, replied: dict, start: dt.date | None) -> dict:
+def delivery(rows: list, replied: dict, start: dt.date | None, today: dt.date | None = None) -> dict:
     """D13 day-14: what was actually delivered."""
     longs = [r for r in cohort_rows(rows, start)]
     tool = [r for r in longs if r.get("format") == "tool"]
@@ -218,11 +249,11 @@ def delivery(rows: list, replied: dict, start: dt.date | None) -> dict:
             on_time += (at - asked) <= dt.timedelta(hours=REPLY_HOURS)
         except ValueError:
             continue
-    misses = sum(1 for r in rows or [] if isinstance(r, dict) and r.get("status") == "NO_SCRIPT"
-                 and start and (_date(r.get("timestamp")) or dt.date.min) >= start)
+    misses = missed_days(rows, start, today or dt.datetime.utcnow().date())
     return {"long_forms": len(tool), "planned_long": PLANNED_LONG, "native_shorts": native,
             "planned_shorts": PLANNED_SHORTS, "crop_shorts": crops, "filler": len(filler),
-            "logged_misses": misses, "replies": len(answered), "replies_on_time": on_time}
+            "logged_misses": len(misses), "missed_days": misses, "replies": len(answered),
+            "replies_on_time": on_time}
 
 
 def outcome(rows: list, snapshots: list, start: dt.date | None,
@@ -347,7 +378,7 @@ def main(argv=None) -> int:
             replied = {}
         today = dt.datetime.utcnow().date()
         start = start_date()
-        report = format_report(today, start, delivery(rows, replied, start),
+        report = format_report(today, start, delivery(rows, replied, start, today),
                                outcome(rows, snaps, start, shorts))
         print(report)
         OUT_DIR.mkdir(parents=True, exist_ok=True)
