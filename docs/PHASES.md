@@ -55,6 +55,8 @@ One phase per session. A phase that isn't pushed doesn't exist.
 | v3-R.4: read | measure R0 (median 0:07 retention, first-7-day curves of the 11 frozen tool videos); day-14 delivery report (2026-11-30); day-21 outcome report with D13 floors and the D14 stop rule; W0 = 13 min frozen | ⏳ queued | day 14 = 2026-11-30, day 21 = 2026-12-07 |
 
 ## Now (owner, in this order)
+-1. **2026-11-12: merge `v3-phase-r2` before Monday 2026-11-16, then do A1 + A2 in Studio**
+   (texts in docs/HANDOFF.md). Without the merge the old daily lanes keep publishing filler.
 0. **Stop the self-views today — permanently.** Artificial traffic (own views via different
    accounts/IPs) violates YouTube's fake-engagement policy; the penalty ladder ends at channel
    termination, which ends the whole 1-2yr hands-off plan. It also poisons the exact metric
