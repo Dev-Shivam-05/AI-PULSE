@@ -333,7 +333,10 @@ name that is not written there. If a decision is missing, add a row and get one 
 - **`learn.video_id` only matches real 11-character ids.** A test fixture id like "VID1" makes every
   ledger lookup miss silently; use 11-character ids in tests.
 - **Schedule rules are about the PUBLISH day.** `scheduling.long_slot` rolls to tomorrow when the
-  run is late; check a weekday rule against the slot's date, never `utcnow()`.
+  run is late; check a weekday rule against the slot's date, never `utcnow()`. The duplicate
+  guard too: `already_published_today` checked only the run day, so a late run on day N-1 and an
+  earlier run on day N both filled day N's slot — 6 days in the ledger had two long-forms at
+  16:45 (found 2026-11-12). The cron has fired 4-8 h late every day since 10-23.
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
