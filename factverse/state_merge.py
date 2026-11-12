@@ -79,6 +79,10 @@ FILES = (
     # Both are dicts — the generic list union would RAISE on them under bash -e.
     "state/pilot_a.json",
     "state/first_seen.json",
+    # v3-R D11: the viewer comments already answered (or judged not a question). A
+    # DICT keyed by comment id — the generic list union would wipe it to [] — and
+    # losing it would answer the same comment again on every run.
+    "state/replied.json",
 )
 
 
@@ -263,6 +267,9 @@ def merge_file(rel: str, ours_text: str | None, theirs_text: str | None) -> str 
         return json.dumps(merged, ensure_ascii=False, indent=2) + "\n"
     elif rel == "state/first_seen.json":
         merged = _merge_first_seen(theirs, ours)
+    elif rel == "state/replied.json":
+        from factverse import replies  # noqa: PLC0415
+        merged = replies.merge(theirs, ours)
     else:
         merged = _merge_list(theirs, ours)
     return json.dumps(merged, ensure_ascii=False, indent=(2 if "production_log" in rel else None))

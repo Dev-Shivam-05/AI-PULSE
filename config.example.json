@@ -37,6 +37,18 @@
     "reach_report": true,
     "debate_format": true,
     "lane_mix_v2": true,
+    "recovery_cohort": true,
+    "comment_replies": true,
+    "cohort_reads": true,
+    "cohort_start": "2026-11-16",
+    "cohort_queue": [
+        {"parent": "4MTEDi4MdnQ", "family": "gpu-unlocking", "title": "Zagitta/gpu-unlock", "url": "https://github.com/Zagitta/gpu-unlock", "question": "Which GPUs and operating systems does gpu-unlock support, and what about Windows and RTX 50 cards?"},
+        {"parent": "xm2GvY4QttA", "family": "removemacai", "title": "omlahore/RemoveMacAI", "url": "https://github.com/omlahore/RemoveMacAI", "question": "What exactly does RemoveMacAI change on a Mac, and how do you undo it?"},
+        {"parent": "QFKGh9DhDW4", "family": "nemotron-transcribe", "title": "nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B", "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B", "question": "What do you need to run Nemotron-3.5-Transcribe on your own machine?"},
+        {"parent": "4MTEDi4MdnQ", "family": "gpu-unlocking", "title": "physicsdolphin/nv-uefi-unlocker", "url": "https://github.com/physicsdolphin/nv-uefi-unlocker", "question": "How is nv-uefi-unlocker different from gpu-unlock, and which cards and systems does it support?"},
+        {"parent": "eMbE-1FrjeA", "family": "openbot", "title": "CopilotKit/OpenBot", "url": "https://github.com/CopilotKit/OpenBot", "question": "What do you need before you can run OpenBot's documented setup?"},
+        {"parent": "-zMkp0hnACk", "family": "zcode", "title": "zai-org/ZCode", "url": "https://github.com/zai-org/ZCode", "question": "What do you need to set up ZCode, step by step?"}
+    ],
     "debate_panel": [
         {"name": "Gemini 2.5 Flash", "lab": "Google", "provider": "gemini", "model": "gemini-2.5-flash"},
         {"name": "GPT-OSS 120B", "lab": "OpenAI", "provider": "groq", "model": "openai/gpt-oss-120b"},

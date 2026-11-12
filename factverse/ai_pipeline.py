@@ -326,6 +326,106 @@ def qa_video(video: str, expected_audio: float) -> bool:
 _BANNED_DATED = ("today", "yesterday", "this week", "just announced", "breaking")
 
 
+# v3-R (D9 / the empty-diagram defect): an abstract stock query returns an infographic
+# TEMPLATE with empty placeholders — three empty boxes were read in a published
+# frame on 2026-11-12 ("collaboration meeting diagram"). _VISUAL_RULES already bans
+# such queries; nothing enforced it. The fallback is one of the rules' own GOOD queries.
+_ABSTRACT_QUERY = re.compile(r"\b(?:diagrams?|infographics?|illustrations?|icons?|abstract|concepts?|"
+                             r"split[ -]screen|symbols?|metaphors?)\b", re.I)
+_CONCRETE_FALLBACK = "person using laptop"
+
+
+def _concrete_query(vq: str) -> str:
+    return _CONCRETE_FALLBACK if _ABSTRACT_QUERY.search(str(vq or "")) else vq
+
+
+# v3-R D12: the README sections that answer a queue topic's question
+QUESTION_SECTIONS_MAX = 1500          # chars appended to the grounding (provisional)
+_Q_STOP = {"which", "what", "does", "and", "the", "about", "with", "your", "how", "you", "for",
+           "are", "can", "need", "own", "this", "that", "from", "into", "before", "step", "exactly",
+           "change", "changes", "undo", "set", "run", "use", "using", "machine", "different", "between"}
+# words too common in READMEs to pick a section on their own ("## Support me" is a donation
+# block): a section must also hit one of the question's other words
+_Q_GENERIC = {"support", "supports", "supported", "work", "works", "card", "cards", "system",
+              "systems", "install", "installed", "requirements", "setup"}
+
+
+def question_sections(full: str, grounding: str, question: str,
+                      budget: int = QUESTION_SECTIONS_MAX) -> str:
+    """The README blocks (paragraphs, headings, FAQ entries) that answer `question` and
+    are NOT already in `grounding`, in README order, within `budget` chars.
+    An FAQ entry is picked when its QUESTION line shares one of the question's
+    specific words ("What about Windows?"); any other block needs two of them, so a
+    paragraph that merely mentions "GPUs" twice in a GPU README is not picked.
+    Measured on gpu-unlock's real README: exactly its Windows and RTX 50 FAQ
+    entries. "" when nothing qualifies. PURE, never raises."""
+    try:
+        q = str(question or "").lower()
+        keys = {w for w in re.findall(r"[a-z0-9][a-z0-9.+-]*", q)
+                if (len(w) >= 3 or w.isdigit()) and w not in _Q_STOP}
+        strong = keys - _Q_GENERIC
+        if not strong or not full:
+            return ""
+        faq = re.compile(r"^\s*[-*]?\s*\**\s*Q\s*[:.]")
+        blocks, cur = [], []
+        for line in str(full).splitlines():
+            if (not line.strip() or line.lstrip().startswith("#") or faq.match(line)) and cur:
+                blocks.append("\n".join(cur).strip())
+                cur = []
+            if line.strip():
+                cur.append(line)
+        if cur:
+            blocks.append("\n".join(cur).strip())
+
+        def hits(text: str) -> set:
+            low = text.lower()
+            return {k for k in strong if re.search(rf"(?<![a-z0-9]){re.escape(k)}(?![a-z0-9])", low)}
+        scored = []
+        for i, b in enumerate(blocks):
+            if not b or b in grounding:
+                continue
+            first = b.splitlines()[0]
+            h = hits(first) if faq.match(first) else hits(b)
+            if (faq.match(first) and h) or len(h) >= 2:
+                scored.append((len(h), i, b))
+        picked, used = [], 0
+        for _n, i, b in sorted(scored, key=lambda t: (-t[0], t[1])):
+            if used + len(b) > budget:
+                continue
+            picked.append((i, b))
+            used += len(b) + 2
+        return "\n\n".join(b for _, b in sorted(picked))
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+_POPULARITY = re.compile(r"\b(?:stars?|downloads?|forks?|likes?|followers?|views?)\b", re.I)
+
+
+def cohort_packaging(s: dict, tool_title: str) -> dict:
+    """spec v3-R D6, as a fixer (D8: packaging style never blocks): the title names the
+    tool; the thumbnail carries no popularity count (the composers fall back to the
+    title when thumb_text is blank). Mutates and returns `s`; never raises."""
+    try:
+        tool = str(tool_title or "").split(":")[0].split("/")[-1].strip()
+        norm = lambda t: re.sub(r"[^a-z0-9]", "", str(t).lower())  # noqa: E731
+        title = str(s.get("title") or "")
+        words = [w for w in re.split(r"[^a-z]+", tool.lower()) if len(w) >= 4]
+        named = (norm(tool) in norm(title)
+                 or (words and sum(1 for w in words if w in title.lower()) * 2 >= len(words)))
+        if tool and not named:
+            new = f"{tool}: {title}".strip(": ")
+            if len(new) <= gates.TITLE_MAX:
+                print(f"     🏷️ D6: the title names the tool — {new!r}")
+                s["title"] = new
+        if _POPULARITY.search(str(s.get("thumb_text") or "")):
+            print(f"     🏷️ D6: popularity count dropped from the thumbnail ({s['thumb_text']!r})")
+            s["thumb_text"] = ""
+    except Exception as e:  # noqa: BLE001
+        print(f"     ⚠️ cohort packaging skipped: {type(e).__name__}")
+    return s
+
+
 def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict | None:
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
@@ -359,6 +459,7 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     for sc in s["scenes"]:
         narration = str(sc.get("narration", "")).strip()
         vq = str(sc.get("visual_query", "")).strip() or "computer technology"
+        vq = _concrete_query(vq)
         if narration:
             entry = {"scene_num": len(scenes) + 1, "narration": narration, "visual_query": vq}
             spk = str(sc.get("speaker", "")).strip().lower()
@@ -372,7 +473,9 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
         return None
     s["scenes"] = scenes
     title = str(s.get("title") or fallback_title or "AI, Explained")[:95]
-    s["title"] = re.sub(r"[<>]", "", title).strip()
+    # v3-R: markdown emphasis from the model ("*can't*") is drawn literally on
+    # every surface (seen in a published Short hook) — strip it with the brackets
+    s["title"] = re.sub(r"[<>*`]", "", title).strip()
     if not s.get("description"):
         s["description"] = f"{s['title']} — clearly explained by {fv.CHANNEL_NAME}."
     desc = str(s["description"])
@@ -400,9 +503,11 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     # v3-G.3 #6: the alternates packaging_payoff / the hype screen may promote to
     # `title`, so each gets the title's own cleaning. The model answers a list, a
     # bare string or null — coerce, never trust the type (deliverable._as_list).
-    s["titles"] = [re.sub(r"[<>]", "", t).strip()[:95] for t in gates.title_options(s)]
+    s["titles"] = [re.sub(r"[<>*`]", "", t).strip()[:95] for t in gates.title_options(s)]
     s["titles"] = [t for t in s["titles"] if t]
-    s["thumb_text"] = re.sub(r"[<>]", "", str(s.get("thumb_text", ""))).strip()[:26]
+    s["thumb_text"] = re.sub(r"[<>*`]", "", str(s.get("thumb_text", ""))).strip()[:26]
+    if "answer_line" in s:     # v3-R D11: raw LLM output — coerce, never trust the type
+        s["answer_line"] = re.sub(r"[<>*`]", "", str(s.get("answer_line") or "")).strip()[:140]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
     # v3-M.1 row 9: model-written memory fields — carried, not popped; coerced
     # because raw LLM output is never type-safe (a string, a dict, null).
@@ -446,10 +551,26 @@ _RETENTION_RULES = """RETENTION ENGINEERING (non-negotiable):
 - Final scene = crisp takeaway + ONE question to the audience + "subscribe" CTA in one sentence."""
 
 
-def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False) -> str:
+def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False,
+                     cohort: bool = False) -> str:
     # v3-G.3 #2: the title tells a builder what they get. The tool lane adds the
     # formula because its whole video is one usable thing.
     formula = ("\n  TOOL VIDEO title formula: [what you can do] + [tool name]." if tool else "")
+    thumb_rule = ("- thumb_text: a DECLARATIVE 2-4 word claim for the thumbnail (NOT the title). No question\n"
+                  "  mark. It MUST contain one number taken from the source/verified facts, or the word FREE\n"
+                  "  (e.g. \"10X FASTER\", \"FREE. OFFLINE.\", \"179K STARS\").")
+    if cohort:
+        # spec v3-R D6: title, thumbnail and video promise the same answer; no
+        # unobserved outcome, no popularity number, never an excluded platform
+        formula = ("\n  COHORT title formula (overrides the rules above): \"<tool name>: <the viewer's "
+                   "question>\".\n  No outcome claim, no star counts, never imply a platform, GPU or OS "
+                   "the source excludes.")
+        thumb_rule = ("- thumb_text: the 2-4 word direct ANSWER to the video's question (e.g. \"LINUX ONLY\",\n"
+                      "  \"MAC ONLY\", \"NEEDS A GPU\"). No star, download or popularity counts, no outcome\n"
+                      "  claims, no question mark.\n"
+                      "- answer_line: ONE sentence, at most 140 characters, that answers the video's question\n"
+                      "  from the SOURCE EXCERPT, attributed (\"Per its README, ...\"). It becomes the first line\n"
+                      "  of the description and the channel's comment. Return it as a top-level JSON field.")
     # v3-M.1 row 9: the memory record's viewer-need fields, for every lane
     mem, mem_json = "", ""
     if fv.flag("memory_fields", False):
@@ -464,9 +585,7 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False)
   framing, never all-caps, no clickbait lies. The title says what the viewer can DO, USE, or
   what CHANGES for them — never how scared or angry to be.{formula}
 - title: the strongest of the 3.
-- thumb_text: a DECLARATIVE 2-4 word claim for the thumbnail (NOT the title). No question
-  mark. It MUST contain one number taken from the source/verified facts, or the word FREE
-  (e.g. "10X FASTER", "FREE. OFFLINE.", "179K STARS").
+{thumb_rule}
 - description: 150+ words; first 2 lines = hook + main keyword; 5-7 hashtags incl. #AI; end with
   "Subscribe to {fv.CHANNEL_NAME}".
 - tags: 8-12 relevant tags.
@@ -697,6 +816,16 @@ def script_tool(item: dict) -> dict | None:
             grounding = f"{keep}\n\n{block}"
             print(f"     📎 first code block was past the excerpt — appended "
                   f"({len(block)} chars).")
+    # spec v3-R D12: a queue topic asks ONE question, and the README part that answers it
+    # may sit past the 5,000-char window (gpu-unlock's Windows / RTX 50 FAQ starts at
+    # char 5,860). Appended HERE, so the writer, the fact-checker and every gate reading
+    # s["grounding"] see the same answer.
+    if cohort_on() and full:
+        extra = question_sections(full, grounding,
+                                  memory.coerce_question(item.get("followup_question")))
+        if extra:
+            grounding = f"{grounding}\n\nREADME SECTIONS ON THE VIEWER'S QUESTION:\n{extra}"
+            print(f"     📎 README sections on the viewer's question appended ({len(extra)} chars).")
     # Built AFTER the append: the screen must read at least what the writer reads.
     screen = grounding if page is None else f"{grounding} {page}"
     # The README is where intent actually shows: a repo titled innocuously can
@@ -710,11 +839,17 @@ def script_tool(item: dict) -> dict | None:
     # gathered AFTER the screen (never record what we would refuse) and BEFORE the
     # writer, which is told what the evidence lets it claim and what it does not.
     ev, ev_brief = None, ""
+    cohort = cohort_on()
     if fv.flag("evidence_engine", False):
         ev = evidence.gather(item, probe_result=item.get("_evidence_probe"))
         if evidence.admissible(ev):
             ev_brief = evidence.writer_brief(ev)
             print(f"     🎞️ Evidence: {ev['label']} — {ev['wording']}")
+        elif cohort:
+            # spec v3-R D4: the documentation route replaces row 17's skip — the
+            # video is built from the project's docs and says so on screen
+            ev, ev_brief = evidence.docs_record(ev), evidence.docs_brief()
+            print(f"     📘 No demo evidence — documentation route: {ev['label']}")
         elif fv.flag("evidence_required", True):
             # review row 17: no admissible evidence = skip by default. The "before you
             # install" verdict is the only allowed exception and is NOT built (spec).
@@ -723,6 +858,8 @@ def script_tool(item: dict) -> dict | None:
             return None
         else:
             ev = ev if isinstance(ev, dict) else evidence.empty("gather failed")
+    elif cohort:
+        ev, ev_brief = evidence.docs_record(None), evidence.docs_brief()
     # spec v3-P.2: the first admissible evidence is one of the ledger's three
     # timestamps (row 13); Pilot A draws its slot HERE, before the writer, because
     # the two arms are different scripts. Arrival order only — never performance.
@@ -730,7 +867,7 @@ def script_tool(item: dict) -> dict | None:
     if evidence.admissible(ev):
         if fv.flag("query_map", False):
             querymap.note_seen([url], field="evidence")
-        if fv.flag("pilot_a", False):
+        if fv.flag("pilot_a", False) and not cohort:     # v3-R: the cohort supersedes Pilot A
             try:
                 pilot_slot = pilot.assign(ev, grounding, pilot.load(), _ledger_rows())
             except Exception as e:  # noqa: BLE001 — a bad state file costs the pilot, not the day
@@ -778,11 +915,38 @@ def script_tool(item: dict) -> dict | None:
             ev_brief = (ev_brief.replace("Scene 1 must open by stating",
                                          "Scene 2 (the result scene) must open by stating")
                         .replace("Scene 1 must begin with", "Scene 2 (the result scene) must begin with"))
+    brief = ("Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to\n"
+             "DO something concrete in the next ten minutes — that is the entire point of the video.")
+    if cohort and not pilot_slot:
+        # spec v3-R D5/D6/D10: answer-first "Before You Install" — the viewer's
+        # question at 0:00, the answer by 0:07, the main limitation by 0:15, no
+        # popularity detail and no unobserved outcome. Replaces the hook rules.
+        question = (memory.coerce_question(item.get("followup_question"))
+                    or "the most useful practical question a viewer has before installing it "
+                       "(compatibility, requirements, what it changes, or how to set it up) — the "
+                       "one the SOURCE EXCERPT answers best")
+        brief = ("Write a \"Before You Install\" video: it answers ONE practical question a viewer has\n"
+                 "before installing this tool, as early and as plainly as possible.")
+        structure = f"""STRUCTURE — "Before You Install" (these rules override every other structure, hook or
+retention rule in this prompt):
+- The question this video answers: {question}
+- Scene 1: sentence 1 asks that question in plain words (at most 12 words). Sentence 2 gives the
+  direct answer or the decisive limitation, taken from the SOURCE EXCERPT. No star or download
+  counts, no "free", no superlatives, no greeting.
+- Scene 2: the most important limitation or requirement (what it does not support, who should
+  not use it). Scenes 1 and 2 together stay under 45 spoken words, so the limitation lands in
+  the first 15 seconds.
+- What the tool is and who maintains it, attributed ("the README says ...").
+- The documented steps or requirements, in order. Quote commands EXACTLY from the source.
+{lim_rule}
+- Final scene: one sentence restating the answer + ONE specific question to the viewer about
+  their own setup (hardware, operating system or use case) + subscribe, in two sentences.
+- Short spoken sentences. Never repeat a point. No hype words. Never promise an outcome the
+  SOURCE EXCERPT does not state; attribute every figure to the authors."""
     task_field = ('\n"task": "the task this tool does, 2-5 words, no numbers (e.g. Rotate Images)"'
                   if (pilot_slot or fv.flag("query_map", False)) else "")
     prompt = f"""You are the lead writer for {fv.CHANNEL_NAME}, a faceless AI/tech YouTube channel.
-Write a HANDS-ON video about this real, free AI tool/model/repo. The viewer must leave able to
-DO something concrete in the next ten minutes — that is the entire point of the video.
+{brief}
 
 TOOL: {title}
 SOURCE: {source}  ({url})
@@ -794,7 +958,7 @@ SOURCE: {source}  ({url})
 {structure}
 {_VISUAL_RULES}
 
-{_output_contract(scene_range, per_scene, tool=True)}
+{_output_contract(scene_range, per_scene, tool=True, cohort=(cohort and not pilot_slot))}
 
 ADDITIONAL REQUIRED FIELD in the same JSON:
 "deliverable": {{"kind":"command|repo|steps","text":"the exact command or first step, <=200 chars",
@@ -831,6 +995,8 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
             s["evidence"] = ev
         if pilot_slot:
             s["pilot"] = pilot_slot
+        if cohort and not pilot_slot:
+            cohort_packaging(s, title)
     return s
 
 
@@ -1145,7 +1311,9 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "titles",          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
           # v3-M.1 row 9: the rewrite prompts never show them, so every pass would
           # reset them to empty; "followup" is run()'s and is popped in _validate_script
-          "question_answered", "questions_open", "followup")
+          "question_answered", "questions_open", "followup",
+          # v3-R D11: the one-line answer — description line 1 and the channel comment
+          "answer_line")
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1256,7 +1424,7 @@ def place_description_blocks(script: dict) -> None:
     ev_line = evidence.attribution_line(script.get("evidence"))
     if ev_line and ev_line not in desc:
         desc = "\n".join(l for l in desc.split("\n")
-                         if not l.startswith(evidence.AUTHOR_MARK)).strip()
+                         if not l.startswith((evidence.AUTHOR_MARK, evidence.DOCS_MARK))).strip()
         i = desc.find(_DL_MARK)
         end = desc.find("\n\n", i) if i >= 0 else -1
         if i >= 0:
@@ -1275,6 +1443,12 @@ def place_description_blocks(script: dict) -> None:
                  for i, it in enumerate(script.get("roundup_items") or [], 1) if it.get("url")]
         if lines:
             desc = desc[:_MAX_DESC].rstrip() + "\n\n" + _SRC_MARK + "\n" + "\n".join(lines)
+    # spec v3-R D11: the one-line answer + its evidence status is the FIRST line.
+    # LAST here, so every block above lands below it; idempotent (called twice).
+    line = cohort_answer_line(script)
+    if line and not desc.startswith(line):
+        desc = "\n".join(l for l in desc.split("\n") if l.strip() != line).strip()
+        desc = f"{line}\n\n{desc}"
     script["description"] = desc
 
 
@@ -1478,18 +1652,38 @@ def tool_chapters(script: dict, starts: list, shift: float) -> str:
     return "\n".join(rows)
 
 
+def cohort_answer_line(script) -> str:
+    """spec v3-R D11: "<one-line answer> — <evidence status>" for a cohort video with an
+    answer_line, else "". The status is the evidence label (the docs route's "From the
+    docs — not tested by ToolDojo"), or "Not tested by <channel>" when there is none."""
+    try:
+        if not cohort_on() or not isinstance(script, dict):
+            return ""
+        ans = str(script.get("answer_line") or "").strip()
+        if not ans:
+            return ""
+        ev = script.get("evidence") if isinstance(script.get("evidence"), dict) else {}
+        status = evidence.label(str(ev.get("source") or "")) or f"Not tested by {fv.CHANNEL_NAME}"
+        return f"{ans} — {status}"
+    except Exception:  # noqa: BLE001
+        return ""
+
+
 def pinned_comment(script: dict, prev_url: str = "") -> str:
     """spec v3-E #7: the auto-comment is the only API-writable engagement surface.
     Under a tool video it carries the two things a viewer opens the comments for —
     the exact command and the cheat sheet — instead of a news question."""
+    # spec v3-R D11: a cohort video's channel comment leads with the one-line answer
+    lead = cohort_answer_line(script)
+    lead = f"{lead}\n\n" if lead else ""
     if script.get("format") == "tool" and script.get("deliverable"):
-        txt = "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
+        txt = lead + "Copy-paste to try it 👇\n" + str(script["deliverable"].get("text", ""))
         if script.get("cheat_sheet"):
             # same promise as the description, so the same destination (v3-F.1 #5)
             txt += ("\n📄 Free cheat sheet: "
                     + site.public_url(site.page_name(script["cheat_sheet"])))
         return txt + "\nWhat should I test next?"
-    base = ("Sources are in the description. What's your take — hype or turning point? 👇")
+    base = lead + ("Sources are in the description. What's your take — hype or turning point? 👇")
     if prev_url:
         base += f"\n\nMissed the last one: {prev_url}"
     return base
@@ -1547,12 +1741,165 @@ def scene_durations(script: dict, words: list, audio_dur: float) -> list | None:
     return durs
 
 
+# --------------------------------------------------------------- recovery cohort
+# spec v3-R (docs/spec/ai-pulse-v3r.md), owner "Go for all" 2026-11-12. Kill switch
+# `recovery_cohort`. While it is on: a tool long-form on Mon/Wed/Fri only (D1), one
+# native Short the next day at 18:45 UTC (D2), every other lane paused (D3), the
+# owner's ordered topics first (D12), and a day with no qualified candidate
+# publishes NOTHING (D7) — never filler.
+COHORT_LONG_WEEKDAYS = (0, 2, 4)      # D1: Monday, Wednesday, Friday (date.weekday())
+COHORT_SHORT_UTC = "18:45"            # D2: Tue / Thu / Sat, the day after each long-form
+COHORT_MARK = "recovery cohort (D12)"
+
+
+def cohort_on() -> bool:
+    return fv.flag("recovery_cohort", False)
+
+
+def cohort_day(day: _dt.date) -> str:
+    """D1: "long" on a cohort long-form day on or after `cohort_start`, else "rest".
+    An unreadable `cohort_start` does not hold the cohort back."""
+    try:
+        start = _dt.date.fromisoformat(str(fv.setting("cohort_start", "") or "")[:10])
+    except ValueError:
+        start = None
+    if start and day < start:
+        return "rest"
+    return "long" if day.weekday() in COHORT_LONG_WEEKDAYS else "rest"
+
+
+def _cohort_slot_day() -> _dt.date:
+    """The day today's long-form would go PUBLIC: scheduling.long_slot rolls to
+    tomorrow when the run is within 15 min of (or past) the slot, so a late retry
+    on a Monday would otherwise publish on a Tuesday."""
+    try:
+        return _dt.date.fromisoformat(scheduling.long_slot()[:10])
+    except Exception:  # noqa: BLE001
+        return _dt.datetime.utcnow().date()
+
+
+def cohort_short_slot(long_publish_at) -> str | None:
+    """D2: 18:45 UTC on the day after the long-form's publish day (RFC3339, the
+    format scheduling.long_slot writes). None when the slot cannot be read.
+    Called in the post-upload zone: never raises."""
+    try:
+        d = _dt.date.fromisoformat(str(long_publish_at)[:10]) + _dt.timedelta(days=1)
+        return f"{d.isoformat()}T{COHORT_SHORT_UTC}:00Z"
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def cohort_queue_items(rows: list | None = None) -> list[dict]:
+    """D12: the owner's ordered topics (config `cohort_queue`) that no PUBLISHED
+    ledger row has used as its source URL yet, shaped like memory.candidate_item so
+    the tool lane, its gates and the follow-up prompt treat them as follow-ups.
+    Never raises: a broken queue costs the queue, not the day."""
+    try:
+        q = fv.setting("cohort_queue", []) or []
+        if not isinstance(q, list):
+            return []
+        if rows is None:
+            rows = learn.read_runs(RUNS_LOG)
+        done = {str(r.get("source_url") or "").rstrip("/").lower()
+                for r in rows or [] if isinstance(r, dict) and r.get("status") == "PUBLISHED"}
+        out = []
+        for it in q:
+            if not isinstance(it, dict) or not str(it.get("url") or "").startswith("http"):
+                continue
+            url = str(it["url"]).strip()
+            if url.rstrip("/").lower() in done:
+                continue
+            out.append({"title": str(it.get("title") or url)[:120], "url": url,
+                        "source": f"{fv.CHANNEL_NAME} {COHORT_MARK}", "kind": "tool",
+                        "fit_score": None,
+                        "followup_question": memory.coerce_question(it.get("question")),
+                        "followup_parent": str(it.get("parent") or "")[:20],
+                        "followup_family": str(it.get("family") or "")[:80]})
+        return out
+    except Exception as e:  # noqa: BLE001
+        print(f"   ⚠️ cohort queue unreadable ({type(e).__name__}) — trending tools only.")
+        return []
+
+
+COHORT_CHIP_MAX_S = 7.0               # D5: the answer lands by 0:07 — the label rides until then
+
+
+def cohort_label_chip(script, starts) -> list:
+    """D4/D5: a docs-route video carries its evidence label as an on-screen chip
+    from 0:00 until scene 2 begins (at most COHORT_CHIP_MAX_S), so the evidence
+    status is visible at 0:00 and never overlaps the first source chip (which
+    starts 0.4 s into scene 2). [] outside the cohort or for any other evidence:
+    an admissible clip burns its own label. Never raises."""
+    try:
+        if not cohort_on() or not isinstance(script, dict):
+            return []
+        lab = evidence.screen_label(script.get("evidence"))
+        if not lab:
+            return []
+        end = COHORT_CHIP_MAX_S
+        if starts and len(starts) > 1:
+            end = max(2.0, min(end, float(starts[1])))
+        return [(0.0, end, lab)]
+    except Exception:  # noqa: BLE001
+        return []
+
+
+COHORT_FAMILY_HOURS = 168             # D2: one Short per subject family per rolling 168 h
+
+
+def cohort_family_of(script) -> str:
+    """D2: a script's subject family — the queue's family (gpu-unlock and
+    nv-uefi-unlocker share "gpu-unlocking"), else the source repo/page URL."""
+    try:
+        fu = script.get("followup") if isinstance(script, dict) else None
+        fam = str((fu or {}).get("family") or "").strip().lower() if isinstance(fu, dict) else ""
+        if fam:
+            return fam
+        url = str((script or {}).get("source_url") or "").strip().lower().rstrip("/")
+        return url.split("://", 1)[-1]
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def cohort_short_blocked(script, long_publish_at, rows: list | None = None) -> bool:
+    """D2: True when a PUBLISHED long-form of the same subject family, published less
+    than COHORT_FAMILY_HOURS before this one, already shipped a Short (each cohort
+    Short lands a fixed time after its long-form, so long-form gaps are Short gaps).
+    Exactly 168 h apart is allowed. Never raises: an unreadable ledger blocks nothing."""
+    try:
+        fam = cohort_family_of(script)
+        if not fam:
+            return False
+        this = _dt.datetime.fromisoformat(str(long_publish_at).replace("Z", "+00:00"))
+        rows = learn.read_runs(RUNS_LOG) if rows is None else rows
+        for r in rows or []:
+            if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or not r.get("shorts"):
+                continue
+            rf = (str(r.get("followup_family") or "").strip().lower()
+                  or str(r.get("source_url") or "").strip().lower().rstrip("/").split("://", 1)[-1])
+            if rf != fam:
+                continue
+            try:
+                prev = _dt.datetime.fromisoformat(str(r.get("publish_at") or "").replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if _dt.timedelta(0) <= this - prev < _dt.timedelta(hours=COHORT_FAMILY_HOURS):
+                return True
+        return False
+    except Exception:  # noqa: BLE001
+        return False
+
+
 # --------------------------------------------------------------- orchestrate
 def decide_format(force: str | None, ranked: list[dict], today: _dt.date | None = None):
     """v3 format choice. Sunday keeps the roundup; a genuinely hot story
     (viral judge >= VIRAL_THRESHOLD) runs as news; otherwise the utility lane —
     a hands-on tool video when a tool signal exists (config flag "tool_format"),
     else an evergreen explainer. Returns (fmt, viral_hint)."""
+    if cohort_on():
+        # spec v3-R D3: news, evergreen, roundup and debate are paused, zero
+        # exceptions (run() refuses a forced paused lane before this is reached)
+        return "tool", None
     if force in ("news", "evergreen", "roundup", "tool", "debate"):
         return force, (viral_pick(ranked) if force == "news" else None)
     day = today or _dt.date.today()
@@ -1699,8 +2046,12 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         return None
     if fmt == "tool":
         tools = []
+        cohort = cohort_on()
+        # spec v3-R D12: the owner's ordered topics go first while the cohort is on
+        queue = ([q for q in cohort_queue_items() if not too_many_failures(q["title"])]
+                 if cohort else [])
         # v3-M.1 row 9: a follow-up candidate goes first and passes every gate below
-        for c in [f for f in memory.followup_items() if not too_many_failures(f["title"])] + ranked:
+        for c in queue + [f for f in memory.followup_items() if not too_many_failures(f["title"])] + ranked:
             if c.get("kind") != "tool":
                 continue
             blocked, term = gates.tool_unsuitable(c["title"])
@@ -1723,7 +2074,10 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
         # possible evidence source is skipped HERE, before it takes one of the three
         # slots — the probe is seconds, a gather + writer call is minutes. A probe that
         # could not look (None) keeps the candidate: gather decides.
-        probe_gate = fv.flag("evidence_engine", False) and fv.flag("evidence_required", True)
+        # spec v3-R D4: in the cohort a candidate with no evidence source is NOT
+        # skipped — script_tool gives it the documentation route instead.
+        probe_gate = (fv.flag("evidence_engine", False) and fv.flag("evidence_required", True)
+                      and not cohort)
         picked = []
         for c in tools:
             if len(picked) >= 3:
@@ -1745,6 +2099,10 @@ def build_script(fmt: str, ranked: list[dict], viral_hint=None) -> dict | None:
                 return s
             mark_failed(cand["title"])
             print("     ↻ tool script failed, trying next...")
+        if cohort:
+            # spec v3-R D7: no qualified candidate = publish nothing; never filler
+            print("   🛑 No qualified tool candidate today — publishing nothing (cohort D7).")
+            return None
         print("   ⚠️ No tool script — falling back to evergreen.")
         return build_script("evergreen", ranked, viral_hint)
     # evergreen
@@ -1890,7 +2248,7 @@ def _s1_native_day(script: dict, crops: list, hooks: list) -> dict | None:
         day = scheduling.long_slot()[:10]
         return pilot_b.plan_day(
             day, crops, hooks, nat, native_short.last_skip,
-            pilot=fv.flag("pilot_b", False),
+            pilot=(fv.flag("pilot_b", False) and not cohort_on()),   # v3-R supersedes Pilot B
             max_batches=int(float(fv.setting("pilot_b_batches", 1) or 1)),
             parity_index=shorts_mod.sb.engine_index(_dt.date.fromisoformat(day)))
     except Exception as e:  # noqa: BLE001
@@ -1979,6 +2337,12 @@ def _fallback_format(fmt: str, force_format: str | None, fallback: bool,
     """
     if force_format and not fallback:
         return None
+    if cohort_on():
+        # spec v3-R D3/D7: a blocked cohort video re-runs the TOOL lane — never a
+        # paused one. mark_failed has counted the block, so the same candidate gets
+        # one more try and then too_many_failures moves the lane to the next;
+        # MAX_DAY_ATTEMPTS still bounds the day.
+        return "tool"
     if fmt == "evergreen":
         return None
     if fallback or fmt == "tool" or not tool_on:
@@ -2116,6 +2480,10 @@ def _make_extras(video: str, script: dict, words, starts, src_domain: str, tool_
     # v3-S.1: the native concept Short replaces the storyboard engine's Short, so
     # with it on both rendered Shorts are crop excerpts (the control + a spare).
     native_on = fv.flag("native_shorts", False)
+    if cohort_on():
+        # spec v3-R D2: no crop and no storyboard Shorts — the day's one Short is
+        # the native concept Short, made by _s1_native_day
+        return thumb, []
     shorts = shorts_mod.make_shorts(video, script, words, scene_starts=starts,
                                     max_count=min(shorts_n, 4), source_domain=src_domain,
                                     storyboard=(False if native_on else None))
@@ -2137,6 +2505,12 @@ def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = N
             scene_clips = cap["scene_clips"]
             tool_shot = cap.get("screenshot") or ""
             print(f"  ✅ Screen-recorded visuals: {len(scene_clips)} scenes, zero stock.")
+        elif cohort_on():
+            # spec v3-R D8/D9: readable evidence is render integrity, and the cohort
+            # forbids unrelated stock — no readable page, no video (the 14:53 cron retries)
+            print("  🛑 No readable page visuals — publishing nothing (cohort D8/D9).")
+            record_run(status="VISUALS_BLOCKED", format=fmt, title=script["title"])
+            return None
         else:
             print("  ⚠️ Screen capture failed — stock visuals for this run.")
     if scene_clips is None:
@@ -2175,7 +2549,12 @@ def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = N
     # AFTER the timings exist — step5_build splits a scene's time equally between
     # its clips, so a card rendered to a fixed length either loops (replaying the
     # count-up mid-scene) or is cut before the number reaches its real value.
-    infographics.inject_cards(script, scene_clips, source_domain=src_domain, scene_durs=shares)
+    if cohort_on():
+        # spec v3-R D5: no popularity counter anywhere in a cohort video — the stat
+        # card counts up from 0, so a scene-1 card opened gpu-unlock on "0 stars"
+        print("  🧮 Stat cards: none (recovery cohort D5)")
+    else:
+        infographics.inject_cards(script, scene_clips, source_domain=src_domain, scene_durs=shares)
     if script.get("format") == "debate":
         # v3-H #11: stills (duration-agnostic), placed AFTER the stat cards so
         # _lead_with replaces a stat card rather than stacking a third clip
@@ -2241,12 +2620,15 @@ def _render_longform(script: dict, narration: str, fmt: str, arm: str | None = N
     if starts and len(starts) >= 6 and src_chip:
         for i in (1, len(starts) // 2, len(starts) - 2):
             cites.append((starts[i] + 0.4, starts[i] + 6.4, src_chip))
+    cites = cohort_label_chip(script, starts) + cites
     video = captions.burn_ass(video, ass, citations=cites)
 
-    if arm:
+    if arm or cohort_on():
         # round 3 §2: NO brand-only sting anywhere in a pilot video, and the human
         # cold open must not displace frame 0 — it is not spliced in at all.
-        print("\n  🎬 Branding: none (Pilot A — no sting, no cold open at 0:00)")
+        # spec v3-R D5: the same for every recovery-cohort video (the question owns 0:00).
+        print(f"\n  🎬 Branding: none ({'Pilot A' if arm else 'recovery cohort D5'} — no sting, "
+              f"no cold open at 0:00)")
         intro_shift = 0.0
         insight_at = starts[-1] if starts else None
         video, l2_rec = l2.inject(video, insight_at, cold_open=False)
@@ -2278,6 +2660,19 @@ def run(publish: bool = False, force_format: str | None = None,
     print("=" * 70)
     print(f"  {fv.CHANNEL_NAME} — content pipeline v2 (viral-first)")
     print("=" * 70)
+    if cohort_on():
+        # spec v3-R D3: a forced paused lane is refused, zero exceptions
+        if force_format and force_format != "tool":
+            print(f"  ⛔ Recovery cohort: the {force_format} lane is paused (D3) — publishing nothing.")
+            record_run(status="COHORT_LANE_PAUSED", format=force_format)
+            return None
+        # spec v3-R D1: long-forms on Mon/Wed/Fri only. A scheduled run on any other
+        # day exits clean (no failure issue, nothing published); a forced tool run is
+        # the owner's own supervised call and is not held back.
+        if publish and not force_format and cohort_day(_cohort_slot_day()) != "long":
+            print("  🗓️ Recovery cohort rest day (D1: long-forms Mon/Wed/Fri) — publishing nothing.")
+            record_run(status="COHORT_REST_DAY", format="-")
+            return {"status": "COHORT_REST_DAY"}
     if publish and already_published_today():
         record_run(status="SKIPPED_DUPLICATE_DAY", format="-")
         return {"status": "SKIPPED_DUPLICATE_DAY"}
@@ -2328,13 +2723,26 @@ def run(publish: bool = False, force_format: str | None = None,
     else:
         # critique first (it now cuts repetition), then the floor (sanity only),
         # then the CAP — padding is the enemy, not brevity
-        script = critique_pass(script)
-        script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
-        script = enforce_max_length(script, MAX_WORDS)
+        if cohort_on():
+            # spec v3-R D5/D6: critique_pass judges scene 1, the titles and the thumbnail
+            # by the generic hook rules (its rule 5 wants a number or FREE on the thumb)
+            # and rewrote "LINUX ONLY" into a star count. A cohort script skips it, as a
+            # Pilot A script does; the length passes still run, and the packaging the
+            # writer produced under the cohort contract is put back after them.
+            keep = {k: script.get(k) for k in ("title", "titles", "thumb_text", "answer_line")
+                    if script.get(k)}
+            script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+            script = enforce_max_length(script, MAX_WORDS)
+            script.update(keep)
+            cohort_packaging(script, script.get("signal_title") or script["title"])
+        else:
+            script = critique_pass(script)
+            script = enforce_length(script, MIN_WORDS.get(script.get("format", fmt), 620))
+            script = enforce_max_length(script, MAX_WORDS)
 
     # spec v3-P.2 row 13: query-map packaging for a tool video with admissible evidence
     if (fv.flag("query_map", False) and script.get("format") == "tool"
-            and evidence.admissible(script.get("evidence"))):
+            and evidence.admissible(script.get("evidence")) and not cohort_on()):
         if querymap.apply(script):
             print(f"  🔎 Query-map title: {script['title']!r}")
 
@@ -2523,7 +2931,15 @@ def run(publish: bool = False, force_format: str | None = None,
     # belongs to that last make_shorts call. Before any upload; never raises.
     native_on = fv.flag("native_shorts", False)
     short_hooks = list(shorts_mod.last_hooks)
-    s1_plan = _s1_native_day(script, shorts, short_hooks) if (native_on and shorts) else None
+    # spec v3-R D2: at most one Short per subject family in any rolling 168 h — checked
+    # BEFORE the native Short is rendered, so a blocked day spends nothing on it
+    _fam_block = cohort_on() and cohort_short_blocked(script, scheduling.long_slot())
+    if _fam_block:
+        print(f"  ⏭️ Short skipped: subject family {cohort_family_of(script)!r} already had a "
+              f"Short in the last {COHORT_FAMILY_HOURS} h (cohort D2).")
+        shorts, short_hooks = [], []
+    s1_plan = (_s1_native_day(script, shorts, short_hooks)
+               if (native_on and not _fam_block and (shorts or cohort_on())) else None)
     if s1_plan:
         shorts, short_hooks = s1_plan["shorts"], s1_plan["hooks"]
     # spec v3-P.2: every Pilot A / query-map ledger field as ONE dict, computed here,
@@ -2636,6 +3052,12 @@ def run(publish: bool = False, force_format: str | None = None,
             _ps = scheduling.pilot_b_slots(long_publish_at)
             if _ps and str(long_publish_at)[:10] == s1_plan["assignment"].get("day"):
                 slots, s1_slots_ok = _ps, True
+        if cohort_on() and shorts:
+            # spec v3-R D2: the day's native Short lands Tue/Thu/Sat at 18:45 UTC —
+            # the day after its long-form. cohort_short_slot never raises.
+            _cs = cohort_short_slot(long_publish_at)
+            if _cs:
+                slots = [_cs] * len(shorts)
         for i, sp in enumerate(shorts):
             # v3-T.1 row 8: on a Live Trials Saturday the live takes the 18:45 slot, so
             # that Short is not uploaded (3 notifications / 24 h). Never raises.
