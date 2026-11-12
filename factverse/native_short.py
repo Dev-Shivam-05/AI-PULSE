@@ -58,10 +58,34 @@ CTA_TERMS = ("subscribe", "full video", "link in", "like and", "follow us", "fol
 
 last_skip = ""                        # why the last make() returned None
 
+# spec v3-R D8 (docs/spec/ai-pulse-v3r.md): only truth/safety, rights and usable-
+# render failures may block a Short; a STYLE failure gets one repair and then
+# ships with a warning. These patterns are the style failures — everything else
+# (no sentences, an invalid diagram, numbers not in the source, unreadable or
+# unfit text, a failed voice/render/mux) still blocks. 5 of the first 6 cohort-era
+# skips were the label-vocabulary rule alone.
+_STYLE_FAILURES = re.compile(
+    r"^headline must be 1-\d+ words \(got [1-9]|^headline has hype words|^sentence 1 has |"
+    r"spoken words \(max|^the qualification is the last sentence|^a call to action|"
+    r"^a diagram label shares no spoken word|^the headline shares no spoken word|"
+    r"^speech starts at|^sentence 1 is over|^sentence 1 ends at|^the answer \(sentence|"
+    r"^duration |^the takeaway ends at|^the qualification ends after|^headline over|"
+    r"^at [\d.]+s only")
+last_warnings: list[str] = []         # style failures the last make() shipped with
+
+
+def is_style_failure(msg: str) -> bool:
+    return bool(_STYLE_FAILURES.search(str(msg or "")))
+
+
+def _blocking(failures: list[str]) -> list[str]:
+    return [f for f in failures if not is_style_failure(f)]
+
 
 # ------------------------------------------------------------------ text helpers
 def _clean(v) -> str:
-    return sb._clean_text(v)
+    # v3-R: markdown emphasis ("*can't*") was drawn literally on a published hook
+    return re.sub(r"[*`]", "", sb._clean_text(v)).strip()
 
 
 def spoken_words(text_or_sentences) -> int:
@@ -166,8 +190,10 @@ def source_text(script: dict) -> str:
 
 
 # ------------------------------------------------------------------ validation
-def validate(raw, source: str) -> tuple[dict | None, list[str]]:
-    """Coerce and check the model's answer. (spec, []) or (None, failures)."""
+def validate(raw, source: str, strict: bool = True) -> tuple[dict | None, list[str]]:
+    """Coerce and check the model's answer. (spec, []) or (None, failures).
+    strict=False (v3-R D8, the last attempt in the cohort): style failures do not
+    block — the spec comes back with them under "warnings"."""
     if not isinstance(raw, dict):
         return None, ["the answer was not a JSON object"]
     f: list[str] = []
@@ -210,14 +236,15 @@ def validate(raw, source: str) -> tuple[dict | None, list[str]]:
     bad = _numbers_ok([headline, narration] + [e["text"] for e in (els or [])], source)
     if bad:
         f.append(f"numbers not in the source facts: {sorted(set(bad))[:5]}")
-    if f:
+    if f and (strict or _blocking(f)):
         return None, f
     title = re.sub(r"#shorts", "", _clean(raw.get("title")), flags=re.I).strip()
     if not title or len(title) > 60 or gates.hype_terms(title):
         title = headline
     return {"question": _clean(raw.get("question"))[:200], "headline": headline,
             "sentences": sentences, "answer": answer, "qualification": qual,
-            "template": template, "els": els, "title": f"{title} #Shorts"}, []
+            "template": template, "els": els, "title": f"{title} #Shorts",
+            "warnings": list(f)}, []
 
 
 def match_level(spec: dict, excerpt: str) -> str:
@@ -468,8 +495,11 @@ def planned_metrics(spec: dict, words: list, length: float) -> dict:
             "sentence_ends": sentence_ends(words, spec["sentences"])}
 
 
-def build(spec: dict, tag: str = "") -> tuple[dict | None, list[str]]:
-    """Voice -> plan -> render -> mux -> captions -> MEASURE THE FILE -> gate."""
+def build(spec: dict, tag: str = "", strict: bool = True) -> tuple[dict | None, list[str]]:
+    """Voice -> plan -> render -> mux -> captions -> MEASURE THE FILE -> gate.
+    strict=False (v3-R D8): timing/style gate failures become warnings; voice,
+    render, mux, caption, unmeasurable timings and unreadable text still block."""
+    warnings: list[str] = []
     from factverse import shorts as shorts_mod  # noqa: PLC0415 — sets the engine path
     text = " ".join(spec["sentences"])
     audio, words = voice(text)
@@ -487,8 +517,9 @@ def build(spec: dict, tag: str = "") -> tuple[dict | None, list[str]]:
     shift, length = pl
     tw = [(round(s - shift, 3), round(e - shift, 3), w) for (s, e, w) in words]
     pre = gate(planned_metrics(spec, tw, length), spec, None)
-    if pre:
+    if pre and (strict or _blocking(pre)):
         return None, pre                     # fail fast: no render for a doomed timeline
+    warnings += pre
     bd = board(spec, tw, length)
     vis, meta = sb.render_meta(bd, str(fv.TEMP / f"nv_vis{tag}.mp4"), tw, demote_unfit=False,
                                probes=(0.0, NO_REVEAL_S))
@@ -509,23 +540,28 @@ def build(spec: dict, tag: str = "") -> tuple[dict | None, list[str]]:
         return None, [f"caption pass failed: {(r.stderr or '')[-160:]}"]
     m = measure(str(final), spec["sentences"], planned=tw)
     fails = gate(m, spec, meta)
-    if fails:
+    if fails and (strict or _blocking(fails)):
         try:
             final.unlink()                   # a failed Short must never be found and uploaded
         except OSError:
             pass
         return None, fails
+    warnings += [f for f in fails if f not in warnings]
     return {"path": str(final), "measured": m, "min_px": meta.get("min_px"),
             "shown": meta.get("shown"), "render_s": meta.get("seconds"), "shift": shift,
-            "length": length}, []
+            "length": length, "warnings": warnings}, []
 
 
 def make(script: dict, hook: str = "", excerpt: str = "", tag: str = "") -> dict | None:
     """The day's native Short, or None (reason in `last_skip`). Never raises.
     At most 1 + REPAIRS model calls."""
-    global last_skip
+    global last_skip, last_warnings
     last_skip = ""
+    last_warnings = []
     failures: list[str] = []
+    # spec v3-R D8: in the recovery cohort the LAST attempt (after the one repair)
+    # lets style failures through as warnings instead of skipping the Short
+    lenient = fv.flag("recovery_cohort", False)
     try:
         src = source_text(script)
         base = prompt(script, src, hook, excerpt)
@@ -534,14 +570,24 @@ def make(script: dict, hook: str = "", excerpt: str = "", tag: str = "") -> dict
             if attempt:
                 raw = llm.generate_json(repair_prompt(base, raw, failures), temperature=0.3,
                                         max_tokens=2048)
-            spec, failures = validate(raw, src)
+            strict = not (lenient and attempt == REPAIRS)
+            # the keyword only on the lenient attempt: the strict path keeps the
+            # pre-v3-R call shape (older seams and stubs take two arguments)
+            kw = {} if strict else {"strict": False}
+            spec, failures = validate(raw, src, **kw)
             if spec:
-                res, failures = build(spec, tag)
+                res, failures = build(spec, tag, **kw)
                 if res:
-                    res.update(spec=spec, attempts=attempt + 1, match=match_level(spec, excerpt))
+                    warns = list(spec.get("warnings") or []) + [
+                        w for w in res.get("warnings") or [] if w not in (spec.get("warnings") or [])]
+                    res.update(spec=spec, attempts=attempt + 1, match=match_level(spec, excerpt),
+                               warnings=warns)
+                    last_warnings = warns
                     m = res["measured"]
                     print(f"  🧩 Native Short: {m['duration']:.1f}s, speech at {m['first_speech']:.2f}s, "
                           f"{m['script_words']} words, timed by {m['source']} (attempt {attempt + 1})")
+                    if warns:
+                        print(f"  ⚠️ Native Short shipped with style warnings (D8): {'; '.join(warns)[:240]}")
                     return res
             print(f"  ↻ native short attempt {attempt + 1} failed: {'; '.join(failures)[:240]}")
         last_skip = "; ".join(failures)[:300] or "unknown"

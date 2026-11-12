@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import math
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -211,7 +212,9 @@ def normalize_moments(raw, num_scenes: int) -> list:
         except (TypeError, ValueError):
             sn = 3
         hook = m.get("hook_text")
-        hook = "" if hook is None else str(hook).strip()
+        # v3-R: markdown emphasis from the model was drawn literally on a published
+        # hook ("What the robot *can't* do yet") — _esc does not touch it
+        hook = "" if hook is None else re.sub(r"[*`]", "", str(hook)).strip()
         if not hook:
             continue
         out.append({"scene_num": max(1, min(sn, max(1, int(num_scenes)))),
