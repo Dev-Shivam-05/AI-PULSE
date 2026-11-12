@@ -131,6 +131,14 @@ jobs:
           META_IG_USER_ID: ${{ secrets.META_IG_USER_ID }}
         run: python -m factverse.reels
 
+      # spec v3-R D11: answer every genuine viewer question within 24 h, from the
+      # video's own sources. Both crons run it (idempotent: state/replied.json). Own
+      # process, always exits 0, ABOVE the state-save or the replied list is lost.
+      - name: Answer viewer questions
+        if: always()
+        continue-on-error: true
+        run: python -m factverse.replies
+
       # Learning-loop data: daily channel/video performance snapshot (never fatal)
       - name: Collect channel analytics
         if: always()
@@ -155,7 +163,7 @@ jobs:
                      state/notified_ig.json state/notified_fb.json \
                      state/shadow_queue.jsonl \
                      state/pilot_b.json state/pilot_a.json state/first_seen.json \
-                     state/notified_tasks.json; do
+                     state/notified_tasks.json state/replied.json; do
               [ -f "$f" ] && cp "$f" /tmp/state_incoming/ || true
             done
             # Cheat sheets need the same stashing as state. On pass 1 the PDF is
