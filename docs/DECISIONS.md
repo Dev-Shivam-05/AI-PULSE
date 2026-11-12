@@ -693,3 +693,27 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
   its moving clock; here they cost the time that put a hold card at 1:30.
 - **`repeat_choice` stays on R3's wording** (first PARTIAL/FAIL, else the control). A timed-out
   test is not repeated unless the owner says otherwise.
+
+## 2026-11-12 — v3-R: the recovery cohort (owner: "Go for all")
+
+- **Why.** The 11-04 plan never reached a viewer: in its first week the evidence rule skipped
+  7/7 tool videos and the native-Short label gate skipped 6/6 days, so filler was published.
+  Every new rule could only block, and none was measured against a week of real candidates.
+  Fresh Studio data: non-tool long-forms get a median of 2-7 views, the Shorts feed collapsed on
+  2026-10-25 at ~13% stayed-to-watch, 18 returning viewers in 28 days, and no comment was ever
+  answered. Diagnosis and the D1-D14 table were agreed with ChatGPT Pro in 2 rounds and locked by
+  the owner (docs/spec/ai-pulse-v3r.md).
+- **Only truth, rights and usable-render failures may block publishing.** Style rules warn after
+  one repair (D8). A day with no qualified candidate publishes nothing rather than filler (D7).
+- **No candidate is skipped for lack of a demo.** The documentation route labels the video
+  "From the docs — not tested by ToolDojo" from 0:00 and forbids testing claims in the
+  narration (D4). The P.1 labels stay unchanged outside the cohort, so Live Trials and the K.1
+  site keep the contract they were built on.
+- **The cohort waits for its start date.** Scheduled runs before 2026-11-16 publish nothing, so
+  the six measured uploads all fall inside the 14-day window.
+- **A latent P.1 hole is closed.** A non-pilot tool video with `evidence_engine` on took the
+  clean-copy branch and never came back for its thumbnail and Shorts. No tool video was
+  published after that merge, so it never showed; the first cohort video would have exposed it.
+- **Not done here (R.3/R.4):** the reply module, the title gate, the visual rules, the reserve,
+  and the measurement. The comment reply and the gpu-unlock retitle were left to the owner: the
+  permission classifier refused the browser automation that would have posted them.

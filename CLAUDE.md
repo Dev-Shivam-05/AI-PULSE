@@ -309,6 +309,19 @@ name that is not written there. If a decision is missing, add a row and get one 
   branch's `docs/HANDOFF.md` title.
 - **A clean stream is not a watchable show.** The first full Live Trials run had 0 decode errors
   and 75% of its time without voice. List each window's longest unchanged frame from `list.txt`.
+- **A rule that can only block must be measured on real candidates before it ships.** The P.1
+  evidence rule and the S.1 label gate passed every test, then blocked 7/7 tool videos and 6/6
+  native Shorts in their first week, and the fallback published filler. The owner judged the
+  whole review by that. Before merging a gate, run it over a week of real candidates and write
+  down its pass rate. Since v3-R only truth, rights and usable-render failures may block (D8).
+- **`_render_longform` has two clean-copy branches, and both must come back for the extras.** The
+  P.1 one did not: a non-pilot tool video with `evidence_engine` on would have been uploaded with
+  no thumbnail and no Shorts. It never showed only because no tool video was published after
+  the merge. `run()` now makes the extras for any render that returned a clean copy without them.
+- **`recovery_cohort` is ON in config.json** and reaches `decide_format`, `run()`'s first lines,
+  `_fallback_format`, the tool lane, `script_tool`, the render and the Shorts slots. conftest
+  turns it off suite-wide; a test that needs it sets `RECOVERY_COHORT=1`
+  (`tests/test_r2_cohort.py`).
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the
