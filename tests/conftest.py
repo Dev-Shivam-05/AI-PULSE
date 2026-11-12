@@ -33,3 +33,12 @@ def _m1_network_switches_off(monkeypatch):
     tests/test_m1_memory.py turns them on with `_m1_flag`, which overrides this."""
     for name in ("FOLLOWUP_CANDIDATES", "SHADOW_QUEUE"):
         monkeypatch.setenv(name, "0")
+
+
+@pytest.fixture(autouse=True)
+def _r2_cohort_off(monkeypatch):
+    """v3-R: `recovery_cohort` is ON in config.json, and it changes the lane, the
+    schedule, the Shorts and the evidence route. Every older test pins the
+    behaviour without it, so it is OFF here; tests/test_r2_cohort.py turns it on
+    per test (the same env override fv.flag honours)."""
+    monkeypatch.setenv("RECOVERY_COHORT", "0")
