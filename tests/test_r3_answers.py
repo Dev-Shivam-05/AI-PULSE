@@ -87,17 +87,14 @@ def test_r3a_cohort_capture_shoots_stills_not_a_scroll(monkeypatch, tmp_path):
     assert lst.count("duration 3.000") == 3
 
 
-def test_r3a_failed_stills_fall_back_to_the_desktop_recording(monkeypatch, tmp_path):
+def test_r3a_failed_stills_never_fall_back_to_a_desktop_scroll(monkeypatch, tmp_path):
     _r3a_on(monkeypatch)
     monkeypatch.setattr(sc.fv, "TEMP", tmp_path)
     monkeypatch.setattr(sc, "_shoot_pages", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("no browser")))
-    rec = []
-    monkeypatch.setattr(sc, "_record_pages",
-                        lambda urls, out, t: rec.append(1) or ([(str(Path(out) / "a.webm"), 2.5)], "shot.png"))
+    monkeypatch.setattr(sc, "_record_pages", lambda *a, **k: (_ for _ in ()).throw(AssertionError("scroll")))
     monkeypatch.setattr(sc, "_ffmpeg", _r3a_fake_ffmpeg([]))
-    monkeypatch.setattr(sc, "_probe_duration", lambda p: 60.0)
     out = sc.capture({"scenes": [{"narration": "w " * 40}] * 4, "source_url": "https://github.com/o/r"})
-    assert rec == [1] and out and out["screenshot"] == "shot.png"
+    assert out is None                                                # D9: no scroll fallback
 
 
 def test_r3a_cohort_off_keeps_the_desktop_recording(monkeypatch, tmp_path):
@@ -193,6 +190,9 @@ def test_r3a_older_rows_take_the_catalogue_source(monkeypatch):
 @pytest.mark.parametrize("raw, status", [
     ({"question": True, "on_topic": True, "settled": True, "reply": "The README lists RTX 50 as not supported."},
      "answered"),
+    ({"question": "false", "on_topic": "true", "reply": "x"}, "not_question"),        # strings are not True
+    ({"question": True, "on_topic": True, "reply": "DM me on telegram for the fix"}, "not_question"),
+    ({"question": True, "on_topic": True, "reply": "Ask @someone about it"}, "not_question"),
     ({"question": False, "on_topic": True, "reply": "x"}, "not_question"),
     ({"question": True, "on_topic": False, "reply": "x"}, "not_question"),
     ({"question": True, "on_topic": True, "reply": ""}, "failed"),
@@ -200,6 +200,11 @@ def test_r3a_older_rows_take_the_catalogue_source(monkeypatch):
 ])
 def test_r3a_decide(raw, status):
     assert rp.decide(raw)[0] == status
+
+
+def test_r3a_clean_reply_drops_bare_domains():
+    t = rp.clean_reply("Grab it at www.evil-example.com/win or evil-example.com/x today. README.md says no.")
+    assert "evil" not in t and "README.md says no." in t
 
 
 def test_r3a_clean_reply_drops_links_markdown_and_runs_long():

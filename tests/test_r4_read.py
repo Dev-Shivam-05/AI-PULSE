@@ -135,9 +135,26 @@ def test_r4_delivery_counts_what_shipped():
     replied = {"c1": {"status": "answered", "published": "2026-11-17T10:00:00Z", "at": "2026-11-17T12:30:00"},
                "c2": {"status": "answered", "published": "2026-11-15T10:00:00Z", "at": "2026-11-17T12:30:00"},
                "c3": {"status": "not_question"}}
-    d = co.delivery(rows, replied, dt.date(2026, 11, 16))
+    d = co.delivery(rows, replied, dt.date(2026, 11, 16), today=dt.date(2026, 11, 21))
     assert d["long_forms"] == 1 and d["filler"] == 1 and d["native_shorts"] == 1 and d["crop_shorts"] == 1
-    assert d["logged_misses"] == 1 and d["replies"] == 2 and d["replies_on_time"] == 1
+    assert d["missed_days"] == ["2026-11-20"] and d["logged_misses"] == 1      # Fri: nothing went public
+    assert d["replies"] == 2 and d["replies_on_time"] == 1
+
+
+def test_r4_reads_stay_inside_the_14_days():
+    rows = [{"status": "PUBLISHED", "format": "tool", "youtube_url": f"https://youtube.com/watch?v=V{i:010d}",
+             "publish_at": (dt.date(2026, 11, 16) + dt.timedelta(days=i)).isoformat() + "T16:45:00Z"}
+            for i in range(0, 20, 2)]
+    got = co.cohort_rows(rows, dt.date(2026, 11, 16))
+    assert len(got) == 7 and got[-1]["publish_at"].startswith("2026-11-28")
+    assert co.missed_days(rows, dt.date(2026, 11, 16), dt.date(2026, 12, 7)) == ["2026-11-23", "2026-11-25", "2026-11-27"]
+
+
+def test_r4_an_unusable_curve_is_given_up_after_five_reads():
+    vids = {"A": dt.date(2026, 11, 16)}
+    assert co.due(vids, {}, dt.date(2026, 12, 1), {"A": 4}) and not co.due(vids, {}, dt.date(2026, 12, 1), {"A": 5})
+    snaps = [{"cohort_reads": {"A": {"curve": []}}}] * 3
+    assert co.read_attempts(snaps) == {"A": 3}
 
 
 def test_r4_shorts_read_needs_the_csv_and_its_floor(tmp_path):

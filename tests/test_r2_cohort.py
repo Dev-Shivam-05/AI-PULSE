@@ -212,12 +212,13 @@ def test_r2_docs_record_is_labelled_not_admissible_and_on_the_ledger():
     assert ev.LABELS["docs"] in brief and "we tested" in brief and "NOT run" in brief
 
 
-def test_r2_docs_overclaims_catch_testing_and_your_machine():
+def test_r2_docs_overclaims_catch_testing_but_not_attributed_claims():
     script = {"evidence": ev.docs_record(), "scenes": [
-        {"narration": "We tested it on a laptop."}, {"narration": "It works on your machine today."},
+        {"narration": "We tested it on a laptop."},
+        {"narration": "The model card says it works offline."},
+        {"narration": "Per the README, it runs on your own machine."},
         {"narration": "The README says it supports Linux."}]}
-    hits = [h.lower() for h in ev.overclaims(script)]
-    assert "we tested" in hits and "works on your machine" in hits and len(hits) == 2
+    assert [h.lower() for h in ev.overclaims(script)] == ["we tested"]
 
 
 def _r2_scenes(n=6):
@@ -397,19 +398,20 @@ def test_r2_a_skipped_native_means_no_short_that_day(monkeypatch, tmp_path):
     assert rows[-1]["status"] == "PUBLISHED" and [u for u in uploads if "short" in u[0]] == []
 
 
-def test_r2_tool_video_gets_a_thumbnail_and_its_native_short(monkeypatch, tmp_path):
-    """The latent P.1 hole: a non-pilot tool video with evidence_engine on took the
-    clean-copy branch and was uploaded with no thumbnail and no Shorts."""
-    script = dict(_r2_script("tool"), evidence=ev.docs_record())
-    rows, uploads, burned = _r2_run(monkeypatch, tmp_path, script, _r2_native_ok,
-                                    flags={"evidence_engine": True, "evidence_required": True,
-                                           "receipts_check": False})
-    longs = [u for u in uploads if "short" not in u[0]]
-    assert rows[-1]["status"] == "PUBLISHED"
-    assert longs[0][3] == "t.jpg"                                         # a real thumbnail
-    assert len([u for u in uploads if "_nv_" in u[0]]) == 1
-    assert rows[-1]["evidence_source"] == "docs"
+def test_r2_docs_label_chip_is_burned_from_zero(monkeypatch, tmp_path):
+    script = dict(_r2_script(), evidence=ev.docs_record())
+    rows, uploads, burned = _r2_run(monkeypatch, tmp_path, script, _r2_native_ok)
+    assert rows[-1]["status"] == "PUBLISHED" and rows[-1]["evidence_source"] == "docs"
+    assert [u for u in uploads if "#Shorts" not in u[2]][0][3] == "t.jpg"    # the thumbnail
     assert burned and (0.0, 7.0, ev.LABELS["docs"]) in burned[0]          # D4/D5 chip from 0:00
+
+
+def test_r2_cohort_tool_video_without_readable_visuals_publishes_nothing(monkeypatch, tmp_path):
+    """D8/D9: no readable page visuals = no video (never unrelated stock)."""
+    script = dict(_r2_script("tool"), evidence=ev.docs_record())
+    rows, uploads, _ = _r2_run(monkeypatch, tmp_path, script, _r2_native_ok,
+                               flags={"receipts_check": False})
+    assert rows[-1]["status"] == "VISUALS_BLOCKED" and uploads == []
 
 
 # ================================================================ D8: the native Short validator
@@ -610,3 +612,66 @@ def test_r3_run_skips_the_short_when_its_family_had_one(monkeypatch, tmp_path):
     rows, uploads, _ = _r2_run(monkeypatch, tmp_path, _r2_script(), native)
     assert rows[-1]["status"] == "PUBLISHED" and called == []                   # not even rendered
     assert [u for u in uploads if "#Shorts" in u[2]] == [] and len(uploads) == 1
+
+
+# ================================================================ review fixes (independent review 2026-11-12)
+def test_r2_rest_check_uses_the_publish_day_not_the_run_day(monkeypatch):
+    """A late Monday retry rolls long_slot to Tuesday: that is a rest day, publish nothing."""
+    _r2_on(monkeypatch)
+    monkeypatch.setitem(ap.fv.CONFIG, "cohort_start", "2026-11-16")
+    monkeypatch.setattr(ap.scheduling, "long_slot", lambda: "2026-11-17T16:45:00Z")   # Tuesday
+    rows = []
+    monkeypatch.setattr(ap, "record_run", lambda **kw: rows.append(kw))
+    monkeypatch.setattr(ap.signal_engine, "rank", lambda limit=20: 1 / 0)
+    assert ap.run(publish=True) == {"status": "COHORT_REST_DAY"}
+    monkeypatch.setattr(ap.scheduling, "long_slot", lambda: "2026-11-16T16:45:00Z")   # Monday
+    monkeypatch.setattr(ap, "already_published_today", lambda: True)
+    assert ap.run(publish=True) == {"status": "SKIPPED_DUPLICATE_DAY"}
+
+
+def _r2_pass_harness(monkeypatch, script):
+    """run() up to the script print, with the rewrite passes observed."""
+    seen = []
+    monkeypatch.setattr(ap, "cohort_day", lambda d: "long")
+    monkeypatch.setattr(ap, "already_published_today", lambda: False)
+    monkeypatch.setattr(ap.signal_engine, "rank", lambda limit=20: [])
+    monkeypatch.setattr(ap, "build_script", lambda f, r, v: script)
+    monkeypatch.setattr(ap, "record_run", lambda **kw: None)
+    monkeypatch.setattr(ap, "critique_pass", lambda s: seen.append("critique") or dict(s, thumb_text="12K STARS"))
+
+    def grow(s, n):
+        seen.append("length")
+        return dict(s, title="Something else entirely", thumb_text="12K STARS")
+    monkeypatch.setattr(ap, "enforce_length", grow)
+    monkeypatch.setattr(ap, "enforce_max_length", lambda s, n: seen.append("cap") or s)
+    monkeypatch.setattr(ap.querymap, "apply", lambda s: (_ for _ in ()).throw(AssertionError("query map")))
+
+    class Stop(Exception):
+        pass
+    captured = []
+    monkeypatch.setattr(ap, "place_description_blocks",
+                        lambda s: captured.append(s) or (_ for _ in ()).throw(Stop()))
+    with pytest.raises(Stop):
+        ap.run(publish=True)
+    return seen, captured
+
+
+def test_r2_cohort_skips_the_critique_and_keeps_its_packaging(monkeypatch):
+    _r2_on(monkeypatch)
+    monkeypatch.setenv("QUERY_MAP", "1")
+    script = {"title": "demo-unlock: Does it run on Windows?", "thumb_text": "LINUX ONLY", "format": "tool",
+              "answer_line": "Per its README, Linux only.", "signal_title": "acme/demo-unlock",
+              "evidence": ev.docs_record(), "scenes": _r2_scenes(), "description": "d"}
+    seen, captured = _r2_pass_harness(monkeypatch, script)
+    assert seen == ["length", "cap"]                                      # no critique pass
+    out = captured[0]                                                     # query map never ran (stub raises)
+    assert out["title"] == "demo-unlock: Does it run on Windows?" and out["thumb_text"] == "LINUX ONLY"
+    assert out["answer_line"] == "Per its README, Linux only."
+
+
+def test_r2_hugging_face_names_are_not_doubled():
+    s = ap.cohort_packaging({"title": "Nemotron 3.5 Transcribe: What You Need"},
+                            "nvidia/NVIDIA-Nemotron-3.5-Transcribe-30B-A4B")
+    assert s["title"] == "Nemotron 3.5 Transcribe: What You Need"
+    s = ap.cohort_packaging({"title": "Does it run on Windows?"}, "Zagitta/gpu-unlock")
+    assert s["title"] == "gpu-unlock: Does it run on Windows?"
