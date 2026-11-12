@@ -2298,6 +2298,14 @@ def already_published_today() -> bool:
     if _os.environ.get("FORCE_PUBLISH"):
         return False
     today = _dt.datetime.utcnow().strftime("%Y-%m-%d")
+    # The run day is not the publish day. GitHub's cron fires 4-8 h late, and
+    # long_slot rolls a run past 16:30 UTC to TOMORROW's slot, so a late run on day
+    # N-1 and an earlier run on day N both target day N. Checking the run day alone
+    # let 6 days get two long-forms at the same 16:45 (07-29 .. 10-24 in the ledger).
+    try:
+        slot_day = str(scheduling.long_slot())[:10]
+    except Exception:  # noqa: BLE001
+        slot_day = ""
     texts = []
     try:
         _sp.run(["git", "fetch", "origin", "main", "--quiet"], cwd=str(fv.BASE),
@@ -2319,8 +2327,14 @@ def already_published_today() -> bool:
                 d = json.loads(line)
             except json.JSONDecodeError:
                 continue
-            if d.get("status") == "PUBLISHED" and str(d.get("timestamp", "")).startswith(today):
-                print(f"  ⏭️  Already published today ({d.get('title', '')[:60]}) — skipping.")
+            if not isinstance(d, dict) or d.get("status") != "PUBLISHED":
+                continue
+            if str(d.get("timestamp", "")).startswith(today):
+                print(f"  ⏭️  Already published today ({str(d.get('title', ''))[:60]}) — skipping.")
+                return True
+            if slot_day and str(d.get("publish_at") or "")[:10] == slot_day:
+                print(f"  ⏭️  A video already goes public on {slot_day} "
+                      f"({str(d.get('title', ''))[:60]}) — skipping.")
                 return True
     return False
 
