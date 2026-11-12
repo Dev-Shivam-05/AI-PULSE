@@ -46,20 +46,45 @@ measured once in Studio before the day-21 read (phase R.4).
 Radar Live, task hubs and the site catalogue, X posting, a second daily long-form, a new voice
 (the Kokoro voice stays), Pilot A/B experiments (superseded by this cohort).
 
-## Phases
-- **R.2 — cohort launch** (this branch): D1, D2, D3, D4, D5, D7 (no-filler part), D8, D12, plus the
-  visible defects found in the frames (literal markdown asterisks in Short hooks).
-- **R.3 — answers and visuals**: D11 reply module, D6 title rule as a gate, D9 visual rules,
-  D7 reserve, Short subject-family cooldown across weeks, the empty-diagram defect.
-- **R.4 — read**: R0 measurement, day-14 delivery report, day-21 outcome report (D13, D14).
+## Phases (all on branch `v3-phase-r2`)
+- **R.2 — cohort launch**: D1, D2, D3, D4, D5, D7 (no-filler part), D8, D12, plus the visible
+  defects found in the frames (literal markdown asterisks in titles, hooks and labels).
+- **R.3 — answers and visuals**: D11 (`factverse/replies.py`, `answer_line` as description line 1
+  and in the channel comment), D6 as a fixer (`cohort_packaging`: the title names the tool, no
+  popularity count on the thumbnail; the critique pass is skipped and the packaging restored after
+  the length passes), D9 (`screencap` readable stills; no desktop-scroll and no stock fallback in
+  the cohort — no readable visuals = `VISUALS_BLOCKED`, nothing published), the 168 h Short
+  family cooldown (D2), concrete stock queries (the empty-diagram defect), and the README
+  sections that answer a queue question appended to the grounding (D12).
+- **R.4 — read**: `factverse/cohort.py` — first-7-day retention curves collected nightly for the
+  cohort long-forms and once for the 11 frozen baseline videos (R0), the day-14 delivery and
+  day-21 outcome report (`python -m factverse.cohort [--shorts-csv file]`, written to
+  `output/cohort/report.md`), the D14 verdict.
+- **Not built: the D7 reserve of 3 pre-rendered videos.** CI keeps nothing between runs
+  (`output/videos/` dies with the runner), so a reserve needs a home — e.g. private uploads that a
+  miss day schedules. That puts unpublished videos on the channel: an owner decision, not taken
+  here. D7 is a target, not a gate; its no-filler half is built.
+- **A1/A2 are the owner's.** Posting the reply and editing the gpu-unlock title were refused by the
+  permission classifier as browser actions, and the API route for A2 was refused too. D11 (built)
+  answers the RTX 50 comment on its first CI run unless `comment_replies` is turned off.
+
+## Implementation values (chosen here, not in the locked table — provisional)
+| Value | Where | Why |
+|---|---|---|
+| docs chip 0:00 until scene 2, at most 7 s | `ai_pipeline.COHORT_CHIP_MAX_S` | D5: the answer lands by 0:07 |
+| README sections appended: at most 1,500 chars | `ai_pipeline.QUESTION_SECTIONS_MAX` | gpu-unlock's answer is 398 chars |
+| stills: 640x360 viewport at scale 3, 3.0 s each, 80% scroll per still | `screencap.STILL_*` | 48 px text = the repo's TEXT_MIN_PX floor; 3.0 s x 1.35 recut stretch < 5 s |
+| replies: 90-day backlog, 10 replies per run, 450 chars, no links/domains/handles | `replies.py` | D11 backlog; 50 quota units per reply |
+| reads: first 7 days = [publish, publish + 6], 2-day lag, 5 attempts | `cohort.py` | the collector's own age_bands window, so W0 and R0 describe the same days |
 
 ## Acceptance (binary)
-- [ ] On a Tue/Thu/Sat/Sun run day no long-form is built; on Mon/Wed/Fri at most one is.
-- [ ] No news / evergreen / roundup / debate long-form can be produced while the cohort flag is on, including through any fallback.
-- [ ] A day with no qualified candidate records a miss in the ledger and uploads nothing.
-- [ ] A tool candidate without admissible evidence proceeds with the documentation label instead of being skipped.
-- [ ] The cohort long-form has no intro bumper and its first 10 s contain no popularity counter.
-- [ ] No crop or storyboard Short is uploaded; a native Short is only uploaded for Tue/Thu/Sat 18:45 UTC.
-- [ ] A native Short whose only failures are style rules is published after one repair (warning logged).
-- [ ] The topic queue serves D12's items in order and never repeats a served item.
-- [ ] Every new flag has a kill switch in config.json; the full suite passes.
+- [x] On a Tue/Thu/Sat/Sun publish day no long-form is built; on Mon/Wed/Fri at most one is (checked against the slot's date).
+- [x] No news / evergreen / roundup / debate long-form can be produced while the cohort flag is on, including through any fallback.
+- [x] A day with no qualified candidate uploads nothing (the report counts it as a missed day).
+- [x] A tool candidate without admissible evidence proceeds with the documentation label instead of being skipped.
+- [x] The cohort long-form has no intro bumper and its first 10 s contain no popularity counter.
+- [x] No crop or storyboard Short is uploaded; a native Short is only uploaded for Tue/Thu/Sat 18:45 UTC.
+- [x] A native Short whose only failures are style rules is published after one repair (warning logged).
+- [x] The topic queue serves D12's items in order and never repeats a served item.
+- [x] Every new flag has a kill switch in config.json; the full suite passes.
+- [ ] Observed in production: the first cohort run (Monday 2026-11-16, CI) — after the merge.

@@ -314,14 +314,26 @@ name that is not written there. If a decision is missing, add a row and get one 
   native Shorts in their first week, and the fallback published filler. The owner judged the
   whole review by that. Before merging a gate, run it over a week of real candidates and write
   down its pass rate. Since v3-R only truth, rights and usable-render failures may block (D8).
-- **`_render_longform` has two clean-copy branches, and both must come back for the extras.** The
-  P.1 one did not: a non-pilot tool video with `evidence_engine` on would have been uploaded with
-  no thumbnail and no Shorts. It never showed only because no tool video was published after
-  the merge. `run()` now makes the extras for any render that returned a clean copy without them.
+- **`_render_longform` has TWO if/elif chains that both start `if arm:` — read them apart.** The
+  first places the opening or the evidence clip (before step5_build); the second decides who makes
+  the thumbnail and Shorts (after it, `else: _make_extras` for every non-arm render). On
+  2026-11-12 they were read as one chain, a "missing thumbnail" bug was reported that never
+  existed, and dead code was added; an independent review caught it.
 - **`recovery_cohort` is ON in config.json** and reaches `decide_format`, `run()`'s first lines,
-  `_fallback_format`, the tool lane, `script_tool`, the render and the Shorts slots. conftest
-  turns it off suite-wide; a test that needs it sets `RECOVERY_COHORT=1`
-  (`tests/test_r2_cohort.py`).
+  `_fallback_format`, the tool lane, `script_tool`, the rewrite passes, the render, the Shorts
+  slots and `screencap`. conftest turns it off suite-wide; a test that needs it sets
+  `RECOVERY_COHORT=1` (`tests/test_r2_cohort.py`).
+- **The rewrite passes judge by the GENERIC rules.** `critique_pass` rule 5 wants a number or FREE
+  on the thumbnail and rule 1 a "what you can do" scene 1 — it undid the cohort's answer-first
+  packaging. A format with its own contract must skip it (Pilot A and the cohort do) and restore
+  its packaging after the length passes.
+- **A Playwright VIDEO ignores `device_scale_factor`; a SCREENSHOT honours it.** A 640x360 viewport
+  at scale 3 records into one corner of a 1920x1080 video, but screenshots at exactly 1920x1080.
+  Phone-readable page footage is therefore built from stills (`screencap._shoot_pages`).
+- **`learn.video_id` only matches real 11-character ids.** A test fixture id like "VID1" makes every
+  ledger lookup miss silently; use 11-character ids in tests.
+- **Schedule rules are about the PUBLISH day.** `scheduling.long_slot` rolls to tomorrow when the
+  run is late; check a weekday rule against the slot's date, never `utcnow()`.
 
 ## Definition of done here
 A phase is done when the tests pass AND the artifact was produced and inspected — watch the

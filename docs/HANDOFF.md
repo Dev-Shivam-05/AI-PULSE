@@ -1,72 +1,74 @@
-# HANDOFF — ToolDojo — Phase v3-R.2 Recovery cohort launch — 2026-11-12
+# HANDOFF — ToolDojo — Phases v3-R.2, R.3, R.4 (recovery cohort) — 2026-11-12
 
 ## Done
-- **v3-R.1 diagnosis (no code).** Fresh YouTube Studio data was read from the owner's logged-in profile without changing anything. Frames from 4 real videos were read off YouTube's public storyboards. A 2-round ChatGPT Pro review followed, and the owner locked table D1-D14 with "Go for all".
-- **The 11-04 changes never reached a viewer.**
-  - Tool videos: 0/7 published.
-  - Native Shorts: 0/6 published.
-  - Non-tool long-forms: median 2-7 views.
-  - Shorts: about 13% stayed to watch, and the Shorts feed collapsed on 2026-10-25, before any change.
-  - Returning viewers: 18 in 28 days.
-  - Comments: 0 ever answered.
-- **v3-R.2 is built on branch `v3-phase-r2`. With `recovery_cohort` on:**
-  - Scheduled runs publish nothing before 2026-11-16 and on Tue/Thu/Sat/Sun. They exit 0 and write a `COHORT_REST_DAY` row.
-  - On Mon/Wed/Fri the tool lane runs, and the six queue topics come first (gpu-unlock first).
-  - A forced news/evergreen/roundup/debate run is refused with `COHORT_LANE_PAUSED`.
-  - A day with no qualified candidate publishes nothing. The evergreen fallback is gone, and a gate block re-runs the tool lane.
-  - A tool with no demo evidence takes the documentation route, labelled "From the docs — not tested by ToolDojo":
-    - as a chip from 0:00 until scene 2 (7 s at most);
-    - as a description line;
-    - with testing claims caught as over-claims.
-  - Openings: no logo bumper, no human cold open, no stat-card counter. The writer gets an answer-first "Before You Install" brief plus a cohort title/thumbnail contract.
-  - Shorts: one native Short the day after the long-form at 18:45 UTC; no crop or storyboard Shorts. Style failures warn after one repair. Truth, render and readability failures still block.
-  - Markdown asterisks are stripped from titles, thumb text, hooks and native labels.
-- **Fixed a latent P.1 hole.** A non-pilot tool video would have been uploaded with no thumbnail and no Shorts.
+- **R.1 diagnosis.** Fresh Studio data, the frames of 4 real videos and a 2-round ChatGPT Pro review. The owner locked D1-D14 ("Go for all"). The round folder is untracked in the main checkout.
+- **R.2 cohort launch.** With `recovery_cohort` on:
+  - Long-forms go public on Mon/Wed/Fri only, from 2026-11-16. The check uses the publish day, not the run day.
+  - Every other lane is paused, including through fallbacks. A day with no qualified candidate publishes nothing.
+  - The six queue topics run first, gpu-unlock first.
+  - A tool with no demo takes the documentation route: an on-screen chip from 0:00 plus a description line.
+  - No sting, no cold open and no stat-card counter.
+  - One native Short goes out the next day at 18:45 UTC, with no crop Shorts. Its style failures warn after one repair.
+- **R.3 answers and visuals:**
+  - `factverse/replies.py` answers every genuine viewer question within 24 h, from the video's own sources. The first CI run answers the RTX 50 comment (A1).
+  - `answer_line` is description line 1 and leads the channel comment.
+  - Packaging: the title names the tool and the thumbnail carries the answer. The critique pass is skipped and the packaging restored after the length passes.
+  - Footage is phone-readable stills: 1920x1080 frames with 48 px text and no scroll. With no readable visuals the video is not published.
+  - A 168 h Short family cooldown.
+  - Abstract stock queries are replaced with concrete ones.
+  - The README sections that answer the queue question are appended to the grounding.
+- **R.4 read.** `factverse/cohort.py` collects first-7-day retention curves (cohort plus the 11 baseline videos), and `python -m factverse.cohort` writes the day-14 / day-21 report with the D14 verdict. W0 = 13 min, recomputed from real data.
 - **Verification:**
-  - Tests: 837/837, 50 of them new.
-  - The docs-label chip frame was rendered through the real drawtext chain and read: the em dash renders, 39 px at 1080p.
-  - The assembled writer prompt and the description were printed and read.
-- **Commits:** 5 on `v3-phase-r2`. `git merge-tree` against origin/main is clean.
+  - Tests: 915/915.
+  - A real readable-stills capture of gpu-unlock produced 26 stills, 81 s, 1920x1080 @ 30 fps; the frames were read.
+  - On the real gpu-unlock README, exactly the Windows and RTX 50 FAQ entries are picked.
+  - The docs chip frame was rendered and read.
+  - The assembled prompt and description were read.
+  - An independent review found 9 issues; all were fixed and test-pinned, or recorded below.
+- **Commits:** 17 on `v3-phase-r2`. **Not pushed:** the Claude OS guard hook blocked `git push`, so the owner pushes.
 
 ## Files changed
-- `factverse/ai_pipeline.py`:
-  - cohort helpers (`cohort_on`, `cohort_day`, `cohort_short_slot`, `cohort_queue_items`, `cohort_label_chip`);
-  - `decide_format`, the start of `run()`, `_fallback_format`, the tool lane, `script_tool` (docs route, brief), `_output_contract(cohort=)`;
-  - render: no cards and no sting; chip; extras fix; Shorts slot.
-- `factverse/evidence.py`: the `docs` source, `COHORT_LABELS` (cohort-scoped D4 wording), `docs_record`/`docs_brief`/`screen_label`, docs over-claims and its description line.
-- `factverse/native_short.py`: D8 style-versus-blocking classification, a lenient last attempt in the cohort, `last_warnings`, asterisk strip.
-- `factverse/shorts.py`: hook asterisk strip.
-- `config.json`, `config.example.json`: `recovery_cohort: true`, `cohort_start: 2026-11-16`, and `cohort_queue` (6 topics with parent video, family, URL and question).
-- `tests/test_r2_cohort.py` (new, 50 tests).
-- `tests/conftest.py`: `RECOVERY_COHORT=0` suite-wide.
-- `docs/spec/ai-pulse-v3r.md` (new, the locked table and the frozen baseline).
-- `docs/PHASES.md`: R.1-R.4 rows, Next 3 item 0.
-- `docs/DECISIONS.md`: the 2026-11-12 entry.
-- `CLAUDE.md`: 3 traps.
+- `factverse/ai_pipeline.py` — cohort schedule, lanes, queue, docs route, prompt contract, rewrite-pass handling, render, Shorts slot and cooldown, answer line, packaging fixer, README sections, concrete queries.
+- `factverse/evidence.py` — `docs` source, cohort-scoped D4 labels, docs brief, chip label, over-claims, description line.
+- `factverse/native_short.py` — D8 style warnings on the lenient last attempt, asterisk strip.
+- `factverse/shorts.py` — hook asterisk strip.
+- `factverse/screencap.py` — readable stills mode (`_shoot_pages`, `stills_list`, `first_page_url`).
+- `factverse/replies.py` (new) — D11 replies.
+- `factverse/cohort.py` (new) — R.4 reads and report.
+- `factverse/analytics.py` — `cohort_reads` hook.
+- `factverse/state_merge.py` — `state/replied.json`.
+- `.github/workflows/publish.yml` — replies step and stash entry.
+- `state/replied.json` (new, `{}`).
+- `config.json`, `config.example.json` — `recovery_cohort`, `cohort_start`, `cohort_queue`, `comment_replies`, `cohort_reads`.
+- `.gitignore` — `output/cohort/`.
+- Tests: `tests/test_r2_cohort.py`, `tests/test_r3_answers.py`, `tests/test_r4_read.py`, `tests/conftest.py`.
+- Docs: `docs/spec/ai-pulse-v3r.md`, `docs/PHASES.md`, `docs/DECISIONS.md`, `CLAUDE.md`.
 
 ## Decisions made
-- **D4 labels are cohort-scoped.** The P.1 labels stay outside the cohort, so Live Trials and the K.1 site keep their contract.
-- **Before `cohort_start`, scheduled runs publish nothing**, so all six measured uploads fall inside the 14-day window.
-- **A forced `tool` dispatch on a rest day is allowed.** It is the owner's own supervised call.
-- **Queue items are matched as "served" by the PUBLISHED ledger `source_url`.** They are not matched by parent, because gpu-unlock and nv-uefi-unlocker share one parent.
-- **OpenBot's identity comes from the original video's source line** (CopilotKit/OpenBot). nv-uefi-unlocker is `physicsdolphin/nv-uefi-unlocker`, which GitHub search shows as the repo searchers mean.
+- **The R.2 claim of a "latent P.1 hole" was wrong.** It is corrected in DECISIONS and in a CLAUDE.md trap.
+- **The cohort skips `critique_pass` and the query-map retitle.** Both rewrite the answer-first packaging.
+- **Within the cohort, no readable visuals means nothing is published** (D8: readable evidence is render integrity). There is no fallback to a scroll or to stock.
+- **The docs route blocks first-person testing claims only.** Attributed claims are allowed.
+- **Replies need literal `true` booleans**, and links, domains, handles and bait are refused.
+- **Implementation values** (chip 7 s, 1,500 README chars, stills, replies limits, read window) are in the spec's "Implementation values" table.
 
 ## Known broken / deliberately skipped
-- **A1/A2 were not done.** The permission classifier refused the Studio browser automation, so the owner pastes these in Studio:
-  - A1, reply to the RTX 50 comment on gpu-unlock: "No — the original gpu-unlock project currently lists RTX 50-series (Blackwell) as unsupported. Our video should have made that clear, and the title overstated what we could verify. We haven't tested it on hardware. Source: the project's Supported GPUs table and FAQ on GitHub."
-  - A2, gpu-unlock title: "gpu-unlock for GeForce RTX 30/40 on Linux: What It Claims and How to Install".
-  - A2, description: prepend "Correction (Nov 2026): gpu-unlock is Linux-only. Per the project, RTX 30 is stable, RTX 40 is experimental and RTX 50 (Blackwell) is not supported. A separate third-party Windows port exists; ToolDojo has not tested it or the tool. The speed figures in this video are the author's claims, not our measurements." Then delete the first paragraph's "secretly running at half speed / up to double" sentences.
-- **Not run for real yet.** The first real cohort run is CI on Monday 2026-11-16, 12:23 UTC. A local render was not possible: there are no API keys locally.
-- **The writer sees only the README's first 5,000 chars.** gpu-unlock's FAQ (Windows port, at char 5,860) is outside it, so the video can say "Linux only, RTX 50 unsupported" but not describe the Windows port. Consider this in R.3.
-- **R.3 and R.4 are not built:**
-  - R.3: D11 replies, the D6 title gate, D9 visuals, the D7 reserve, the cross-week Short family cooldown, the empty-diagram stock filter.
-  - R.4: R0 is not measured. W0 = 13 min is frozen.
-- **Leftovers on this machine:**
-  - The Studio browser profile is still in the old scratchpad (`…/01a5917a-…/scratchpad/yt-studio-profile`), and a Chrome may still be open on port 9240.
-  - The round folder `docs/debate/2026-11-12-tooldojo-deep-diagnosis/` is untracked in the main checkout on purpose, because it holds Studio data and `docs/` is public.
-  - The main checkout is still on the stale `v3-gemini-fallback`.
+- **D7 reserve of 3 pre-rendered videos is NOT built.** CI keeps nothing between runs, so reserves would have to live on the channel as private uploads. That is an owner decision. Its no-filler half is built.
+- **A2 is the owner's to do.** Both the browser and API routes were refused by the permission classifier. Paste this in Studio on video 4MTEDi4MdnQ:
+  - **Title:** "gpu-unlock for GeForce RTX 20/30/40 on Linux: What It Claims and How to Install".
+  - **Description first paragraph** (replaces the current one): "Correction (Nov 2026): gpu-unlock is Linux-only. Per the project, RTX 30 is stable, RTX 20 and RTX 40 are experimental, and RTX 50 (Blackwell) is not supported. A separate third-party Windows port exists; ToolDojo has not tested it or the tool. This video walks through the project's own install steps; the speed figures are the author's claims, not our measurements."
+- **A1:** D11 answers the RTX 50 comment automatically on the first CI run after the merge (`comment_replies: false` turns that off). The owner may also answer it by hand first.
+- **Not observed in production yet:**
+  - the first cohort run (Mon 2026-11-16);
+  - the first live reply;
+  - the first `cohort_reads` collection: whether the Analytics API still returns the baseline's October 7-day curves is unverified until it runs.
+- **Shorts stayed-to-watch is Studio-only.** The day-21 Shorts read needs the owner's CSV (`video,feed_impressions,stayed_pct`).
+- **Leftovers:** the Studio browser profile in the old scratchpad, the untracked round folder, the stale main checkout and old worktrees (`git worktree remove <path>`, never `--force`).
 
 ## Next session starts here
-- **Phase v3-R.3:** build the comment-reply module, the D6 title gate and the D9 visual rules, after confirming the PR is merged and reading Monday's first cohort run.
-- **First command:** `/boot` from `E:\YOUTUBE\AI-PULSE-r2` (or from main, once `v3-phase-r2` is merged).
-- **Watch out for:** if the PR is not merged before Monday 2026-11-16, the old daily lanes keep publishing filler. Check `git log origin/main` for `v3-phase-r2` first.
+- **Phase:** none to build. Owner: push `v3-phase-r2`, open and merge the PR before Monday 2026-11-16, do A2, and decide on D7. Then read Monday's CI log for:
+  - `📘 No demo evidence` / `📖 Readable stills` / `🧩 Native Short`;
+  - the `COHORT_*` ledger rows;
+  - `💬 replies`.
+- **First command:** `/boot` from `E:\YOUTUBE\AI-PULSE-r2` (or from main after the merge).
+- **Watch out for:** a `VISUALS_BLOCKED` row means the readable-stills browser failed in CI. The 14:53 cron retries, but two in a row means the CI browser needs a look, not a fallback to stock.

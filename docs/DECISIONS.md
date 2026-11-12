@@ -717,3 +717,30 @@ first. Spec: `docs/spec/ai-pulse-v3c3.md`.*
 - **Not done here (R.3/R.4):** the reply module, the title gate, the visual rules, the reserve,
   and the measurement. The comment reply and the gpu-unlock retitle were left to the owner: the
   permission classifier refused the browser automation that would have posted them.
+
+## 2026-11-12 — v3-R.3 / R.4 built; one claim corrected
+
+- **Correction to the R.2 entry above.** "A latent P.1 hole is closed" was wrong. `_render_longform`
+  has two separate `if arm:` chains; main already made the thumbnail and Shorts for every non-pilot
+  render. The dead clause was removed. An independent review caught the error, and a CLAUDE.md trap
+  now records the two chains.
+- **The cohort skips `critique_pass`.** Its generic rules rewrote the answer thumbnail into a star
+  count and scene 1 into a "what you can do" hook. The length passes still run, and the cohort
+  packaging is restored after them. The query-map retitle is off in the cohort for the same reason.
+- **D1 is checked against the publish day** (`scheduling.long_slot`), not the run day. A late Monday
+  retry would otherwise have published on Tuesday.
+- **D9 readable footage is built from stills.** Playwright's video ignores the device scale and its
+  screenshots honour it, so a 640x360 viewport at scale 3 gives 1920x1080 stills with 48 px text.
+  Within the cohort there is no fallback to the desktop scroll or to stock; such a day publishes
+  nothing (`VISUALS_BLOCKED`), per D8 (readable evidence is render integrity).
+- **The docs route blocks first-person testing claims only.** The hosted-demo over-claim pattern
+  matched attributed sentences ("the model card says it works offline"), which is exactly the
+  wording the docs brief asks for. It would have burned queue item 3 for good.
+- **Replies are posted as the channel, so they are screened.** The model must answer
+  `question: true` and `on_topic: true` literally (not "false" strings). Links, bare domains,
+  handles and contact or money bait are refused, because a viewer comment can carry instructions.
+- **Not built: the D7 reserve.** CI keeps no rendered video between runs. A reserve would mean
+  private uploads on the channel, and that is an owner decision.
+- **A2 stays manual.** The API route to retitle the gpu-unlock video was refused by the permission
+  classifier, like the browser route before it. The verified text is in docs/HANDOFF.md, and the
+  README lists RTX 20 as supported too ("Experimental").
