@@ -326,6 +326,103 @@ def qa_video(video: str, expected_audio: float) -> bool:
 _BANNED_DATED = ("today", "yesterday", "this week", "just announced", "breaking")
 
 
+# v3-R (D9 / the empty-diagram defect): an abstract stock query returns an infographic
+# TEMPLATE with empty placeholders — three empty boxes were read in a published
+# frame on 2026-11-12 ("collaboration meeting diagram"). _VISUAL_RULES already bans
+# such queries; nothing enforced it. The fallback is one of the rules' own GOOD queries.
+_ABSTRACT_QUERY = re.compile(r"\b(?:diagrams?|infographics?|illustrations?|icons?|abstract|concepts?|"
+                             r"split[ -]screen|symbols?|metaphors?)\b", re.I)
+_CONCRETE_FALLBACK = "person using laptop"
+
+
+def _concrete_query(vq: str) -> str:
+    return _CONCRETE_FALLBACK if _ABSTRACT_QUERY.search(str(vq or "")) else vq
+
+
+# v3-R D12: the README sections that answer a queue topic's question
+QUESTION_SECTIONS_MAX = 1500          # chars appended to the grounding (provisional)
+_Q_STOP = {"which", "what", "does", "and", "the", "about", "with", "your", "how", "you", "for",
+           "are", "can", "need", "own", "this", "that", "from", "into", "before", "step", "exactly",
+           "change", "changes", "undo", "set", "run", "use", "using", "machine", "different", "between"}
+# words too common in READMEs to pick a section on their own ("## Support me" is a donation
+# block): a section must also hit one of the question's other words
+_Q_GENERIC = {"support", "supports", "supported", "work", "works", "card", "cards", "system",
+              "systems", "install", "installed", "requirements", "setup"}
+
+
+def question_sections(full: str, grounding: str, question: str,
+                      budget: int = QUESTION_SECTIONS_MAX) -> str:
+    """The README blocks (paragraphs, headings, FAQ entries) that answer `question` and
+    are NOT already in `grounding`, in README order, within `budget` chars.
+    An FAQ entry is picked when its QUESTION line shares one of the question's
+    specific words ("What about Windows?"); any other block needs two of them, so a
+    paragraph that merely mentions "GPUs" twice in a GPU README is not picked.
+    Measured on gpu-unlock's real README: exactly its Windows and RTX 50 FAQ
+    entries. "" when nothing qualifies. PURE, never raises."""
+    try:
+        q = str(question or "").lower()
+        keys = {w for w in re.findall(r"[a-z0-9][a-z0-9.+-]*", q)
+                if (len(w) >= 3 or w.isdigit()) and w not in _Q_STOP}
+        strong = keys - _Q_GENERIC
+        if not strong or not full:
+            return ""
+        faq = re.compile(r"^\s*[-*]?\s*\**\s*Q\s*[:.]")
+        blocks, cur = [], []
+        for line in str(full).splitlines():
+            if (not line.strip() or line.lstrip().startswith("#") or faq.match(line)) and cur:
+                blocks.append("\n".join(cur).strip())
+                cur = []
+            if line.strip():
+                cur.append(line)
+        if cur:
+            blocks.append("\n".join(cur).strip())
+
+        def hits(text: str) -> set:
+            low = text.lower()
+            return {k for k in strong if re.search(rf"(?<![a-z0-9]){re.escape(k)}(?![a-z0-9])", low)}
+        scored = []
+        for i, b in enumerate(blocks):
+            if not b or b in grounding:
+                continue
+            first = b.splitlines()[0]
+            h = hits(first) if faq.match(first) else hits(b)
+            if (faq.match(first) and h) or len(h) >= 2:
+                scored.append((len(h), i, b))
+        picked, used = [], 0
+        for _n, i, b in sorted(scored, key=lambda t: (-t[0], t[1])):
+            if used + len(b) > budget:
+                continue
+            picked.append((i, b))
+            used += len(b) + 2
+        return "\n\n".join(b for _, b in sorted(picked))
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+_POPULARITY = re.compile(r"\b(?:stars?|downloads?|forks?|likes?|followers?|views?)\b", re.I)
+
+
+def cohort_packaging(s: dict, tool_title: str) -> dict:
+    """spec v3-R D6, as a fixer (D8: packaging style never blocks): the title names the
+    tool; the thumbnail carries no popularity count (the composers fall back to the
+    title when thumb_text is blank). Mutates and returns `s`; never raises."""
+    try:
+        tool = str(tool_title or "").split(":")[0].split("/")[-1].strip()
+        norm = lambda t: re.sub(r"[^a-z0-9]", "", str(t).lower())  # noqa: E731
+        title = str(s.get("title") or "")
+        if tool and norm(tool) not in norm(title):
+            new = f"{tool}: {title}".strip(": ")
+            if len(new) <= gates.TITLE_MAX:
+                print(f"     🏷️ D6: the title names the tool — {new!r}")
+                s["title"] = new
+        if _POPULARITY.search(str(s.get("thumb_text") or "")):
+            print(f"     🏷️ D6: popularity count dropped from the thumbnail ({s['thumb_text']!r})")
+            s["thumb_text"] = ""
+    except Exception as e:  # noqa: BLE001
+        print(f"     ⚠️ cohort packaging skipped: {type(e).__name__}")
+    return s
+
+
 def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict | None:
     """Enforce the script contract so a partial LLM response can't crash mid-render."""
     if not s or not isinstance(s.get("scenes"), list) or len(s["scenes"]) < 5:
@@ -359,6 +456,7 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     for sc in s["scenes"]:
         narration = str(sc.get("narration", "")).strip()
         vq = str(sc.get("visual_query", "")).strip() or "computer technology"
+        vq = _concrete_query(vq)
         if narration:
             entry = {"scene_num": len(scenes) + 1, "narration": narration, "visual_query": vq}
             spk = str(sc.get("speaker", "")).strip().lower()
@@ -405,6 +503,8 @@ def _validate_script(s: dict, fallback_title: str, source_url: str = "") -> dict
     s["titles"] = [re.sub(r"[<>*`]", "", t).strip()[:95] for t in gates.title_options(s)]
     s["titles"] = [t for t in s["titles"] if t]
     s["thumb_text"] = re.sub(r"[<>*`]", "", str(s.get("thumb_text", ""))).strip()[:26]
+    if "answer_line" in s:     # v3-R D11: raw LLM output — coerce, never trust the type
+        s["answer_line"] = re.sub(r"[<>*`]", "", str(s.get("answer_line") or "")).strip()[:140]
     s["synthesis_claim"] = str(s.get("synthesis_claim", "")).strip()[:400]
     # v3-M.1 row 9: model-written memory fields — carried, not popped; coerced
     # because raw LLM output is never type-safe (a string, a dict, null).
@@ -464,7 +564,10 @@ def _output_contract(scene_range: str, words_per_scene: str, tool: bool = False,
                    "the source excludes.")
         thumb_rule = ("- thumb_text: the 2-4 word direct ANSWER to the video's question (e.g. \"LINUX ONLY\",\n"
                       "  \"MAC ONLY\", \"NEEDS A GPU\"). No star, download or popularity counts, no outcome\n"
-                      "  claims, no question mark.")
+                      "  claims, no question mark.\n"
+                      "- answer_line: ONE sentence, at most 140 characters, that answers the video's question\n"
+                      "  from the SOURCE EXCERPT, attributed (\"Per its README, ...\"). It becomes the first line\n"
+                      "  of the description and the channel's comment. Return it as a top-level JSON field.")
     # v3-M.1 row 9: the memory record's viewer-need fields, for every lane
     mem, mem_json = "", ""
     if fv.flag("memory_fields", False):
@@ -710,6 +813,16 @@ def script_tool(item: dict) -> dict | None:
             grounding = f"{keep}\n\n{block}"
             print(f"     📎 first code block was past the excerpt — appended "
                   f"({len(block)} chars).")
+    # spec v3-R D12: a queue topic asks ONE question, and the README part that answers it
+    # may sit past the 5,000-char window (gpu-unlock's Windows / RTX 50 FAQ starts at
+    # char 5,860). Appended HERE, so the writer, the fact-checker and every gate reading
+    # s["grounding"] see the same answer.
+    if cohort_on() and full:
+        extra = question_sections(full, grounding,
+                                  memory.coerce_question(item.get("followup_question")))
+        if extra:
+            grounding = f"{grounding}\n\nREADME SECTIONS ON THE VIEWER'S QUESTION:\n{extra}"
+            print(f"     📎 README sections on the viewer's question appended ({len(extra)} chars).")
     # Built AFTER the append: the screen must read at least what the writer reads.
     screen = grounding if page is None else f"{grounding} {page}"
     # The README is where intent actually shows: a repo titled innocuously can
@@ -879,6 +992,8 @@ ADDITIONAL REQUIRED FIELD in the same JSON:
             s["evidence"] = ev
         if pilot_slot:
             s["pilot"] = pilot_slot
+        if cohort and not pilot_slot:
+            cohort_packaging(s, title)
     return s
 
 
@@ -1193,7 +1308,9 @@ _CARRY = ("format", "grounding", "roundup_items", "signal_title", "synthesis_cla
           "titles",          # v3-G.3 #6: the alternates; 09-16 and 10-01 lost theirs to a rewrite
           # v3-M.1 row 9: the rewrite prompts never show them, so every pass would
           # reset them to empty; "followup" is run()'s and is popped in _validate_script
-          "question_answered", "questions_open", "followup")
+          "question_answered", "questions_open", "followup",
+          # v3-R D11: the one-line answer — description line 1 and the channel comment
+          "answer_line")
 
 
 def _carry_over(src: dict, dst: dict) -> dict:
@@ -1686,6 +1803,52 @@ def cohort_label_chip(script, starts) -> list:
         return [(0.0, end, lab)]
     except Exception:  # noqa: BLE001
         return []
+
+
+COHORT_FAMILY_HOURS = 168             # D2: one Short per subject family per rolling 168 h
+
+
+def cohort_family_of(script) -> str:
+    """D2: a script's subject family — the queue's family (gpu-unlock and
+    nv-uefi-unlocker share "gpu-unlocking"), else the source repo/page URL."""
+    try:
+        fu = script.get("followup") if isinstance(script, dict) else None
+        fam = str((fu or {}).get("family") or "").strip().lower() if isinstance(fu, dict) else ""
+        if fam:
+            return fam
+        url = str((script or {}).get("source_url") or "").strip().lower().rstrip("/")
+        return url.split("://", 1)[-1]
+    except Exception:  # noqa: BLE001
+        return ""
+
+
+def cohort_short_blocked(script, long_publish_at, rows: list | None = None) -> bool:
+    """D2: True when a PUBLISHED long-form of the same subject family, published less
+    than COHORT_FAMILY_HOURS before this one, already shipped a Short (each cohort
+    Short lands a fixed time after its long-form, so long-form gaps are Short gaps).
+    Exactly 168 h apart is allowed. Never raises: an unreadable ledger blocks nothing."""
+    try:
+        fam = cohort_family_of(script)
+        if not fam:
+            return False
+        this = _dt.datetime.fromisoformat(str(long_publish_at).replace("Z", "+00:00"))
+        rows = learn.read_runs(RUNS_LOG) if rows is None else rows
+        for r in rows or []:
+            if not isinstance(r, dict) or r.get("status") != "PUBLISHED" or not r.get("shorts"):
+                continue
+            rf = (str(r.get("followup_family") or "").strip().lower()
+                  or str(r.get("source_url") or "").strip().lower().rstrip("/").split("://", 1)[-1])
+            if rf != fam:
+                continue
+            try:
+                prev = _dt.datetime.fromisoformat(str(r.get("publish_at") or "").replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if _dt.timedelta(0) <= this - prev < _dt.timedelta(hours=COHORT_FAMILY_HOURS):
+                return True
+        return False
+    except Exception:  # noqa: BLE001
+        return False
 
 
 # --------------------------------------------------------------- orchestrate
@@ -2714,8 +2877,15 @@ def run(publish: bool = False, force_format: str | None = None,
     # belongs to that last make_shorts call. Before any upload; never raises.
     native_on = fv.flag("native_shorts", False)
     short_hooks = list(shorts_mod.last_hooks)
+    # spec v3-R D2: at most one Short per subject family in any rolling 168 h — checked
+    # BEFORE the native Short is rendered, so a blocked day spends nothing on it
+    _fam_block = cohort_on() and cohort_short_blocked(script, scheduling.long_slot())
+    if _fam_block:
+        print(f"  ⏭️ Short skipped: subject family {cohort_family_of(script)!r} already had a "
+              f"Short in the last {COHORT_FAMILY_HOURS} h (cohort D2).")
+        shorts, short_hooks = [], []
     s1_plan = (_s1_native_day(script, shorts, short_hooks)
-               if (native_on and (shorts or cohort_on())) else None)
+               if (native_on and not _fam_block and (shorts or cohort_on())) else None)
     if s1_plan:
         shorts, short_hooks = s1_plan["shorts"], s1_plan["hooks"]
     # spec v3-P.2: every Pilot A / query-map ledger field as ONE dict, computed here,

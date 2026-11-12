@@ -500,3 +500,113 @@ def test_r2_markdown_emphasis_never_reaches_a_title_hook_or_label():
     m = sh.normalize_moments([{"scene_num": 2, "hook_text": "What the robot *can't* do yet"}], 8)
     assert m[0]["hook_text"] == "What the robot can't do yet"
     assert ns._clean("**Linux** only") == "Linux only"
+
+
+# ================================================================ v3-R.3: answers and packaging
+def _r3_readme():
+    """Synthetic README shaped like gpu-unlock's: the answers sit past char 5,000."""
+    head = "# demo-unlock\n\nLinux only. For Windows see the FAQ.\n\n" + ("Background text. " * 320)
+    faq = ("\n\n## FAQ\n- Q: What about Windows?\nA: Not maintained here; a third-party Windows port "
+           "exists, YMMV.\n- Q: What about Blackwell (RTX 50)?\nA: Not supported and unlikely to happen.\n"
+           "- Q: Do you sell an installer?\nA: No.\n\n## Support me\nDonations welcome.\n")
+    return head + faq
+
+
+def test_r3_question_sections_pull_the_answer_from_past_the_window():
+    full = _r3_readme()
+    assert full.find("What about Windows") > 5000
+    grounding = full[:5000]
+    out = ap.question_sections(full, grounding, "Which GPUs and systems does it support, "
+                                                "and what about Windows and RTX 50 cards?")
+    assert "third-party Windows port" in out and "RTX 50" in out
+    assert "Donations" not in out and "installer" not in out
+    assert out.index("Windows port") < out.index("RTX 50")                     # README order
+    assert ap.question_sections(full, grounding, "") == ""
+    assert ap.question_sections(full, full, "what about Windows?") == ""       # already in grounding
+    assert len(ap.question_sections(full, grounding, "windows rtx 50 donations", budget=60)) <= 60
+
+
+def test_r3_cohort_appends_the_sections_to_the_grounding(monkeypatch):
+    _r2_on(monkeypatch)
+    full = _r3_readme() + "\n```bash\nmake install\n```\n"
+    prompts = []
+    monkeypatch.setattr(ap, "fetch_text", lambda u, limit=4000: full[:limit])
+    monkeypatch.setattr(ap, "_verified_facts", lambda u: {})
+    monkeypatch.setattr(ap, "_top_issues", lambda u: [])
+    ans = {"title": "demo-unlock: Does it run on Windows?", "scenes": _r2_scenes(),
+           "deliverable": {"kind": "command", "text": "make install", "url": _R2_GH},
+           "answer_line": "Per its *README*, it is Linux only.", "thumb_text": "12K STARS"}
+    monkeypatch.setattr(ap.llm, "generate_json", lambda p, **k: prompts.append(p) or json.loads(json.dumps(ans)))
+    s = ap.script_tool({"title": "acme/demo-unlock", "source": "queue", "url": _R2_GH, "kind": "tool",
+                        "followup_question": "What about Windows and RTX 50 cards?"})
+    assert s and "README SECTIONS ON THE VIEWER'S QUESTION" in s["grounding"]
+    assert "third-party Windows port" in prompts[0]
+    assert s["answer_line"] == "Per its README, it is Linux only."               # coerced, kept
+    assert s["thumb_text"] == ""                                                 # D6: no popularity count
+
+
+def test_r3_packaging_names_the_tool_and_drops_popularity():
+    s = ap.cohort_packaging({"title": "Does it run on Windows?", "thumb_text": "5K STARS"}, "acme/demo-unlock")
+    assert s["title"] == "demo-unlock: Does it run on Windows?" and s["thumb_text"] == ""
+    s = ap.cohort_packaging({"title": "Demo Unlock: Linux only", "thumb_text": "LINUX ONLY"}, "acme/demo-unlock")
+    assert s["title"] == "Demo Unlock: Linux only" and s["thumb_text"] == "LINUX ONLY"
+    long_title = "x" * (ap.gates.TITLE_MAX - 3)
+    assert ap.cohort_packaging({"title": long_title}, "acme/demo-unlock")["title"] == long_title
+    assert ap.cohort_packaging("junk", "x") == "junk"                              # never raises
+
+
+def test_r3_answer_line_survives_a_rewrite_pass():
+    assert "answer_line" in ap._CARRY
+    src = {"answer_line": "Per its README, Linux only."}
+    assert ap._carry_over(src, {})["answer_line"] == "Per its README, Linux only."
+    s = ap._validate_script({"title": "T", "scenes": _r2_scenes(), "answer_line": ["x"] * 3}, "T")
+    assert isinstance(s["answer_line"], str)
+
+
+@pytest.mark.parametrize("q, out", [
+    ("collaboration meeting diagram", "person using laptop"),
+    ("split screen traditional vs generative ai", "person using laptop"),
+    ("tool icon with gears", "person using laptop"),
+    ("abstract network connections", "person using laptop"),
+    ("person typing code", "person typing code"),
+    ("data center servers", "data center servers"),
+])
+def test_r3_abstract_stock_queries_become_concrete(q, out):
+    assert ap._concrete_query(q) == out
+    s = ap._validate_script({"title": "T", "scenes": [dict(sc, visual_query=q) for sc in _r2_scenes()]}, "T")
+    assert all(sc["visual_query"] == out for sc in s["scenes"])
+
+
+def _r3_row(fam, publish_at, shorts=True, status="PUBLISHED"):
+    return {"status": status, "followup_family": fam, "publish_at": publish_at,
+            "shorts": [{"url": "u", "engine": "native"}] if shorts else []}
+
+
+def test_r3_one_short_per_family_per_168_hours():
+    script = {"followup": {"family": "gpu-unlocking"}}
+    rows = [_r3_row("gpu-unlocking", "2026-11-16T16:45:00Z")]
+    assert ap.cohort_short_blocked(script, "2026-11-20T16:45:00Z", rows)          # 4 days later
+    assert not ap.cohort_short_blocked(script, "2026-11-23T16:45:00Z", rows)      # exactly 168 h: allowed
+    assert not ap.cohort_short_blocked({"followup": {"family": "zcode"}}, "2026-11-20T16:45:00Z", rows)
+    assert not ap.cohort_short_blocked(script, "2026-11-20T16:45:00Z",
+                                       [_r3_row("gpu-unlocking", "2026-11-16T16:45:00Z", shorts=False)])
+    assert not ap.cohort_short_blocked(script, "2026-11-20T16:45:00Z",
+                                       [_r3_row("gpu-unlocking", "2026-11-16T16:45:00Z", status="QA_FAILED")])
+    by_url = {"source_url": "https://github.com/acme/tool/"}
+    assert ap.cohort_family_of(by_url) == "github.com/acme/tool"
+    assert ap.cohort_short_blocked(by_url, "2026-11-18T16:45:00Z",
+                                   [{"status": "PUBLISHED", "source_url": "https://github.com/acme/tool",
+                                     "publish_at": "2026-11-16T16:45:00Z", "shorts": [{"url": "u"}]}])
+    assert not ap.cohort_short_blocked(script, "garbage", rows) and not ap.cohort_short_blocked({}, "x", rows)
+
+
+def test_r3_run_skips_the_short_when_its_family_had_one(monkeypatch, tmp_path):
+    called = []
+    monkeypatch.setattr(ap, "cohort_short_blocked", lambda s, lp, rows=None: True)
+
+    def native(script, hook="", excerpt=""):
+        called.append(1)
+        return _r2_native_ok(script)
+    rows, uploads, _ = _r2_run(monkeypatch, tmp_path, _r2_script(), native)
+    assert rows[-1]["status"] == "PUBLISHED" and called == []                   # not even rendered
+    assert [u for u in uploads if "#Shorts" in u[2]] == [] and len(uploads) == 1
