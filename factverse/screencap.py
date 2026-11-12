@@ -34,6 +34,18 @@ TAIL_PAD = 0.5                # frozen-frame margin past a piece's share (see re
 FPS = 30                      # recut pieces are encoded at the engine's FPS
 SETTLE_MS = 3000              # after a page paints, let it settle (real content, kept)
 BOTTOM_PAUSE_MS = 1400        # the reading rhythm's long pause, held at the bottom
+# spec v3-R D9 (docs/spec/ai-pulse-v3r.md): no continuous page scroll longer than 5 s
+# and source text readable on a 390 px phone. A 1920 px desktop recording draws
+# README text at 16 px (about 3 px on that phone). The cohort instead SHOOTS STILLS
+# of the page at a 640x360 viewport and device scale 3 = exactly the 1920x1080
+# canvas, so the same text is 48 px (the repo's TEXT_MIN_PX floor), and the video
+# steps from still to still — hard cuts, never a scroll. Measured 2026-11-12: a
+# Playwright VIDEO ignores the device scale (it drew 640x360 into one corner of the
+# 1920x1080 frame), a SCREENSHOT honours it — hence stills, not a recording.
+STILL_VIEW_W, STILL_VIEW_H, STILL_DSF = 640, 360, 3
+STILL_SECONDS = 3.0           # each still is on screen this long (provisional)
+STILL_STEP = 0.8              # scroll per still, as a share of the viewport (context overlap)
+STILL_SCROLL_MS = 450         # let the scrolled page repaint before the next still
 
 
 # ------------------------------------------------------------- pure planners
@@ -178,6 +190,40 @@ def _cut_args(src: str, dst: str, start: float, length: float) -> list[str]:
             "-crf", "23", dst]
 
 
+def readable_mode() -> bool:
+    """D9 rides the recovery cohort's kill switch."""
+    return fv.flag("recovery_cohort", False)
+
+
+def first_page_url(url: str) -> str:
+    """D9: a GitHub repo root opens AT its README (the mobile layout puts the file
+    list first). Other pages are unchanged."""
+    u = str(url or "")
+    if "github.com/" in u and "#" not in u and len([x for x in u.split("github.com/", 1)[1].split("/") if x]) == 2:
+        return u.rstrip("/") + "#readme"
+    return u
+
+
+def stills_list(stills: list[str], seconds: float = STILL_SECONDS) -> str:
+    """The ffmpeg concat-demuxer list that shows each still for `seconds`. The last
+    file is listed twice: the demuxer ignores the final `duration` otherwise. PURE."""
+    if not stills:
+        return ""
+    lines = []
+    for png in stills:
+        lines += [f"file '{Path(png).as_posix()}'", f"duration {seconds:.3f}"]
+    lines.append(f"file '{Path(stills[-1]).as_posix()}'")
+    return "\n".join(lines) + "\n"
+
+
+def _stills_args(list_path: str, dst: str) -> list[str]:
+    """Stills -> the ONE recording every later step already handles (segment_plan,
+    recut). Each still IS the 1920x1080 canvas; fps/setsar match _join_args."""
+    return [fv.FFMPEG or "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", list_path,
+            "-vf", f"fps={FPS},scale={REC_W}:{REC_H}:flags=lanczos,setsar=1,format=yuv420p",
+            "-an", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "20", dst]
+
+
 def _still_args(png: str, mp4: str, seconds: float) -> list[str]:
     return [fv.FFMPEG or "ffmpeg", "-y", "-loop", "1", "-i", png,
             "-t", str(seconds), "-r", "30", "-c:v", "libx264", "-preset", "fast",
@@ -294,6 +340,81 @@ def _record_pages(urls: list[str], out_dir: str,
     return takes, shot
 
 
+def _shoot_pages(urls: list[str], out_dir: str,
+                 target_seconds: float) -> tuple[list[str], str]:
+    """D9: the same browse_plan pages, as phone-readable stills (see STILL_*). Each
+    page gets its share of `target_seconds` (page_budget) as STILL_SECONDS stills,
+    scrolling STILL_STEP of a screen between them, until the page bottom. A page that
+    fails, answers >= 400 or redirects off its path is skipped. Returns
+    ([png, ...], first png as the thumbnail base). Playwright imported here only."""
+    from playwright.sync_api import sync_playwright
+
+    out = Path(out_dir)
+    stills: list[str] = []
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        ctx = browser.new_context(viewport={"width": STILL_VIEW_W, "height": STILL_VIEW_H},
+                                  device_scale_factor=STILL_DSF, color_scheme="dark")
+        remaining = float(target_seconds)
+        for k, url in enumerate(urls):
+            if remaining <= 0:
+                break
+            page = ctx.new_page()
+            try:
+                resp = page.goto(first_page_url(url) if k == 0 else url,
+                                 wait_until="domcontentloaded", timeout=45000)
+                ok = resp is None or resp.status < 400
+                if ok and k > 0:
+                    ok = landed_on(url, page.url)
+            except Exception as e:
+                print(f"   ⏭️ page skipped ({url}): {str(e)[:80]}")
+                ok = False
+            if not ok:
+                page.close()
+                continue
+            page.wait_for_timeout(SETTLE_MS)
+            n = max(1, int(page_budget(remaining, len(urls) - k) // STILL_SECONDS))
+            taken = 0
+            for _ in range(n):
+                png = str(out / f"still_{len(stills):04d}.png")
+                try:
+                    page.screenshot(path=png)
+                except Exception:
+                    break
+                stills.append(png)
+                taken += 1
+                try:
+                    if page.evaluate(_AT_BOTTOM_JS):
+                        break
+                    page.mouse.wheel(0, int(STILL_VIEW_H * STILL_STEP))
+                    page.wait_for_timeout(STILL_SCROLL_MS)
+                except Exception:
+                    break
+            remaining -= taken * STILL_SECONDS
+            page.close()
+        ctx.close()
+        browser.close()
+    stills = [x for x in stills if Path(x).exists()]
+    if not stills:
+        raise RuntimeError("no stills produced")
+    return stills, stills[0]
+
+
+def _readable_recording(urls: list[str], rec_dir: Path, target_seconds: float):
+    """D9: stills -> recording.mp4. (recording path, screenshot, page count) or None."""
+    try:
+        stills, shot = _shoot_pages(urls, str(rec_dir), target_seconds)
+        lst = rec_dir / "stills.txt"
+        lst.write_text(stills_list(stills), encoding="utf-8")
+        dst = str(rec_dir / "recording.mp4")
+        if not _ffmpeg(_stills_args(str(lst), dst), timeout=900):
+            return None
+        return dst, shot, len(stills)
+    except Exception as e:
+        print(f"   ⚠️ readable stills failed ({str(e)[:100]}) — desktop recording instead.")
+        return None
+
+
 def capture(script: dict) -> dict | None:
     """Record the tool's pages and return {'scene_clips': list[list[path]] one
     per scene (PROVISIONAL — recut() replaces them once the narration timings
@@ -309,11 +430,19 @@ def capture(script: dict) -> dict | None:
         rec_dir = fv.TEMP / "screencap"
         shutil.rmtree(rec_dir, ignore_errors=True)
         rec_dir.mkdir(parents=True, exist_ok=True)
-        takes, shot = _record_pages(browse_plan(url), str(rec_dir),
-                                    estimate_video_seconds(script))
-        trimmed = str(rec_dir / "recording.mp4")
-        if not _ffmpeg(_join_args(takes, trimmed), timeout=900):
-            return None
+        readable = _readable_recording(browse_plan(url), rec_dir,
+                                       estimate_video_seconds(script)) if readable_mode() else None
+        if readable:
+            trimmed, shot, n_pages = readable
+            print(f"  📖 Readable stills (D9): {n_pages} stills at {STILL_VIEW_W}x{STILL_VIEW_H} "
+                  f"x{STILL_DSF}, {STILL_SECONDS:.0f} s each")
+            takes = [("", 0.0)] * n_pages
+        else:
+            takes, shot = _record_pages(browse_plan(url), str(rec_dir),
+                                        estimate_video_seconds(script))
+            trimmed = str(rec_dir / "recording.mp4")
+            if not _ffmpeg(_join_args(takes, trimmed), timeout=900):
+                return None
         total = _probe_duration(trimmed)
         if total < MIN_SEG:
             return None
