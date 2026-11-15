@@ -259,3 +259,4 @@
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-13T21:01:52"}
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-14T18:19:07"}
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-14T19:31:51"}
+{"status": "VISUALS_BLOCKED", "format": "tool", "title": "gpu-unlock: Which GPUs and OS does it support?", "timestamp": "2026-11-15T18:59:24"}
