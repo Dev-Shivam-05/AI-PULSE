@@ -268,3 +268,4 @@
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-18T20:44:10"}
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-18T22:38:50"}
 {"status": "VISUALS_BLOCKED", "format": "tool", "title": "Zagitta/gpu-unlock: Linux and RTX 20/30/40 Only", "timestamp": "2026-11-19T20:50:07"}
+{"status": "VISUALS_BLOCKED", "format": "tool", "title": "gpu-unlock: RTX 20, 30, 40 on Linux?", "timestamp": "2026-11-19T22:30:31"}
