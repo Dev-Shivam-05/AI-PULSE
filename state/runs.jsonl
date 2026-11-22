@@ -275,3 +275,4 @@
 {"status": "COHORT_REST_DAY", "format": "-", "timestamp": "2026-11-21T20:41:41"}
 {"status": "FACTCHECK_BLOCKED", "format": "tool", "title": "gpu-unlock: Which GPUs and operating systems are supported?", "factcheck": {"passed": false, "checked": 12, "critical_failures": [{"text": "`gpu-unlock` is for Linux only", "type": "quote", "critical": true, "verdict": "unsupported"}], "soft_failures": []}, "timestamp": "2026-11-22T19:53:18"}
 {"status": "VISUALS_BLOCKED", "format": "tool", "title": "Zagitta/gpu-unlock: Linux & RTX 20-40 Series Only", "timestamp": "2026-11-22T19:54:04"}
+{"status": "VISUALS_BLOCKED", "format": "tool", "title": "Zagitta/gpu-unlock: Supported GPUs and Operating Systems?", "timestamp": "2026-11-22T20:52:37"}
